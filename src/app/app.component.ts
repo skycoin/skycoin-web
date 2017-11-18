@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WalletService } from './services/wallet.service';
 import { BlockchainService } from './services/blockchain.service';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
@@ -11,7 +11,7 @@ import { config } from './app.config';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   current: number;
   highest: number;
@@ -28,18 +28,18 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    this.setVersion();
-    IntervalObservable
-      .create(3000)
-      .flatMap(() => this.blockchainService.progress())
-      .takeWhile(response => !response.current || response.current !== response.highest)
-      .subscribe(response => {
-        this.highest = response.highest;
-        this.current = response.current;
-        this.percentage = this.current && this.highest ? (this.current / this.highest * 100) : 0;
-        console.log(response);
-      }, error => console.log(error),
-        () => this.completeLoading());
+    // this.setVersion();
+    // IntervalObservable
+    //   .create(3000)
+    //   .flatMap(() => this.blockchainService.progress())
+    //   .takeWhile(response => !response.current || response.current !== response.highest)
+    //   .subscribe(response => {
+    //     this.highest = response.highest;
+    //     this.current = response.current;
+    //     this.percentage = this.current && this.highest ? (this.current / this.highest * 100) : 0;
+    //     console.log(response);
+    //   }, error => console.log(error),
+    //     () => this.completeLoading());
   }
 
   loading() {

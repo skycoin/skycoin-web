@@ -14,7 +14,6 @@ import 'rxjs/add/operator/mergeMap';
 
 @Injectable()
 export class WalletService {
-
   recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   transactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   wallets: Subject<WalletModel[]> = new BehaviorSubject<WalletModel[]>([]);
@@ -22,10 +21,10 @@ export class WalletService {
   constructor(
     private apiService: ApiService
   ) {
-    this.loadData();
-    IntervalObservable
-      .create(30000)
-      .subscribe(() => this.refreshBalances());
+    // this.loadData();
+    // IntervalObservable
+    //   .create(30000)
+    //   .subscribe(() => this.refreshBalances());
   }
 
   addressesAsString(): Observable<string> {
