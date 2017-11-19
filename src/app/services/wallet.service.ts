@@ -14,6 +14,15 @@ import { Address, Wallet } from '../app.datatypes';
 
 declare var Cipher;
 
+function ascii_to_hexa(str) {
+  const arr1 = [];
+  for (let n = 0, l = str.length; n < l; n ++) {
+    const hex = Number(str.charCodeAt(n)).toString(16);
+    arr1.push(hex);
+  }
+  return arr1.join('');
+}
+
 @Injectable()
 export class WalletService {
   recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
@@ -29,7 +38,7 @@ export class WalletService {
   ) {}
 
   addAddress(wallet: Wallet) {
-    const lastSeed = wallet.addresses[wallet.addresses.length - 1];
+    const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
     wallet.addresses.push(this.generateAddress(lastSeed));
     this.updateWallet(wallet);
   }
@@ -38,7 +47,7 @@ export class WalletService {
     const wallet = {
       label: label,
       seed: seed,
-      addresses: [this.generateAddress(seed)]
+      addresses: [this.generateAddress(ascii_to_hexa(seed))]
     };
 
     this.addWallet(wallet);
