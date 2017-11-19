@@ -4,6 +4,7 @@ import { MdDialog, MdDialogConfig } from '@angular/material';
 import { ChangeNameComponent } from '../change-name/change-name.component';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { Wallet } from '../../../../app.datatypes';
+import { UnlockWalletComponent } from '../unlock-wallet/unlock-wallet.component';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -26,16 +27,19 @@ export class WalletDetailComponent {
     const config = new MdDialogConfig();
     config.width = '500px';
     config.data = this.wallet;
-    this.dialog.open(ChangeNameComponent, config).afterClosed().subscribe(result => {
-      if (result) {
-        this.wallet.label = result;
-      }
-    });
+    this.dialog.open(ChangeNameComponent, config);
   }
 
   showQr(address) {
     const config = new MdDialogConfig();
     config.data = address;
     this.dialog.open(QrCodeComponent, config);
+  }
+
+  unlockWallet() {
+    const config = new MdDialogConfig();
+    config.width = '500px';
+    config.data = this.wallet;
+    this.dialog.open(UnlockWalletComponent, config);
   }
 }
