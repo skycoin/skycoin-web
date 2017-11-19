@@ -42,6 +42,7 @@ import { BuyComponent } from './components/pages/buy/buy.component';
 import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-address/add-deposit-address.component';
 import { PurchaseService } from './services/purchase.service';
 import { TellerStatusPipe } from './pipes/teller-status.pipe';
+import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
 
 const ROUTES = [
   {
@@ -193,12 +194,14 @@ const ROUTES = [
     BuyComponent,
     AddDepositAddressComponent,
     TellerStatusPipe,
+    UnlockWalletComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
     CreateWalletComponent,
     ChangeNameComponent,
     QrCodeComponent,
+    UnlockWalletComponent,
   ],
   imports: [
     BrowserModule,
