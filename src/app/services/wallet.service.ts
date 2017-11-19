@@ -61,6 +61,14 @@ export class WalletService {
     this.addWallet(wallet);
   }
 
+  updateWallet(wallet: Wallet) {
+    this.all.first().subscribe(wallets => {
+      const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
+      wallets[index] = wallet;
+      this.saveWallets(wallets);
+    });
+  }
+
   private addWallet(wallet) {
     this.all.first().subscribe(wallets => {
       wallets.push(wallet);
@@ -116,13 +124,7 @@ export class WalletService {
     this.wallets.next(wallets);
   }
 
-  private updateWallet(wallet: Wallet) {
-    this.all.first().subscribe(wallets => {
-      const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
-      wallets[index] = wallet;
-      this.saveWallets(wallets);
-    });
-  }
+
 
   /*
   Legacy
@@ -170,10 +172,6 @@ export class WalletService {
       })))
         .subscribe(newWallets => this.wallets.next(newWallets));
     });
-  }
-
-  renameWallet(wallet: WalletModel, label: string): Observable<WalletModel> {
-    return this.apiService.post('wallet/update', { id: wallet.meta.filename, label: label });
   }
 
   retrieveUpdatedTransactions(transactions) {
