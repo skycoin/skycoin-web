@@ -10,7 +10,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
-import { Address, Wallet } from '../app.datatypes';
+import { Address, Output, TransactionInput, TransactionOutput, Wallet } from '../app.datatypes';
 
 declare var Cipher;
 
@@ -59,6 +59,33 @@ export class WalletService {
     };
 
     this.addWallet(wallet);
+  }
+
+  sendSkycoin(wallet: Wallet, address: string, amount: number) {
+    const addresses = wallet.addresses.map(a => a.address).join(',');
+    return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
+      const totalCoins = outputs.reduce((count, output) => count + output.coins, 0);
+      const totalHours = outputs.reduce((count, output) => count + output.hours, 0);
+      const changeCoins = totalCoins - amount;
+      const changeHours = totalHours / 4;
+      const txOutputs: TransactionOutput[] = [{ address: address, coins: amount * 1000000, hours: changeHours }];
+      const txInputs: TransactionInput[] = [];
+
+      if (changeCoins > 0) {
+        txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins * 1000000, hours: changeHours });
+      }
+
+      outputs.forEach(input => {
+        txInputs.push({
+          hash: input.hash,
+          secret: wallet.addresses.find(a => a.address === input.address).secret_key,
+        });
+      });
+
+      const rawTransaction = Cipher.PrepareTransaction(JSON.stringify(txInputs), JSON.stringify(txOutputs));
+
+      return this.apiService.postTransaction(rawTransaction);
+    });
   }
 
   updateWallet(wallet: Wallet) {
@@ -142,8 +169,6 @@ export class WalletService {
     this.wallets.next(wallets);
   }
 
-
-
   /*
   Legacy
    */
@@ -200,15 +225,6 @@ export class WalletService {
         return response;
       });
     })));
-  }
-
-  sendSkycoin(wallet_id: string, address: string, amount: number) {
-    return this.apiService.post('wallet/spend', {id: wallet_id, dst: address, coins: amount})
-      .do(output => this.recentTransactions.first().subscribe(transactions => {
-        const transaction = {id: output.txn.txid, address: address, amount: amount / 1000000};
-        transactions.push(transaction);
-        this.recentTransactions.next(transactions);
-      }));
   }
 
   sum(): Observable<number> {

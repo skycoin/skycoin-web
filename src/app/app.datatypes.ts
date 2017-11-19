@@ -19,6 +19,7 @@ export interface Address {
 export interface Output {
   address: string;
   coins: number;
+  hash: string;
   hours: number;
 }
 
@@ -34,4 +35,20 @@ export interface GetOutputsRequestOutput {
   address: string;
   coins: string;
   hours: number;
+}
+
+export class TransactionInput {
+  hash: string;
+  secret: string;
+}
+
+export class TransactionOutput {
+  address: string;
+  coins: number;
+  hours: number;
+}
+
+export class TransactionRequest {
+  inputs: TransactionInput[];
+  outputs: TransactionOutput[];
 }

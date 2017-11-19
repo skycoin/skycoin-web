@@ -20,10 +20,15 @@ export class ApiService {
       response.head_outputs.forEach(output => outputs.push({
         address: output.address,
         coins: parseFloat(output.coins),
+        hash: output.hash,
         hours: output.hours,
       }));
       return outputs;
     }) : Observable.of([]);
+  }
+
+  postTransaction(rawTransaction: string): Observable<string> {
+    return this.post('transaction', { raw: rawTransaction });
   }
 
   get(url, options = null) {
@@ -32,15 +37,15 @@ export class ApiService {
       .catch((error: any) => Observable.throw(error || 'Server error'));
   }
 
-  post(url, options = {}) {
-    return this.http.post(this.getUrl(url), this.getQueryString(options), this.returnRequestOptions())
+  post(url, body = {}) {
+    return this.http.post(this.getUrl(url), body, this.returnRequestOptions())
       .map((res: any) => res.json())
       .catch((error: any) => Observable.throw(error || 'Server error'));
   }
 
   private getHeaders() {
     const headers = new Headers();
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    headers.append('Content-Type', 'application/json');
     return headers;
   }
 
