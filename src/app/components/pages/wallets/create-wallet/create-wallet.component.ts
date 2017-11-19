@@ -26,6 +26,7 @@ export class CreateWalletComponent implements OnInit {
 
   createWallet() {
     this.walletService.create(this.form.value.label, this.form.value.seed);
+    this.dialogRef.close();
   }
 
   generateSeed() {

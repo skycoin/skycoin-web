@@ -1,7 +1,7 @@
-<md-expansion-panel *ngFor="let wallet of walletService.all() | async">
+<md-expansion-panel *ngFor="let wallet of walletService.all | async">
   <md-expansion-panel-header>
     <md-panel-title>
-      {{ wallet.meta.label }}
+      {{ wallet.label }}
     </md-panel-title>
     <md-panel-description>
       <span>{{ wallet.balance | sky }}</span> <span>{{ wallet.hours ? wallet.hours : 0 }} Coin Hours</span>
