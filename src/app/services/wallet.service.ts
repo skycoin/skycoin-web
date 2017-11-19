@@ -69,6 +69,24 @@ export class WalletService {
     });
   }
 
+  unlockWallet(wallet: Wallet, seed: string) {
+    let currentSeed = ascii_to_hexa(seed);
+    wallet.seed = seed;
+
+    wallet.addresses.forEach(address => {
+      const fullAddress = this.generateAddress(currentSeed);
+      if (fullAddress.address !== address.address) {
+        return new Error('addresses don\'t match');
+      }
+      address.next_seed = fullAddress.next_seed;
+      address.secret_key = fullAddress.secret_key;
+      address.public_key = fullAddress.public_key;
+      currentSeed = fullAddress.next_seed;
+    });
+
+    this.updateWallet(wallet);
+  }
+
   private addWallet(wallet) {
     this.all.first().subscribe(wallets => {
       wallets.push(wallet);
