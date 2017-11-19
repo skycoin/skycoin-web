@@ -1,8 +1,6 @@
-# Skycoin desktop client
+# Skycoin web client
 
-The Skycoin wallet ships with a web interface which can be ran from the browser and/or Electron.
-
-The project contains both the source (src) and target (dist) files of this web interface.
+The Skycoin web client provides a lite browser wallet, which can be ran from the browser, using a full node exposing selected back-end functions.
 
 ## Prerequisites
 
@@ -24,18 +22,10 @@ To compile new target files, you will have to run: `npm run build`
 
 ## Development server
 
-Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. 
 
-Please note that you will most likely receive CORS errors as there's a difference between the port number of the source and destination.
+## Back-end
 
-As a work-around, the development server will create a proxy from `http://localhost:4200/api` to `http://127.0.0.1:6420/`.
-
-You can route all calls to this address by changing the url property on the ApiService class.
-
-## Purchase API (teller)
-
-Please note that at the moment the Purchase API (teller) is both offline and not supporting CORS headers.
-
-While event.skycoin.net is not working, we will have to run the purchase API locally.
-
-Similar as the solution for the above CORS issue, you can circumvent CORS issues by changing the url property to '/teller/'
+As this is a lite client, it requires a back-end to retrieve the blockchain state and inject new transactions. For this
+purpose a full node has been set up at `http://128.199.57.221`. At the moment this requires a mapping API, but in the
+future any node can do this.
