@@ -5,8 +5,8 @@
     <h4 md-line>{{address.address}} - {{ address.balance ? address.balance : 0 }} Sky ({{ address.hours ? address.hours : 0 }} Coin Hours)</h4>
   </md-list-item>
   <div class="button-line">
-    <a md-raised-button color="primary" (click)="unlockWallet()">Unlock wallet</a>
+    <a md-raised-button color="primary" (click)="unlockWallet()" [disabled]="wallet.seed">Unlock wallet</a>
     <a md-raised-button color="primary" (click)="renameWallet()">Rename wallet</a>
-    <a md-raised-button color="primary" (click)="addAddress()">Add address</a>
+    <a md-raised-button color="primary" (click)="addAddress()" [disabled]="!wallet.seed">Add address</a>
   </div>
 </md-list>
