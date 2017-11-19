@@ -1,17 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { GetOutputsRequest, Output } from '../app.datatypes';
 
 @Injectable()
 export class ApiService {
 
-  // private url = 'http://127.0.0.1:6420/'; // production
-  private url = '/api/'; // test
+  private url = 'http://128.199.57.221/';
 
   constructor(private http: Http) { }
+
+  getOutputs(addresses): Observable<Output[]> {
+    return addresses ? this.get('outputs', { addresses: addresses }).map((response: GetOutputsRequest) => {
+      const outputs: Output[] = [];
+      response.head_outputs.forEach(output => outputs.push({
+        address: output.address,
+        coins: parseFloat(output.coins),
+        hours: output.hours,
+      }));
+      return outputs;
+    }) : Observable.of([]);
+  }
 
   get(url, options = null) {
     return this.http.get(this.getUrl(url, options), this.getHeaders())
@@ -31,7 +44,7 @@ export class ApiService {
     return headers;
   }
 
-  returnRequestOptions() {
+  private returnRequestOptions() {
     const options = new RequestOptions();
 
     options.headers = this.getHeaders();
@@ -44,7 +57,7 @@ export class ApiService {
       return '';
     }
 
-    return Object.keys(parameters).reduce((array,key) => {
+    return Object.keys(parameters).reduce((array, key) => {
       array.push(key + '=' + encodeURIComponent(parameters[key]));
       return array;
     }, []).join('&');
