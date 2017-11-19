@@ -27,15 +27,23 @@ function ascii_to_hexa(str) {
 export class WalletService {
   recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   transactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
-  wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
+
+  private wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
+
+  get addresses(): Observable<any[]> {
+    return this.all.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
+  }
 
   get all(): Observable<Wallet[]> {
-    return this.wallets.asObservable();
+    return this.wallets.asObservable().map(wallets => wallets ? wallets : []);
   }
 
   constructor(
     private apiService: ApiService
-  ) {}
+  ) {
+    this.loadWallets();
+    this.loadBalances();
+  }
 
   addAddress(wallet: Wallet) {
     const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
@@ -70,7 +78,41 @@ export class WalletService {
     };
   }
 
+  private loadBalances() {
+    this.addresses.first().subscribe(addresses => {
+      const stringified = addresses.map(address => address.address).join(',');
+      this.apiService.getOutputs(stringified).subscribe(outputs => {
+        this.all.first().subscribe(wallets => {
+          wallets.forEach(wallet => {
+            wallet.addresses.forEach(address => {
+              const output = outputs.find(o => address.address === o.address);
+              if (output) {
+                address.balance = address.balance >= 0 ? address.balance + output.coins : output.coins;
+                address.hours = address.hours >= 0 ? address.hours + output.hours : output.hours;
+              }
+            });
+            wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
+            wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0).reduce((a , b) => a + b, 0);
+          });
+          this.saveWallets(wallets);
+        });
+      });
+    });
+  }
+
+  private loadWallets() {
+    const wallets = JSON.parse(localStorage.getItem('wallets'));
+    this.wallets.next(wallets);
+  }
+
   private saveWallets(wallets) {
+    const strippedWallets: Wallet[] = [];
+    wallets.forEach(wallet => {
+      const strippedAddresses: Address[] = [];
+      wallet.addresses.forEach(address => strippedAddresses.push({ address: address.address }));
+      strippedWallets.push({ label: wallet.label, addresses: strippedAddresses });
+    });
+    localStorage.setItem('wallets', JSON.stringify(strippedWallets));
     this.wallets.next(wallets);
   }
 
@@ -92,10 +134,6 @@ export class WalletService {
         return a;
       }, []).join(',');
     }).join(','));
-  }
-
-  allAddresses(): Observable<any[]> {
-    return this.all.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
   }
 
 
