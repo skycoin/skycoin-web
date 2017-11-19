@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { WalletModel } from '../models/wallet.model';
 import { Observable } from 'rxjs/Observable';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -20,11 +19,8 @@ export class WalletService {
 
   constructor(
     private apiService: ApiService
-  ) {
-    // this.loadData();
-    // IntervalObservable
-    //   .create(30000)
-    //   .subscribe(() => this.refreshBalances());
+  ) {}
+
   }
 
   addressesAsString(): Observable<string> {
@@ -64,9 +60,6 @@ export class WalletService {
     return this.apiService.get('wallets/folderName').map(response => response.address);
   }
 
-  generateSeed(): Observable<string> {
-    return this.apiService.get('wallet/newSeed').map(response => response.seed);
-  }
 
   history(): Observable<any[]> {
     return this.transactions.asObservable();
@@ -139,15 +132,6 @@ export class WalletService {
     });
   }
 
-  private loadData(): void {
-    this.retrieveWallets().first().subscribe(wallets => {
-      this.wallets.next(wallets);
-      this.refreshBalances();
-      // this.retrieveHistory();
-      this.retrieveTransactions();
-    });
-  }
-
   private retrieveAddressBalance(address: any|any[]) {
     const addresses = Array.isArray(address) ? address.map(address => address.address).join(',') : address.address;
     return this.apiService.get('balance', {addrs: addresses});
@@ -186,10 +170,6 @@ export class WalletService {
   private retrieveWalletTransactions(wallet: WalletModel) {
     return Observable.forkJoin(wallet.entries.map(address => this.retrieveAddressTransactions(address)))
       .map(addresses => [].concat.apply([], addresses));
-  }
-
-  private retrieveWalletUnconfirmedTransactions(wallet: WalletModel) {
-    return this.apiService.get('wallet/transactions', {id: wallet.meta.filename});
   }
 
   private retrieveWallets(): Observable<WalletModel[]> {
