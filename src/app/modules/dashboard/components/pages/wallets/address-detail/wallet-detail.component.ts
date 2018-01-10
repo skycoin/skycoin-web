@@ -3,8 +3,8 @@ import { WalletService } from '../../../../services/wallet.service';
 import { MdDialog, MdDialogConfig } from '@angular/material';
 import { ChangeNameComponent } from '../change-name/change-name.component';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
-import { Wallet } from '../../../../app.datatypes';
 import { UnlockWalletComponent } from '../unlock-wallet/unlock-wallet.component';
+import {Wallet} from '../../../../../../app.datatypes';
 
 @Component({
   selector: 'app-wallet-detail',

@@ -3,13 +3,13 @@ import { WalletService } from '../../../services/wallet.service';
 import { MdDialog, MdDialogConfig } from '@angular/material';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 
+
 @Component({
   selector: 'app-wallets',
   templateUrl: './wallets.component.html',
   styleUrls: ['./wallets.component.css']
 })
 export class WalletsComponent {
-
   constructor(
     public walletService: WalletService,
     private dialog: MdDialog,

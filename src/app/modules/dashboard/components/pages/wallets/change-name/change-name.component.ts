@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { WalletService } from '../../../../services/wallet.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
-import { Wallet } from '../../../../app.datatypes';
+import {Wallet} from '../../../../../../app.datatypes';
 
 @Component({
   selector: 'app-change-name',

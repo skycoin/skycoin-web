@@ -5,7 +5,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { GetOutputsRequest, Output } from '../app.datatypes';
+import { GetOutputsRequest, Output } from '../../../app.datatypes';
 
 @Injectable()
 export class ApiService {

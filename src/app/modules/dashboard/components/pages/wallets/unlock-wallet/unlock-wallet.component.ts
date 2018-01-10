@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
-import { Wallet } from '../../../../app.datatypes';
+import { Wallet } from '../../../../../../app.datatypes';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletService } from '../../../../services/wallet.service';
 

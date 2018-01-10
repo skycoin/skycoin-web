@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PurchaseService } from '../../../services/purchase.service';
 import { MdDialog, MdDialogConfig } from '@angular/material';
 import { AddDepositAddressComponent } from './add-deposit-address/add-deposit-address.component';
-import { config } from '../../../app.config';
+import { config } from '../../../dashboard.config';
 
 @Component({
   selector: 'app-buy',

@@ -10,7 +10,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
-import { Address, Output, TransactionInput, TransactionOutput, Wallet } from '../app.datatypes';
+import { Address, Output, TransactionInput, TransactionOutput, Wallet } from '../../../app.datatypes';
 
 declare var Cipher;
 
