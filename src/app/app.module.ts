@@ -46,6 +46,7 @@ import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/
 import {HeaderComponent} from './components/layout/header/header.component';
 import {NavBarComponent} from './components/layout/header/nav-bar/nav-bar.component';
 import {PriceService} from './services/price.service';
+import {TopBarComponent} from './components/layout/header/top-bar/top-bar.component';
 
 const ROUTES = [
   {
@@ -199,7 +200,8 @@ const ROUTES = [
     TellerStatusPipe,
     UnlockWalletComponent,
     HeaderComponent,
-    NavBarComponent
+    NavBarComponent,
+    TopBarComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
