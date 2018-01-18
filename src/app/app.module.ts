@@ -43,6 +43,16 @@ import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-a
 import { PurchaseService } from './services/purchase.service';
 import { TellerStatusPipe } from './pipes/teller-status.pipe';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
+import { OnboardingCreateWalletComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
+import {
+  OnboardingEncryptWalletComponent
+} from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
+import {
+  OnboardingDisclaimerComponent
+} from './components/pages/onboarding/onboarding-create-wallet/onboarding-disclaimer/onboarding-disclaimer.component';
+import {
+  OnboardingSafeguardComponent
+} from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
 
 const ROUTES = [
   {
@@ -195,6 +205,10 @@ const ROUTES = [
     AddDepositAddressComponent,
     TellerStatusPipe,
     UnlockWalletComponent,
+    OnboardingCreateWalletComponent,
+    OnboardingEncryptWalletComponent,
+    OnboardingDisclaimerComponent,
+    OnboardingSafeguardComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
