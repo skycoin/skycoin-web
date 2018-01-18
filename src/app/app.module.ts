@@ -43,6 +43,9 @@ import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-a
 import { PurchaseService } from './services/purchase.service';
 import { TellerStatusPipe } from './pipes/teller-status.pipe';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
+import {HeaderComponent} from './components/layout/header/header.component';
+import {NavBarComponent} from './components/layout/header/nav-bar/nav-bar.component';
+import {PriceService} from './services/price.service';
 
 const ROUTES = [
   {
@@ -195,6 +198,8 @@ const ROUTES = [
     AddDepositAddressComponent,
     TellerStatusPipe,
     UnlockWalletComponent,
+    HeaderComponent,
+    NavBarComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -233,6 +238,7 @@ const ROUTES = [
     NetworkService,
     PurchaseService,
     WalletService,
+    PriceService
   ],
   bootstrap: [AppComponent]
 })

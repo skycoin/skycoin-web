@@ -1,3 +1,4 @@
+
 export interface Wallet {
   label: string;
   addresses: Address[];

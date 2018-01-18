@@ -28,7 +28,7 @@ export class WalletService {
   recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   transactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
 
-  private wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
+  wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
 
   get addresses(): Observable<any[]> {
     return this.all.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
