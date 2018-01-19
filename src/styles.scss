@@ -142,6 +142,14 @@ md-panel-title {
 .form-field {
   margin-bottom: 20px;
 
+  label {
+    color: #1e2227;
+    display: block;
+    font-size: 13px;
+    line-height: 10px;
+    margin-bottom: 10px;
+  }
+
   input {
     border: 2px solid rgba(0, 0, 0, 0.05);
     border-radius: 6px;
@@ -187,6 +195,19 @@ md-panel-title {
   }
 }
 
+.dark button.enabled {
+  background-color: $black !important;
+  span {
+    color: white;
+  }
+}
+.ghost button.enabled {
+  background-color: $transparent !important;
+  span {
+    color: black;
+  }
+}
+
 /**
 On-boarding components
  */
@@ -199,6 +220,10 @@ On-boarding components
   background: -o-linear-gradient(bottom right, $gradient-blue-dark, $gradient-blue-light); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(bottom right, $gradient-blue-dark, $gradient-blue-light); /* For Firefox 3.6 to 15 */
   background: linear-gradient(to bottom right, $gradient-blue-dark, $gradient-blue-light); /* Standard syntax */
+
+  label {
+    color: white;
+  }
 }
 /**
 General Helpers

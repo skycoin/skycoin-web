@@ -173,6 +173,24 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: 'wizard',
+    children: [
+      {
+        path: '',
+        redirectTo: 'create',
+        pathMatch: 'full'
+      },
+      {
+        path: 'create',
+        component: OnboardingCreateWalletComponent
+      },
+      {
+        path: 'encrypt',
+        component: OnboardingEncryptWalletComponent
+      }
+    ]
+  }
 ];
 
 @NgModule({
