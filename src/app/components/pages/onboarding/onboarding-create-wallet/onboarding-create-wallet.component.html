@@ -5,19 +5,18 @@
         <span>Create a Wallet</span>
       </div>
       <div class="-description">
-                <span>
+                <p>
           If you don't have a Skycoin wallet, use the generated seed to create a new one.
           If you already have a wallet, toggle over to "Load Wallet" and enter your seed.
 
-        </span>
+        </p>
       </div>
 
     </div>
   </div>
   <div class="row justify-content-center">
-    <div class="col-sm-4 -text-align-center">
-      toggle buttons
-      <!--<app-radio-group-button (onClick)="onRadioGroupClick($event)"></app-radio-group-button>-->
+    <div class="col-sm-4 -toggle-container">
+     <app-double-button right_button_text="Load" left_button_text="New" [active_button]="doubleButtonActive" (onStateChange)="changeForm($event)"></app-double-button>
     </div>
   </div>
   <div class="row justify-content-center">

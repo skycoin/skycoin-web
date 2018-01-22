@@ -24,6 +24,9 @@
   align-items: center;
   flex-flow: column;
 }
+.-toggle-container{
+  margin: 10px auto;
+}
 
 :host ::ng-deep .-buttons-footer button{
   margin: 2px 10px !important;

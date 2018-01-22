@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {DoubleButtonActive} from '../../../layout/double-button/double-button.component';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -9,6 +10,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 export class OnboardingCreateWalletComponent implements OnInit {
   showNewForm = true;
   form: FormGroup;
+  doubleButtonActive = DoubleButtonActive.LeftButton;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -28,8 +30,12 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.form.valueChanges.subscribe(data => this.onValueChanged(data));
   }
 
-  changeForm(status) {
-    this.showNewForm = status;
+  changeForm(newState) {
+    if (newState === DoubleButtonActive.RightButton) {
+      this.showNewForm = false;
+    } else {
+      this.showNewForm = true;
+    }
     this.initWalletForm();
   }
 
