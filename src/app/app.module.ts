@@ -1,7 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {
-  MdButtonModule, MdCardModule, MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule,
+  MdButtonModule, MdCardModule, MdCheckbox, MdCheckboxModule, MdDialogModule, MdExpansionModule, MdGridListModule,
+  MdIconModule,
+  MdInputModule,
   MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
   MdSelectModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
 } from '@angular/material';
@@ -54,6 +56,7 @@ import {
   OnboardingSafeguardComponent
 } from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
 import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
+import {ModalComponent} from './components/layout/modal/modal.component';
 
 const ROUTES = [
   {
@@ -229,6 +232,7 @@ const ROUTES = [
     OnboardingDisclaimerComponent,
     OnboardingSafeguardComponent,
     DoubleButtonComponent,
+    ModalComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -236,6 +240,7 @@ const ROUTES = [
     ChangeNameComponent,
     QrCodeComponent,
     UnlockWalletComponent,
+    OnboardingDisclaimerComponent
   ],
   imports: [
     BrowserModule,
@@ -256,6 +261,7 @@ const ROUTES = [
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
+    MdCheckboxModule,
     NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,

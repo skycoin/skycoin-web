@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DoubleButtonActive} from '../../../layout/double-button/double-button.component';
+import {MdDialogConfig, MdDialog} from '@angular/material';
+import {OnboardingDisclaimerComponent} from './onboarding-disclaimer/onboarding-disclaimer.component';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -12,7 +14,8 @@ export class OnboardingCreateWalletComponent implements OnInit {
   form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private dialog: MdDialog) {
   }
 
   ngOnInit() {
@@ -45,6 +48,13 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   onSubmit(values) {
 
+  }
+
+  showDisclaimer() {
+    const config = new MdDialogConfig();
+    config.width = '400px';
+    this.dialog.open(OnboardingDisclaimerComponent, config).afterClosed().subscribe(result => {
+    });
   }
 
 }

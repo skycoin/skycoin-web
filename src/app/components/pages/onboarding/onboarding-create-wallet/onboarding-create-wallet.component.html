@@ -38,7 +38,7 @@
     </div>
   </div>
   <div class="row -buttons-footer">
-    <app-button class="dark -button-min-margin" [disabled]="!form.valid">
+    <app-button class="dark -button-min-margin" [disabled]="!form.valid" (action)="showDisclaimer()">
       Create
     </app-button>
     <app-button class="ghost -button-min-margin">
