@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -8,13 +8,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 export class ButtonComponent {
   @Input() disabled: any;
+  @Input() emit = false;
   @Output() action = new EventEmitter();
 
   error: string;
   state: number;
 
   onClick() {
-    if (!this.disabled) {
+    if (!this.disabled || this.emit) {
       this.action.emit();
     }
   }

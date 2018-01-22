@@ -53,6 +53,7 @@ import {
 import {
   OnboardingSafeguardComponent
 } from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
+import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
 
 const ROUTES = [
   {
@@ -227,6 +228,7 @@ const ROUTES = [
     OnboardingEncryptWalletComponent,
     OnboardingDisclaimerComponent,
     OnboardingSafeguardComponent,
+    DoubleButtonComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
