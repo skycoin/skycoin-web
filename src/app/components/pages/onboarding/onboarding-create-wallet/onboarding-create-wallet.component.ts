@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DoubleButtonActive} from '../../../layout/double-button/double-button.component';
 import {MdDialogConfig, MdDialog} from '@angular/material';
 import {OnboardingDisclaimerComponent} from './onboarding-disclaimer/onboarding-disclaimer.component';
+import {OnboardingSafeguardComponent} from './onboarding-safeguard/onboarding-safeguard.component';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -52,9 +53,14 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   showDisclaimer() {
     const config = new MdDialogConfig();
-    config.width = '400px';
+    config.width = '450px';
     this.dialog.open(OnboardingDisclaimerComponent, config).afterClosed().subscribe(result => {
     });
   }
-
+  showSafe() {
+    const config = new MdDialogConfig();
+    config.width = '450px';
+    this.dialog.open(OnboardingSafeguardComponent, config).afterClosed().subscribe(result => {
+    });
+  }
 }

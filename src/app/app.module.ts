@@ -240,7 +240,8 @@ const ROUTES = [
     ChangeNameComponent,
     QrCodeComponent,
     UnlockWalletComponent,
-    OnboardingDisclaimerComponent
+    OnboardingDisclaimerComponent,
+    OnboardingSafeguardComponent
   ],
   imports: [
     BrowserModule,
