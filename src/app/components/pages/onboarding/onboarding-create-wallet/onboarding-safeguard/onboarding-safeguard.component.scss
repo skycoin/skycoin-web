@@ -7,10 +7,12 @@
   mix-blend-mode: normal;
   opacity: 0.8;
 }
-.-check-container{
+
+.-check-container {
   text-align: center;
   margin-top: 50px;
 }
+
 .-safe-check-text {
   font-family: Skycoin;
   line-height: normal;
@@ -49,15 +51,15 @@
   text-align: center;
 }
 
-.-no-bottom-margin ::ng-deep button{
+.-no-bottom-margin ::ng-deep button {
   margin: 28px 10px 0 10px !important;
 }
-.-title{
+
+.-title {
   font-family: Skycoin;
   line-height: 30px;
   font-size: 14px;
   text-align: center;
   letter-spacing: 0.0769231em;
-
   color: #FF004E;
 }
