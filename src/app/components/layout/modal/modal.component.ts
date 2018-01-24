@@ -9,8 +9,11 @@ import { MdDialogRef } from '@angular/material';
 export class ModalComponent {
   @Input() dialog: MdDialogRef<any>;
   @Input() title: string;
+  @Input() disableDismiss: boolean;
 
   closePopup() {
-    this.dialog.close();
+    if (!this.disableDismiss) {
+      this.dialog.close();
+    }
   }
 }

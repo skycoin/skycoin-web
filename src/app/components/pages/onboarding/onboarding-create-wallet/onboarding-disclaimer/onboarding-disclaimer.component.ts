@@ -17,7 +17,9 @@ export class OnboardingDisclaimerComponent implements OnInit {
   }
 
   closePopup() {
-    this.dialogRef.close(this.acceptTerms);
+    if (this.acceptTerms) {
+      this.dialogRef.close(this.acceptTerms);
+    }
   }
 
   setAccept(event) {
