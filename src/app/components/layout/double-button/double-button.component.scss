@@ -10,6 +10,7 @@
 }
 
 .-toggle ::ng-deep button {
+  box-shadow: unset;
   background-color: $transparent !important;
   line-height: unset !important;
   min-height: 26px;
@@ -32,4 +33,5 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 100px;
   margin: 0px auto;
+  text-align: center;
 }
