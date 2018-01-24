@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PriceService } from '../../../services/price.service';
 import { Subscription } from 'rxjs/Subscription';
+import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   @Input() title: string;
@@ -18,7 +18,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private walletSubscription: Subscription;
 
   get balance() {
-    if (this.price === null) return 'loading..';
+    if (this.price === null) {
+      return 'loading..';
+    }
     const balance = Math.round(this.coins * this.price * 100) / 100;
     return '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100) + ')';
   }
