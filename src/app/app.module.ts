@@ -1,54 +1,60 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 import {
   MdButtonModule, MdCardModule, MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule,
   MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
-  MdSelectModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule
+  MdSelectModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule,
 } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AppComponent } from './app.component';
-import { HttpModule } from '@angular/http';
-import { ApiService } from './services/api.service';
-import { WalletService } from './services/wallet.service';
-import { WalletsComponent } from './components/pages/wallets/wallets.component';
-import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
-import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SkyPipe } from './pipes/sky.pipe';
-import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skycoin.component';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { HistoryComponent } from './components/pages/history/history.component';
-import { DateFromNowPipe } from './pipes/date-from-now.pipe';
 import { RouterModule } from '@angular/router';
-import { BreadcrumbComponent } from './components/layout/breadcrumb/breadcrumb.component';
-import { TransactionComponent } from './components/pages/transaction/transaction.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { AppComponent } from './app.component';
 import { BackButtonComponent } from './components/layout/back-button/back-button.component';
-import { ExplorerComponent } from './components/pages/explorer/explorer.component';
-import { BlockchainService } from './services/blockchain.service';
-import { DateTimePipe } from './pipes/date-time.pipe';
-import { TransactionsAmountPipe } from './pipes/transactions-amount.pipe';
-import { BlockComponent } from './components/pages/block/block.component';
-import { AddressComponent } from './components/pages/address/address.component';
-import { PendingTransactionsComponent } from './components/pages/settings/pending-transactions/pending-transactions.component';
-import { OutputsComponent } from './components/pages/settings/outputs/outputs.component';
-import { BlockchainComponent } from './components/pages/settings/blockchain/blockchain.component';
-import { BackupComponent } from './components/pages/settings/backup/backup.component';
-import { NetworkComponent } from './components/pages/settings/network/network.component';
-import { NetworkService } from './services/network.service';
-import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
+import { BreadcrumbComponent } from './components/layout/breadcrumb/breadcrumb.component';
 import { ButtonComponent } from './components/layout/button/button.component';
+import { HeaderComponent } from './components/layout/header/header.component';
+import { NavBarComponent } from './components/layout/header/nav-bar/nav-bar.component';
+import { TopBarComponent } from './components/layout/header/top-bar/top-bar.component';
 import { QrCodeComponent } from './components/layout/qr-code/qr-code.component';
-import { BuyComponent } from './components/pages/buy/buy.component';
+import { AddressComponent } from './components/pages/address/address.component';
+import { BlockComponent } from './components/pages/block/block.component';
 import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-address/add-deposit-address.component';
-import { PurchaseService } from './services/purchase.service';
-import { TellerStatusPipe } from './pipes/teller-status.pipe';
+import { BuyComponent } from './components/pages/buy/buy.component';
+import { ExplorerComponent } from './components/pages/explorer/explorer.component';
+import { HistoryComponent } from './components/pages/history/history.component';
+import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skycoin.component';
+import { BackupComponent } from './components/pages/settings/backup/backup.component';
+import { BlockchainComponent } from './components/pages/settings/blockchain/blockchain.component';
+import { NetworkComponent } from './components/pages/settings/network/network.component';
+import { OutputsComponent } from './components/pages/settings/outputs/outputs.component';
+import {
+  PendingTransactionsComponent,
+} from './components/pages/settings/pending-transactions/pending-transactions.component';
+import { TransactionComponent } from './components/pages/transaction/transaction.component';
+import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
+import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
+import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
+import { WalletsComponent } from './components/pages/wallets/wallets.component';
+import { DateFromNowPipe } from './pipes/date-from-now.pipe';
+import { DateTimePipe } from './pipes/date-time.pipe';
+import { SkyPipe } from './pipes/sky.pipe';
+import { TellerStatusPipe } from './pipes/teller-status.pipe';
+import { TransactionsAmountPipe } from './pipes/transactions-amount.pipe';
+import { ApiService } from './services/api.service';
+import { BlockchainService } from './services/blockchain.service';
+import { NetworkService } from './services/network.service';
+import { PriceService } from './services/price.service';
+import { PurchaseService } from './services/purchase.service';
+import { WalletService } from './services/wallet.service';
 
 const ROUTES = [
   {
     path: '',
     redirectTo: 'wallets',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'wallets',
@@ -195,6 +201,9 @@ const ROUTES = [
     AddDepositAddressComponent,
     TellerStatusPipe,
     UnlockWalletComponent,
+    HeaderComponent,
+    NavBarComponent,
+    TopBarComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -233,7 +242,8 @@ const ROUTES = [
     NetworkService,
     PurchaseService,
     WalletService,
+    PriceService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

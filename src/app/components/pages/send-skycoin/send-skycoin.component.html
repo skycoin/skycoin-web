@@ -1,3 +1,6 @@
+
+<div class="sky-container sky-container-grey">
+  <app-header title="Wallets"></app-header>
 <md-card [formGroup]="form" class="send-skycoin-form">
   <md-select formControlName="wallet" placeholder="Select Wallet" class="input-field">
     <md-option *ngFor="let wallet of walletService.all | async" [value]="wallet" [disabled]="wallet.balance <= 0 || !wallet.seed">
@@ -41,3 +44,4 @@
     <!--<ngx-datatable-column name="Amount" [flexGrow]="1"></ngx-datatable-column>-->
   <!--</ngx-datatable>-->
 <!--</md-card>-->
+</div>
