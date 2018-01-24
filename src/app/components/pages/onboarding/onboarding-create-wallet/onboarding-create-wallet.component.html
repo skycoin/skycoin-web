@@ -5,7 +5,7 @@
         <span>Create a Wallet</span>
       </div>
       <div class="-description">
-                <p>
+        <p>
           If you don't have a Skycoin wallet, use the generated seed to create a new one.
           If you already have a wallet, toggle over to "Load Wallet" and enter your seed.
 
@@ -16,15 +16,16 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-sm-4 -toggle-container">
-     <app-double-button right_button_text="Load" left_button_text="New" [active_button]="doubleButtonActive" (onStateChange)="changeForm($event)"></app-double-button>
+      <app-double-button right_button_text="Load" left_button_text="New" [active_button]="doubleButtonActive"
+                         (onStateChange)="changeForm($event)"></app-double-button>
     </div>
   </div>
   <div class="row justify-content-center">
     <div class="col-sm-4">
-      <form [formGroup]="form" (submit)='onSubmit(form.value)'>
+      <form [formGroup]="form">
         <div class="form-field">
-          <label for="name">Name</label>
-          <input formControlName="name" id="name">
+          <label for="label">Name</label>
+          <input formControlName="label" id="label">
         </div>
         <div class="form-field">
           <label for="seed">Seed</label>
@@ -32,13 +33,14 @@
         </div>
         <div class="form-field" [style.visibility]="showNewForm?'visible':'hidden'">
           <label for="confirm_seed">Confirm seed</label>
-          <textarea formControlName="confirmSeed" class="form-control" id="confirm_seed" rows="2"></textarea>
+          <textarea formControlName="confirm_seed" class="form-control" id="confirm_seed" rows="2"></textarea>
         </div>
       </form>
     </div>
   </div>
   <div class="row -buttons-footer">
-    <app-button class="dark -button-min-margin" [disabled]="!form.valid" (action)="showDisclaimer()">
+    <app-button class="dark -button-min-margin" [disabled]="!form.valid"
+                (action)="showNewForm?createWallet():loadWallet()">
       Create
     </app-button>
     <app-button class="ghost -button-min-margin">
