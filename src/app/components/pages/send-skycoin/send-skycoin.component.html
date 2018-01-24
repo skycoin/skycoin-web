@@ -1,6 +1,6 @@
 <md-card [formGroup]="form" class="send-skycoin-form">
   <md-select formControlName="wallet" placeholder="Select Wallet" class="input-field">
-    <md-option *ngFor="let wallet of walletService.all | async" [value]="wallet" [disabled]="wallet.balance <= 0 || !wallet.seed">
+    <md-option *ngFor="let wallet of walletService.all() | async" [value]="wallet" [disabled]="wallet.balance <= 0 || !wallet.seed">
       <i class="fa fa-lock" *ngIf="!wallet.seed"></i> {{ wallet.label }} ({{ wallet.balance }}) Sky
     </md-option>
   </md-select>
