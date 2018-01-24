@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { WalletService } from './services/wallet.service';
-import { BlockchainService } from './services/blockchain.service';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import 'rxjs/add/operator/takeWhile';
-import { ApiService } from './services/api.service';
+import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { config } from './app.config';
+import { ApiService } from './services/api.service';
+import { BlockchainService } from './services/blockchain.service';
+import { WalletService } from './services/wallet.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
 
@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
   }
 
   loading() {
-    return !this.current || !this.highest || this.current != this.highest;
+    return !this.current || !this.highest || this.current !== this.highest;
   }
 
   private completeLoading() {
