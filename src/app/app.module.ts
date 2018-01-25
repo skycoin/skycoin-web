@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {
-  MdButtonModule, MdCardModule, MdCheckbox, MdCheckboxModule, MdDialogModule, MdExpansionModule, MdGridListModule,
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdExpansionModule, MdGridListModule,
   MdIconModule,
   MdInputModule,
   MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
@@ -16,9 +16,11 @@ import { AppComponent } from './app.component';
 import { BackButtonComponent } from './components/layout/back-button/back-button.component';
 import { BreadcrumbComponent } from './components/layout/breadcrumb/breadcrumb.component';
 import { ButtonComponent } from './components/layout/button/button.component';
+import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
 import { HeaderComponent } from './components/layout/header/header.component';
 import { NavBarComponent } from './components/layout/header/nav-bar/nav-bar.component';
 import { TopBarComponent } from './components/layout/header/top-bar/top-bar.component';
+import { ModalComponent } from './components/layout/modal/modal.component';
 import { QrCodeComponent } from './components/layout/qr-code/qr-code.component';
 import { AddressComponent } from './components/pages/address/address.component';
 import { BlockComponent } from './components/pages/block/block.component';
@@ -26,6 +28,18 @@ import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-a
 import { BuyComponent } from './components/pages/buy/buy.component';
 import { ExplorerComponent } from './components/pages/explorer/explorer.component';
 import { HistoryComponent } from './components/pages/history/history.component';
+import {
+  OnboardingCreateWalletComponent,
+} from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
+import {
+  OnboardingDisclaimerComponent,
+} from './components/pages/onboarding/onboarding-create-wallet/onboarding-disclaimer/onboarding-disclaimer.component';
+import {
+  OnboardingSafeguardComponent,
+} from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
+import {
+  OnboardingEncryptWalletComponent,
+} from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
 import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skycoin.component';
 import { BackupComponent } from './components/pages/settings/backup/backup.component';
 import { BlockchainComponent } from './components/pages/settings/blockchain/blockchain.component';
@@ -51,23 +65,11 @@ import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
-import { OnboardingCreateWalletComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
-import {
-  OnboardingEncryptWalletComponent
-} from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
-import {
-  OnboardingDisclaimerComponent
-} from './components/pages/onboarding/onboarding-create-wallet/onboarding-disclaimer/onboarding-disclaimer.component';
-import {
-  OnboardingSafeguardComponent
-} from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
-import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
-import { ModalComponent } from './components/layout/modal/modal.component';
 
 const ROUTES = [
   {
     path: '',
-    redirectTo: 'wallets',
+    redirectTo: 'wizard',
     pathMatch: 'full',
   },
   {
@@ -189,18 +191,18 @@ const ROUTES = [
       {
         path: '',
         redirectTo: 'create',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'create',
-        component: OnboardingCreateWalletComponent
+        component: OnboardingCreateWalletComponent,
       },
       {
         path: 'encrypt',
-        component: OnboardingEncryptWalletComponent
-      }
-    ]
-  }
+        component: OnboardingEncryptWalletComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
@@ -241,7 +243,7 @@ const ROUTES = [
     OnboardingDisclaimerComponent,
     OnboardingSafeguardComponent,
     DoubleButtonComponent,
-    ModalComponent
+    ModalComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -250,7 +252,7 @@ const ROUTES = [
     QrCodeComponent,
     UnlockWalletComponent,
     OnboardingDisclaimerComponent,
-    OnboardingSafeguardComponent
+    OnboardingSafeguardComponent,
   ],
   imports: [
     BrowserModule,

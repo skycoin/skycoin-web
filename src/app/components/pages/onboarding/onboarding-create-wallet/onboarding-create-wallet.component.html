@@ -16,7 +16,7 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-sm-4 -toggle-container">
-      <app-double-button right_button_text="Load" left_button_text="New" [active_button]="doubleButtonActive"
+      <app-double-button rightButtonText="Load" leftButtonText="New" [activeButton]="doubleButtonActive"
                          (onStateChange)="changeForm($event)"></app-double-button>
     </div>
   </div>
@@ -43,7 +43,7 @@
                 (action)="showNewForm?createWallet():loadWallet()">
       Create
     </app-button>
-    <app-button class="ghost -button-min-margin">
+    <app-button class="ghost -button-min-margin" (action)="skip()">
       Skip
     </app-button>
   </div>

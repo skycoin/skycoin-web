@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-onboarding-encrypt-wallet',
   templateUrl: './onboarding-encrypt-wallet.component.html',
-  styleUrls: ['./onboarding-encrypt-wallet.component.scss']
+  styleUrls: ['./onboarding-encrypt-wallet.component.scss'],
 })
 export class OnboardingEncryptWalletComponent implements OnInit {
   encryptWallet = false;
@@ -20,7 +20,13 @@ export class OnboardingEncryptWalletComponent implements OnInit {
   initEncryptForm() {
     this.form = this.formBuilder.group({
       password: new FormControl('', Validators.compose([Validators.required, Validators.minLength(2)])),
-      confirm: new FormControl('', Validators.compose([Validators.required, Validators.minLength(2)])),
+      confirm: new FormControl('',
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(2),
+          this.validateAreEqual.bind(this),
+        ]),
+      ),
     });
     this.form.valueChanges.subscribe(data => this.onValueChanged(data));
     this.form.disable();
@@ -39,7 +45,7 @@ export class OnboardingEncryptWalletComponent implements OnInit {
 
   }
 
-  onSubmit(values) {
-
+  private validateAreEqual(fieldControl: FormControl) {
+    return fieldControl.value === this.form.get('password').value ? null : { NotEqual: true };
   }
 }

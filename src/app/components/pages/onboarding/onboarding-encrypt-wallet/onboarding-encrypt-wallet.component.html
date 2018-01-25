@@ -22,7 +22,7 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-sm-4">
-      <form [formGroup]="form" (submit)='onSubmit(form.value)'>
+      <form [formGroup]="form">
         <div class="form-field">
           <label for="password">Password</label>
           <input class="-input" type="password"  formControlName="password" id="password" [ngClass]="{disable: !encryptWallet}">
