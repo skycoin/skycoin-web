@@ -1,5 +1,6 @@
-<md-expansion-panel *ngFor="let wallet of walletService.all() | async">
-  <md-expansion-panel-header>
+<div class="sky-container sky-container-grey">
+<app-header title="Wallets"></app-header>
+<md-expansion-panel *ngFor="let wallet of walletService.all() | async">  <md-expansion-panel-header>
     <md-panel-title>
       <i class="fa fa-lock" *ngIf="!wallet.seed"></i>
       <i class="fa fa-unlock" *ngIf="wallet.seed"></i>
@@ -13,4 +14,5 @@
 </md-expansion-panel>
 <div class="button-line">
   <a md-raised-button color="primary" (click)="addWallet()">Add wallet</a>
+</div>
 </div>
