@@ -92,7 +92,9 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
     config.width = '450px';
     config.disableClose = true;
     this.dialog.open(OnboardingSafeguardComponent, config).afterClosed().subscribe(result => {
-      this.skip();
+      if (result) {
+        this.skip();
+      }
     });
   }
 
