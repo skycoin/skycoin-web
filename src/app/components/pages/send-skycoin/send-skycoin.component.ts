@@ -16,11 +16,10 @@ export class SendSkycoinComponent implements OnInit {
   form: FormGroup;
   transactions = [];
 
-  constructor(
-    public formBuilder: FormBuilder,
-    public walletService: WalletService,
-    private snackbar: MdSnackBar,
-  ) {}
+  constructor(public formBuilder: FormBuilder,
+              public walletService: WalletService,
+              private snackbar: MdSnackBar) {
+  }
 
   ngOnInit() {
     this.initForm();

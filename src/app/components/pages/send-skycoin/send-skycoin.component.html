@@ -2,11 +2,10 @@
   <app-header title="Wallets"></app-header>
   <div class="container">
     <div [formGroup]="form" class="-paper">
-      <div class="row">
-        <div class="col-sm-12 col-lg-6">
           <div class="form-field">
             <label for="wallet">Send from</label>
-            <select formControlName="wallet" placeholder="Select Wallet" id="wallet">
+            <select formControlName="wallet" id="wallet">
+              <option value="" selected>Select Wallet</option>
               <option *ngFor="let wallet of walletService.all() | async"
                       [disabled]="wallet.balance <= 0 || !wallet.seed" [ngValue]="wallet">
                 {{ wallet.label }} — {{ wallet.balance }} SKY
@@ -17,22 +16,14 @@
             <label for="address">Send to</label>
             <input formControlName="address" id="address" placeholder="Recipient address">
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4 col-lg-2">
           <div class="form-field">
             <label for="amount">Amount</label>
             <input formControlName="amount" id="amount" placeholder="SKY">
           </div>
-        </div>
-        <div class="col-sm-8 col-lg-4">
           <div class="form-field">
             <label for="notes">Notes</label>
             <input formControlName="notes" id="notes" placeholder="Your note here">
           </div>
-        </div>
-      </div>
 
       <app-button #button (action)="send()" class="primary" [disabled]="!form.valid">
         Send
