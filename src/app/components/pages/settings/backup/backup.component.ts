@@ -20,7 +20,7 @@ export class BackupComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
-    this.walletService.all.subscribe(wallets => wallets.forEach(wallet => wallet.hidden = true));
+    this.walletService.all().subscribe(wallets => wallets.forEach(wallet => wallet.hidden = true));
   }
 
   download(wallet: WalletModel) {

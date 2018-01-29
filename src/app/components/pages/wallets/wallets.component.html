@@ -1,6 +1,6 @@
 <div class="sky-container sky-container-grey">
 <app-header title="Wallets"></app-header>
-<md-expansion-panel *ngFor="let wallet of walletService.all | async">
+<md-expansion-panel *ngFor="let wallet of walletService.all() | async">
   <md-expansion-panel-header>
     <md-panel-title>
       <i class="fa fa-lock" *ngIf="!wallet.seed"></i>
