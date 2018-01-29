@@ -65,7 +65,9 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
       ));
 
     this.form.valueChanges.subscribe(data => this.onValueChanged(data));
-    this.generateSeed();
+    if (this.showNewForm) {
+      this.generateSeed();
+    }
   }
 
   changeForm(newState) {
