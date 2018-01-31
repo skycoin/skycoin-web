@@ -17,6 +17,8 @@ import { ButtonComponent } from './components/layout/button/button.component';
 import { HeaderComponent } from './components/layout/header/header.component';
 import { NavBarComponent } from './components/layout/header/nav-bar/nav-bar.component';
 import { TopBarComponent } from './components/layout/header/top-bar/top-bar.component';
+import { ModalComponent } from './components/layout/modal/modal.component';
+import { ClipboardButtonComponent } from './components/layout/qr-code/clipboard-button/clipboard-button.component';
 import { QrCodeComponent } from './components/layout/qr-code/qr-code.component';
 import { AddressComponent } from './components/pages/address/address.component';
 import { BlockComponent } from './components/pages/block/block.component';
@@ -38,6 +40,7 @@ import { ChangeNameComponent } from './components/pages/wallets/change-name/chan
 import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { WalletsComponent } from './components/pages/wallets/wallets.component';
+import { ClipboardDirective } from './directives/clipboard.directive';
 import { DateFromNowPipe } from './pipes/date-from-now.pipe';
 import { DateTimePipe } from './pipes/date-time.pipe';
 import { SkyPipe } from './pipes/sky.pipe';
@@ -45,6 +48,7 @@ import { TellerStatusPipe } from './pipes/teller-status.pipe';
 import { TransactionsAmountPipe } from './pipes/transactions-amount.pipe';
 import { ApiService } from './services/api.service';
 import { BlockchainService } from './services/blockchain.service';
+import { ClipboardService } from './services/clipboard.service';
 import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
@@ -204,6 +208,9 @@ const ROUTES = [
     HeaderComponent,
     NavBarComponent,
     TopBarComponent,
+    ModalComponent,
+    ClipboardDirective,
+    ClipboardButtonComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -243,6 +250,7 @@ const ROUTES = [
     PurchaseService,
     WalletService,
     PriceService,
+    ClipboardService,
   ],
   bootstrap: [AppComponent],
 })

@@ -5,6 +5,8 @@ export interface Wallet {
   balance?: number;
   hours?: number;
   hidden?: boolean;
+  opened?: boolean;
+  hideEmpty?: boolean;
 }
 
 export interface Address {
