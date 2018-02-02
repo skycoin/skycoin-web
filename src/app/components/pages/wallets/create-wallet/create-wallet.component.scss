@@ -1,0 +1,34 @@
+.-buttons {
+  text-align: center;
+}
+
+.-disclaimer-box{
+  margin-bottom: 20px;
+
+  .-disclaimer-text{
+    font-family: Skycoin;
+    line-height: 20px;
+    font-size: 12px;
+    color: #FF004E;
+    mix-blend-mode: normal;
+  }
+}
+.-confirm-box{
+  display: flex;
+
+  .-valid{
+    bottom: -6px;
+    left: -7px;
+    position: relative;
+    align-self: flex-end;
+    display: none;
+  }
+}
+
+.-confirm-seed.-expand{
+  margin-right: -14px;
+  .-valid{
+    display: block;
+  }
+}
+
