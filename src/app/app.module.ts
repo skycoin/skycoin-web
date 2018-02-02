@@ -53,6 +53,7 @@ import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
+import {LoadWalletComponent} from './components/pages/wallets/load-wallet/load-wallet.component';
 
 const ROUTES = [
   {
@@ -182,6 +183,7 @@ const ROUTES = [
     WalletsComponent,
     WalletDetailComponent,
     CreateWalletComponent,
+    LoadWalletComponent,
     SkyPipe,
     SendSkycoinComponent,
     DateFromNowPipe,
@@ -218,6 +220,7 @@ const ROUTES = [
     ChangeNameComponent,
     QrCodeComponent,
     UnlockWalletComponent,
+    LoadWalletComponent,
   ],
   imports: [
     BrowserModule,

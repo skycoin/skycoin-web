@@ -4,6 +4,7 @@ import { MdDialog, MdDialogConfig } from '@angular/material';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 import {Wallet} from '../../../app.datatypes';
 import {UnlockWalletComponent} from './unlock-wallet/unlock-wallet.component';
+import {LoadWalletComponent} from './load-wallet/load-wallet.component';
 
 @Component({
   selector: 'app-wallets',
@@ -29,7 +30,11 @@ export class WalletsComponent {
     this.dialog.open(UnlockWalletComponent, config);
   }
 
-  loadWallet(){}
+  loadWallet(){
+    const config = new MdDialogConfig();
+    config.width = '566px';
+    this.dialog.open(LoadWalletComponent, config);
+  }
 
   toggleWallet(wallet: Wallet) {
     wallet.opened = !wallet.opened;
