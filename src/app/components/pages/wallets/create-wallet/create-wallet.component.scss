@@ -13,7 +13,8 @@
     mix-blend-mode: normal;
   }
 }
-.-confirm-box{
+
+.-valid-box{
   display: flex;
 
   .-valid{
@@ -25,10 +26,9 @@
   }
 }
 
-.-confirm-seed.-expand{
+.-valid-seed-container.-expand{
   margin-right: -14px;
   .-valid{
     display: block;
   }
 }
-

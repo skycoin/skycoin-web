@@ -11,9 +11,9 @@
     <div class="-disclaimer-box">
       <span class="-disclaimer-text">Remember this seed! Keep it in a safe place. If you forget your seed, you will not be able to recover your wallet!</span>
     </div>
-    <div class="form-field -confirm-seed" [ngClass]="{'-expand':form.get('confirm_seed').valid}">
+    <div class="form-field  -valid-seed-container" [ngClass]="{'-expand':form.get('confirm_seed').valid}">
       <label for="confirm_seed">Confirm seed</label>
-      <div class="-confirm-box">
+      <div class="-valid-box">
         <textarea formControlName="confirm_seed" id="confirm_seed" row="2"></textarea>
         <img  class="-valid" src="../../../../../assets/img/valid.png">
       </div>
