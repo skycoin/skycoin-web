@@ -6,7 +6,7 @@ import { WalletService } from '../../../../services/wallet.service';
 @Component({
   selector: 'app-load-wallet',
   templateUrl: './load-wallet.component.html',
-  styleUrls: ['./load-wallet.component.scss']
+  styleUrls: ['./load-wallet.component.scss'],
 })
 export class LoadWalletComponent implements OnInit {
 
