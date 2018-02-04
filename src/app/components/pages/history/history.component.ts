@@ -1,36 +1,35 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
-import { MdDialog } from '@angular/material';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
-  styleUrls: ['./history.component.css']
+  styleUrls: ['./history.component.scss'],
 })
-export class HistoryComponent implements OnInit {
-  @ViewChild('table') table: any;
-  transactions: any[];
 
-  constructor(
-    public router: Router,
-    public walletService: WalletService,
-  ) { }
+export class HistoryComponent implements OnInit {
+  public transactions: any[];
+  public price: number;
+  private priceSubscription: Subscription;
+
+  constructor(public walletService: WalletService,
+              private priceService: PriceService) {
+  }
 
   ngOnInit() {
+    this.priceSubscription = this.priceService.price.subscribe(price => this.price = price);
     this.walletService.history().subscribe(transactions => this.transactions = this.mapTransactions(transactions));
   }
 
-  onActivate(response) {
-    if (response.row && response.row.txid) {
-      this.router.navigate(['/history', response.row.txid]);
-    }
+  showTransaction(transaction: any) {
   }
 
   private mapTransactions(transactions) {
     return transactions.map(transaction => {
       transaction.amount = transaction.outputs.map(output => output.coins >= 0 ? output.coins : 0)
-        .reduce((a , b) => a + parseInt(b), 0);
+        .reduce((a, b) => a + parseInt(b), 0);
       return transaction;
     });
   }
