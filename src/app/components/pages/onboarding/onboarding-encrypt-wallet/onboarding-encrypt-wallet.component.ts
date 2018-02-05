@@ -10,8 +10,9 @@ export class OnboardingEncryptWalletComponent implements OnInit {
   encryptWallet = false;
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
-  }
+  constructor(
+    private formBuilder: FormBuilder,
+  ) { }
 
   ngOnInit() {
     this.initEncryptForm();
@@ -28,7 +29,6 @@ export class OnboardingEncryptWalletComponent implements OnInit {
         ]),
       ),
     });
-    this.form.valueChanges.subscribe(data => this.onValueChanged(data));
     this.form.disable();
   }
 
@@ -39,10 +39,6 @@ export class OnboardingEncryptWalletComponent implements OnInit {
     } else {
       this.form.disable();
     }
-  }
-
-  onValueChanged(data) {
-
   }
 
   private validateAreEqual(fieldControl: FormControl) {

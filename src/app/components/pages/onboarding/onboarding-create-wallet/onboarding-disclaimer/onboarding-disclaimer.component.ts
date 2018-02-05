@@ -1,20 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {MdDialogRef} from '@angular/material';
+import { Component } from '@angular/core';
+import { MdDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-onboarding-disclaimer',
   templateUrl: './onboarding-disclaimer.component.html',
-  styleUrls: ['./onboarding-disclaimer.component.scss']
+  styleUrls: ['./onboarding-disclaimer.component.scss'],
 })
-export class OnboardingDisclaimerComponent implements OnInit {
+export class OnboardingDisclaimerComponent {
 
-  public acceptTerms = false;
+  acceptTerms = false;
 
-  constructor(public dialogRef: MdDialogRef<OnboardingDisclaimerComponent>) {
-  }
-
-  ngOnInit() {
-  }
+  constructor(
+    public dialogRef: MdDialogRef<OnboardingDisclaimerComponent>,
+  ) { }
 
   closePopup() {
     this.dialogRef.close(this.acceptTerms);

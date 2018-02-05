@@ -18,10 +18,11 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
 
-  constructor(private dialog: MdDialog,
-              public walletService: WalletService,
-              private router: Router) {
-  }
+  constructor(
+    private dialog: MdDialog,
+    public walletService: WalletService,
+    private router: Router,
+  ) { }
 
   ngOnInit() {
     this.initForm();
@@ -63,8 +64,6 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
             this.validateAreEqual.bind(this)])
           : Validators.compose([]),
       ));
-
-    this.form.valueChanges.subscribe(data => this.onValueChanged(data));
     if (this.showNewForm) {
       this.generateSeed();
     }
@@ -77,9 +76,6 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
       this.showNewForm = true;
     }
     this.initForm();
-  }
-
-  onValueChanged(data) {
   }
 
   showDisclaimer() {
