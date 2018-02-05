@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {
-  MdButtonModule, MdCardModule, MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule,
-  MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
-  MdSelectModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule,
+  MdButtonModule, MdCardModule, MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule,
+  MdInputModule, MdListModule, MdMenuModule, MdProgressBarModule,
+  MdProgressSpinnerModule, MdSelectModule, MdSnackBarModule,
+  MdTabsModule, MdToolbarModule, MdTooltipModule,
 } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,10 +35,14 @@ import { OutputsComponent } from './components/pages/settings/outputs/outputs.co
 import {
   PendingTransactionsComponent,
 } from './components/pages/settings/pending-transactions/pending-transactions.component';
+import {
+  TransactionDetailComponent,
+} from './components/pages/transaction/transaction-detail/transaction-detail.component';
 import { TransactionComponent } from './components/pages/transaction/transaction.component';
 import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
 import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
 import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
+import { LoadWalletComponent } from './components/pages/wallets/load-wallet/load-wallet.component';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { WalletsComponent } from './components/pages/wallets/wallets.component';
 import { ClipboardDirective } from './directives/clipboard.directive';
@@ -53,7 +58,6 @@ import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
-import {LoadWalletComponent} from './components/pages/wallets/load-wallet/load-wallet.component';
 
 const ROUTES = [
   {
@@ -213,6 +217,7 @@ const ROUTES = [
     ModalComponent,
     ClipboardDirective,
     ClipboardButtonComponent,
+    TransactionDetailComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -221,6 +226,7 @@ const ROUTES = [
     QrCodeComponent,
     UnlockWalletComponent,
     LoadWalletComponent,
+    TransactionDetailComponent,
   ],
   imports: [
     BrowserModule,
