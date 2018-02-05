@@ -27,7 +27,7 @@ function ascii_to_hexa(str) {
 export class WalletService {
   recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   transactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
-
+  tempAddresses: Address[];
   wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
 
   get addresses(): Observable<any[]> {
@@ -258,7 +258,7 @@ export class WalletService {
     return this.apiService.get('uxout', {uxid: input});
   }
 
-  private retrieveTransactions() {
+  public retrieveTransactions() {
     return this.all().first().subscribe(wallets => {
       Observable.forkJoin(wallets.map(wallet => this.retrieveWalletTransactions(wallet)))
         .map(transactions => [].concat.apply([], transactions).sort((a, b) =>  b.timestamp - a.timestamp))
@@ -270,6 +270,52 @@ export class WalletService {
         }, []))
         .subscribe(transactions => this.transactions.next(transactions));
     });
+  }
+  allAddresses(): Observable<any[]> {
+    return this.all().map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
+  }
+
+  transactionsHistory(): Observable<any[]> {
+    return this.allAddresses().filter(addresses => !!addresses.length).first().flatMap(addresses => {
+      this.tempAddresses = addresses;
+      return Observable.forkJoin(addresses.map(address => this.getExplorerAddress(address)));
+    }).map(transactions => [].concat.apply([], transactions).sort((a, b) =>  b.timestamp - a.timestamp))
+      .map(transactions => transactions.reduce((array, item) => {
+        if (!array.find(trans => trans.txid === item.txid)) {
+          array.push(item);
+        }
+        return array;
+      }, []))
+      .map(transactions => transactions.map(transaction => {
+        const outgoing = !!this.tempAddresses.find(address => transaction.inputs[0].owner === address.address);
+        transaction.outputs.forEach(output => {
+          if (outgoing && !this.tempAddresses.find(address => output.dst === address.address)) {
+            transaction.addresses.push(output.dst);
+            transaction.balance = transaction.balance - parseFloat(output.coins);
+          }
+          if (!outgoing && this.tempAddresses.find(address => output.dst === address.address)) {
+            transaction.addresses.push(output.dst);
+            transaction.balance = transaction.balance + parseFloat(output.coins);
+          }
+          return transaction;
+        });
+
+        return transaction;
+      }));
+  }
+
+  getExplorerAddress(address: Address): Observable<any[]> {
+    return this.apiService.get('explorer/address', {address: address.address})
+      .map(transactions => transactions.map(transaction => ({
+        addresses: [],
+        balance: 0,
+        block: transaction.status.block_seq,
+        confirmed: transaction.status.confirmed,
+        timestamp: transaction.timestamp,
+        txid: transaction.txid,
+        inputs: transaction.inputs,
+        outputs: transaction.outputs,
+      })));
   }
 
   private retrieveWalletBalance(wallet: Wallet): Observable<any> {

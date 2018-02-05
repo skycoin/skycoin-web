@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MdDialog, MdDialogConfig } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
+import { TransactionDetailComponent } from '../transaction/transaction-detail/transaction-detail.component';
 
 @Component({
   selector: 'app-history',
@@ -15,15 +17,22 @@ export class HistoryComponent implements OnInit {
   private priceSubscription: Subscription;
 
   constructor(public walletService: WalletService,
-              private priceService: PriceService) {
+              private priceService: PriceService,
+              private dialog: MdDialog) {
   }
 
   ngOnInit() {
     this.priceSubscription = this.priceService.price.subscribe(price => this.price = price);
-    this.walletService.history().subscribe(transactions => this.transactions = this.mapTransactions(transactions));
+    this.walletService.transactionsHistory().subscribe(transactions => {
+      this.transactions = this.mapTransactions(transactions);
+    });
   }
 
   showTransaction(transaction: any) {
+    const config = new MdDialogConfig();
+    config.width = '566px';
+    config.data = transaction;
+    this.dialog.open(TransactionDetailComponent, config).afterClosed().subscribe();
   }
 
   private mapTransactions(transactions) {
