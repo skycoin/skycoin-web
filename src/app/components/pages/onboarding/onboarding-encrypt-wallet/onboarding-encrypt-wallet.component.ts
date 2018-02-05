@@ -29,6 +29,11 @@ export class OnboardingEncryptWalletComponent implements OnInit {
         ]),
       ),
     });
+
+    this.form.controls.password.valueChanges.subscribe(() => {
+      this.form.controls.confirm.updateValueAndValidity();
+    });
+
     this.form.disable();
   }
 
@@ -42,6 +47,8 @@ export class OnboardingEncryptWalletComponent implements OnInit {
   }
 
   private validateAreEqual(fieldControl: FormControl) {
-    return fieldControl.value === this.form.get('password').value ? null : { NotEqual: true };
+    if (this.form && this.form.controls.password) {
+      return fieldControl.value === this.form.controls.password.value ? null : { NotEqual: true };
+    }
   }
 }

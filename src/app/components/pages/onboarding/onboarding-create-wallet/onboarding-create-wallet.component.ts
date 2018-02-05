@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MdDialog, MdDialogConfig } from '@angular/material';
 import { Router } from '@angular/router';
 import * as Bip39 from 'bip39';
@@ -22,6 +22,7 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
     private dialog: MdDialog,
     public walletService: WalletService,
     private router: Router,
+    private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit() {
@@ -41,32 +42,29 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   }
 
   initForm() {
-    this.form = new FormGroup({});
-    this.form.addControl(
-      'label',
-      new FormControl('', Validators.compose([
+    this.form = this.formBuilder.group({
+      label: new FormControl('', Validators.compose([
           Validators.required, Validators.minLength(2),
-        ]),
-      ));
-    this.form.addControl(
-      'seed',
-      new FormControl('', Validators.compose([
+        ])),
+      seed: new FormControl('', Validators.compose([
           Validators.required, Validators.minLength(2),
-        ]),
-      ));
-    this.form.addControl(
-      'confirm_seed',
-      new FormControl('',
+        ])),
+      confirm_seed: new FormControl('',
         this.showNewForm ?
           Validators.compose([
             Validators.required,
             Validators.minLength(2),
-            this.validateAreEqual.bind(this)])
+            this.validateAreEqual.bind(this),
+          ])
           : Validators.compose([]),
-      ));
+      )});
     if (this.showNewForm) {
       this.generateSeed();
     }
+
+    this.form.controls.seed.valueChanges.subscribe(() => {
+      this.form.controls.confirm_seed.updateValueAndValidity();
+    });
   }
 
   changeForm(newState) {
@@ -115,7 +113,9 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   }
 
   private validateAreEqual(fieldControl: FormControl) {
-    return fieldControl.value === this.form.get('seed').value ? null : { NotEqual: true };
+    if (this.form && this.form.controls.seed) {
+      return fieldControl.value === this.form.controls.seed.value ? null : { NotEqual: true };
+    }
   }
 
 }
