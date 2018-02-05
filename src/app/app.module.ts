@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {
-  MdButtonModule, MdCardModule, MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule,
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule,
   MdInputModule, MdListModule, MdMenuModule, MdProgressBarModule,
-  MdProgressSpinnerModule, MdSelectModule, MdSnackBarModule,
+  MdProgressSpinnerModule,  MdSelectModule, MdSnackBarModule,
   MdTabsModule, MdToolbarModule, MdTooltipModule,
 } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
@@ -35,6 +35,7 @@ import { OutputsComponent } from './components/pages/settings/outputs/outputs.co
 import {
   PendingTransactionsComponent,
 } from './components/pages/settings/pending-transactions/pending-transactions.component';
+import { SettingsComponent } from './components/pages/settings/settings.component';
 import {
   TransactionDetailComponent,
 } from './components/pages/transaction/transaction-detail/transaction-detail.component';
@@ -218,6 +219,7 @@ const ROUTES = [
     ClipboardDirective,
     ClipboardButtonComponent,
     TransactionDetailComponent,
+    SettingsComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -247,6 +249,7 @@ const ROUTES = [
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
+    MdCheckboxModule,
     NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
