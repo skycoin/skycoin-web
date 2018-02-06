@@ -67,11 +67,7 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   }
 
   changeForm(newState) {
-    if (newState === DoubleButtonActive.RightButton) {
-      this.showNewForm = false;
-    } else {
-      this.showNewForm = true;
-    }
+    newState === DoubleButtonActive.RightButton ? this.showNewForm = false : this.showNewForm = true;
     this.initForm();
   }
 
