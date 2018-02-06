@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { WalletService } from '../../../services/wallet.service';
 import { MdDialog, MdDialogConfig } from '@angular/material';
+import { WalletService } from '../../../services/wallet.service';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 
 @Component({
   selector: 'app-wallets',
   templateUrl: './wallets.component.html',
-  styleUrls: ['./wallets.component.css']
+  styleUrls: ['./wallets.component.css'],
 })
 export class WalletsComponent {
 

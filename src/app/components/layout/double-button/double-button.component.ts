@@ -19,9 +19,6 @@ export class DoubleButtonComponent implements OnInit {
   onStateChange = new EventEmitter();
   rightActive = false;
 
-  constructor() {
-  }
-
   ngOnInit() {
     this.initState();
   }
