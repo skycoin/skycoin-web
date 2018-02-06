@@ -34,7 +34,7 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   }
 
   existWallets() {
-    this.walletService.all().subscribe(wallets => {
+    this.walletService.all.subscribe(wallets => {
       if (wallets.length === 0) {
         this.showDisclaimer();
       }

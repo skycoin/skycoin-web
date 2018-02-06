@@ -31,10 +31,10 @@ export class WalletService {
   wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
 
   get addresses(): Observable<any[]> {
-    return this.all().map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
+    return this.all.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
   }
 
-  all(): Observable<Wallet[]> {
+  get all(): Observable<Wallet[]> {
     return this.wallets.asObservable().map(wallets => wallets ? wallets : []);
   }
 
@@ -89,7 +89,7 @@ export class WalletService {
   }
 
   updateWallet(wallet: Wallet) {
-    this.all().first().subscribe(wallets => {
+    this.all.first().subscribe(wallets => {
       const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
       wallets[index] = wallet;
       this.saveWallets(wallets);
@@ -115,7 +115,7 @@ export class WalletService {
   }
 
   private addWallet(wallet) {
-    this.all().first().subscribe(wallets => {
+    this.all.first().subscribe(wallets => {
       wallets.push(wallet);
       this.saveWallets(wallets);
     });
@@ -135,7 +135,7 @@ export class WalletService {
     this.addresses.first().subscribe(addresses => {
       const stringified = addresses.map(address => address.address).join(',');
       this.apiService.getOutputs(stringified).subscribe(outputs => {
-        this.all().first().subscribe(wallets => {
+        this.all.first().subscribe(wallets => {
           wallets.forEach(wallet => {
             wallet.addresses.forEach(address => {
               const output = outputs.find(o => address.address === o.address);
@@ -173,7 +173,7 @@ export class WalletService {
   Legacy
    */
   addressesAsString(): Observable<string> {
-    return this.all().map(wallets => wallets.map(wallet => {
+    return this.all.map(wallets => wallets.map(wallet => {
       return wallet.addresses.reduce((a, b) => {
         a.push(b.address);
         return a;
@@ -206,7 +206,7 @@ export class WalletService {
   }
 
   refreshBalances() {
-    this.all().first().subscribe(wallets => {
+    this.all.first().subscribe(wallets => {
       Observable.forkJoin(wallets.map(wallet => this.retrieveWalletBalance(wallet).map(response => {
         wallet.addresses = response;
         wallet.balance = response.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
@@ -228,7 +228,7 @@ export class WalletService {
   }
 
   sum(): Observable<number> {
-    return this.all().map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0).reduce((a , b) => a + b, 0));
+    return this.all.map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0).reduce((a , b) => a + b, 0));
   }
 
   transaction(txid: string): Observable<any> {
@@ -259,7 +259,7 @@ export class WalletService {
   }
 
   private retrieveTransactions() {
-    return this.all().first().subscribe(wallets => {
+    return this.all.first().subscribe(wallets => {
       Observable.forkJoin(wallets.map(wallet => this.retrieveWalletTransactions(wallet)))
         .map(transactions => [].concat.apply([], transactions).sort((a, b) =>  b.timestamp - a.timestamp))
         .map(transactions => transactions.reduce((array, item) => {
