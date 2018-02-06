@@ -19,7 +19,7 @@ export class OnboardingDisclaimerComponent {
   }
 
   setAccept(event) {
-    this.acceptTerms = event.checked;
+    event.checked ? this.acceptTerms = true : this.acceptTerms = false;
   }
 
 }

@@ -43,28 +43,27 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
 
   initForm() {
     this.form = this.formBuilder.group({
-      label: new FormControl('', Validators.compose([
+        label: new FormControl('', Validators.compose([
           Validators.required, Validators.minLength(2),
         ])),
-      seed: new FormControl('', Validators.compose([
+        seed: new FormControl('', Validators.compose([
           Validators.required, Validators.minLength(2),
         ])),
-      confirm_seed: new FormControl('',
-        this.showNewForm ?
-          Validators.compose([
-            Validators.required,
-            Validators.minLength(2),
-            this.validateAreEqual.bind(this),
-          ])
-          : Validators.compose([]),
-      )});
+        confirm_seed: new FormControl('',
+          this.showNewForm ?
+            Validators.compose([
+              Validators.required,
+              Validators.minLength(2),
+            ])
+            : Validators.compose([]),
+        ),
+      },
+      this.showNewForm ? { validator: this.seedMatchValidator.bind(this) } : {},
+      );
+
     if (this.showNewForm) {
       this.generateSeed();
     }
-
-    this.form.controls.seed.valueChanges.subscribe(() => {
-      this.form.controls.confirm_seed.updateValueAndValidity();
-    });
   }
 
   changeForm(newState) {
@@ -112,10 +111,9 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
     this.form.controls.seed.setValue(Bip39.generateMnemonic());
   }
 
-  private validateAreEqual(fieldControl: FormControl) {
-    if (this.form && this.form.controls.seed) {
-      return fieldControl.value === this.form.controls.seed.value ? null : { NotEqual: true };
-    }
+  private seedMatchValidator(g: FormGroup) {
+      return g.get('seed').value === g.get('confirm_seed').value
+        ? null : { mismatch: true };
   }
 
 }

@@ -15,7 +15,7 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-sm-4 -check-container">
-      <md-checkbox class="-check" [checked]="encryptWallet" (change)="setEncrypt($event)"
+      <md-checkbox class="-check" (change)="setEncrypt($event)"
                    type="checkbox" id="encrypt"><img src="../../../../../assets/img/lock-gold.png">Encrypt Wallet
       </md-checkbox>
     </div>
@@ -25,11 +25,11 @@
       <form [formGroup]="form">
         <div class="form-field">
           <label for="password">Password</label>
-          <input class="-input" type="password"  formControlName="password" id="password" [ngClass]="{disable: !encryptWallet}">
+          <input class="-input" type="password"  formControlName="password" id="password" [ngClass]="{ disable: form.disabled }">
         </div>
         <div class="form-field">
           <label for="confirm">Confirm password</label>
-          <input  class="-input"  type="password" formControlName="confirm" id="confirm"  [ngClass]="{disable: !encryptWallet}">
+          <input  class="-input"  type="password" formControlName="confirm" id="confirm"  [ngClass]="{ disable: form.disabled }">
         </div>
       </form>
     </div>

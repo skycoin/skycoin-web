@@ -7,7 +7,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   styleUrls: ['./onboarding-encrypt-wallet.component.scss'],
 })
 export class OnboardingEncryptWalletComponent implements OnInit {
-  encryptWallet = false;
   form: FormGroup;
 
   constructor(
@@ -20,35 +19,27 @@ export class OnboardingEncryptWalletComponent implements OnInit {
 
   initEncryptForm() {
     this.form = this.formBuilder.group({
-      password: new FormControl('', Validators.compose([Validators.required, Validators.minLength(2)])),
-      confirm: new FormControl('',
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(2),
-          this.validateAreEqual.bind(this),
-        ]),
-      ),
-    });
-
-    this.form.controls.password.valueChanges.subscribe(() => {
-      this.form.controls.confirm.updateValueAndValidity();
-    });
+        password: new FormControl('', Validators.compose([Validators.required, Validators.minLength(2)])),
+        confirm: new FormControl('',
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(2),
+          ]),
+        ),
+      },
+      {
+        validator: this.passwordMatchValidator.bind(this),
+      });
 
     this.form.disable();
   }
 
   setEncrypt(event) {
-    this.encryptWallet = event.checked;
-    if (this.encryptWallet) {
-      this.form.enable();
-    } else {
-      this.form.disable();
-    }
+    event.checked ? this.form.enable() : this.form.disable();
   }
 
-  private validateAreEqual(fieldControl: FormControl) {
-    if (this.form && this.form.controls.password) {
-      return fieldControl.value === this.form.controls.password.value ? null : { NotEqual: true };
-    }
+  private passwordMatchValidator(g: FormGroup) {
+    return g.get('password').value === g.get('confirm').value
+      ? null : { mismatch: true };
   }
 }
