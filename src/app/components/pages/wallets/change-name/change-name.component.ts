@@ -1,13 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { WalletService } from '../../../../services/wallet.service';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
 import { Wallet } from '../../../../app.datatypes';
+import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
   selector: 'app-change-name',
   templateUrl: './change-name.component.html',
-  styleUrls: ['./change-name.component.css']
+  styleUrls: ['./change-name.component.scss'],
 })
 export class ChangeNameComponent implements OnInit {
 

@@ -6,7 +6,7 @@
             <label for="wallet">Send from</label>
             <select formControlName="wallet" id="wallet">
               <option value="" selected>Select Wallet</option>
-              <option *ngFor="let wallet of walletService.all() | async"
+              <option *ngFor="let wallet of walletService.all | async"
                       [disabled]="wallet.balance <= 0 || !wallet.seed" [ngValue]="wallet">
                 {{ wallet.label }} — {{ wallet.balance }} SKY
               </option>

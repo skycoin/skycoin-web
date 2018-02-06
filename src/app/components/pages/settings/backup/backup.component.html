@@ -8,7 +8,7 @@
 
   <ngx-datatable #table
                  class="material"
-                 [rows]="walletService.all() | async"
+                 [rows]="walletService.all | async"
                  columnMode="flex"
                  [headerHeight]="50"
                  [footerHeight]="50"

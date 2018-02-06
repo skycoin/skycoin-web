@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MdDialogRef } from '@angular/material';
 import { WalletService } from '../../../../services/wallet.service';
 
@@ -16,6 +16,7 @@ export class LoadWalletComponent implements OnInit {
   constructor(
     public dialogRef: MdDialogRef<LoadWalletComponent>,
     private walletService: WalletService,
+    private formBuilder: FormBuilder,
   ) {}
 
   ngOnInit() {
@@ -32,8 +33,13 @@ export class LoadWalletComponent implements OnInit {
   }
 
   private initForm() {
-    this.form = new FormGroup({});
-    this.form.addControl('label', new FormControl('', [Validators.required]));
-    this.form.addControl('seed', new FormControl('', [Validators.required]));
+    this.form = this.formBuilder.group({
+        label: new FormControl('', Validators.compose([
+          Validators.required, Validators.minLength(2),
+        ])),
+        seed: new FormControl('', Validators.compose([
+          Validators.required, Validators.minLength(2),
+        ])),
+      });
   }
 }

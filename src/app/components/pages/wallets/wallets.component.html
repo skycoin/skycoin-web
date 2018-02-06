@@ -8,7 +8,7 @@
       <div class="-width-150">Balance</div>
     </div>
     <div class="-wallets">
-      <ng-container *ngFor="let wallet of walletService.all() | async">
+      <ng-container *ngFor="let wallet of walletService.all | async">
         <div class="-wallet" >
           <div class="-width-250 -label">{{ wallet.label }}</div>
           <div class="flex-fill -encryption">

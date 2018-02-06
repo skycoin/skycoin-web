@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MdDialogRef } from '@angular/material';
 import * as Bip39 from 'bip39';
 import { WalletService } from '../../../../services/wallet.service';
@@ -13,11 +13,12 @@ export class CreateWalletComponent implements OnInit {
 
   form: FormGroup;
   seed: string;
-  seedValid: boolean = false;
 
-  constructor(public dialogRef: MdDialogRef<CreateWalletComponent>,
-              private walletService: WalletService) {
-  }
+  constructor(
+    public dialogRef: MdDialogRef<CreateWalletComponent>,
+    private walletService: WalletService,
+    private formBuilder: FormBuilder,
+  ) { }
 
   ngOnInit() {
     this.initForm();
@@ -37,20 +38,29 @@ export class CreateWalletComponent implements OnInit {
   }
 
   private initForm() {
-    this.form = new FormGroup({});
-    this.form.addControl('label', new FormControl('', [Validators.required]));
-    this.form.addControl('seed', new FormControl('', [Validators.required]));
-    this.form.addControl('confirm_seed', new FormControl('', [
-      Validators.compose([Validators.required, this.validateAreEqual.bind(this)]),
-    ]));
-    this.form.controls.seed.valueChanges.subscribe(val => {
-      this.form.controls.confirm_seed.updateValueAndValidity({ onlySelf: true });
-    });
+    this.form = this.formBuilder.group({
+        label: new FormControl('', Validators.compose([
+          Validators.required, Validators.minLength(2),
+        ])),
+        seed: new FormControl('', Validators.compose([
+          Validators.required, Validators.minLength(2),
+        ])),
+        confirm_seed: new FormControl('',
+            Validators.compose([
+              Validators.required,
+              Validators.minLength(2),
+            ]),
+        ),
+      },
+      { validator: this.seedMatchValidator.bind(this) },
+    );
+
     this.generateSeed();
   }
 
-  private validateAreEqual(fieldControl: FormControl) {
-    return fieldControl.value === this.form.get('seed').value ? null : { NotEqual: true };
+  private seedMatchValidator(g: FormGroup) {
+    return g.get('seed').value === g.get('confirm_seed').value
+      ? null : { mismatch: true };
   }
 
 }
