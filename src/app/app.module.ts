@@ -19,7 +19,6 @@ import { HeaderComponent } from './components/layout/header/header.component';
 import { NavBarComponent } from './components/layout/header/nav-bar/nav-bar.component';
 import { TopBarComponent } from './components/layout/header/top-bar/top-bar.component';
 import { ModalComponent } from './components/layout/modal/modal.component';
-import { ClipboardButtonComponent } from './components/layout/qr-code/clipboard-button/clipboard-button.component';
 import { QrCodeComponent } from './components/layout/qr-code/qr-code.component';
 import { AddressComponent } from './components/pages/address/address.component';
 import { BlockComponent } from './components/pages/block/block.component';
@@ -217,7 +216,6 @@ const ROUTES = [
     TopBarComponent,
     ModalComponent,
     ClipboardDirective,
-    ClipboardButtonComponent,
     TransactionDetailComponent,
     SettingsComponent,
   ],

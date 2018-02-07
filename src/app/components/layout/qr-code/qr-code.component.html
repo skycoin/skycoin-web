@@ -3,6 +3,6 @@
   <div class="row -address-footer">
     <div class="-address-label">Address</div>
     <div class="-address-address">{{data.address}}</div>
-    <app-clipboard-button [text]="data.address"></app-clipboard-button>
+    <img #btnImg class="-button-qr" title="Copy address to clipboard" [clipboard]=data.address (clipboardCopy)="onCopySuccess()">
   </div>
 </app-modal>

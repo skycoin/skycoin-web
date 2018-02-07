@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
 
 declare var QRCode: any;
@@ -8,8 +8,9 @@ declare var QRCode: any;
   templateUrl: './qr-code.component.html',
   styleUrls: ['./qr-code.component.scss'],
 })
-export class QrCodeComponent implements OnInit {
+export class QrCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('qr') qr: any;
+  @ViewChild('btnImg') btnImg: ElementRef;
   size: number = 230;
   level: string = 'M';
   colordark: string = '#000000';
@@ -19,11 +20,10 @@ export class QrCodeComponent implements OnInit {
   constructor(
     @Inject(MD_DIALOG_DATA) public data: any,
     public dialogRef: MdDialogRef<QrCodeComponent>,
-    private el: ElementRef,
   ) { }
 
   ngOnInit() {
-    new QRCode(this.qr.nativeElement, {
+    const qr = new QRCode(this.qr.nativeElement, {
       text: this.data.address,
       width: this.size,
       height: this.size,
@@ -32,5 +32,13 @@ export class QrCodeComponent implements OnInit {
       useSVG: this.usesvg,
       correctLevel: QRCode.CorrectLevel[this.level.toString()],
     });
+  }
+
+  ngAfterViewInit() {
+    this.btnImg.nativeElement.src = '../../../../assets/img/copy-qr.png';
+  }
+
+  onCopySuccess() {
+    this.btnImg.nativeElement.src = '../../../../assets/img/copy-qr-success.png';
   }
 }
