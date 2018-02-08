@@ -3,11 +3,11 @@
     Transaction Detail <img src="../../../../../assets/img/close-grey.png" (click)="closePopup()">
   </div>
   <div class="-body">
-    <div class="-icon" [ngClass]="{ '-incoming': transaction.amount > 0, '-pending': !transaction.confirmed }">
+    <div class="-icon" [ngClass]="{ '-incoming': transaction.balance > 0, '-pending': !transaction.confirmed }">
       <img src="/assets/img/send-gold.png">
     </div>
-    <h4>{{ transaction.amount }} SKY</h4>
-    <p *ngIf="price">{{ transaction.amount * price | currency:'USD':true:'1.2-2' }}</p>
+    <h4>{{ transaction.balance }} SKY</h4>
+    <p *ngIf="price">{{ transaction.balance * price | currency:'USD':true:'1.2-2' }}</p>
   </div>
   <div class="-footer">
     <div class="-row">

@@ -24,8 +24,8 @@ export class HistoryComponent implements OnInit {
 
   ngOnInit() {
     this.priceSubscription = this.priceService.price.subscribe(price => this.price = price);
-    this.walletService.transactionsHistory().subscribe(transactions => {
-      this.transactions = this.mapTransactions(transactions);
+    this.walletService.transactions().subscribe(transactions => {
+      this.transactions = transactions;
     });
   }
 
@@ -34,13 +34,5 @@ export class HistoryComponent implements OnInit {
     config.width = '566px';
     config.data = transaction;
     this.dialog.open(TransactionDetailComponent, config).afterClosed().subscribe();
-  }
-
-  private mapTransactions(transactions) {
-    return transactions.map(transaction => {
-      transaction.amount = transaction.outputs.map(output => output.coins >= 0 ? output.coins : 0)
-        .reduce((a, b) => a + parseInt(b, 10), 0);
-      return transaction;
-    });
   }
 }

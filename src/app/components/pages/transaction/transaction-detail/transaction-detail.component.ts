@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
-import { PriceService } from '../../../../services/price.service';
 import { Subscription } from 'rxjs/Subscription';
+import { PriceService } from '../../../../services/price.service';
 
 @Component({
   selector: 'app-transaction-detail',
