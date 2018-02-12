@@ -24,9 +24,11 @@ export class OnboardingCreatePage {
   }
 
   acceptSafeguard() {
-    element.all(by.css('.mat-checkbox-label')).first().click();
-    element(by.buttonText('Continue')).click();
-    return this.getSafeguardIsShow();
+   return element.all(by.css('.mat-checkbox-label')).first().click().then(() => {
+     return element(by.buttonText('Continue')).click().then(() => {
+        return this.getSafeguardIsShow();
+      });
+    });
   }
 
   getDisclaimerButtonState() {
