@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class OnboardingCreatePage {
   navigateTo() {
-    return browser.get('/wizard/create');
+    return browser.get('/#/wizard/create');
   }
 
   getHeaderText() {
