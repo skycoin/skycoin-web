@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class WalletsPage {
   navigateTo() {
-    return browser.get('/wallets');
+    return browser.get('/#/wallets');
   }
 
   getHeaderText() {
