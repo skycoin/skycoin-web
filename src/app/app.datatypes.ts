@@ -5,6 +5,8 @@ export interface Wallet {
   balance?: number;
   hours?: number;
   hidden?: boolean;
+  opened?: boolean;
+  hideEmpty?: boolean;
 }
 
 export interface Address {
@@ -16,6 +18,16 @@ export interface Address {
   hours?: number;
 }
 
+export class Transaction {
+  addresses: string[];
+  balance: number;
+  block: number;
+  confirmed: boolean;
+  inputs: any[];
+  outputs: any[];
+  timestamp: number;
+  txid: string;
+}
 export interface Output {
   address: string;
   coins: number;

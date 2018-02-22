@@ -1,12 +1,42 @@
-<md-list>
-  <h3 md-subheader>Addresses</h3>
-  <md-list-item *ngFor="let address of wallet.addresses">
-    <i md-list-icon (click)="showQr(address)" class="fa fa-qrcode"></i>
-    <h4 md-line>{{address.address}} - {{ address.balance ? address.balance : 0 }} Sky ({{ address.hours ? address.hours : 0 }} Coin Hours)</h4>
-  </md-list-item>
-  <div class="button-line">
-    <a md-raised-button color="primary" (click)="unlockWallet()" [disabled]="wallet.seed">Unlock wallet</a>
-    <a md-raised-button color="primary" (click)="renameWallet()">Rename wallet</a>
-    <a md-raised-button color="primary" (click)="addAddress()" [disabled]="!wallet.seed">Add address</a>
+<ng-container *ngFor="let address of (wallet ? wallet.addresses : []); let i = index">
+  <div class="-record" *ngIf="!wallet.hideEmpty || address.balance">
+    <div class="id-column">{{ i + 1 }}</div>
+    <div class="address-column">
+      <img src="../../../../../assets/img/qr-code-black.png"  (click)="showQr(address)" >
+      <p>{{ address.address }}</p>
+    </div>
+    <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
+    <div class="coins-column">{{ address.balance ? address.balance : 0 }}</div>
   </div>
-</md-list>
+</ng-container>
+<div class="-actions">
+  <div class="-button" (click)="newAddress()">
+    <div class="-btn-plus">
+      <img src="../../../../../assets/img/plus-grey.png">
+      <span>New Address</span>
+    </div>
+
+  </div>
+  <div class="-button" (click)="toggleEmpty()">
+    <ng-container *ngIf="!wallet.hideEmpty">
+      <div class="-btn-minus">
+        <img src="../../../../../assets/img/minus-grey.png">
+        <span>Hide Empty</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="wallet.hideEmpty">
+      <div class="-btn-plus">
+        <img src="../../../../../assets/img/plus-grey.png">
+        <span>Show Empty</span>
+      </div>
+
+    </ng-container>
+  </div>
+  <div class="flex-fill"></div>
+  <div class="-button" (click)="editWallet()">
+    <div class="-btn-edit">
+      <img src="../../../../../assets/img/edit-grey.png">
+      <span>Edit Wallet</span>
+    </div>
+  </div>
+</div>

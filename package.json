@@ -6,9 +6,9 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.config.json",
     "build": "ng build --prod",
-    "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "test": "protractor protractor.conf.js"
   },
   "private": true,
   "dependencies": {
