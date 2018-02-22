@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Headers, Http, RequestOptions } from '@angular/http';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 import { GetOutputsRequest, Output } from '../app.datatypes';
 
 @Injectable()
 export class ApiService {
 
   private url = 'http://128.199.57.221/';
-
   constructor(private http: Http) { }
 
   getOutputs(addresses): Observable<Output[]> {
