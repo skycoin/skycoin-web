@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {
-  MdButtonModule, MdCardModule, MdDialogModule, MdExpansionModule, MdGridListModule, MdIconModule, MdInputModule,
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdExpansionModule, MdGridListModule,
+  MdIconModule,
+  MdInputModule,
   MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
   MdSelectModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdTooltipModule,
 } from '@angular/material';
@@ -14,9 +16,11 @@ import { AppComponent } from './app.component';
 import { BackButtonComponent } from './components/layout/back-button/back-button.component';
 import { BreadcrumbComponent } from './components/layout/breadcrumb/breadcrumb.component';
 import { ButtonComponent } from './components/layout/button/button.component';
+import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
 import { HeaderComponent } from './components/layout/header/header.component';
 import { NavBarComponent } from './components/layout/header/nav-bar/nav-bar.component';
 import { TopBarComponent } from './components/layout/header/top-bar/top-bar.component';
+import { ModalComponent } from './components/layout/modal/modal.component';
 import { QrCodeComponent } from './components/layout/qr-code/qr-code.component';
 import { AddressComponent } from './components/pages/address/address.component';
 import { BlockComponent } from './components/pages/block/block.component';
@@ -24,6 +28,18 @@ import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-a
 import { BuyComponent } from './components/pages/buy/buy.component';
 import { ExplorerComponent } from './components/pages/explorer/explorer.component';
 import { HistoryComponent } from './components/pages/history/history.component';
+import {
+  OnboardingCreateWalletComponent,
+} from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
+import {
+  OnboardingDisclaimerComponent,
+} from './components/pages/onboarding/onboarding-create-wallet/onboarding-disclaimer/onboarding-disclaimer.component';
+import {
+  OnboardingSafeguardComponent,
+} from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
+import {
+  OnboardingEncryptWalletComponent,
+} from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
 import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skycoin.component';
 import { BackupComponent } from './components/pages/settings/backup/backup.component';
 import { BlockchainComponent } from './components/pages/settings/blockchain/blockchain.component';
@@ -53,7 +69,7 @@ import { WalletService } from './services/wallet.service';
 const ROUTES = [
   {
     path: '',
-    redirectTo: 'wallets',
+    redirectTo: 'wizard',
     pathMatch: 'full',
   },
   {
@@ -169,6 +185,24 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: 'wizard',
+    children: [
+      {
+        path: '',
+        redirectTo: 'create',
+        pathMatch: 'full',
+      },
+      {
+        path: 'create',
+        component: OnboardingCreateWalletComponent,
+      },
+      {
+        path: 'encrypt',
+        component: OnboardingEncryptWalletComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
@@ -204,6 +238,12 @@ const ROUTES = [
     HeaderComponent,
     NavBarComponent,
     TopBarComponent,
+    OnboardingCreateWalletComponent,
+    OnboardingEncryptWalletComponent,
+    OnboardingDisclaimerComponent,
+    OnboardingSafeguardComponent,
+    DoubleButtonComponent,
+    ModalComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -211,6 +251,8 @@ const ROUTES = [
     ChangeNameComponent,
     QrCodeComponent,
     UnlockWalletComponent,
+    OnboardingDisclaimerComponent,
+    OnboardingSafeguardComponent,
   ],
   imports: [
     BrowserModule,
@@ -231,6 +273,7 @@ const ROUTES = [
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
+    MdCheckboxModule,
     NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
