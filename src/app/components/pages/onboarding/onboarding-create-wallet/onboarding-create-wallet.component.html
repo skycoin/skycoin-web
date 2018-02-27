@@ -43,7 +43,8 @@
                 (action)="showNewForm?createWallet():loadWallet()">
       Create
     </app-button>
-    <app-button class="ghost -button-min-margin" (action)="skip()">
+    <app-button *ngIf="haveWallets"
+      class="ghost -button-min-margin" (action)="skip()">
       Skip
     </app-button>
   </div>
