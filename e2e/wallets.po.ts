@@ -218,7 +218,7 @@ export class WalletsPage {
   }
 
   _checkHeaderPriceFormat(price: string) {
-    const reg = /^\$[0-9]+.[0-9]{2}\s\(\$[0-9]+\)$/;
+    const reg = /^\$[0-9]+.[0-9]{2}\s\(\$[0-9]+.[0-9]{2}\)$/;
     return price.match(reg) ?  true :  false;
   }
 }
