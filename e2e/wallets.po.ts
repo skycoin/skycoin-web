@@ -199,6 +199,18 @@ export class WalletsPage {
     });
   }
 
+  canUnlock() {
+     return this.unlockFirstWallet().then(result => {
+       if (result) {
+          return element.all(by.css('.-wallet .-encryption img')).first().getAttribute('src').then(source => {
+            return source.includes('unlock-grey.png');
+          });
+        }else {
+          return false;
+        }
+      });
+  }
+
   unlockFirstWallet(): any {
     return element.all(by.css('.-encryption img')).first().click().then(() => {
       const seed = element(by.css('[formcontrolname="seed"]'));

@@ -75,4 +75,9 @@ describe('Wallets', () => {
   it('should change wallet name', () => {
     expect<any>(page.changeWalletName()).toEqual(true);
   });
+
+  it('should decrypt wallet', () => {
+    page.navigateTo();
+    expect<any>(page.canUnlock()).toEqual(true);
+  });
 });
