@@ -210,4 +210,15 @@ export class WalletsPage {
       });
     });
   }
+
+  showPriceInformation() {
+    return element(by.css('.balance p.dollars')).getText().then(text => {
+      return this._checkHeaderPriceFormat(text);
+    });
+  }
+
+  _checkHeaderPriceFormat(price: string) {
+    const reg = /^\$[0-9]+.[0-9]{2}\s\(\$[0-9]+\)$/;
+    return price.match(reg) ?  true :  false;
+  }
 }

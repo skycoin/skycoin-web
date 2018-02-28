@@ -75,4 +75,8 @@ describe('Wallets', () => {
   it('should change wallet name', () => {
     expect<any>(page.changeWalletName()).toEqual(true);
   });
+
+  it('should display price information', () => {
+    expect<any>(page.showPriceInformation()).toEqual(true);
+  });
 });
