@@ -79,4 +79,9 @@ describe('Wallets', () => {
   it('should display price information', () => {
     expect<any>(page.showPriceInformation()).toEqual(true);
   });
+  
+  it('should decrypt wallet', () => {
+    page.navigateTo();
+    expect<any>(page.canUnlock()).toEqual(true);
+  });
 });
