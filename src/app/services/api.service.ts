@@ -10,7 +10,8 @@ import { GetOutputsRequest, Output } from '../app.datatypes';
 @Injectable()
 export class ApiService {
 
-  private url = 'http://128.199.57.221/';
+  private url = '/api/';
+
   constructor(private http: Http) { }
 
   getOutputs(addresses): Observable<Output[]> {
