@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MdDialog, MdDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import * as Bip39 from 'bip39';
 import { WalletService } from '../../../../services/wallet.service';
@@ -19,7 +19,7 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   doubleButtonActive = DoubleButtonActive.LeftButton;
 
   constructor(
-    private dialog: MdDialog,
+    private dialog: MatDialog,
     public walletService: WalletService,
     private router: Router,
     private formBuilder: FormBuilder,
@@ -72,14 +72,14 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   }
 
   showDisclaimer() {
-    const config = new MdDialogConfig();
+    const config = new MatDialogConfig();
     config.width = '450px';
     config.disableClose = true;
     this.dialog.open(OnboardingDisclaimerComponent, config);
   }
 
   showSafe() {
-    const config = new MdDialogConfig();
+    const config = new MatDialogConfig();
     config.width = '450px';
     config.disableClose = true;
     this.dialog.open(OnboardingSafeguardComponent, config).afterClosed().subscribe(result => {

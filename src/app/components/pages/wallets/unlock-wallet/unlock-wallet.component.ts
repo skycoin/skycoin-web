@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Wallet } from '../../../../app.datatypes';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletService } from '../../../../services/wallet.service';
@@ -14,8 +14,8 @@ export class UnlockWalletComponent implements OnInit {
   form: FormGroup;
 
   constructor(
-    @Inject(MD_DIALOG_DATA) private data: Wallet,
-    public dialogRef: MdDialogRef<UnlockWalletComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: Wallet,
+    public dialogRef: MatDialogRef<UnlockWalletComponent>,
     private formBuilder: FormBuilder,
     private walletService: WalletService,
   ) {}

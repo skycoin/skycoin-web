@@ -1,13 +1,24 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import {
-  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdExpansionModule, MdGridListModule,
-  MdIconModule,
-  MdInputModule, MdListModule, MdMenuModule, MdProgressBarModule,
-  MdProgressSpinnerModule,  MdSelectModule, MdSnackBarModule,
-  MdTabsModule, MdToolbarModule, MdTooltipModule,
-} from '@angular/material';
+import { MatInputModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -270,23 +281,24 @@ const ROUTES = [
   imports: [
     BrowserModule,
     HttpModule,
-    MdButtonModule,
-    MdCardModule,
-    MdDialogModule,
-    MdExpansionModule,
-    MdGridListModule,
-    MdIconModule,
-    MdInputModule,
-    MdListModule,
-    MdMenuModule,
-    MdProgressBarModule,
-    MdProgressSpinnerModule,
-    MdSelectModule,
-    MdSnackBarModule,
-    MdTabsModule,
-    MdToolbarModule,
-    MdTooltipModule,
-    MdCheckboxModule,
+    HttpClientModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatCheckboxModule,
     NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
