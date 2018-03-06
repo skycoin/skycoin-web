@@ -199,15 +199,38 @@ export class WalletsPage {
     });
   }
 
+  canUnlock() {
+     return this.unlockFirstWallet().then(result => {
+       if (result) {
+          return element.all(by.css('.-wallet .-encryption img')).first().getAttribute('src').then(source => {
+            return source.includes('unlock-grey.png');
+          });
+        }else {
+          return false;
+        }
+      });
+  }
+
   unlockFirstWallet(): any {
     return element.all(by.css('.-encryption img')).first().click().then(() => {
       const seed = element(by.css('[formcontrolname="seed"]'));
-      const btnUnlock = element(by.css('.button-line a'));
+      const btnUnlock = element(by.buttonText('Unlock'));
       return seed.sendKeys('Test Wallet').then(() => {
         return btnUnlock.click().then(() => {
             return true;
         });
       });
     });
+  }
+
+  showPriceInformation() {
+    return element(by.css('.balance p.dollars')).getText().then(text => {
+      return this._checkHeaderPriceFormat(text);
+    });
+  }
+
+  _checkHeaderPriceFormat(price: string) {
+    const reg = /^\$[0-9]+.[0-9]{2}\s\(\$[0-9]+.[0-9]{2}\)$/;
+    return price.match(reg) ?  true :  false;
   }
 }

@@ -1,8 +1,16 @@
-<div [formGroup]="form">
-  <mat-input-container>
-    <input matInput formControlName="seed" placeholder="Seed">
-  </mat-input-container>
-</div>
-<div class="button-line">
-  <a mat-raised-button (click)="unlock()">Unlock</a>
-</div>
+<app-modal title="Unlock Wallet" [dialog]="dialogRef">
+  <div [formGroup]="form">
+    <div class="form-field">
+      <label for="seed">Seed</label>
+      <textarea formControlName="seed" id="seed" row="2"></textarea>
+    </div>
+  </div>
+  <div class="-buttons">
+    <app-button (action)="closePopup()">
+      Cancel
+    </app-button>
+    <app-button (action)="unlockWallet()" class="primary" [disabled]="!form.valid">
+      Unlock
+    </app-button>
+  </div>
+</app-modal>

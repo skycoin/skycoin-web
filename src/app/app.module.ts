@@ -83,11 +83,12 @@ import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
+import { WizardGuardService } from './services/wizard-guard.service';
 
 const ROUTES = [
   {
     path: '',
-    redirectTo: 'wizard',
+    redirectTo: 'wallets',
     pathMatch: 'full',
   },
   {
@@ -96,6 +97,7 @@ const ROUTES = [
     data: {
       breadcrumb: 'Wallets',
     },
+    canActivate: [WizardGuardService],
   },
   {
     path: 'send',
@@ -103,6 +105,7 @@ const ROUTES = [
     data: {
       breadcrumb: 'Send Skycoin',
     },
+    canActivate: [WizardGuardService],
   },
   {
     path: 'history',
@@ -122,6 +125,7 @@ const ROUTES = [
         },
       },
     ],
+    canActivate: [WizardGuardService],
   },
   {
     path: 'explorer',
@@ -155,6 +159,7 @@ const ROUTES = [
         },
       },
     ],
+    canActivate: [WizardGuardService],
   },
   {
     path: 'buy',
@@ -162,6 +167,7 @@ const ROUTES = [
     data: {
       breadcrumb: 'Buy Skycoin',
     },
+    canActivate: [WizardGuardService],
   },
   {
     path: 'settings',
@@ -202,6 +208,7 @@ const ROUTES = [
         },
       },
     ],
+    canActivate: [WizardGuardService],
   },
   {
     path: 'wizard',
@@ -312,6 +319,7 @@ const ROUTES = [
     WalletService,
     PriceService,
     ClipboardService,
+    WizardGuardService,
   ],
   bootstrap: [AppComponent],
 })

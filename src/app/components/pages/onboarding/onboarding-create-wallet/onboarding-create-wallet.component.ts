@@ -17,6 +17,7 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   showNewForm = true;
   form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
+  haveWallets = false;
 
   constructor(
     private dialog: MatDialog,
@@ -36,7 +37,10 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   existWallets() {
     this.walletService.all.subscribe(wallets => {
       if (wallets.length === 0) {
+        this.haveWallets = false;
         this.showDisclaimer();
+      }else {
+        this.haveWallets = true;
       }
     });
   }

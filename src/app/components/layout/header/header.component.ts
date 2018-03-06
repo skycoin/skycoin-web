@@ -33,6 +33,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.priceSubscription = this.priceService.price.subscribe(price => this.price = price);
     this.walletSubscription = this.walletService.wallets.subscribe(wallets => {
+      this.coins = wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0).reduce((a , b) => a + b, 0);
       this.hours = wallets.map(wallet => wallet.hours >= 0 ? wallet.hours : 0).reduce((a , b) => a + b, 0);
     });
   }
