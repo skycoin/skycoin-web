@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Wallet } from '../../../../app.datatypes';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { WalletService } from '../../../../services/wallet.service';
   styleUrls: ['./unlock-wallet.component.scss'],
 })
 export class UnlockWalletComponent implements OnInit {
-
+  @ViewChild('unlock') unlockButton;
   form: FormGroup;
 
   constructor(
@@ -18,6 +19,7 @@ export class UnlockWalletComponent implements OnInit {
     public dialogRef: MatDialogRef<UnlockWalletComponent>,
     private formBuilder: FormBuilder,
     private walletService: WalletService,
+    private snackbar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -29,8 +31,18 @@ export class UnlockWalletComponent implements OnInit {
   }
 
   unlockWallet() {
-    this.walletService.unlockWallet(this.data, this.form.value.seed);
-    this.dialogRef.close();
+    this.walletService.unlockWallet(this.data, this.form.value.seed)
+    .then(
+      () => {
+        this.dialogRef.close();
+      },
+      (error: Error) => {
+        const config = new MatSnackBarConfig();
+        config.duration = 5000;
+        this.snackbar.open(error.message, null, config);
+        this.unlockButton.setError({ _body: error.message });
+      },
+    );
   }
 
   private initForm() {

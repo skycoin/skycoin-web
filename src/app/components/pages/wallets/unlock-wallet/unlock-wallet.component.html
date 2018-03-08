@@ -9,7 +9,7 @@
     <app-button (action)="closePopup()">
       Cancel
     </app-button>
-    <app-button (action)="unlockWallet()" class="primary" [disabled]="!form.valid">
+    <app-button #unlock (action)="unlockWallet()" class="primary" [disabled]="!form.valid">
       Unlock
     </app-button>
   </div>
