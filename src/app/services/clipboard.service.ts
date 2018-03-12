@@ -15,7 +15,7 @@ export class ClipboardService {
 
   public copy( value: string ): Promise<string> {
 
-    let promise = new Promise(
+    let promise = new Promise<string>(
       ( resolve, reject ): void => {
 
         let textarea = null;

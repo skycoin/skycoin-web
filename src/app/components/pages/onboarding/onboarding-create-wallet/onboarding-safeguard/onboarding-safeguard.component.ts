@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-onboarding-safeguard',
@@ -11,7 +11,7 @@ export class OnboardingSafeguardComponent {
   public acceptSafe = false;
 
   constructor(
-    public dialogRef: MdDialogRef<OnboardingSafeguardComponent>,
+    public dialogRef: MatDialogRef<OnboardingSafeguardComponent>,
   ) { }
 
   closePopup() {

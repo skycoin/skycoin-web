@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 declare var QRCode: any;
 
@@ -18,8 +18,8 @@ export class QrCodeComponent implements OnInit, AfterViewInit {
   usesvg: boolean = false;
 
   constructor(
-    @Inject(MD_DIALOG_DATA) public data: any,
-    public dialogRef: MdDialogRef<QrCodeComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<QrCodeComponent>,
   ) { }
 
   ngOnInit() {

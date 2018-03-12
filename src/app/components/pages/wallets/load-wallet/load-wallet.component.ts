@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class LoadWalletComponent implements OnInit {
   seed: string;
 
   constructor(
-    public dialogRef: MdDialogRef<LoadWalletComponent>,
+    public dialogRef: MatDialogRef<LoadWalletComponent>,
     private walletService: WalletService,
     private formBuilder: FormBuilder,
   ) {}
