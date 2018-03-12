@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MdDialog, MdDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/Subscription';
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
@@ -19,7 +19,7 @@ export class HistoryComponent implements OnInit {
   constructor(
     public walletService: WalletService,
     private priceService: PriceService,
-    private dialog: MdDialog,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -30,7 +30,7 @@ export class HistoryComponent implements OnInit {
   }
 
   showTransaction(transaction: any) {
-    const config = new MdDialogConfig();
+    const config = new MatDialogConfig();
     config.width = '566px';
     config.data = transaction;
     this.dialog.open(TransactionDetailComponent, config).afterClosed().subscribe();

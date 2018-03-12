@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.scss']
+  styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent {
-  @Input() dialog: MdDialogRef<any>;
+  @Input() dialog: MatDialogRef<any>;
   @Input() title: string;
   @Input() disableDismiss: boolean;
 

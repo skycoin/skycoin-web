@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-onboarding-disclaimer',
@@ -11,7 +11,7 @@ export class OnboardingDisclaimerComponent {
   acceptTerms = false;
 
   constructor(
-    public dialogRef: MdDialogRef<OnboardingDisclaimerComponent>,
+    public dialogRef: MatDialogRef<OnboardingDisclaimerComponent>,
   ) { }
 
   closePopup() {

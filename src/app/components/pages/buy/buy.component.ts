@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { PurchaseService } from '../../../services/purchase.service';
-import { MdDialog, MdDialogConfig } from '@angular/material';
-import { AddDepositAddressComponent } from './add-deposit-address/add-deposit-address.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { config } from '../../../app.config';
+import { PurchaseService } from '../../../services/purchase.service';
+import { AddDepositAddressComponent } from './add-deposit-address/add-deposit-address.component';
 
 @Component({
   selector: 'app-buy',
   templateUrl: './buy.component.html',
-  styleUrls: ['./buy.component.css']
+  styleUrls: ['./buy.component.css'],
 })
 export class BuyComponent {
 
@@ -17,13 +17,13 @@ export class BuyComponent {
 
   constructor(
     public purchaseService: PurchaseService,
-    private dialog: MdDialog,
+    private dialog: MatDialog,
   ) {
     this.otcEnabled = config.otcEnabled;
   }
 
   addDepositAddress() {
-    const config = new MdDialogConfig();
+    const config = new MatDialogConfig();
     config.width = '500px';
     this.dialog.open(AddDepositAddressComponent, config);
   }
@@ -37,8 +37,7 @@ export class BuyComponent {
     });
   }
 
-  private disableScanning()
-  {
+  private disableScanning() {
     setTimeout(() => this.scanning = false, 1000);
   }
 }

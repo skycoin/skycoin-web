@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MdDialog, MdDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Wallet } from '../../../app.datatypes';
 import { WalletService } from '../../../services/wallet.service';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
@@ -15,23 +15,24 @@ export class WalletsComponent {
 
   constructor(
     public walletService: WalletService,
-    private dialog: MdDialog,
+    private dialog: MatDialog,
   ) {}
 
   addWallet() {
-    const config = new MdDialogConfig();
+    const config = new MatDialogConfig();
     config.width = '566px';
     this.dialog.open(CreateWalletComponent, config);
   }
+
   unlockWallet(wallet: Wallet) {
-    const config = new MdDialogConfig();
+    const config = new MatDialogConfig();
     config.width = '500px';
     config.data = wallet;
     this.dialog.open(UnlockWalletComponent, config);
   }
 
   loadWallet() {
-    const config = new MdDialogConfig();
+    const config = new MatDialogConfig();
     config.width = '566px';
     this.dialog.open(LoadWalletComponent, config);
   }
