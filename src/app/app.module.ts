@@ -24,8 +24,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AppComponent } from './app.component';
-import { BackButtonComponent } from './components/layout/back-button/back-button.component';
-import { BreadcrumbComponent } from './components/layout/breadcrumb/breadcrumb.component';
 import { ButtonComponent } from './components/layout/button/button.component';
 import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
 import { HeaderComponent } from './components/layout/header/header.component';
@@ -71,9 +69,7 @@ import { AppRoutes } from './app.routes';
   declarations: [
     AddDepositAddressComponent,
     AppComponent,
-    BackButtonComponent,
     BlockchainComponent,
-    BreadcrumbComponent,
     ButtonComponent,
     BuyComponent,
     ChangeNameComponent,
