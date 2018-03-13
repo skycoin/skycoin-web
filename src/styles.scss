@@ -121,9 +121,21 @@ button.active {
   background-color: rgba(0, 0, 0, .12);
 }
 
-mat-spinner.in-button .mat-spinner path {
-  stroke: #000;
-  opacity: 0.3;
+mat-spinner.in-button {
+  display: inline-block;
+  margin-left: 10px;
+  height: 24px !important;
+  width: 24px !important;
+
+  svg {
+    height: 24px !important;
+    width: 24px !important;
+  }
+
+  circle {
+    stroke: #000;
+    opacity: 0.3;
+  }
 }
 
 snack-bar-container {
@@ -159,10 +171,10 @@ mat-panel-title {
     line-height: 10px;
     margin-bottom: 10px;
   }
-/*
-    line-height: 20px;
-    margin-bottom: 2px;
-*/
+  /*
+      line-height: 20px;
+      margin-bottom: 2px;
+  */
 
   input {
     border: 2px solid rgba(0, 0, 0, 0.05);

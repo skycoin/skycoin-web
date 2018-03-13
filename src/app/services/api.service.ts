@@ -15,7 +15,7 @@ export class ApiService {
   constructor(private http: Http) { }
 
   getOutputs(addresses): Observable<Output[]> {
-    return addresses ? this.get('outputs', { addresses: addresses }).map((response: GetOutputsRequest) => {
+    return addresses ? this.get('outputs', { addrs: addresses }).map((response: GetOutputsRequest) => {
       const outputs: Output[] = [];
       response.head_outputs.forEach(output => outputs.push({
         address: output.address,
@@ -28,7 +28,7 @@ export class ApiService {
   }
 
   postTransaction(rawTransaction: string): Observable<string> {
-    return this.post('transaction', { raw: rawTransaction });
+    return this.post('injectTransaction', { rawtx: rawTransaction });
   }
 
   get(url, options = null) {

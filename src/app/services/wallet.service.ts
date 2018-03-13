@@ -175,7 +175,8 @@ export class WalletService {
   outputs(): Observable<any> {
     return this.addressesAsString()
       .filter(addresses => !!addresses)
-      .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }));
+      .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
+      .map(response => response.head_outputs);
   }
 
   pendingTransactions(): Observable<any> {
