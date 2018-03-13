@@ -44,7 +44,6 @@ import { OnboardingDisclaimerComponent } from './components/pages/onboarding/onb
 import { OnboardingSafeguardComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
 import { OnboardingEncryptWalletComponent } from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
 import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skycoin.component';
-import { BackupComponent } from './components/pages/settings/backup/backup.component';
 import { BlockchainComponent } from './components/pages/settings/blockchain/blockchain.component';
 import { NetworkComponent } from './components/pages/settings/network/network.component';
 import { OutputsComponent } from './components/pages/settings/outputs/outputs.component';
@@ -96,7 +95,6 @@ import { AppRoutes } from './app.routes';
     PendingTransactionsComponent,
     OutputsComponent,
     BlockchainComponent,
-    BackupComponent,
     NetworkComponent,
     ChangeNameComponent,
     ButtonComponent,

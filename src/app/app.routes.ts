@@ -11,7 +11,6 @@ import { HistoryComponent } from './components/pages/history/history.component';
 import { OnboardingEncryptWalletComponent } from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
 import { ExplorerComponent } from './components/pages/explorer/explorer.component';
 import { BuyComponent } from './components/pages/buy/buy.component';
-import { BackupComponent } from './components/pages/settings/backup/backup.component';
 import { OnboardingCreateWalletComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
 import { TransactionComponent } from './components/pages/transaction/transaction.component';
 
@@ -75,10 +74,6 @@ export const AppRoutes = [
   {
     path: 'settings',
     children: [
-      {
-        path: 'backup',
-        component: BackupComponent,
-      },
       {
         path: 'blockchain',
         component: BlockchainComponent,
