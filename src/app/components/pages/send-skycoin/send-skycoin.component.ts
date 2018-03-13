@@ -8,7 +8,7 @@ import { WalletService } from '../../../services/wallet.service';
 @Component({
   selector: 'app-send-skycoin',
   templateUrl: './send-skycoin.component.html',
-  styleUrls: ['./send-skycoin.component.css'],
+  styleUrls: ['./send-skycoin.component.scss'],
 })
 export class SendSkycoinComponent implements OnInit {
   @ViewChild('button') button;
@@ -37,7 +37,8 @@ export class SendSkycoinComponent implements OnInit {
         error => {
           const config = new MatSnackBarConfig();
           config.duration = 300000;
-          this.snackbar.open(error['_body'], null, config);
+          const errorMessage = error._body ? error._body : 'Your transaction appears to be unsuccessful';
+          this.snackbar.open(errorMessage, null, config);
           this.button.setError(error);
         },
       );
