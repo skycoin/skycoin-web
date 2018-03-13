@@ -72,109 +72,7 @@ import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
 import { WizardGuardService } from './services/wizard-guard.service';
-
-const ROUTES = [
-  {
-    path: '',
-    redirectTo: 'wallets',
-    pathMatch: 'full',
-  },
-  {
-    path: 'wallets',
-    component: WalletsComponent,
-    canActivate: [WizardGuardService],
-  },
-  {
-    path: 'send',
-    component: SendSkycoinComponent,
-    canActivate: [WizardGuardService],
-  },
-  {
-    path: 'history',
-    children: [
-      {
-        path: '',
-        component: HistoryComponent,
-      },
-      {
-        path: ':transaction',
-        component: TransactionComponent,
-      },
-    ],
-    canActivate: [WizardGuardService],
-  },
-  {
-    path: 'explorer',
-    children: [
-      {
-        path: '',
-        component: ExplorerComponent,
-      },
-      {
-        path: 'address/:address',
-        component: AddressComponent,
-      },
-      {
-        path: ':block',
-        component: BlockComponent,
-      },
-      {
-        path: 'transaction/:transaction',
-        component: TransactionComponent,
-      },
-    ],
-    canActivate: [WizardGuardService],
-  },
-  {
-    path: 'buy',
-    component: BuyComponent,
-    canActivate: [WizardGuardService],
-  },
-  {
-    path: 'settings',
-    children: [
-      {
-        path: 'backup',
-        component: BackupComponent,
-      },
-      {
-        path: 'blockchain',
-        component: BlockchainComponent,
-      },
-      {
-        path: 'network',
-        component: NetworkComponent,
-      },
-      {
-        path: 'outputs',
-        component: OutputsComponent,
-      },
-      {
-        path: 'pending-transactions',
-        component: PendingTransactionsComponent,
-      },
-    ],
-    canActivate: [WizardGuardService],
-  },
-  {
-    path: 'wizard',
-    children: [
-      {
-        path: '',
-        redirectTo: 'create',
-        pathMatch: 'full',
-      },
-      {
-        path: 'create',
-        component: OnboardingCreateWalletComponent,
-      },
-      {
-        path: 'encrypt',
-        component: OnboardingEncryptWalletComponent,
-      },
-    ],
-  },
-];
+import { AppRoutes } from './app.routes';
 
 @NgModule({
   declarations: [
@@ -255,7 +153,7 @@ const ROUTES = [
     NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(ROUTES, { useHash: true }),
+    RouterModule.forRoot(AppRoutes, { useHash: true }),
   ],
   providers: [
     ApiService,
