@@ -95,7 +95,6 @@ import { AppRoutes } from './app.routes';
     PendingTransactionsComponent,
     OutputsComponent,
     BlockchainComponent,
-    NetworkComponent,
     ChangeNameComponent,
     ButtonComponent,
     QrCodeComponent,

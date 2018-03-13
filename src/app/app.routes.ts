@@ -1,6 +1,5 @@
 import { AddressComponent } from './components/pages/address/address.component';
 import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skycoin.component';
-import { NetworkComponent } from './components/pages/settings/network/network.component';
 import { WizardGuardService } from './services/wizard-guard.service';
 import { WalletsComponent } from './components/pages/wallets/wallets.component';
 import { BlockComponent } from './components/pages/block/block.component';
@@ -77,10 +76,6 @@ export const AppRoutes = [
       {
         path: 'blockchain',
         component: BlockchainComponent,
-      },
-      {
-        path: 'network',
-        component: NetworkComponent,
       },
       {
         path: 'outputs',
