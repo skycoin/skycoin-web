@@ -2,7 +2,7 @@
   <div #qr class="-code"></div>
   <div class="row -address-footer">
     <div class="-address-label">Address</div>
-    <div class="-address-address">{{data.address}}</div>
-    <img #btnImg class="-button-qr" title="Copy address to clipboard" [clipboard]=data.address (clipboardCopy)="onCopySuccess()">
+    <div class="-address-address">{{ address }}</div>
+    <img #btnImg class="-button-qr" title="Copy address to clipboard" [clipboard]=address (clipboardCopy)="onCopySuccess()">
   </div>
 </app-modal>
