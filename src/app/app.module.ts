@@ -39,30 +39,18 @@ import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-a
 import { BuyComponent } from './components/pages/buy/buy.component';
 import { ExplorerComponent } from './components/pages/explorer/explorer.component';
 import { HistoryComponent } from './components/pages/history/history.component';
-import {
-  OnboardingCreateWalletComponent,
-} from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
-import {
-  OnboardingDisclaimerComponent,
-} from './components/pages/onboarding/onboarding-create-wallet/onboarding-disclaimer/onboarding-disclaimer.component';
-import {
-  OnboardingSafeguardComponent,
-} from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
-import {
-  OnboardingEncryptWalletComponent,
-} from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
+import { OnboardingCreateWalletComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
+import { OnboardingDisclaimerComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-disclaimer/onboarding-disclaimer.component';
+import { OnboardingSafeguardComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
+import { OnboardingEncryptWalletComponent } from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
 import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skycoin.component';
 import { BackupComponent } from './components/pages/settings/backup/backup.component';
 import { BlockchainComponent } from './components/pages/settings/blockchain/blockchain.component';
 import { NetworkComponent } from './components/pages/settings/network/network.component';
 import { OutputsComponent } from './components/pages/settings/outputs/outputs.component';
-import {
-  PendingTransactionsComponent,
-} from './components/pages/settings/pending-transactions/pending-transactions.component';
+import { PendingTransactionsComponent } from './components/pages/settings/pending-transactions/pending-transactions.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
-import {
-  TransactionDetailComponent,
-} from './components/pages/transaction/transaction-detail/transaction-detail.component';
+import { TransactionDetailComponent } from './components/pages/transaction/transaction-detail/transaction-detail.component';
 import { TransactionComponent } from './components/pages/transaction/transaction.component';
 import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
 import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
@@ -94,17 +82,11 @@ const ROUTES = [
   {
     path: 'wallets',
     component: WalletsComponent,
-    data: {
-      breadcrumb: 'Wallets',
-    },
     canActivate: [WizardGuardService],
   },
   {
     path: 'send',
     component: SendSkycoinComponent,
-    data: {
-      breadcrumb: 'Send Skycoin',
-    },
     canActivate: [WizardGuardService],
   },
   {
@@ -113,16 +95,10 @@ const ROUTES = [
       {
         path: '',
         component: HistoryComponent,
-        data: {
-          breadcrumb: 'History',
-        },
       },
       {
         path: ':transaction',
         component: TransactionComponent,
-        data: {
-          breadcrumb: 'Transaction',
-        },
       },
     ],
     canActivate: [WizardGuardService],
@@ -133,30 +109,18 @@ const ROUTES = [
       {
         path: '',
         component: ExplorerComponent,
-        data: {
-          breadcrumb: 'Explorer',
-        },
       },
       {
         path: 'address/:address',
         component: AddressComponent,
-        data: {
-          breadcrumb: 'Address',
-        },
       },
       {
         path: ':block',
         component: BlockComponent,
-        data: {
-          breadcrumb: 'Block',
-        },
       },
       {
         path: 'transaction/:transaction',
         component: TransactionComponent,
-        data: {
-          breadcrumb: 'Transaction',
-        },
       },
     ],
     canActivate: [WizardGuardService],
@@ -164,9 +128,6 @@ const ROUTES = [
   {
     path: 'buy',
     component: BuyComponent,
-    data: {
-      breadcrumb: 'Buy Skycoin',
-    },
     canActivate: [WizardGuardService],
   },
   {
@@ -175,37 +136,22 @@ const ROUTES = [
       {
         path: 'backup',
         component: BackupComponent,
-        data: {
-          breadcrumb: 'Backup',
-        },
       },
       {
         path: 'blockchain',
         component: BlockchainComponent,
-        data: {
-          breadcrumb: 'Blockchain',
-        },
       },
       {
         path: 'network',
         component: NetworkComponent,
-        data: {
-          breadcrumb: 'Networking',
-        },
       },
       {
         path: 'outputs',
         component: OutputsComponent,
-        data: {
-          breadcrumb: 'Outputs',
-        },
       },
       {
         path: 'pending-transactions',
         component: PendingTransactionsComponent,
-        data: {
-          breadcrumb: 'Pending transactions',
-        },
       },
     ],
     canActivate: [WizardGuardService],
