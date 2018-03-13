@@ -33,11 +33,8 @@ import { NavBarComponent } from './components/layout/header/nav-bar/nav-bar.comp
 import { TopBarComponent } from './components/layout/header/top-bar/top-bar.component';
 import { ModalComponent } from './components/layout/modal/modal.component';
 import { QrCodeComponent } from './components/layout/qr-code/qr-code.component';
-import { AddressComponent } from './components/pages/address/address.component';
-import { BlockComponent } from './components/pages/block/block.component';
 import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-address/add-deposit-address.component';
 import { BuyComponent } from './components/pages/buy/buy.component';
-import { ExplorerComponent } from './components/pages/explorer/explorer.component';
 import { HistoryComponent } from './components/pages/history/history.component';
 import { OnboardingCreateWalletComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
 import { OnboardingDisclaimerComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-disclaimer/onboarding-disclaimer.component';
@@ -47,8 +44,7 @@ import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skyco
 import { BlockchainComponent } from './components/pages/settings/blockchain/blockchain.component';
 import { OutputsComponent } from './components/pages/settings/outputs/outputs.component';
 import { PendingTransactionsComponent } from './components/pages/settings/pending-transactions/pending-transactions.component';
-import { TransactionDetailComponent } from './components/pages/transaction/transaction-detail/transaction-detail.component';
-import { TransactionComponent } from './components/pages/transaction/transaction.component';
+import { TransactionDetailComponent } from './components/pages/history/transaction-detail/transaction-detail.component';
 import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
 import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
 import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
@@ -73,44 +69,40 @@ import { AppRoutes } from './app.routes';
 
 @NgModule({
   declarations: [
+    AddDepositAddressComponent,
     AppComponent,
+    BackButtonComponent,
+    BlockchainComponent,
+    BreadcrumbComponent,
+    ButtonComponent,
+    BuyComponent,
+    ChangeNameComponent,
+    ClipboardDirective,
+    CreateWalletComponent,
+    DateFromNowPipe,
+    DateTimePipe,
+    DoubleButtonComponent,
+    HeaderComponent,
     HistoryComponent,
+    LoadWalletComponent,
+    ModalComponent,
+    NavBarComponent,
+    OutputsComponent,
+    OnboardingCreateWalletComponent,
+    OnboardingDisclaimerComponent,
+    OnboardingEncryptWalletComponent,
+    OnboardingSafeguardComponent,
+    PendingTransactionsComponent,
+    QrCodeComponent,
+    SendSkycoinComponent,
+    SkyPipe,
+    TellerStatusPipe,
+    TopBarComponent,
+    TransactionDetailComponent,
+    TransactionsAmountPipe,
+    UnlockWalletComponent,
     WalletsComponent,
     WalletDetailComponent,
-    CreateWalletComponent,
-    LoadWalletComponent,
-    SkyPipe,
-    SendSkycoinComponent,
-    DateFromNowPipe,
-    BreadcrumbComponent,
-    TransactionComponent,
-    BackButtonComponent,
-    ExplorerComponent,
-    DateTimePipe,
-    TransactionsAmountPipe,
-    BlockComponent,
-    AddressComponent,
-    PendingTransactionsComponent,
-    OutputsComponent,
-    BlockchainComponent,
-    ChangeNameComponent,
-    ButtonComponent,
-    QrCodeComponent,
-    BuyComponent,
-    AddDepositAddressComponent,
-    TellerStatusPipe,
-    UnlockWalletComponent,
-    HeaderComponent,
-    NavBarComponent,
-    TopBarComponent,
-    OnboardingCreateWalletComponent,
-    OnboardingEncryptWalletComponent,
-    OnboardingDisclaimerComponent,
-    OnboardingSafeguardComponent,
-    DoubleButtonComponent,
-    ModalComponent,
-    ClipboardDirective,
-    TransactionDetailComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
