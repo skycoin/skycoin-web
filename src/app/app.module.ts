@@ -147,7 +147,7 @@ import { AppRoutes } from './app.routes';
     NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(AppRoutes, { useHash: true }),
+    RouterModule.forRoot(AppRoutes),
   ],
   providers: [
     ApiService,
