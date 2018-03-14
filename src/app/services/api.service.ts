@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Headers, Http, RequestOptions } from '@angular/http';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 import { GetOutputsRequest, Output } from '../app.datatypes';
 
 @Injectable()
 export class ApiService {
 
-  private url = 'http://128.199.57.221/';
+  private url = '/api/';
 
   constructor(private http: Http) { }
 
   getOutputs(addresses): Observable<Output[]> {
-    return addresses ? this.get('outputs', { addresses: addresses }).map((response: GetOutputsRequest) => {
+    return addresses ? this.get('outputs', { addrs: addresses }).map((response: GetOutputsRequest) => {
       const outputs: Output[] = [];
       response.head_outputs.forEach(output => outputs.push({
         address: output.address,
@@ -28,11 +28,11 @@ export class ApiService {
   }
 
   postTransaction(rawTransaction: string): Observable<string> {
-    return this.post('transaction', { raw: rawTransaction });
+    return this.post('injectTransaction', { rawtx: rawTransaction });
   }
 
   get(url, options = null) {
-    return this.http.get(this.getUrl(url, options), this.getHeaders())
+    return this.http.get(this.getUrl(url, options), this.returnRequestOptions())
       .map((res: any) => res.json())
       .catch((error: any) => Observable.throw(error || 'Server error'));
   }

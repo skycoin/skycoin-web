@@ -1,37 +1,53 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
-import { Wallet } from '../../../../app.datatypes';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
   selector: 'app-unlock-wallet',
   templateUrl: './unlock-wallet.component.html',
-  styleUrls: ['./unlock-wallet.component.css']
+  styleUrls: ['./unlock-wallet.component.scss'],
 })
 export class UnlockWalletComponent implements OnInit {
-
+  @ViewChild('unlock') unlockButton;
   form: FormGroup;
 
   constructor(
-    @Inject(MD_DIALOG_DATA) private data: Wallet,
-    public dialogRef: MdDialogRef<UnlockWalletComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: Wallet,
+    public dialogRef: MatDialogRef<UnlockWalletComponent>,
     private formBuilder: FormBuilder,
     private walletService: WalletService,
+    private snackbar: MatSnackBar,
   ) {}
 
   ngOnInit() {
     this.initForm();
   }
 
-  unlock() {
-    this.walletService.unlockWallet(this.data, this.form.value.seed);
+  closePopup() {
     this.dialogRef.close();
+  }
+
+  unlockWallet() {
+    this.walletService.unlockWallet(this.data, this.form.value.seed)
+    .then(
+      () => {
+        this.dialogRef.close();
+      },
+      (error: Error) => {
+        const config = new MatSnackBarConfig();
+        config.duration = 5000;
+        this.snackbar.open(error.message, null, config);
+        this.unlockButton.setError({ _body: error.message });
+      },
+    );
   }
 
   private initForm() {
     this.form = this.formBuilder.group({
-      seed: [this.data.seed, Validators.required],
+      seed: [this.data.seed || '', Validators.required],
     });
   }
 }

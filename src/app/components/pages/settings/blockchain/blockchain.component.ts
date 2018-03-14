@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { BlockchainService } from '../../../../services/blockchain.service';
 
 @Component({
-  selector: 'app-blockchain',
   templateUrl: './blockchain.component.html',
-  styleUrls: ['./blockchain.component.css']
+  styleUrls: ['./blockchain.component.scss']
 })
 export class BlockchainComponent implements OnInit {
-
   block: any;
 
   constructor(

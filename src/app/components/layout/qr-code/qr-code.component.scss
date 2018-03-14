@@ -1,0 +1,35 @@
+@import '../../../../theme/_variables';
+.-code {
+  margin: 50px;
+  ::ng-deep img {
+    margin: 0 auto;
+  }
+}
+
+.-address-footer {
+  mix-blend-mode: normal;
+  opacity: 0.43;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  line-height: normal;
+  color: $grey-normal;
+
+  .-address-label {
+    mix-blend-mode: normal;
+    opacity: 0.5;
+  }
+
+  .-address-address {
+    text-align: right;
+  }
+}
+.-button-qr{
+  border-radius: 100px;
+  cursor: pointer;
+}
+.-button-qr:hover{
+  box-shadow: 0px 2px 1px 1px #1e2227;
+}
+

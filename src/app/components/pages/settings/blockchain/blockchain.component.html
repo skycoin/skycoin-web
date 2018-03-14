@@ -1,16 +1,30 @@
-<md-card>
-  <md-card-title>Blockchain</md-card-title>
-  <md-card class="skycoin-details">
-    <div class="skycoin-detail-keys">
-      Number of blocks: <br>
-      Time since last block: <br>
-      Hash of last block: <br>
+<div class="sky-container sky-container-grey">
+  <app-header title="Blockchain"></app-header>
+  <div class="container">
+    <div class="-paper">
+      <div class="-keys">
+        Number of blocks: <br>
+        Time since last block: <br>
+        Hash of last block: <br>
+      </div>
+      <div class="-values" *ngIf="block && block.header">
+        {{ block.header.seq }} <br>
+        {{ block.header.timestamp | dateFromNow }} <br>
+        {{ block.header.block_hash }}
+      </div>
     </div>
-    <div class="skycoin-detail-values" *ngIf="block && block.header">
-      {{ block.header.seq }} <br>
-      {{ block.header.timestamp | dateFromNow }} <br>
-      {{ block.header.block_hash }}
-    </div>
-  </md-card>
-</md-card>
+  </div>
+</div>
 
+
+
+
+<!--<div class="sky-container sky-container-grey">-->
+  <!--<app-header title="Blockchain"></app-header>-->
+  <!--<mat-card>-->
+    <!--<mat-card-title>Blockchain</mat-card-title>-->
+    <!--<mat-card class="skycoin-details">-->
+      <!---->
+    <!--</mat-card>-->
+  <!--</mat-card>-->
+<!--</div>-->

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { WalletService } from '../../../../services/wallet.service';
-import { MdDialogRef } from '@angular/material';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import * as Bip39 from 'bip39';
+import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
   selector: 'app-create-wallet',
   templateUrl: './create-wallet.component.html',
-  styleUrls: ['./create-wallet.component.css']
+  styleUrls: ['./create-wallet.component.scss'],
 })
 export class CreateWalletComponent implements OnInit {
 
@@ -15,13 +15,17 @@ export class CreateWalletComponent implements OnInit {
   seed: string;
 
   constructor(
-    public dialogRef: MdDialogRef<CreateWalletComponent>,
-    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<CreateWalletComponent>,
     private walletService: WalletService,
-  ) {}
+    private formBuilder: FormBuilder,
+  ) { }
 
   ngOnInit() {
     this.initForm();
+  }
+
+  closePopup() {
+    this.dialogRef.close();
   }
 
   createWallet() {
@@ -35,11 +39,28 @@ export class CreateWalletComponent implements OnInit {
 
   private initForm() {
     this.form = this.formBuilder.group({
-      label: ['', Validators.required],
-      seed: ['', Validators.required],
-    });
+        label: new FormControl('', Validators.compose([
+          Validators.required, Validators.minLength(2),
+        ])),
+        seed: new FormControl('', Validators.compose([
+          Validators.required, Validators.minLength(2),
+        ])),
+        confirm_seed: new FormControl('',
+            Validators.compose([
+              Validators.required,
+              Validators.minLength(2),
+            ]),
+        ),
+      },
+      { validator: this.seedMatchValidator.bind(this) },
+    );
 
     this.generateSeed();
+  }
+
+  private seedMatchValidator(g: FormGroup) {
+    return g.get('seed').value === g.get('confirm_seed').value
+      ? null : { mismatch: true };
   }
 
 }

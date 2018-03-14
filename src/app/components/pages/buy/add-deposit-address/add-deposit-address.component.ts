@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { WalletService } from '../../../../services/wallet.service';
+import { MatDialogRef } from '@angular/material/dialog';
 import { PurchaseService } from '../../../../services/purchase.service';
-import { MdDialogRef } from '@angular/material';
+import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
   selector: 'app-add-deposit-address',
   templateUrl: './add-deposit-address.component.html',
-  styleUrls: ['./add-deposit-address.component.css']
+  styleUrls: ['./add-deposit-address.component.css'],
 })
 export class AddDepositAddressComponent implements OnInit {
 
@@ -15,7 +15,7 @@ export class AddDepositAddressComponent implements OnInit {
 
   constructor(
     public walletService: WalletService,
-    private dialogRef: MdDialogRef<AddDepositAddressComponent>,
+    private dialogRef: MatDialogRef<AddDepositAddressComponent>,
     private formBuilder: FormBuilder,
     private purchaseService: PurchaseService,
   ) {}
