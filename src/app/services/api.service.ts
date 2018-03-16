@@ -6,11 +6,12 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { GetOutputsRequest, Output } from '../app.datatypes';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ApiService {
 
-  private url = '/api/';
+  private url = environment.nodeUrl;
 
   constructor(private http: Http) { }
 
