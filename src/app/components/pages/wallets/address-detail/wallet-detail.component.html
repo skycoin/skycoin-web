@@ -6,7 +6,7 @@
       <p>{{ address.address }}</p>
     </div>
     <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
-    <div class="coins-column">{{ address.balance ? address.balance : 0 }}</div>
+    <div class="coins-column">{{ (address.balance ? address.balance : 0) | number:'1.0-6' }}</div>
   </div>
 </ng-container>
 <div class="-actions">
