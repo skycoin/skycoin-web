@@ -12,7 +12,7 @@ export class ButtonComponent {
   @Output() action = new EventEmitter();
 
   error: string;
-  state: number = 0;
+  state: number;
 
   onClick() {
     if (!this.disabled || this.emit) {
