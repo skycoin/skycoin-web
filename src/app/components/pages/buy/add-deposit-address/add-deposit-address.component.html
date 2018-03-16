@@ -1,7 +1,7 @@
 <p>Choose an address to generate a BTC deposit link for:</p>
 <div [formGroup]="form">
   <mat-select formControlName="address" placeholder="Select Address" class="input-field">
-    <mat-option *ngFor="let address of walletService.allAddresses() | async" [value]="address.address">
+    <mat-option *ngFor="let address of walletService.addresses | async" [value]="address.address">
       {{ address.address }}
     </mat-option>
   </mat-select>
