@@ -43,7 +43,11 @@ export class WalletService {
   get all(): Observable<Wallet[]> {
     return this.wallets.asObservable().map(wallets => wallets ? wallets : []);
   }
+
   addAddress(wallet: Wallet) {
+    if (!wallet.seed || !wallet.addresses[wallet.addresses.length - 1].next_seed) {
+      throw new Error('trying to generate address without seed!');
+    }
     const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
     wallet.addresses.push(this.generateAddress(lastSeed));
     this.updateWallet(wallet);
