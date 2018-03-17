@@ -51,6 +51,7 @@ export class WalletService {
     const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
     wallet.addresses.push(this.generateAddress(lastSeed));
     this.updateWallet(wallet);
+    this.loadBalances();
   }
 
   create(label, seed) {
@@ -258,10 +259,12 @@ export class WalletService {
         this.all.first().subscribe(wallets => {
           wallets.forEach(wallet => {
             wallet.addresses.forEach(address => {
+              address.balance = 0;
+              address.hours = 0;
               const output = outputs.find(o => address.address === o.address);
               if (output) {
-                address.balance = address.balance >= 0 ? address.balance + output.coins : output.coins;
-                address.hours = address.hours >= 0 ? address.hours + output.hours : output.hours;
+                address.balance = address.balance + output.coins;
+                address.hours = address.hours + output.hours;
               }
             });
             wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0)
