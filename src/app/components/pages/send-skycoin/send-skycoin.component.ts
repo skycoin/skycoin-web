@@ -66,6 +66,6 @@ export class SendSkycoinComponent implements OnInit {
     this.form.controls.wallet.reset(undefined);
     this.form.controls.address.reset(undefined);
     this.form.controls.amount.reset(undefined);
-    this.form.controls.note.reset(undefined);
+    this.form.controls.notes.reset(undefined);
   }
 }
