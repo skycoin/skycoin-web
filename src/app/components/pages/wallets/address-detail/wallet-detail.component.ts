@@ -19,28 +19,10 @@ export class WalletDetailComponent {
     private dialog: MatDialog,
   ) {}
 
-  addAddress() {
-    this.walletService.addAddress(this.wallet);
-  }
-
-  renameWallet() {
-    const config = new MatDialogConfig();
-    config.width = '500px';
-    config.data = this.wallet;
-    this.dialog.open(ChangeNameComponent, config);
-  }
-
   showQr(address) {
     const config = new MatDialogConfig();
     config.data = address;
     this.dialog.open(QrCodeComponent, config);
-  }
-
-  unlockWallet() {
-    const config = new MatDialogConfig();
-    config.width = '500px';
-    config.data = this.wallet;
-    this.dialog.open(UnlockWalletComponent, config);
   }
 
   editWallet() {
