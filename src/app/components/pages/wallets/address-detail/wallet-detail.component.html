@@ -6,11 +6,11 @@
       <p>{{ address.address }}</p>
     </div>
     <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
-    <div class="coins-column">{{ address.balance ? address.balance : 0 }}</div>
+    <div class="coins-column">{{ (address.balance ? address.balance : 0) | number:'1.0-6' }}</div>
   </div>
 </ng-container>
 <div class="-actions">
-  <div class="-button" (click)="newAddress()">
+  <div class="-button" (click)="newAddress()" *ngIf="wallet.seed && wallet.addresses[wallet.addresses.length -1].next_seed">
     <div class="-btn-plus">
       <img src="../../../../../assets/img/plus-grey.png">
       <span>New Address</span>

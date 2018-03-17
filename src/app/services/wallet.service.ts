@@ -43,10 +43,15 @@ export class WalletService {
   get all(): Observable<Wallet[]> {
     return this.wallets.asObservable().map(wallets => wallets ? wallets : []);
   }
+
   addAddress(wallet: Wallet) {
+    if (!wallet.seed || !wallet.addresses[wallet.addresses.length - 1].next_seed) {
+      throw new Error('trying to generate address without seed!');
+    }
     const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
     wallet.addresses.push(this.generateAddress(lastSeed));
     this.updateWallet(wallet);
+    this.loadBalances();
   }
 
   create(label, seed) {
@@ -62,15 +67,15 @@ export class WalletService {
   sendSkycoin(wallet: Wallet, address: string, amount: number) {
     const addresses = wallet.addresses.map(a => a.address).join(',');
     return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
-      const totalCoins = outputs.reduce((count, output) => count + output.coins, 0);
+      const totalCoins = parseInt((outputs.reduce((count, output) => count + output.coins, 0) * 1000000) + '', 10);
       const totalHours = outputs.reduce((count, output) => count + output.hours, 0);
-      const changeCoins = totalCoins - amount;
+      const changeCoins = totalCoins - amount * 1000000;
       const changeHours = totalHours / 4;
       const txOutputs: TransactionOutput[] = [{ address: address, coins: amount * 1000000, hours: changeHours }];
       const txInputs: TransactionInput[] = [];
 
       if (changeCoins > 0) {
-        txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins * 1000000, hours: changeHours });
+        txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins, hours: changeHours });
       }
 
       outputs.forEach(input => {
@@ -254,10 +259,12 @@ export class WalletService {
         this.all.first().subscribe(wallets => {
           wallets.forEach(wallet => {
             wallet.addresses.forEach(address => {
+              address.balance = 0;
+              address.hours = 0;
               const output = outputs.find(o => address.address === o.address);
               if (output) {
-                address.balance = address.balance >= 0 ? address.balance + output.coins : output.coins;
-                address.hours = address.hours >= 0 ? address.hours + output.hours : output.hours;
+                address.balance = address.balance + output.coins;
+                address.hours = address.hours + output.hours;
               }
             });
             wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0)

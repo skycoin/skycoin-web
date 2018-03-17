@@ -8,7 +8,7 @@
               <option value="" selected>Select Wallet</option>
               <option *ngFor="let wallet of walletService.all | async"
                       [disabled]="wallet.balance <= 0 || !wallet.seed" [ngValue]="wallet">
-                {{ wallet.label }} — {{ wallet.balance }} SKY
+                {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} SKY
               </option>
             </select>
           </div>
@@ -18,7 +18,7 @@
           </div>
           <div class="form-field">
             <label for="amount">Amount</label>
-            <input formControlName="amount" id="amount" placeholder="SKY">
+            <input formControlName="amount" id="amount" placeholder="SKY" type="number">
           </div>
           <div class="form-field">
             <label for="notes">Notes</label>
