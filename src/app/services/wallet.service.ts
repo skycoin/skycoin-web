@@ -66,15 +66,15 @@ export class WalletService {
   sendSkycoin(wallet: Wallet, address: string, amount: number) {
     const addresses = wallet.addresses.map(a => a.address).join(',');
     return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
-      const totalCoins = outputs.reduce((count, output) => count + output.coins, 0);
+      const totalCoins = parseInt((outputs.reduce((count, output) => count + output.coins, 0) * 1000000) + '', 10);
       const totalHours = outputs.reduce((count, output) => count + output.hours, 0);
-      const changeCoins = totalCoins - amount;
+      const changeCoins = totalCoins - amount * 1000000;
       const changeHours = totalHours / 4;
       const txOutputs: TransactionOutput[] = [{ address: address, coins: amount * 1000000, hours: changeHours }];
       const txInputs: TransactionInput[] = [];
 
       if (changeCoins > 0) {
-        txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins * 1000000, hours: changeHours });
+        txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins, hours: changeHours });
       }
 
       outputs.forEach(input => {
