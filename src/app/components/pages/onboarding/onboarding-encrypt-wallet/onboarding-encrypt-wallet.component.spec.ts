@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatCheckboxModule } from '@angular/material';
+import { FormBuilder } from '@angular/forms';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { OnboardingEncryptWalletComponent } from './onboarding-encrypt-wallet.component';
 
@@ -8,7 +11,10 @@ describe('OnboardingEncryptWalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OnboardingEncryptWalletComponent ]
+      declarations: [ OnboardingEncryptWalletComponent ],
+      imports: [ MatCheckboxModule ],
+      providers: [ FormBuilder ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

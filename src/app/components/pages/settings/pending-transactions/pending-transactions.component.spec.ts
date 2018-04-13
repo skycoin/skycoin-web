@@ -1,16 +1,35 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NO_ERRORS_SCHEMA, Pipe } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { PendingTransactionsComponent } from './pending-transactions.component';
+import { WalletService } from '../../../../services/wallet.service';
 
 describe('PendingTransactionsComponent', () => {
   let component: PendingTransactionsComponent;
   let fixture: ComponentFixture<PendingTransactionsComponent>;
 
+  class MockWalletService {
+    pendingTransactions() {
+      return Observable.of([]);
+    }
+  }
+
+  @Pipe({name: 'dateTime'})
+  class MockDateTimePipe {
+  }
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PendingTransactionsComponent ]
-    })
-    .compileComponents();
+      imports: [ RouterTestingModule ],
+      declarations: [
+        PendingTransactionsComponent,
+        MockDateTimePipe
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [{ provide: WalletService, useClass: MockWalletService }]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
