@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { OnboardingDisclaimerComponent } from './onboarding-disclaimer.component';
 
@@ -8,9 +10,12 @@ describe('OnboardingDisclaimerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OnboardingDisclaimerComponent ]
-    })
-    .compileComponents();
+      declarations: [ OnboardingDisclaimerComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
