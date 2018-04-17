@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule, MatDividerModule, MatIconModule, MatListModule, MatDialogModule } from '@angular/material';
-import { Pipe } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 import { BuyComponent } from './buy.component';
 import { PurchaseService } from '../../../services/purchase.service';
@@ -9,11 +9,17 @@ class MockPurchaseService {
 }
 
 @Pipe({name: 'tellerStatus'})
-class MockTellerStatusPipe {
+class MockTellerStatusPipe implements PipeTransform {
+  transform() {
+    return 'transformed value';
+  }
 }
 
-@Pipe({name: 'dateTime'})
-class MockDateTimePipe {
+@Pipe({ name: 'dateTime' })
+class MockDateTimePipe implements PipeTransform {
+  transform() {
+    return 'transformed value';
+  }
 }
 
 describe('BuyComponent', () => {
