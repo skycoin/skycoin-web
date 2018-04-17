@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NO_ERRORS_SCHEMA, Pipe } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { PendingTransactionsComponent } from './pending-transactions.component';
@@ -17,7 +17,10 @@ describe('PendingTransactionsComponent', () => {
   }
 
   @Pipe({name: 'dateTime'})
-  class MockDateTimePipe {
+  class MockDateTimePipe implements PipeTransform {
+    transform() {
+      return 'transformed value';
+    }
   }
 
   beforeEach(async(() => {

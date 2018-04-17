@@ -1,12 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BlockchainComponent } from './blockchain.component';
-import { NO_ERRORS_SCHEMA, Pipe } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
 
 @Pipe({name: 'dateFromNow'})
-class MockDateFromNowPipe {
+class MockDateFromNowPipe implements PipeTransform {
+  transform() {
+    return 'transformed value';
+  }
 }
 
 class MockBlockchainService {
