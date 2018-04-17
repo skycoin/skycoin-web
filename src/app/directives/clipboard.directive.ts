@@ -1,35 +1,27 @@
-import { Directive } from '@angular/core';
+import { Directive, Output, Input, HostListener } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { ClipboardService } from '../services/clipboard.service';
 
 @Directive({
+  /* tslint:disable:directive-selector */
   selector: '[clipboard]',
-  inputs: ['value: clipboard'],
-  outputs: [
-    'copyEvent: clipboardCopy',
-    'errorEvent: clipboardError',
-  ],
-  host: {
-    '(click)': 'copyToClipboard()',
-  },
 })
 export class ClipboardDirective {
-
-  public copyEvent: EventEmitter<string>;
-  public errorEvent: EventEmitter<Error>;
-  public value: string;
+  @Output() public copyEvent: EventEmitter<string>;
+  @Output() public errorEvent: EventEmitter<Error>;
+  /* tslint:disable:no-input-rename */
+  @Input('clipboard') public value: string;
 
   private clipboardService: ClipboardService;
 
   constructor(clipboardService: ClipboardService) {
-
     this.clipboardService = clipboardService;
     this.copyEvent = new EventEmitter();
     this.errorEvent = new EventEmitter();
     this.value = '';
   }
 
-  public copyToClipboard(): void {
+  @HostListener('click') public copyToClipboard(): void {
     this.clipboardService
       .copy(this.value)
       .then(
@@ -43,5 +35,4 @@ export class ClipboardDirective {
         },
       );
   }
-
 }
