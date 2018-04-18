@@ -8,7 +8,9 @@
     "build": "ng build --prod",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "test": "protractor protractor.conf.js"
+    "test": "protractor protractor.conf.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "private": true,
   "dependencies": {
@@ -31,7 +33,8 @@
     "font-awesome": "^4.7.0",
     "moment": "^2.21.0",
     "rxjs": "^5.5.7",
-    "zone.js": "^0.8.14"
+    "zone.js": "^0.8.14",
+    "snyk": "^1.71.0"
   },
   "devDependencies": {
     "@angular/cli": "^1.7.3",
@@ -41,9 +44,9 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
     "codelyzer": "~4.0.1",
-    "jasmine-core": "~2.6.2",
+    "jasmine-core": "~3.1.0",
     "jasmine-spec-reporter": "~4.1.0",
-    "karma": "~1.7.0",
+    "karma": "~2.0.0",
     "karma-chrome-launcher": "~2.1.1",
     "karma-cli": "~1.0.1",
     "karma-coverage-istanbul-reporter": "^1.2.1",
@@ -54,5 +57,6 @@
     "tslint": "~5.7.0",
     "tslint-eslint-rules": "^4.1.1",
     "typescript": "~2.4.2"
-  }
+  },
+  "snyk": true
 }
