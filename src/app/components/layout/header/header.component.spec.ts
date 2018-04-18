@@ -1,6 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { HeaderComponent } from './header.component';
+import { PriceService } from '../../../services/price.service';
+import { WalletService } from '../../../services/wallet.service';
+import { Wallet } from '../../../app.datatypes';
+
+class MockPriceService {
+  price: Subject<number> = new BehaviorSubject<number>(null);
+}
+
+class MockWalletService {
+  wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
+
+  sum() {
+  }
+}
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -8,9 +25,13 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ]
-    })
-    .compileComponents();
+      declarations: [ HeaderComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: PriceService, useClass: MockPriceService },
+        { provide: WalletService, useClass: MockWalletService }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

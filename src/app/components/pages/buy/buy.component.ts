@@ -23,9 +23,9 @@ export class BuyComponent {
   }
 
   addDepositAddress() {
-    const config = new MatDialogConfig();
-    config.width = '500px';
-    this.dialog.open(AddDepositAddressComponent, config);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '500px';
+    this.dialog.open(AddDepositAddressComponent, dialogConfig);
   }
 
   searchDepositAddress(address: string) {

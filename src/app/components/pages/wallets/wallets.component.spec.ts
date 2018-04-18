@@ -1,6 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialog } from '@angular/material';
 
 import { WalletsComponent } from './wallets.component';
+import { WalletService } from '../../../services/wallet.service';
+
+class MockWalletService {
+}
 
 describe('WalletsComponent', () => {
   let component: WalletsComponent;
@@ -8,7 +14,12 @@ describe('WalletsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WalletsComponent ]
+      declarations: [ WalletsComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: MatDialog, useValue: {} }
+      ]
     })
     .compileComponents();
   }));

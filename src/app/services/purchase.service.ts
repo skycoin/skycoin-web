@@ -7,9 +7,9 @@ import { Http } from '@angular/http';
 export class PurchaseService {
 
   private purchaseOrders: Subject<any[]> = new BehaviorSubject<any[]>([]);
-  // private purchaseUrl: string = 'https://event.skycoin.net/api/';
-  private purchaseUrl: string = 'http://127.0.01:7071/api/';
-  // private purchaseUrl: string = '/teller/';
+  // private purchaseUrl = 'https://event.skycoin.net/api/';
+  private purchaseUrl = 'http://127.0.01:7071/api/';
+  // private purchaseUrl = '/teller/';
 
   constructor(
     private http: Http,
@@ -37,7 +37,7 @@ export class PurchaseService {
             created: timestamp,
             updated: timestamp,
           });
-          this.updatePurchaseOrders(orders)
+          this.updatePurchaseOrders(orders);
         });
       });
   }
@@ -45,29 +45,29 @@ export class PurchaseService {
   scan(address: string) {
     return this.get('status?skyaddr=' + address).do(response => {
       this.purchaseOrders.first().subscribe(orders => {
-        let index = orders.findIndex(order => order.address === address);
+        const index = orders.findIndex(order => order.address === address);
         // Sort addresses ascending by creation date to match teller status response
         orders[index].addresses.sort((a, b) =>  b.created - a.created);
         for (const btcAddress of orders[index].addresses) {
           // Splice last status to assign this to the latest known order
-          const status = response.statuses.splice(-1,1)[0];
+          const status = response.statuses.splice(-1, 1)[0];
           btcAddress.status = status.status;
           btcAddress.updated = status.update_at;
         }
 
-        this.updatePurchaseOrders(orders)
+        this.updatePurchaseOrders(orders);
       });
     });
   }
 
   private get(url) {
     return this.http.get(this.purchaseUrl + url)
-      .map((res: any) => res.json())
+      .map((res: any) => res.json());
   }
 
   private post(url, parameters = {}) {
     return this.http.post(this.purchaseUrl + url, parameters)
-      .map((res: any) => res.json())
+      .map((res: any) => res.json());
   }
 
   private retrievePurchaseOrders() {
