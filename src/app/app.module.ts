@@ -64,6 +64,7 @@ import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
 import { WizardGuardService } from './services/wizard-guard.service';
 import { AppRoutes } from './app.routes';
+import { CipherProvider } from './services/cipher.provider';
 
 @NgModule({
   declarations: [
@@ -146,6 +147,7 @@ import { AppRoutes } from './app.routes';
     PriceService,
     ClipboardService,
     WizardGuardService,
+    CipherProvider
   ],
   bootstrap: [AppComponent],
 })
