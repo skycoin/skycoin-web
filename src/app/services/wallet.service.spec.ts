@@ -209,13 +209,13 @@ describe('WalletService', () => {
     const expectedTxOutputs: TransactionOutput[] = [
       {
         address: address,
-        coins: amount * 1000000,
-        hours: 20 / 4
+        coins: 1000000,
+        hours: 5
       },
       {
         address: wallet.addresses[0].address,
-        coins: 20 * 1000000 - amount * 1000000,
-        hours: 20 / 4
+        coins: 19000000,
+        hours: 5
       }
     ];
 
@@ -232,15 +232,60 @@ describe('WalletService', () => {
       .toHaveBeenCalledWith('preparedTransaction');
   }));
 
+  it('outputs: should be returned outputs', fakeAsync(() => {
+    const walletAddress1 = 'address 1';
+    const walletAddress2 = 'address 2';
+    const wallet: Wallet = Object.assign(createWallet(), { addresses: [ createAddress(walletAddress1), createAddress(walletAddress2) ] });
+
+    spyOnProperty(walletService, 'all', 'get').and.returnValue( Observable.of([wallet]) );
+
+    const outputAddress = 'output address';
+    const apiResponse = {
+      head_outputs: [{
+        address: outputAddress
+      }]
+    };
+    spyApiService.get.and.returnValue( Observable.of(apiResponse) );
+
+    const expectedOutputs = [{
+      address: outputAddress
+    }];
+
+    walletService.outputs()
+      .subscribe((outputs: any[]) => {
+        expect(outputs).toEqual(expectedOutputs);
+      });
+    expect(spyApiService.get).toHaveBeenCalledWith('outputs', { addrs: `${walletAddress1},${walletAddress2}` });
+  }));
+
+  it('sum: should be correct sum of the wallets, positive balances', fakeAsync(() => {
+    const wallets: Wallet[] = [
+      createWallet('label1', 'seed1', 100),
+      createWallet('label2', 'seed2', 200),
+      createWallet('label3', 'seed3', -200)
+    ];
+    spyOnProperty(walletService, 'all', 'get').and.returnValue( Observable.of(wallets) );
+
+    walletService.sum()
+      .subscribe(sum => expect(sum).toBe(300));
+  }));
+
+  it('pendingTransactions: should be called with a correct parameter', fakeAsync(() => {
+    walletService.pendingTransactions();
+    expect(spyApiService.get).toHaveBeenCalledWith('pendingTxs');
+  }));
+
 });
 
-function createWallet(label: string = 'label', seed: string = 'seed', addresses = [createAddress()]): Wallet {
+function createWallet(label: string = 'label', seed: string = 'seed', balance: number = 0): Wallet {
   return {
     label: label,
     seed: seed,
-    balance: 0,
+    balance: balance,
     hours: 0,
-    addresses: addresses
+    addresses: [
+      createAddress()
+    ]
   };
 }
 

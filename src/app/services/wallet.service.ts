@@ -161,21 +161,13 @@ export class WalletService {
   /*
  Legacy
   */
-  addressesAsString(): Observable<string> {
-    return this.all.map(wallets => wallets.map(wallet => {
-      return wallet.addresses.reduce((a, b) => {
-        a.push(b.address);
-        return a;
-      }, []).join(',');
-    }).join(','));
-  }
-
+  
   folder(): Observable<string> {
     return this.apiService.get('wallets/folderName').map(response => response.address);
   }
 
   outputs(): Observable<any> {
-    return this.addressesAsString()
+    return this.getAddressesAsString()
       .filter(addresses => !!addresses)
       .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
       .map(response => response.head_outputs);
@@ -307,6 +299,15 @@ export class WalletService {
 
   private retrieveWallets(): Observable<WalletModel[]> {
     return this.apiService.get('wallets');
+  }
+
+  private getAddressesAsString(): Observable<string> {
+    return this.all.map(wallets => wallets.map(wallet => {
+      return wallet.addresses.reduce((a, b) => {
+        a.push(b.address);
+        return a;
+      }, []).join(',');
+    }).join(','));
   }
 
   private ascii_to_hexa(str): string {
