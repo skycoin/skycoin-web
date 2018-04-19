@@ -1,4 +1,4 @@
-import { TestBed, inject, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -15,7 +15,7 @@ describe('WalletService', () => {
 
   beforeEach(() => {
     spyOn(localStorage, 'setItem').and.callFake((key, value) => store[key] = value);
-    spyOn(localStorage, 'getItem').and.callFake((key) => { return store[key]; });
+    spyOn(localStorage, 'getItem').and.callFake((key) => store[key]);
 
     TestBed.configureTestingModule({
       providers: [
@@ -65,7 +65,7 @@ describe('WalletService', () => {
 
     spyCipherProvider.generateAddress.and.returnValue({ ...newAddress });
     spyOn(walletService, 'updateWallet');
-    
+
     walletService.addAddress(wallet);
     expect(walletService.updateWallet).toHaveBeenCalledWith(expectedWallet);
   });
@@ -99,25 +99,25 @@ describe('WalletService', () => {
       expect(wallets.includes(wallet)).toBeTruthy();
     });
   }));
-  
+
   it('updateWallet: trying to update the wallet with unknown address', () => {
     walletService.wallets = new BehaviorSubject([ createWallet() ]);
-    
+
     const updatedWallet = createWallet();
     updatedWallet.addresses[0].address = 'non-exist address';
-  
+
     expect(() => walletService.updateWallet(updatedWallet))
       .toThrowError('trying to update the wallet with unknown address!');
   });
 
   it('unlockWallet: wallet should be updated', fakeAsync(() => {
-    let wallet: Wallet = createWallet();
+    const wallet: Wallet = createWallet();
     walletService.wallets = new BehaviorSubject([ wallet ]);
 
     const someSeed = 'some seed';
     const expectedAddress = createAddress('address', 'new secret key', 'new public key', 'new next seed');
 
-    let expectedWallet: Wallet = createWallet('label', someSeed);
+    const expectedWallet: Wallet = createWallet('label', someSeed);
     expectedWallet.addresses[0] = expectedAddress;
 
     spyCipherProvider.generateAddress.and.returnValue({ ...expectedAddress });
@@ -136,7 +136,7 @@ describe('WalletService', () => {
 
     walletService.unlockWallet(wallet, 'wrong seed')
       .then(
-        () => fail('should be rejected'), 
+        () => fail('should be rejected'),
         (error) => expect(error.message).toBe('Wrong seed')
       );
   }));
@@ -150,13 +150,13 @@ describe('WalletService', () => {
     walletService.retrieveAddressTransactions( createAddress() )
       .subscribe((transactions: Transaction[]) => {
         expect(transactions).toEqual([expectedTransaction]);
-      })
+      });
   }));
 
   it('transactions: should be returned outgoing transaction', fakeAsync(() => {
     const ownerAddress: Address = createAddress('owner address');
     spyOnProperty(walletService, 'addresses', 'get').and.returnValue( Observable.of([ownerAddress]) );
-    
+
     const destinationAddress = 'destination address';
     const apiResponse = createAddressTransactions(ownerAddress.address, destinationAddress, 13);
     spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
@@ -168,11 +168,11 @@ describe('WalletService', () => {
         expect(transactions).toEqual([expectedTransaction]);
       });
   }));
-  
+
   it('transactions: should be returned incoming transaction', fakeAsync(() => {
     const destinationAddress: Address = createAddress('destination address');
     spyOnProperty(walletService, 'addresses', 'get').and.returnValue( Observable.of([destinationAddress]) );
-    
+
     const ownerAddress = 'owner address';
     const apiResponse = createAddressTransactions(ownerAddress, destinationAddress.address, 13);
     spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
@@ -184,7 +184,7 @@ describe('WalletService', () => {
         expect(transactions).toEqual([expectedTransaction]);
       });
   }));
-  
+
   it('sendSkycoin: postTransaction should be called with the correct rawTransaction', fakeAsync(() => {
     const address = 'address';
     const amount = 1;
@@ -208,14 +208,14 @@ describe('WalletService', () => {
 
     const expectedTxOutputs: TransactionOutput[] = [
       {
-        address: address, 
-        coins: amount * 1000000, 
-        hours: 20 / 4 
+        address: address,
+        coins: amount * 1000000,
+        hours: 20 / 4
       },
-      { 
-        address: wallet.addresses[0].address, 
-        coins: 20 * 1000000 - amount * 1000000, 
-        hours: 20 / 4 
+      {
+        address: wallet.addresses[0].address,
+        coins: 20 * 1000000 - amount * 1000000,
+        hours: 20 / 4
       }
     ];
 
@@ -224,7 +224,7 @@ describe('WalletService', () => {
 
     walletService.sendSkycoin(wallet, address, amount)
       .subscribe();
-    
+
     expect(spyCipherProvider.prepareTransaction)
       .toHaveBeenCalledWith(JSON.stringify(expectedTxInputs), JSON.stringify(expectedTxOutputs));
 
@@ -234,7 +234,7 @@ describe('WalletService', () => {
 
 });
 
-function createWallet(label: string = 'label', seed: string = 'seed', addresses = [createAddress()]): Wallet { 
+function createWallet(label: string = 'label', seed: string = 'seed', addresses = [createAddress()]): Wallet {
   return {
     label: label,
     seed: seed,
@@ -252,7 +252,7 @@ function createAddress(address: string = 'address', secretKey: string = 'secret 
     next_seed: nextSeed,
     balance: 0,
     hours: 0
-  }
+  };
 }
 
 function createAddressTransactions(ownerAddress: string, destinationAddress: string, coins: number = 0) {
@@ -297,5 +297,5 @@ function createOutput(address: string, hash: string): Output {
     coins: 10,
     hash: hash,
     hours: 10
-  }
+  };
 }
