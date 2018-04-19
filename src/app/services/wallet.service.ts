@@ -161,7 +161,6 @@ export class WalletService {
   /*
  Legacy
   */
-  
   folder(): Observable<string> {
     return this.apiService.get('wallets/folderName').map(response => response.address);
   }
