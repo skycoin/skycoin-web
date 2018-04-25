@@ -36,7 +36,7 @@
     "moment": "^2.21.0",
     "rxjs": "^5.5.7",
     "zone.js": "^0.8.14",
-    "snyk": "^1.71.0"
+    "snyk": "^1.73.0"
   },
   "devDependencies": {
     "@angular/cli": "^1.7.3",
