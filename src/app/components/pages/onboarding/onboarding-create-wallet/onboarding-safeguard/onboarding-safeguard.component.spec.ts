@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 import { OnboardingSafeguardComponent } from './onboarding-safeguard.component';
 
@@ -8,9 +10,12 @@ describe('OnboardingSafeguardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OnboardingSafeguardComponent ]
-    })
-    .compileComponents();
+      declarations: [ OnboardingSafeguardComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

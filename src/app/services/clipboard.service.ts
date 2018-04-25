@@ -8,16 +8,12 @@ export class ClipboardService {
   private dom: Document;
 
   constructor( @Inject( DOCUMENT ) dom: Document ) {
-
     this.dom = dom;
-
   }
 
   public copy( value: string ): Promise<string> {
-
-    let promise = new Promise<string>(
-      ( resolve, reject ): void => {
-
+    const promise = new Promise<string>(
+      (resolve, reject ): void => {
         let textarea = null;
 
         try {
@@ -38,20 +34,13 @@ export class ClipboardService {
           resolve( value );
 
         } finally {
-
           if ( textarea && textarea.parentNode ) {
-
             textarea.parentNode.removeChild( textarea );
-
           }
-
         }
-
       },
     );
 
     return( promise );
-
   }
-
 }

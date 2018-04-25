@@ -1,21 +1,30 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material';
 
-import { AddressDetailComponent } from './wallet-detail.component';
+import { WalletDetailComponent } from './wallet-detail.component';
+import { WalletService } from '../../../../services/wallet.service';
 
-describe('AddressDetailComponent', () => {
-  let component: AddressDetailComponent;
-  let fixture: ComponentFixture<AddressDetailComponent>;
+class MockWalletService {
+}
+
+describe('WalletDetailComponent', () => {
+  let component: WalletDetailComponent;
+  let fixture: ComponentFixture<WalletDetailComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddressDetailComponent ]
-    })
-    .compileComponents();
+      declarations: [ WalletDetailComponent ],
+      providers: [
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: MatDialog, useValue: {} }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddressDetailComponent);
+    fixture = TestBed.createComponent(WalletDetailComponent);
     component = fixture.componentInstance;
+    component.wallet = { label: '', addresses: [] };
     fixture.detectChanges();
   });
 

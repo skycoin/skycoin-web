@@ -11,17 +11,7 @@ import { Subject } from 'rxjs/Subject';
 import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet } from '../app.datatypes';
 import { WalletModel } from '../models/wallet.model';
 import { ApiService } from './api.service';
-
-declare var Cipher;
-
-function ascii_to_hexa(str) {
-  const arr1 = [];
-  for (let n = 0, l = str.length; n < l; n ++) {
-    const hex = Number(str.charCodeAt(n)).toString(16);
-    arr1.push(hex);
-  }
-  return arr1.join('');
-}
+import { CipherProvider } from './cipher.provider';
 
 @Injectable()
 export class WalletService {
@@ -31,6 +21,7 @@ export class WalletService {
 
   constructor(
     private apiService: ApiService,
+    private cipherProvider: CipherProvider
   ) {
     this.loadWallets();
     this.loadBalances();
@@ -49,18 +40,17 @@ export class WalletService {
       throw new Error('trying to generate address without seed!');
     }
     const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
-    wallet.addresses.push(this.generateAddress(lastSeed));
+    wallet.addresses.push(this.cipherProvider.generateAddress(lastSeed));
     this.updateWallet(wallet);
     this.loadBalances();
   }
 
-  create(label, seed) {
+  create(label: string, seed: string) {
     const wallet = {
       label: label,
       seed: seed,
-      addresses: [this.generateAddress(ascii_to_hexa(seed))]
+      addresses: [this.cipherProvider.generateAddress(this.ascii_to_hexa(seed))]
     };
-
     this.addWallet(wallet);
   }
 
@@ -85,7 +75,7 @@ export class WalletService {
         });
       });
 
-      const rawTransaction = Cipher.PrepareTransaction(JSON.stringify(txInputs), JSON.stringify(txOutputs));
+      const rawTransaction = this.cipherProvider.prepareTransaction(JSON.stringify(txInputs), JSON.stringify(txOutputs));
 
       return this.apiService.postTransaction(rawTransaction);
     });
@@ -94,6 +84,9 @@ export class WalletService {
   updateWallet(wallet: Wallet) {
     this.all.first().subscribe(wallets => {
       const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
+      if (index === -1) {
+        throw new Error('trying to update the wallet with unknown address!');
+      }
       wallets[index] = wallet;
       this.saveWallets(wallets);
     });
@@ -101,10 +94,10 @@ export class WalletService {
 
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      let currentSeed = ascii_to_hexa(seed);
+      let currentSeed = this.ascii_to_hexa(seed);
       wallet.seed = seed;
       wallet.addresses.forEach(address => {
-        const fullAddress = this.generateAddress(currentSeed);
+        const fullAddress = this.cipherProvider.generateAddress(currentSeed);
         if (fullAddress.address !== address.address) {
           return reject(new Error('Wrong seed'));
         }
@@ -120,10 +113,14 @@ export class WalletService {
   }
 
   transactions(): Observable<any[]> {
-    return this.addresses.filter(addresses => !!addresses.length).first().flatMap(addresses => {
-      this.addressesTemp = addresses;
-      return Observable.forkJoin(addresses.map(address => this.retrieveAddressTransactions(address)));
-    }).map(transactions => [].concat.apply([], transactions).sort((a, b) =>  b.timestamp - a.timestamp))
+    return this.addresses
+      .filter(addresses => !!addresses.length)
+      .first()
+      .flatMap(addresses => {
+        this.addressesTemp = addresses;
+        return Observable.forkJoin(addresses.map(address => this.retrieveAddressTransactions(address)));
+      })
+      .map(transactions => [].concat.apply([], transactions).sort((a, b) =>  b.timestamp - a.timestamp))
       .map(transactions => transactions.reduce((array, item) => {
         if (!array.find(trans => trans.txid === item.txid)) {
           array.push(item);
@@ -164,21 +161,12 @@ export class WalletService {
   /*
  Legacy
   */
-  addressesAsString(): Observable<string> {
-    return this.all.map(wallets => wallets.map(wallet => {
-      return wallet.addresses.reduce((a, b) => {
-        a.push(b.address);
-        return a;
-      }, []).join(',');
-    }).join(','));
-  }
-
   folder(): Observable<string> {
     return this.apiService.get('wallets/folderName').map(response => response.address);
   }
 
   outputs(): Observable<any> {
-    return this.addressesAsString()
+    return this.getAddressesAsString()
       .filter(addresses => !!addresses)
       .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
       .map(response => response.head_outputs);
@@ -242,16 +230,6 @@ export class WalletService {
     });
   }
 
-  private generateAddress(seed): Address {
-    const address = Cipher.GenerateAddresses(seed);
-    return {
-      next_seed: address.NextSeed,
-      secret_key: address.Secret,
-      public_key: address.Public,
-      address: address.Address,
-    };
-  }
-
   private loadBalances() {
     this.addresses.first().subscribe(addresses => {
       const stringified = addresses.map(address => address.address).join(',');
@@ -279,8 +257,10 @@ export class WalletService {
   }
 
   private loadWallets() {
-    const wallets = JSON.parse(localStorage.getItem('wallets'));
-    this.wallets.next(wallets);
+    const storedWallets: string = localStorage.getItem('wallets');
+    if (storedWallets) {
+      this.wallets.next( JSON.parse(storedWallets) );
+    }
   }
 
   private saveWallets(wallets) {
@@ -295,7 +275,7 @@ export class WalletService {
   }
 
   private retrieveAddressBalance(address: any|any[]) {
-    const addresses = Array.isArray(address) ? address.map(address => address.address).join(',') : address.address;
+    const addresses = Array.isArray(address) ? address.map(a => a.address).join(',') : address.address;
     return this.apiService.get('balance', { addrs: addresses });
   }
 
@@ -318,5 +298,23 @@ export class WalletService {
 
   private retrieveWallets(): Observable<WalletModel[]> {
     return this.apiService.get('wallets');
+  }
+
+  private getAddressesAsString(): Observable<string> {
+    return this.all.map(wallets => wallets.map(wallet => {
+      return wallet.addresses.reduce((a, b) => {
+        a.push(b.address);
+        return a;
+      }, []).join(',');
+    }).join(','));
+  }
+
+  private ascii_to_hexa(str): string {
+    const arr1: string[] = [];
+    for (let n = 0, l = str.length; n < l; n ++) {
+      const hex = Number(str.charCodeAt(n)).toString(16);
+      arr1.push(hex);
+    }
+    return arr1.join('');
   }
 }

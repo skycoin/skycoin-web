@@ -35,8 +35,9 @@ export class PendingTransactionsComponent implements OnInit {
       return transaction.transaction;
     })
     .map(transaction => {
-      transaction.amount = transaction.outputs.map(output => output.coins >= 0 ? output.coins : 0)
-        .reduce((a , b) => a + parseInt(b), 0);
+      transaction.amount = transaction.outputs
+        .map(output => output.coins >= 0 ? output.coins : 0)
+        .reduce((a, b) => a + parseInt(b, 10), 0);
       return transaction;
     });
   }
