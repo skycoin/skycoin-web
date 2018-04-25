@@ -4,8 +4,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { BuyComponent } from './buy.component';
 import { PurchaseService } from '../../../services/purchase.service';
+import { Observable } from 'rxjs/Observable';
 
 class MockPurchaseService {
+  all(): Observable<any[]> {
+    return Observable.of([]);
+  }
 }
 
 @Pipe({name: 'tellerStatus'})

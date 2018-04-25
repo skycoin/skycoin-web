@@ -6,8 +6,12 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { AddDepositAddressComponent } from './add-deposit-address.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { PurchaseService } from '../../../../services/purchase.service';
+import { Observable } from 'rxjs/Observable';
 
 class MockWalletService {
+  get addresses(): Observable<any[]> {
+    return Observable.of([]);
+  }
 }
 
 class MockPurchaseService {
