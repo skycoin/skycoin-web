@@ -4,7 +4,6 @@ import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { ChangeNameComponent } from '../change-name/change-name.component';
-import { UnlockWalletComponent } from '../unlock-wallet/unlock-wallet.component';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -15,7 +14,7 @@ export class WalletDetailComponent {
   @Input() wallet: Wallet;
 
   constructor(
-    public walletService: WalletService,
+    private walletService: WalletService,
     private dialog: MatDialog,
   ) {}
 

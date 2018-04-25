@@ -17,7 +17,7 @@ export class HistoryComponent implements OnInit {
   private priceSubscription: Subscription;
 
   constructor(
-    public walletService: WalletService,
+    private walletService: WalletService,
     private priceService: PriceService,
     private dialog: MatDialog,
   ) { }
