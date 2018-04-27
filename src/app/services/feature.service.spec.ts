@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { FeatureService } from './feature.service';
 
-fdescribe('FeatureService', () => {
+describe('FeatureService', () => {
   let store = {};
   let featureService: FeatureService;
   let fakeConfig: any;
