@@ -1,6 +1,7 @@
 export const features: any = {
+  localStorageName: 'features',
   disclaimerWarning: {
-    name: 'Disclaimer Warning',
-    enableDisclaimerWarning: 'enableDisclaimerWarning'
+    name: 'enableDisclaimerWarning',
+    enabled: true
   }
 };

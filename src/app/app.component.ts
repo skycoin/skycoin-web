@@ -25,9 +25,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    // this.featureService.setFeatureToggleData(features.disclaimerWarning.enableDisclaimerWarning, true);
-    this.featureToggleData = this.featureService.getFeatureToggleData(features.disclaimerWarning.enableDisclaimerWarning);
+    // this.featureService.setFeatureToggleData(features.disclaimerWarning, false);
+    this.featureToggleData = this.featureService.getFeatureToggleData(features.disclaimerWarning);
   }
 
   loading() {

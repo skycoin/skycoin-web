@@ -1,35 +1,38 @@
 import { Injectable } from '@angular/core';
+
 import { features } from '../constants/features.const';
 
 @Injectable()
 export class FeatureService {
 
-  setFeatureToggleData(featureItem: string, enabled: boolean) {
+  setFeatureToggleData(featureConfig: any, enabled: boolean) {
     const featuresStore = this.getFeatures();
-    const feature = featuresStore.find((item) => Object.keys(item).includes(featureItem));
+    const feature = featuresStore.find((item) => Object.keys(item).includes(featureConfig.name));
 
     if (feature) {
-      feature[featureItem] = enabled;
+      feature[featureConfig.name] = enabled;
     } else {
-      featuresStore.push(this.getFeature(featureItem, enabled));
+      featuresStore.push(this.getFeature(featureConfig, enabled));
     }
 
-    localStorage.setItem(features.disclaimerWarning.name, JSON.stringify(featuresStore));
+    localStorage.setItem(features.localStorageName, JSON.stringify(featuresStore));
   }
 
-  getFeatureToggleData(featureItem: string): any {
-    const feature = this.getFeatures().find((item) => Object.keys(item).includes(featureItem));
+  getFeatureToggleData(featureConfig: any): any {
+    const feature = this.getFeatures().find((item) => Object.keys(item).includes(featureConfig.name));
 
-    return feature ? feature : this.getFeature(featureItem);
+    return feature ? feature : this.getFeature(featureConfig);
   }
 
   private getFeatures(): any[] {
-    return JSON.parse(localStorage.getItem(features.disclaimerWarning.name)) || [];
+    const featuresStore = localStorage.getItem(features.localStorageName);
+
+    return featuresStore ? JSON.parse(featuresStore) : [];
   }
 
-  private getFeature(featureItem: string, enabled = true): any {
+  private getFeature(featureConfig: any, enabled?: boolean): any {
     const feature = {};
-    feature[featureItem] = enabled;
+    feature[featureConfig.name] = enabled !== undefined ? enabled : featureConfig.enabled;
 
     return feature;
   }
