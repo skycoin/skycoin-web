@@ -17,7 +17,7 @@ describe('Send Sky', () => {
         `window.localStorage.setItem(\'wallets\',
           JSON.stringify([{"label":"Test wallet","addresses":
           [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
-      
+
         walletPage.navigateTo().then(() => {
          walletPage.unlockFirstWallet().then((result) => {
           if (result) {

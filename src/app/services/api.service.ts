@@ -56,7 +56,7 @@ export class ApiService {
   private returnRequestOptions(additionalOptions) {
     const options = new RequestOptions();
     options.headers = this.getHeaders();
-    
+
     if (additionalOptions.csrf) {
       options.headers.append('X-CSRF-Token', additionalOptions.csrf);
     }
