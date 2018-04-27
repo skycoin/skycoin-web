@@ -4,8 +4,13 @@ import { MatDialog } from '@angular/material';
 
 import { WalletsComponent } from './wallets.component';
 import { WalletService } from '../../../services/wallet.service';
+import { Observable } from 'rxjs/Observable';
+import { Wallet } from '../../../app.datatypes';
 
 class MockWalletService {
+  get all(): Observable<Wallet[]> {
+    return Observable.of([]);
+  }
 }
 
 describe('WalletsComponent', () => {
@@ -34,3 +39,4 @@ describe('WalletsComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

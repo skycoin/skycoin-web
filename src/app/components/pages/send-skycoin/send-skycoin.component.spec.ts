@@ -5,8 +5,13 @@ import { MatSnackBarModule } from '@angular/material';
 
 import { SendSkycoinComponent } from './send-skycoin.component';
 import { WalletService } from '../../../services/wallet.service';
+import { Observable } from 'rxjs/Observable';
+import { Wallet } from '../../../app.datatypes';
 
 class MockWalletService {
+  get all(): Observable<Wallet[]> {
+    return Observable.of([]);
+  }
 }
 
 describe('SendSkycoinComponent', () => {

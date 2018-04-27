@@ -4,6 +4,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 import { WalletService } from '../../../services/wallet.service';
+import { Wallet } from '../../../app.datatypes';
 
 @Component({
   selector: 'app-send-skycoin',
@@ -14,16 +15,20 @@ export class SendSkycoinComponent implements OnInit {
   @ViewChild('button') button;
 
   form: FormGroup;
+  wallets: Wallet[];
   transactions = [];
 
   constructor(
-    public formBuilder: FormBuilder,
-    public walletService: WalletService,
+    private formBuilder: FormBuilder,
+    private walletService: WalletService,
     private snackbar: MatSnackBar,
   ) { }
 
   ngOnInit() {
     this.initForm();
+    this.walletService.all.subscribe( (wallets) => {
+      this.wallets = wallets;
+    });
   }
 
   send() {

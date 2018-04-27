@@ -21,7 +21,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    public walletService: WalletService,
+    private walletService: WalletService,
     private router: Router,
     private formBuilder: FormBuilder,
   ) { }

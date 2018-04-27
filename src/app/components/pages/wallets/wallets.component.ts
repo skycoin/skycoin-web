@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Wallet } from '../../../app.datatypes';
 import { WalletService } from '../../../services/wallet.service';
@@ -11,12 +11,20 @@ import { UnlockWalletComponent } from './unlock-wallet/unlock-wallet.component';
   templateUrl: './wallets.component.html',
   styleUrls: ['./wallets.component.scss'],
 })
-export class WalletsComponent {
+export class WalletsComponent implements OnInit {
+
+  wallets: Wallet[];
 
   constructor(
-    public walletService: WalletService,
+    private walletService: WalletService,
     private dialog: MatDialog,
   ) {}
+
+  ngOnInit() {
+    this.walletService.all.subscribe( (wallets) => {
+      this.wallets = wallets;
+    });
+  }
 
   addWallet() {
     const config = new MatDialogConfig();
@@ -40,5 +48,4 @@ export class WalletsComponent {
   toggleWallet(wallet: Wallet) {
     wallet.opened ? wallet.opened = false : wallet.opened = true;
   }
-
 }
