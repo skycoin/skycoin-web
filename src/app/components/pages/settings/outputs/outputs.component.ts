@@ -13,7 +13,7 @@ export class OutputsComponent implements OnInit {
   outputs: any[];
 
   constructor(
-    public walletService: WalletService,
+    private walletService: WalletService,
     private dialog: MatDialog,
   ) { }
 

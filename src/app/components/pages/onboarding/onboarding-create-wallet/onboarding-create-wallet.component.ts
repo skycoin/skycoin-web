@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { OnboardingSafeguardComponent } from './onboarding-safeguard/onboarding-
   templateUrl: './onboarding-create-wallet.component.html',
   styleUrls: ['./onboarding-create-wallet.component.scss'],
 })
-export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
+export class OnboardingCreateWalletComponent implements OnInit {
   showNewForm = true;
   form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
@@ -21,16 +21,13 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
 
   constructor(
     private dialog: MatDialog,
-    public walletService: WalletService,
+    private walletService: WalletService,
     private router: Router,
     private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit() {
     this.initForm();
-  }
-
-  ngAfterViewInit() {
     this.existWallets();
   }
 
@@ -79,7 +76,9 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
     const config = new MatDialogConfig();
     config.width = '450px';
     config.disableClose = true;
-    this.dialog.open(OnboardingDisclaimerComponent, config);
+    setTimeout(() => {
+      this.dialog.open(OnboardingDisclaimerComponent, config);
+    }, 0);
   }
 
   showSafe() {
@@ -115,5 +114,4 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
       return g.get('seed').value === g.get('confirm_seed').value
         ? null : { mismatch: true };
   }
-
 }

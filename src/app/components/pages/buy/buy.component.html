@@ -8,7 +8,7 @@
   </mat-card>
 
   <mat-list>
-    <ng-container *ngFor="let address of (purchaseService.all() | async); let i = index">
+    <ng-container *ngFor="let address of orders; let i = index">
       <mat-divider *ngIf="i"></mat-divider>
       <h3 mat-subheader>Sky address: {{ address.address }}</h3>
       <mat-list-item *ngFor="let btc of address.addresses">

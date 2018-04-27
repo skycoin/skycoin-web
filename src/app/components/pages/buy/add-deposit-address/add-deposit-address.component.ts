@@ -12,9 +12,10 @@ import { WalletService } from '../../../../services/wallet.service';
 export class AddDepositAddressComponent implements OnInit {
 
   form: FormGroup;
+  addresses: any[];
 
   constructor(
-    public walletService: WalletService,
+    private walletService: WalletService,
     private dialogRef: MatDialogRef<AddDepositAddressComponent>,
     private formBuilder: FormBuilder,
     private purchaseService: PurchaseService,
@@ -22,6 +23,9 @@ export class AddDepositAddressComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
+    this.walletService.addresses.subscribe( (addresses) => {
+      this.addresses = addresses;
+    });
   }
 
   generate() {

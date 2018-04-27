@@ -13,7 +13,7 @@ export class PendingTransactionsComponent implements OnInit {
   transactions: any[];
 
   constructor(
-    public walletService: WalletService,
+    private walletService: WalletService,
     private router: Router,
   ) { }
 
