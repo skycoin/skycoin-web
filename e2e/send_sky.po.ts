@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class SendSkyPage {
   navigateTo() {
-    return browser.get('/#/send');
+    return browser.get('/send');
   }
 
   getHeaderText() {
@@ -53,7 +53,7 @@ export class SendSkyPage {
     const amount = element(by.css('[formcontrolname="amount"]'));
     amount.clear();
     const btnSend = element(by.buttonText('Send'));
-    return dest.sendKeys('2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNy').then(() => {
+    return dest.sendKeys('2cYALUgtwGHRcw8fyAoXaDWLJjFTxzroggx').then(() => {
      return this.getValidsWallets().then(wallets => {
         if (wallets.length > 0) {
           return wallets[0].click().then(() => {
@@ -77,7 +77,7 @@ export class SendSkyPage {
     const amount = element(by.css('[formcontrolname="amount"]'));
     amount.clear();
     const btnSend = element(by.buttonText('Send'));
-    return dest.sendKeys('2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNy').then(() => {
+    return dest.sendKeys('2cYALUgtwGHRcw8fyAoXaDWLJjFTxzroggx').then(() => {
       return this.getValidsWallets().then(wallets => {
         if (wallets.length > 0) {
           return wallets[0].click().then(() => {
