@@ -32,16 +32,19 @@ export class ApiService {
     return this.post('injectTransaction', { rawtx: rawTransaction });
   }
 
-  get(url, options = null) {
-    return this.http.get(this.getUrl(url, options), this.returnRequestOptions())
+  get(url, params = null, options = {}) {
+    return this.http.get(this.getUrl(url, params), this.returnRequestOptions(options))
       .map((res: any) => res.json())
       .catch((error: any) => Observable.throw(error || 'Server error'));
   }
 
-  post(url, body = {}) {
-    return this.http.post(this.getUrl(url), body, this.returnRequestOptions())
-      .map((res: any) => res.json())
-      .catch((error: any) => Observable.throw(error || 'Server error'));
+  post(url, body = {}, options: any = {}) {
+    return this.getCsrf().first().flatMap(csrf => {
+      options.csrf = csrf;
+      return this.http.post(this.getUrl(url), body, this.returnRequestOptions(options))
+        .map((res: any) => res.json())
+        .catch((error: any) => Observable.throw(error || 'Server error'));
+    });
   }
 
   private getHeaders() {
@@ -50,10 +53,13 @@ export class ApiService {
     return headers;
   }
 
-  private returnRequestOptions() {
+  private returnRequestOptions(additionalOptions) {
     const options = new RequestOptions();
-
     options.headers = this.getHeaders();
+
+    if (additionalOptions.csrf) {
+      options.headers.append('X-CSRF-Token', additionalOptions.csrf);
+    }
 
     return options;
   }
@@ -71,5 +77,9 @@ export class ApiService {
 
   private getUrl(url, options = null) {
     return this.url + url + '?' + this.getQueryString(options);
+  }
+
+  private getCsrf() {
+    return this.get('csrf').map(response => response.csrf_token);
   }
 }

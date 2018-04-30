@@ -7,7 +7,7 @@
     "start": "ng serve --proxy-config proxy.config.js",
     "build": "ng build --prod",
     "lint": "ng lint",
-    "e2e": "ng e2e",
+    "e2e": "ng e2e --proxy-config proxy.config.js",
     "snyk-protect": "snyk protect",
     "protractor": "protractor protractor.conf.js",
     "test": "ng test -sm=false --watch=false --browsers ChromeHeadlessNoSandbox",

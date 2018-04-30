@@ -12,10 +12,9 @@ describe('Transactions', () => {
   it('should display title', () => {
     page.navigateTo().then(() => {
       browser.executeScript(
-        `return window.localStorage.setItem(\'wallets\',
-       JSON.stringify([{"label":"Test wallet","addresses":
-       [{"address":"2moe8pXGU3zq8jmKS3Fv1vysJBW1nKXBr7R"}]}]) );
-       `);
+        `window.localStorage.setItem(\'wallets\',
+          JSON.stringify([{"label":"Test wallet","addresses":
+          [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
     });
     expect<any>(page.getHeaderText()).toEqual('Transactions');
   });
