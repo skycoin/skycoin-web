@@ -1,4 +1,4 @@
-export const features: any = {
+export const featuresConfig: any = {
   localStorageName: 'features',
   disclaimerWarning: {
     name: 'enableDisclaimerWarning',

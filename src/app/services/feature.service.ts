@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { features } from '../constants/features.const';
+import { featuresConfig } from '../constants/featuresConfig.const';
 
 @Injectable()
 export class FeatureService {
@@ -15,7 +15,7 @@ export class FeatureService {
       featuresStore.push(this.getFeature(featureConfig, enabled));
     }
 
-    localStorage.setItem(features.localStorageName, JSON.stringify(featuresStore));
+    localStorage.setItem(featuresConfig.localStorageName, JSON.stringify(featuresStore));
   }
 
   getFeatureToggleData(featureConfig: any): any {
@@ -25,7 +25,7 @@ export class FeatureService {
   }
 
   private getFeatures(): any[] {
-    const featuresStore = localStorage.getItem(features.localStorageName);
+    const featuresStore = localStorage.getItem(featuresConfig.localStorageName);
 
     return featuresStore ? JSON.parse(featuresStore) : [];
   }

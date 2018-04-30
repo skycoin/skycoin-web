@@ -3,7 +3,7 @@ import 'rxjs/add/operator/takeWhile';
 import { config } from './app.config';
 
 import { FeatureService } from './services/feature.service';
-import { features } from './constants/features.const';
+import { featuresConfig } from './constants/featuresConfig.const';
 
 @Component({
   selector: 'app-root',
@@ -25,8 +25,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.featureService.setFeatureToggleData(features.disclaimerWarning, false);
-    this.featureToggleData = this.featureService.getFeatureToggleData(features.disclaimerWarning);
+    // this.featureService.setFeatureToggleData(featuresConfig.disclaimerWarning, false);
+    this.featureToggleData = this.featureService.getFeatureToggleData(featuresConfig.disclaimerWarning);
   }
 
   loading() {

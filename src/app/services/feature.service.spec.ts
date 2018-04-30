@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { FeatureService } from './feature.service';
+import { featuresConfig } from '../constants/featuresConfig.const';
 
 describe('FeatureService', () => {
   let store = {};
   let featureService: FeatureService;
   let fakeConfig: any;
-  const localStorageName = 'features';
   const otherFakeConfigName = 'otherFakeConfigNAme';
 
   beforeEach(() => {
@@ -27,13 +27,13 @@ describe('FeatureService', () => {
   });
 
   describe('getFeatureToggleData', () => {
-    it('should be enabled with empty localStorage', () => {
+    it('should be default with empty localStorage', () => {
       spyOn(localStorage, 'getItem').and.returnValue(null);
 
       expect(featureService.getFeatureToggleData(fakeConfig)).toEqual(createFeature(fakeConfig.name, fakeConfig.enabled));
     });
 
-    it('should be enabled with missing localStorage value', () => {
+    it('should be default with missing localStorage value', () => {
       const features = getFeatures(createFeature(otherFakeConfigName, fakeConfig.enabled));
       spyOn(localStorage, 'getItem').and.returnValue(JSON.stringify(features));
 
@@ -57,22 +57,23 @@ describe('FeatureService', () => {
   });
 
   describe('setFeatureToggleData', () => {
-    it('should add localStorage value', () => {
+    beforeEach(() => {
       spyOn(localStorage, 'setItem').and.callFake((key, value) => store[key] = value);
       spyOn(localStorage, 'getItem').and.callFake((key) => store[key]);
+    });
+
+    it('should add localStorage value', () => {
       featureService.setFeatureToggleData(fakeConfig, true);
       const expectedObject = getFeatures(createFeature(fakeConfig.name, fakeConfig.enabled));
 
-      expect(localStorage.getItem(localStorageName)).toBe(JSON.stringify(expectedObject));
+      expect(localStorage.getItem(featuresConfig.localStorageName)).toBe(JSON.stringify(expectedObject));
     });
 
     it('should change localStorage value', () => {
-      spyOn(localStorage, 'setItem').and.callFake((key, value) => store[key] = value);
-      spyOn(localStorage, 'getItem').and.callFake((key) => store[key]);
       featureService.setFeatureToggleData(fakeConfig, !fakeConfig.enabled);
       const expectedObject = getFeatures(createFeature(fakeConfig.name, !fakeConfig.enabled));
 
-      expect(localStorage.getItem(localStorageName)).toBe(JSON.stringify(expectedObject));
+      expect(localStorage.getItem(featuresConfig.localStorageName)).toBe(JSON.stringify(expectedObject));
     });
   });
 });
