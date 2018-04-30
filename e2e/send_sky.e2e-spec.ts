@@ -41,9 +41,9 @@ describe('Send Sky', () => {
     expect<any>(page.getWalletsCount()).toBeGreaterThan(0);
   });
 
-  // ************                                                       ************ //
-  // THE REST TEST CASES WILL BE FAILED DUE TO USED ADDRESS DOES NOT HAVE ANY INPUTS //
-  // ************                                                       ************ //
+  // ************                                                             ************ //
+  // THE REST TEST CASES WILL BE FAILED DUE TO USED ADDRESS WHICH DOES NOT HAVE ANY INPUTS //
+  // ************                                                             ************ //
 
   // it('should have sky in wallets', () => {
   //   expect<any>(page.getWalletsWidthMoney().then((wallets) => {
