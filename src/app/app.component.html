@@ -1,6 +1,9 @@
 <feature-toggle-provider [features]="featureToggleData">
   <feature-toggle [featureName]="'enableDisclaimerWarning'">
-    <p style="text-align: center">IF YOU USE THIS WALLET YOU MAY LOSE COINS. TESTING PURPOSES ONLY.</p>
+    <div style="text-align: center">
+      <span>IF YOU USE THIS WALLET YOU MAY LOSE COINS. TESTING PURPOSES ONLY. </span>
+      <a style="cursor: pointer" (click)="hideDisclaimerWarning()">&times;</a>
+    </div>
   </feature-toggle>
 </feature-toggle-provider>
 

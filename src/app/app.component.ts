@@ -25,11 +25,19 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.featureService.setFeatureToggleData(featuresConfig.disclaimerWarning, false);
-    this.featureToggleData = this.featureService.getFeatureToggleData(featuresConfig.disclaimerWarning);
+    this.getfeatureToggleData();
   }
 
   loading() {
     return !this.current || !this.highest || this.current !== this.highest;
+  }
+
+  hideDisclaimerWarning() {
+    this.featureService.setFeatureToggleData(featuresConfig.disclaimerWarning, false);
+    this.getfeatureToggleData();
+  }
+
+  getfeatureToggleData() {
+    this.featureToggleData = this.featureService.getFeatureToggleData(featuresConfig.disclaimerWarning);
   }
 }
