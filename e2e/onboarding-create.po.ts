@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class OnboardingCreatePage {
   navigateTo() {
-    return browser.get('/#/wizard/create');
+    return browser.get('/wizard/create');
   }
 
   getHeaderText() {
@@ -54,9 +54,9 @@ export class OnboardingCreatePage {
     label.clear();
     label.sendKeys('Test wallet');
     seed.clear();
-    seed.sendKeys('test test');
+    seed.sendKeys('skycoin-web-e2e-test-seed');
     confirm.clear();
-    confirm.sendKeys('test test');
+    confirm.sendKeys('skycoin-web-e2e-test-seed');
     return btnCreate.isEnabled().then(status => {
       if (status) {
         btnCreate.click();
@@ -75,7 +75,7 @@ export class OnboardingCreatePage {
     label.clear();
     label.sendKeys('Test wallet');
     seed.clear();
-    seed.sendKeys('test test');
+    seed.sendKeys('skycoin-web-e2e-test-seed');
     return btnLoad.isEnabled();
   }
 
