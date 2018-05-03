@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getfeatureToggleData();
+    this.getFeatureToggleData();
   }
 
   loading() {
@@ -34,10 +34,10 @@ export class AppComponent implements OnInit {
 
   hideDisclaimerWarning() {
     this.featureService.setFeatureToggleData(featuresConfig.disclaimerWarning, false);
-    this.getfeatureToggleData();
+    this.getFeatureToggleData();
   }
 
-  getfeatureToggleData() {
+  getFeatureToggleData() {
     this.featureToggleData = this.featureService.getFeatureToggleData(featuresConfig.disclaimerWarning);
   }
 }
