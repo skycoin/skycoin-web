@@ -41,7 +41,7 @@ export class WalletDetailComponent {
 
   copyAddress(address) {
     const selBox = document.createElement('textarea');
-    
+
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
     selBox.style.top = '0';
