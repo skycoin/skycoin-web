@@ -58,7 +58,6 @@ import { TransactionsAmountPipe } from './pipes/transactions-amount.pipe';
 import { ApiService } from './services/api.service';
 import { BlockchainService } from './services/blockchain.service';
 import { ClipboardService } from './services/clipboard.service';
-import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
@@ -141,7 +140,6 @@ import { CipherProvider } from './services/cipher.provider';
   providers: [
     ApiService,
     BlockchainService,
-    NetworkService,
     PurchaseService,
     WalletService,
     PriceService,
