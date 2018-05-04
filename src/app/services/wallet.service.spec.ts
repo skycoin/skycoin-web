@@ -80,6 +80,8 @@ describe('WalletService', () => {
       const expectedWallet = {
         label: walletLabel,
         seed: walletSeed,
+        balance: 0,
+        hours: 0,
         addresses: [walletAddress]
       };
 
