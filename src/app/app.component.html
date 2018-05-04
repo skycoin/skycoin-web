@@ -1,1 +1,10 @@
+<feature-toggle-provider [features]="featureToggleData">
+  <feature-toggle [featureName]="'enableDisclaimerWarning'">
+    <div class="disclaimer-warning">
+      <span>IF YOU USE THIS WALLET YOU MAY LOSE COINS. TESTING PURPOSES ONLY. </span>
+      <a title="Dismiss warning" (click)="hideDisclaimerWarning()">&times; Don't show this message again</a>
+    </div>
+  </feature-toggle>
+</feature-toggle-provider>
+
 <router-outlet></router-outlet>

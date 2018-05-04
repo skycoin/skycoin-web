@@ -1,27 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import 'rxjs/add/operator/takeWhile';
 import { config } from './app.config';
-import { WalletService } from './services/wallet.service';
+
+import { FeatureService } from './services/feature.service';
+import { featuresConfig } from './constants/featuresConfig.const';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   current: number;
   highest: number;
   otcEnabled: boolean;
   version: string;
+  featureToggleData: any;
 
   constructor(
-    public walletService: WalletService,
+    private featureService: FeatureService,
   ) {
     this.otcEnabled = config.otcEnabled;
   }
 
+  ngOnInit() {
+    this.getFeatureToggleData();
+  }
+
   loading() {
     return !this.current || !this.highest || this.current !== this.highest;
+  }
+
+  hideDisclaimerWarning() {
+    this.featureService.setFeatureToggleData(featuresConfig.disclaimerWarning, false);
+    this.getFeatureToggleData();
+  }
+
+  getFeatureToggleData() {
+    this.featureToggleData = this.featureService.getFeatureToggleData(featuresConfig.disclaimerWarning);
   }
 }

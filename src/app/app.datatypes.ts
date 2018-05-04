@@ -46,7 +46,7 @@ export interface GetOutputsRequestOutput {
   src_tx: string;
   address: string;
   coins: string;
-  hours: number;
+  calculated_hours: number;
 }
 
 export class TransactionInput {
