@@ -52,6 +52,7 @@ export class WalletService {
       addresses: [this.cipherProvider.generateAddress(this.ascii_to_hexa(seed))]
     };
     this.addWallet(wallet);
+    this.loadBalances();
   }
 
   sendSkycoin(wallet: Wallet, address: string, amount: number) {
