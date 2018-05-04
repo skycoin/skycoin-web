@@ -2,9 +2,12 @@ import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { WalletService } from './services/wallet.service';
+import { FeatureService } from './services/feature.service';
 
-class MockWalletService {
+class MockFeatureService {
+  getFeatureToggleData(): any {
+    return {};
+  }
 }
 
 describe('AppComponent', () => {
@@ -16,7 +19,7 @@ describe('AppComponent', () => {
       declarations: [ AppComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: FeatureService, useClass: MockFeatureService }
       ]
     }).compileComponents();
   }));

@@ -65,6 +65,8 @@ import { WalletService } from './services/wallet.service';
 import { WizardGuardService } from './services/wizard-guard.service';
 import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
+import { FeatureToggleModule } from 'ngx-feature-toggle';
+import { FeatureService } from './services/feature.service';
 
 @NgModule({
   declarations: [
@@ -137,6 +139,7 @@ import { CipherProvider } from './services/cipher.provider';
     NoopAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(AppRoutes),
+    FeatureToggleModule
   ],
   providers: [
     ApiService,
@@ -147,7 +150,8 @@ import { CipherProvider } from './services/cipher.provider';
     PriceService,
     ClipboardService,
     WizardGuardService,
-    CipherProvider
+    CipherProvider,
+    FeatureService
   ],
   bootstrap: [AppComponent],
 })
