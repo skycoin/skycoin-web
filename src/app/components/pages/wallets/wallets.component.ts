@@ -4,7 +4,7 @@ import { Wallet } from '../../../app.datatypes';
 import { WalletService } from '../../../services/wallet.service';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 import { LoadWalletComponent } from './load-wallet/load-wallet.component';
-import { UnlockWalletComponent } from './unlock-wallet/unlock-wallet.component';
+import { openUnlockWalletModal } from '../../../utils/index';
 
 @Component({
   selector: 'app-wallets',
@@ -33,10 +33,7 @@ export class WalletsComponent implements OnInit {
   }
 
   unlockWallet(wallet: Wallet) {
-    const config = new MatDialogConfig();
-    config.width = '500px';
-    config.data = wallet;
-    this.dialog.open(UnlockWalletComponent, config);
+    openUnlockWalletModal(wallet, this.dialog);
   }
 
   loadWallet() {

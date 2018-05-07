@@ -5,8 +5,8 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 import { WalletService } from '../../../services/wallet.service';
 import { Wallet } from '../../../app.datatypes';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
-import { UnlockWalletComponent } from '../wallets/unlock-wallet/unlock-wallet.component';
+import { MatDialog } from '@angular/material';
+import { openUnlockWalletModal } from '../../../utils/index';
 
 @Component({
   selector: 'app-send-skycoin',
@@ -38,7 +38,8 @@ export class SendSkycoinComponent implements OnInit {
     const wallet = this.form.value.wallet;
 
     if (!wallet.seed) {
-      this.unlockWallet(wallet).componentInstance.onWalletUnlocked.subscribe(() => this.send(wallet));
+      openUnlockWalletModal(wallet, this.unlockDialog).componentInstance.onWalletUnlocked
+        .subscribe(() => this.send(wallet));
     } else {
       this.send(wallet);
     }
@@ -85,13 +86,5 @@ export class SendSkycoinComponent implements OnInit {
     this.form.controls.address.reset(undefined);
     this.form.controls.amount.reset(undefined);
     this.form.controls.notes.reset(undefined);
-  }
-
-  private unlockWallet(wallet: Wallet): MatDialogRef<UnlockWalletComponent, any> {
-    const config = new MatDialogConfig();
-    config.width = '500px';
-    config.data = wallet;
-
-    return this.unlockDialog.open(UnlockWalletComponent, config);
   }
 }
