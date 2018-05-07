@@ -241,7 +241,7 @@ describe('WalletService', () => {
         .subscribe();
 
       expect(spyCipherProvider.prepareTransaction)
-        .toHaveBeenCalledWith(JSON.stringify(expectedTxInputs), JSON.stringify(expectedTxOutputs));
+        .toHaveBeenCalledWith(expectedTxInputs, expectedTxOutputs);
 
       expect(spyApiService.postTransaction)
         .toHaveBeenCalledWith('preparedTransaction');
