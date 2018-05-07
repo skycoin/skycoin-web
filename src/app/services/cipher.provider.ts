@@ -1,4 +1,4 @@
-import { Address } from '../app.datatypes';
+import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
 
 declare var Cipher;
 
@@ -14,7 +14,7 @@ export class CipherProvider {
     };
   }
 
-  prepareTransaction(inputs: string, outputs: string): string {
+  prepareTransaction(inputs: TransactionInput[], outputs: TransactionOutput[]): string {
     return Cipher.PrepareTransaction(JSON.stringify(inputs), JSON.stringify(outputs));
   }
 }

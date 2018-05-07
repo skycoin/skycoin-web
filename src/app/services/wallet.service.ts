@@ -76,7 +76,7 @@ export class WalletService {
         });
       });
 
-      const rawTransaction = this.cipherProvider.prepareTransaction(JSON.stringify(txInputs), JSON.stringify(txOutputs));
+      const rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
 
       return this.apiService.postTransaction(rawTransaction);
     });
