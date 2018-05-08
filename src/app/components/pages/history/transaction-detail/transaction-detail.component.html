@@ -15,6 +15,10 @@
       <div class="-values">{{ transaction.timestamp * 1000 | date:'fullDate' }}</div>
     </div>
     <div class="-row">
+      <div class="-key">ID</div>
+      <div class="-values">{{ transaction.txid }}</div>
+    </div>
+    <div class="-row">
       <div class="-key">Status</div>
       <div *ngIf="!transaction.confirmed" class="-values">Pending</div>
         <div *ngIf="transaction.confirmed" class="-values"><img src="../../../../../assets/img/check-green.png">Complete</div>
@@ -29,7 +33,7 @@
       <div class="-key">To</div>
       <div class="-values">
         <ng-container *ngFor="let output of transaction.outputs">
-          <span *ngIf="showOutput(output)">{{ output.dst | slice:0:10 }} ... {{ output.dst | slice:-10 }}</span>
+          <span *ngIf="showOutput(output)">{{ output.dst }}</span>
         </ng-container>
       </div>
     </div>
