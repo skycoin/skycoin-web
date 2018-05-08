@@ -7,7 +7,8 @@
             <select formControlName="wallet" id="wallet">
               <option value="" selected>Select Wallet</option>
               <option *ngFor="let wallet of wallets"
-                      [disabled]="wallet.balance <= 0 || !wallet.seed" [ngValue]="wallet">
+                      [disabled]="wallet.balance <= 0 || !wallet.seed"
+                      [ngValue]="wallet">
                 {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} SKY
               </option>
             </select>
