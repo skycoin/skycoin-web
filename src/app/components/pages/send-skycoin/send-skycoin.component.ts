@@ -61,7 +61,7 @@ export class SendSkycoinComponent implements OnInit {
         Validators.required,
         Validators.min(0.000001),
         Validators.max(balance),
-        Validators.pattern("^[0-9]{1,2}(\.[0-9]{1,6})?$"),
+        Validators.pattern('^[0-9]{1,2}(\.[0-9]{1,6})?$'),
       ]);
       this.form.controls.amount.updateValueAndValidity();
     });
