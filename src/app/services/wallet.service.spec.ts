@@ -202,7 +202,7 @@ describe('WalletService', () => {
   describe('sendSkycoin', () => {
     it('postTransaction should be called with the correct rawTransaction', fakeAsync(() => {
       const address = 'address';
-      const amount = 1;
+      const amount = 15;
 
       const addresses = [
         createAddress('address1', 'secretKey1'),
@@ -212,8 +212,10 @@ describe('WalletService', () => {
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput('address1', 'hash1'),
-        createOutput('address2', 'hash2')
+        createOutput('address1', 'hash1', 10, 10),
+        createOutput('address1', 'hash1', 80, 90),
+        createOutput('address2', 'hash2', 11, 20),
+        createOutput('address2', 'hash2', 60, 50)
       ];
 
       const expectedTxInputs: TransactionInput[] = [
@@ -224,13 +226,13 @@ describe('WalletService', () => {
       const expectedTxOutputs: TransactionOutput[] = [
         {
           address: address,
-          coins: 1000000,
-          hours: 5
+          coins: 15000000,
+          hours: 7
         },
         {
           address: wallet.addresses[0].address,
-          coins: 19000000,
-          hours: 5
+          coins: 6000000,
+          hours: 7
         }
       ];
 
@@ -357,11 +359,11 @@ function createTransaction(addresses: string[], ownerAddress: string, destinatio
   };
 }
 
-function createOutput(address: string, hash: string): Output {
+function createOutput(address: string, hash: string, coins = 10, hours = 100): Output {
   return {
     address: address,
-    coins: 10,
+    coins: coins,
     hash: hash,
-    hours: 10
+    hours: hours
   };
 }

@@ -19,6 +19,8 @@ export class WalletService {
   wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
 
+  private readonly allocationRatio = 0.25;
+
   constructor(
     private apiService: ApiService,
     private cipherProvider: CipherProvider
@@ -57,11 +59,14 @@ export class WalletService {
 
   sendSkycoin(wallet: Wallet, address: string, amount: number) {
     const addresses = wallet.addresses.map(a => a.address).join(',');
+
     return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
-      const totalCoins = parseInt((outputs.reduce((count, output) => count + output.coins, 0) * 1000000) + '', 10);
-      const totalHours = outputs.reduce((count, output) => count + output.hours, 0);
+      const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
+      const totalCoins = parseInt((minRequiredOutputs.reduce((count, output) =>
+        count + output.coins, 0) * 1000000) + '', 10);
+      const totalHours = minRequiredOutputs.reduce((count, output) => count + output.hours, 0);
       const changeCoins = totalCoins - amount * 1000000;
-      const changeHours = totalHours / 4;
+      const changeHours = Math.floor(totalHours * this.allocationRatio);
       const txOutputs: TransactionOutput[] = [{ address: address, coins: amount * 1000000, hours: changeHours }];
       const txInputs: TransactionInput[] = [];
 
@@ -69,7 +74,7 @@ export class WalletService {
         txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins, hours: changeHours });
       }
 
-      outputs.forEach(input => {
+      minRequiredOutputs.forEach(input => {
         txInputs.push({
           hash: input.hash,
           secret: wallet.addresses.find(a => a.address === input.address).secret_key,
@@ -317,5 +322,23 @@ export class WalletService {
       arr1.push(hex);
     }
     return arr1.join('');
+  }
+
+  private getMinRequiredOutputs(amount: number, outputs: Output[]): Output[] {
+    outputs.sort( function(a, b) {
+      return a.hours - b.hours;
+    });
+
+    const minRequiredOutputs: Output[] = [];
+    let sumCoins = 0;
+
+    outputs.forEach(output => {
+      if (amount > sumCoins) {
+        minRequiredOutputs.push(output);
+        sumCoins = sumCoins + output.coins;
+      }
+    });
+
+    return minRequiredOutputs;
   }
 }
