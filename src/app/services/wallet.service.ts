@@ -16,7 +16,7 @@ import { CipherProvider } from './cipher.provider';
 @Injectable()
 export class WalletService {
   recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
-  wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
+  wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
 
   constructor(
@@ -57,6 +57,7 @@ export class WalletService {
 
   sendSkycoin(wallet: Wallet, address: string, amount: number) {
     const addresses = wallet.addresses.map(a => a.address).join(',');
+
     return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
       const totalCoins = parseInt((outputs.reduce((count, output) => count + output.coins, 0) * 1000000) + '', 10);
       const totalHours = outputs.reduce((count, output) => count + output.hours, 0);
@@ -76,7 +77,7 @@ export class WalletService {
         });
       });
 
-      const rawTransaction = this.cipherProvider.prepareTransaction(JSON.stringify(txInputs), JSON.stringify(txOutputs));
+      const rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
 
       return this.apiService.postTransaction(rawTransaction);
     });
