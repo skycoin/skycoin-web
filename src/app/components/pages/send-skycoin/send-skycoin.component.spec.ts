@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material';
+import { MatSnackBarModule, MatDialog } from '@angular/material';
 
 import { SendSkycoinComponent } from './send-skycoin.component';
 import { WalletService } from '../../../services/wallet.service';
@@ -25,7 +25,8 @@ describe('SendSkycoinComponent', () => {
       imports: [ MatSnackBarModule ],
       providers: [
         FormBuilder,
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: MatDialog, useValue: {} }
       ]
     }).compileComponents();
   }));
