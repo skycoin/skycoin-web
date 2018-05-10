@@ -241,12 +241,15 @@ export class WalletService {
             wallet.addresses.forEach(address => {
               address.balance = 0;
               address.hours = 0;
-              const output = outputs.find(o => address.address === o.address);
-              if (output) {
-                address.balance = address.balance + output.coins;
-                address.hours = address.hours + output.hours;
-              }
+
+              outputs
+                .filter(o => address.address === o.address)
+                .map(output => {
+                  address.balance = address.balance + output.coins;
+                  address.hours = address.hours + output.hours;
+                });
             });
+
             wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0)
               .reduce((a , b) => a + b, 0);
             wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0)
