@@ -46,7 +46,6 @@ export class WalletService {
   }
 
   create(label: string, seed: string) {
-    seed = this.getCleanSeed(seed);
     const wallet = {
       label: label,
       seed: seed,
@@ -96,8 +95,6 @@ export class WalletService {
   }
 
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
-    seed = this.getCleanSeed(seed);
-
     return new Promise<void>((resolve, reject) => {
       let currentSeed = this.ascii_to_hexa(seed);
       wallet.addresses.forEach(address => {
@@ -321,9 +318,5 @@ export class WalletService {
       arr1.push(hex);
     }
     return arr1.join('');
-  }
-
-  private getCleanSeed(seed: string): string {
-    return seed.replace(/\r?\n|\r/g, ' ').replace(/ +/g, ' ').trim();
   }
 }
