@@ -80,6 +80,8 @@ describe('WalletService', () => {
       const expectedWallet = {
         label: walletLabel,
         seed: walletSeed,
+        balance: 0,
+        hours: 0,
         addresses: [walletAddress]
       };
 
@@ -239,7 +241,7 @@ describe('WalletService', () => {
         .subscribe();
 
       expect(spyCipherProvider.prepareTransaction)
-        .toHaveBeenCalledWith(JSON.stringify(expectedTxInputs), JSON.stringify(expectedTxOutputs));
+        .toHaveBeenCalledWith(expectedTxInputs, expectedTxOutputs);
 
       expect(spyApiService.postTransaction)
         .toHaveBeenCalledWith('preparedTransaction');

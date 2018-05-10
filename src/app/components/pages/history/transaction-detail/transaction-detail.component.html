@@ -7,12 +7,16 @@
       <img src="/assets/img/send-gold.png">
     </div>
     <h4>{{ transaction.balance }} SKY</h4>
-    <p *ngIf="price">{{ transaction.balance * price | currency:'USD':true:'1.2-2' }}</p>
+    <p *ngIf="price">{{ transaction.balance * price | currency:'USD':symbol:'1.2-2' }}</p>
   </div>
   <div class="-footer">
     <div class="-row">
       <div class="-key">Date</div>
       <div class="-values">{{ transaction.timestamp * 1000 | date:'fullDate' }}</div>
+    </div>
+    <div class="-row">
+      <div class="-key">ID</div>
+      <div class="-values">{{ transaction.txid }}</div>
     </div>
     <div class="-row">
       <div class="-key">Status</div>
@@ -29,7 +33,7 @@
       <div class="-key">To</div>
       <div class="-values">
         <ng-container *ngFor="let output of transaction.outputs">
-          <span *ngIf="showOutput(output)">{{ output.dst | slice:0:10 }} ... {{ output.dst | slice:-10 }}</span>
+          <span *ngIf="showOutput(output)">{{ output.dst }}</span>
         </ng-container>
       </div>
     </div>

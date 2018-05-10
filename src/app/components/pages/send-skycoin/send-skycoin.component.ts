@@ -5,6 +5,8 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 import { WalletService } from '../../../services/wallet.service';
 import { Wallet } from '../../../app.datatypes';
+import { MatDialog } from '@angular/material';
+import { openUnlockWalletModal } from '../../../utils/index';
 
 @Component({
   selector: 'app-send-skycoin',
@@ -22,6 +24,7 @@ export class SendSkycoinComponent implements OnInit {
     private formBuilder: FormBuilder,
     private walletService: WalletService,
     private snackbar: MatSnackBar,
+    private unlockDialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -31,9 +34,20 @@ export class SendSkycoinComponent implements OnInit {
     });
   }
 
-  send() {
+  onSendSkyCoin() {
+    const wallet = this.form.value.wallet;
+
+    if (!wallet.seed) {
+      openUnlockWalletModal(wallet, this.unlockDialog).componentInstance.onWalletUnlocked
+        .subscribe(() => this.send(wallet));
+    } else {
+      this.send(wallet);
+    }
+  }
+
+  private send(wallet: Wallet) {
     this.button.setLoading();
-    this.walletService.sendSkycoin(this.form.value.wallet, this.form.value.address, this.form.value.amount)
+    this.walletService.sendSkycoin(wallet, this.form.value.address, this.form.value.amount)
       .subscribe(
         () => {
           this.resetForm();

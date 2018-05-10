@@ -16,7 +16,7 @@ import { CipherProvider } from './cipher.provider';
 @Injectable()
 export class WalletService {
   recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
-  wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
+  wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
 
   constructor(
@@ -52,10 +52,12 @@ export class WalletService {
       addresses: [this.cipherProvider.generateAddress(this.ascii_to_hexa(seed))]
     };
     this.addWallet(wallet);
+    this.loadBalances();
   }
 
   sendSkycoin(wallet: Wallet, address: string, amount: number) {
     const addresses = wallet.addresses.map(a => a.address).join(',');
+
     return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
       const totalCoins = parseInt((outputs.reduce((count, output) => count + output.coins, 0) * 1000000) + '', 10);
       const totalHours = outputs.reduce((count, output) => count + output.hours, 0);
@@ -75,7 +77,7 @@ export class WalletService {
         });
       });
 
-      const rawTransaction = this.cipherProvider.prepareTransaction(JSON.stringify(txInputs), JSON.stringify(txOutputs));
+      const rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
 
       return this.apiService.postTransaction(rawTransaction);
     });
@@ -95,11 +97,10 @@ export class WalletService {
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       let currentSeed = this.ascii_to_hexa(seed);
-      wallet.seed = seed;
       wallet.addresses.forEach(address => {
         const fullAddress = this.cipherProvider.generateAddress(currentSeed);
         if (fullAddress.address !== address.address) {
-          return reject(new Error('Wrong seed'));
+          throw new Error('Wrong seed');
         }
         address.next_seed = fullAddress.next_seed;
         address.secret_key = fullAddress.secret_key;
@@ -107,6 +108,7 @@ export class WalletService {
         currentSeed = fullAddress.next_seed;
       });
 
+      wallet.seed = seed;
       this.updateWallet(wallet);
       return resolve();
     });

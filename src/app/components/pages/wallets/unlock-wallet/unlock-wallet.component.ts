@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import { WalletService } from '../../../../services/wallet.service';
   styleUrls: ['./unlock-wallet.component.scss'],
 })
 export class UnlockWalletComponent implements OnInit {
+  @Output() onWalletUnlocked = new EventEmitter<void>();
   @ViewChild('unlock') unlockButton;
   form: FormGroup;
 
@@ -35,6 +36,7 @@ export class UnlockWalletComponent implements OnInit {
     .then(
       () => {
         this.dialogRef.close();
+        this.onWalletUnlocked.emit();
       },
       (error: Error) => {
         const config = new MatSnackBarConfig();
