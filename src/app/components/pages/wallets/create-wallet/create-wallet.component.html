@@ -29,7 +29,7 @@
       Cancel
     </app-button>
     <app-button (action)="createWallet()" class="primary" [disabled]="!form.valid">
-      Create
+      {{ data.create ? 'Create' : 'Load'}}
     </app-button>
   </div>
 </app-modal>
