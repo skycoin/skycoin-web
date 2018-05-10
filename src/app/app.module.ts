@@ -22,7 +22,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AppComponent } from './app.component';
 import { ButtonComponent } from './components/layout/button/button.component';
 import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
@@ -135,7 +134,6 @@ import { FeatureService } from './services/feature.service';
     MatToolbarModule,
     MatTooltipModule,
     MatCheckboxModule,
-    NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(AppRoutes),
