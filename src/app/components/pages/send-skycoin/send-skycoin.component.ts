@@ -29,6 +29,7 @@ export class SendSkycoinComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
+
     this.walletService.all
       .subscribe(wallets => this.wallets = wallets);
   }
@@ -75,9 +76,22 @@ export class SendSkycoinComponent implements OnInit {
         Validators.required,
         Validators.min(0.000001),
         Validators.max(balance),
-        Validators.pattern('^[0-9]{1,2}(\.[0-9]{1,6})?$'),
+        this.validateAmount,
       ]);
       this.form.controls.amount.updateValueAndValidity();
     });
+  }
+  private validateAmount(amountControl: FormControl) {
+    if (!amountControl.value || isNaN(amountControl.value) || parseFloat(amountControl.value) <= 0) {
+      return { Invalid: true };
+    }
+
+    const parts = amountControl.value.toString().split('.');
+
+    if (parts.length === 2 && parts[1].length > 6) {
+      return { Invalid: true };
+    }
+
+    return null;
   }
 }
