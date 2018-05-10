@@ -19,6 +19,8 @@ export class WalletService {
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
 
+  private balancesUpdatedTime: BehaviorSubject<Date> = new BehaviorSubject<Date>(null);
+
   constructor(
     private apiService: ApiService,
     private cipherProvider: CipherProvider
@@ -33,6 +35,10 @@ export class WalletService {
 
   get all(): Observable<Wallet[]> {
     return this.wallets.asObservable().map(wallets => wallets ? wallets : []);
+  }
+
+  getBalancesUpdated(): Observable<Date> {
+    return this.balancesUpdatedTime.asObservable();
   }
 
   addAddress(wallet: Wallet) {
@@ -225,14 +231,7 @@ export class WalletService {
     });
   }
 
-  private addWallet(wallet) {
-    this.all.first().subscribe(wallets => {
-      wallets.push(wallet);
-      this.saveWallets(wallets);
-    });
-  }
-
-  private loadBalances() {
+  loadBalances() {
     this.addresses.first().subscribe(addresses => {
       const stringified = addresses.map(address => address.address).join(',');
       this.apiService.getOutputs(stringified).subscribe(outputs => {
@@ -253,8 +252,16 @@ export class WalletService {
               .reduce((a , b) => a + b, 0);
           });
           this.saveWallets(wallets);
+          this.balancesUpdatedTime.next(new Date());
         });
       });
+    });
+  }
+
+  private addWallet(wallet) {
+    this.all.first().subscribe(wallets => {
+      wallets.push(wallet);
+      this.saveWallets(wallets);
     });
   }
 
