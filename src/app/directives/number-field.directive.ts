@@ -1,12 +1,11 @@
 import { Directive, HostListener } from '@angular/core';
 
 @Directive({
-  selector: 'input[numberField]'
+  selector: 'input[appNumberField]'
 })
 export class NumberFieldDirective {
   @HostListener('keydown', ['$event']) onKeyDown(event) {
     const e = <KeyboardEvent> event;
-    console.info(event);
     if ([46, 8, 9, 27, 13, 110, 190].indexOf(e.keyCode) !== -1 ||
       // Allow: Ctrl+A
       (e.keyCode === 65 && (e.ctrlKey || e.metaKey)) ||
