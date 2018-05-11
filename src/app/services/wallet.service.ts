@@ -20,6 +20,7 @@ export class WalletService {
   addressesTemp: Address[];
 
   private readonly allocationRatio = 0.25;
+  private readonly unburnedHouarsRatio = 0.5;
 
   constructor(
     private apiService: ApiService,
@@ -64,15 +65,30 @@ export class WalletService {
       const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
       const totalCoins = parseInt((minRequiredOutputs.reduce((count, output) =>
         count + output.coins, 0) * 1000000) + '', 10);
-      const totalHours = minRequiredOutputs.reduce((count, output) => count + output.hours, 0);
+
+      if (totalCoins < amount * 1000000) {
+        throw new Error('Not enough available SKY Hours to perform transaction!');
+      }
+
+      const totalHours = parseInt((minRequiredOutputs.reduce((count, output) =>
+        count + output.hours, 0)) + '', 10);
       const changeCoins = totalCoins - amount * 1000000;
-      const changeHours = Math.floor(totalHours * this.allocationRatio);
-      const txOutputs: TransactionOutput[] = [{ address: address, coins: amount * 1000000, hours: changeHours }];
+      let changeHours = parseInt((totalHours * this.allocationRatio) + '', 10);
+
+      const txOutputs: TransactionOutput[] = [];
       const txInputs: TransactionInput[] = [];
 
       if (changeCoins > 0) {
-        txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins, hours: changeHours });
+        txOutputs.push({
+          address: wallet.addresses[0].address,
+          coins: changeCoins,
+          hours: totalHours * this.unburnedHouarsRatio - changeHours
+        });
+      } else {
+        changeHours = parseInt((totalHours * this.unburnedHouarsRatio) + '', 10);
       }
+
+      txOutputs.push({ address: address, coins: amount * 1000000, hours: changeHours });
 
       minRequiredOutputs.forEach(input => {
         txInputs.push({
@@ -324,16 +340,16 @@ export class WalletService {
     return arr1.join('');
   }
 
-  private getMinRequiredOutputs(amount: number, outputs: Output[]): Output[] {
+  private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {
     outputs.sort( function(a, b) {
-      return a.hours - b.hours;
+      return b.coins - a.coins;
     });
 
     const minRequiredOutputs: Output[] = [];
     let sumCoins = 0;
 
     outputs.forEach(output => {
-      if (amount > sumCoins) {
+      if (transactionAmount > sumCoins && output.hours > 0) {
         minRequiredOutputs.push(output);
         sumCoins = sumCoins + output.coins;
       }

@@ -56,7 +56,7 @@ export class SendSkycoinComponent implements OnInit {
         error => {
           const config = new MatSnackBarConfig();
           config.duration = 300000;
-          const errorMessage = error._body ? error._body : 'Your transaction appears to be unsuccessful';
+          const errorMessage = error.message ? error.message : 'Your transaction appears to be unsuccessful';
           this.snackbar.open(errorMessage, null, config);
           this.button.setError(error);
         },
