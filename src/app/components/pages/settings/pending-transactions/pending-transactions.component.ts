@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-pending-transactions',
   templateUrl: './pending-transactions.component.html',
-  styleUrls: ['./pending-transactions.component.css']
+  styleUrls: ['./pending-transactions.component.scss']
 })
 export class PendingTransactionsComponent implements OnInit {
 
