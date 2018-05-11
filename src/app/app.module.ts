@@ -65,6 +65,7 @@ import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
 import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
+import { NumberFieldDirective } from './directives/number-field.directive';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { FeatureService } from './services/feature.service';
     BuyComponent,
     ChangeNameComponent,
     ClipboardDirective,
+    NumberFieldDirective,
     CreateWalletComponent,
     DateFromNowPipe,
     DateTimePipe,
