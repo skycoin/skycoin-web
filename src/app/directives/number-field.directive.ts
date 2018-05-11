@@ -1,5 +1,6 @@
 import { Directive, HostListener } from '@angular/core';
 
+// --- Allows an input to accept only numbers. Currently, the paste option is failing, it needs some more testing 2.222
 @Directive({
   selector: 'input[appNumberField]'
 })
@@ -32,7 +33,7 @@ export class NumberFieldDirective {
       ? event.clipboardData.getData('text/plain')
       : window['clipboardData'].getData('text');
 
-    if (!pastedValue || !pastedValue.match('^[+-]?(\d*\.)?\d+$')) {
+    if (!pastedValue || !pastedValue.match(/^\d+(\.\d+)*$/)) {
       event.preventDefault();
     }
   }
