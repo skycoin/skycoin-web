@@ -13,48 +13,21 @@ export class TopBarComponent implements OnInit, OnDestroy {
   @Input() title: string;
 
   timeSinceLastUpdateBalances = 0;
-
-  private updateBalancesTimer: NodeJS.Timer;
   private updateBalancesSubscription: Subscription;
-  private lastUpdatedBalancesTime;
-  private intervalTime = 60 * 1000;
-  private refreshBalancesTime = 5;
 
   constructor(private walletService: WalletService) {
   }
 
   ngOnInit() {
-    this.updateBalancesSubscription = this.walletService.getBalancesUpdated()
-      .subscribe((lastUpdatedTime) => {
-        if (lastUpdatedTime) {
-          this.lastUpdatedBalancesTime = lastUpdatedTime;
-
-          this.refreshData();
-          this.startTimer();
+    this.updateBalancesSubscription = this.walletService.timeSinceLastBalancesUpdate
+      .subscribe((time: number) => {
+        if (time != null) {
+          this.timeSinceLastUpdateBalances = time;
         }
       });
   }
 
   ngOnDestroy() {
-    if (this.updateBalancesTimer) {
-      clearInterval(this.updateBalancesTimer);
-    }
-
     this.updateBalancesSubscription.unsubscribe();
-  }
-
-  private startTimer() {
-    this.updateBalancesTimer = setInterval(() => {
-      this.refreshData();
-    }, this.intervalTime);
-  }
-
-  private refreshData() {
-    const diffMs: number = this.lastUpdatedBalancesTime.getTime() - new Date().getTime();
-    this.timeSinceLastUpdateBalances = Math.abs(parseInt((diffMs / 1000 / 60).toFixed(2), 10));
-
-    if (this.timeSinceLastUpdateBalances === this.refreshBalancesTime) {
-      this.walletService.loadBalances();
-    }
   }
 }

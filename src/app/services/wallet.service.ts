@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -18,8 +18,12 @@ export class WalletService {
   recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
+  timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
-  private balancesUpdatedTime: BehaviorSubject<Date> = new BehaviorSubject<Date>(null);
+  private updateBalancesTimer: NodeJS.Timer;
+  private lastBalancesUpdateTime: Date;
+  private readonly intervalTime = 60 * 1000;
+  private readonly refreshBalancesTime = 5;
 
   constructor(
     private apiService: ApiService,
@@ -35,10 +39,6 @@ export class WalletService {
 
   get all(): Observable<Wallet[]> {
     return this.wallets.asObservable().map(wallets => wallets ? wallets : []);
-  }
-
-  getBalancesUpdated(): Observable<Date> {
-    return this.balancesUpdatedTime.asObservable();
   }
 
   addAddress(wallet: Wallet) {
@@ -231,7 +231,7 @@ export class WalletService {
     });
   }
 
-  loadBalances() {
+  private loadBalances() {
     this.addresses.first().subscribe(addresses => {
       const stringified = addresses.map(address => address.address).join(',');
       this.apiService.getOutputs(stringified).subscribe(outputs => {
@@ -251,8 +251,8 @@ export class WalletService {
             wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0)
               .reduce((a , b) => a + b, 0);
           });
-          this.saveWallets(wallets);
-          this.balancesUpdatedTime.next(new Date());
+
+          this.resetBalancesUpdateTime();
         });
       });
     });
@@ -325,5 +325,33 @@ export class WalletService {
       arr1.push(hex);
     }
     return arr1.join('');
+  }
+
+  private resetBalancesUpdateTime() {
+    this.lastBalancesUpdateTime = new Date();
+    this.calculateTimeSinceLastUpdate();
+    this.restartTimer();
+  }
+
+  private restartTimer() {
+    if (this.updateBalancesTimer) {
+      clearInterval(this.updateBalancesTimer);
+    }
+    this.startTimer();
+  }
+
+  private startTimer() {
+    this.updateBalancesTimer = setInterval(() => this.calculateTimeSinceLastUpdate(), this.intervalTime);
+  }
+
+  private calculateTimeSinceLastUpdate() {
+    const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
+    const timeSinceLastUpdate = Math.abs(Math.round((diffMs / 1000 / 60)));
+
+    this.timeSinceLastBalancesUpdate.next(timeSinceLastUpdate);
+
+    if (timeSinceLastUpdate === this.refreshBalancesTime) {
+      this.loadBalances();
+    }
   }
 }

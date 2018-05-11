@@ -7,7 +7,7 @@ import { TopBarComponent } from './top-bar.component';
 import { WalletService } from '../../../../services/wallet.service';
 
 class MockWalletService {
-  getBalancesUpdated(): Observable<void> {
+  get timeSinceLastBalancesUpdate(): Observable<void> {
     return Observable.of();
   }
 }
