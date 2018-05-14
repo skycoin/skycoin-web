@@ -19,7 +19,7 @@ export class BlockchainService {
     private apiService: ApiService,
     private walletService: WalletService
   ) {
-    this.loadBlockchain();
+    this.loadBlockchainBlocks();
   }
 
   addressTransactions(id): Observable<any> {
@@ -61,14 +61,14 @@ export class BlockchainService {
     return this.apiService.get('uxout', {uxid: input});
   }
 
-  private loadBlockchain() {
+  private loadBlockchainBlocks() {
     setTimeout(() => IntervalObservable
       .create(2000)
       .flatMap(() => this.getBlockchainProgress())
       .takeWhile((response: any) => !response.current || response.current !== response.highest)
       .subscribe(
         response => this.progressSubject.next(response),
-        error => console.log(error),
+        error => this.finishLoadingBlockchain(),
         () => this.completeLoading()
       ), 3000);
   }
@@ -78,7 +78,11 @@ export class BlockchainService {
   }
 
   private completeLoading() {
-    this.progressSubject.next({ current: 999999999999, highest: 999999999999 });
+    this.finishLoadingBlockchain();
     this.walletService.loadBalances();
+  }
+
+  private finishLoadingBlockchain() {
+    this.progressSubject.next({ current: 999999999999, highest: 999999999999 });
   }
 }

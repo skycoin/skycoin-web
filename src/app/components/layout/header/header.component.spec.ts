@@ -23,8 +23,8 @@ class MockWalletService {
 }
 
 class MockAppService {
-  get connectionError() {
-    return Observable.of();
+  checkConnectionState()  {
+    return Observable.of(null);
   }
 }
 

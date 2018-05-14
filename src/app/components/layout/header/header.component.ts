@@ -49,7 +49,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.appService.connectionError
+    this.appService.checkConnectionState()
       .subscribe((error: ConnectionError) => this.connectionError = error);
 
     this.priceSubscription = this.priceService.price

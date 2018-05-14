@@ -56,7 +56,6 @@ import { TransactionsAmountPipe } from './pipes/transactions-amount.pipe';
 import { ApiService } from './services/api.service';
 import { BlockchainService } from './services/blockchain.service';
 import { ClipboardService } from './services/clipboard.service';
-import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
@@ -66,6 +65,7 @@ import { CipherProvider } from './services/cipher.provider';
 import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
 import { AppService } from './services/app.service';
+import { NumberFieldDirective } from './directives/number-field.directive';
 
 @NgModule({
   declarations: [
@@ -76,6 +76,7 @@ import { AppService } from './services/app.service';
     BuyComponent,
     ChangeNameComponent,
     ClipboardDirective,
+    NumberFieldDirective,
     CreateWalletComponent,
     DateFromNowPipe,
     DateTimePipe,
@@ -141,7 +142,6 @@ import { AppService } from './services/app.service';
     AppService,
     ApiService,
     BlockchainService,
-    NetworkService,
     PurchaseService,
     WalletService,
     PriceService,
