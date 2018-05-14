@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { WalletDetailComponent } from './wallet-detail.component';
 import { WalletService } from '../../../../services/wallet.service';
@@ -16,7 +16,8 @@ describe('WalletDetailComponent', () => {
       declarations: [ WalletDetailComponent ],
       providers: [
         { provide: WalletService, useClass: MockWalletService },
-        { provide: MatDialog, useValue: {} }
+        { provide: MatDialog, useValue: {} },
+        { provide: MatSnackBar, useValue: {} }
       ]
     }).compileComponents();
   }));
