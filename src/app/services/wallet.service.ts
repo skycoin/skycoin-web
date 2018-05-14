@@ -8,6 +8,7 @@ import 'rxjs/add/operator/mergeMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+
 import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet } from '../app.datatypes';
 import { WalletModel } from '../models/wallet.model';
 import { ApiService } from './api.service';
@@ -20,7 +21,7 @@ export class WalletService {
   addressesTemp: Address[];
   timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
-  private updateBalancesTimer: NodeJS.Timer;
+  private updateBalancesTimer: any;
   private lastBalancesUpdateTime: Date;
   private readonly intervalTime = 60 * 1000;
   private readonly refreshBalancesTime = 5;
@@ -169,9 +170,6 @@ export class WalletService {
   /*
  Legacy
   */
-  folder(): Observable<string> {
-    return this.apiService.get('wallets/folderName').map(response => response.address);
-  }
 
   outputs(): Observable<any> {
     return this.getAddressesAsString()
@@ -182,34 +180,6 @@ export class WalletService {
 
   pendingTransactions(): Observable<any> {
     return this.apiService.get('pendingTxs');
-  }
-
-  recent(): Observable<any[]> {
-    return this.recentTransactions.asObservable();
-  }
-
-  refreshBalances() {
-    this.all.first().subscribe(wallets => {
-      Observable.forkJoin(wallets.map(wallet => this.retrieveWalletBalance(wallet).map(response => {
-        wallet.addresses = response;
-        wallet.balance = response.map(address => address.balance >= 0 ? address.balance : 0)
-          .reduce((a , b) => a + b, 0);
-        wallet.hours = response.map(address => address.hours >= 0 ? address.hours : 0)
-          .reduce((a , b) => a + b, 0);
-        return wallet;
-      })))
-        .subscribe(newWallets => this.wallets.next(newWallets));
-    });
-  }
-
-  retrieveUpdatedTransactions(transactions) {
-    return Observable.forkJoin((transactions.map(transaction => {
-      return this.apiService.get('transaction', { txid: transaction.id }).map(response => {
-        response.amount = transaction.amount;
-        response.address = transaction.address;
-        return response;
-      });
-    })));
   }
 
   sum(): Observable<number> {
@@ -240,12 +210,15 @@ export class WalletService {
             wallet.addresses.forEach(address => {
               address.balance = 0;
               address.hours = 0;
-              const output = outputs.find(o => address.address === o.address);
-              if (output) {
-                address.balance = address.balance + output.coins;
-                address.hours = address.hours + output.hours;
-              }
+
+              outputs
+                .filter(o => address.address === o.address)
+                .map(output => {
+                  address.balance = address.balance + output.coins;
+                  address.hours = address.hours + output.hours;
+                });
             });
+
             wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0)
               .reduce((a , b) => a + b, 0);
             wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0)
