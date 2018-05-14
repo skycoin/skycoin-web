@@ -11,6 +11,10 @@ describe('Send Sky', () => {
     walletPage = new WalletsPage();
   });
 
+  afterAll(() => {
+    browser.executeScript('window.localStorage.clear();');
+  });
+
   it('should preconfigure wallet', () => {
     page.navigateTo().then(() => {
       browser.executeScript(

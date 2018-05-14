@@ -1,14 +1,25 @@
+import { browser } from 'protractor';
+
 import { WalletsPage } from './wallets.po';
 
 describe('Wallets', () => {
   let page: WalletsPage;
 
-  beforeEach(() => {
+  beforeAll(async() => {
+    await browser.executeScript(
+      `window.localStorage.setItem(\'wallets\',
+      JSON.stringify([{"label":"Test wallet","addresses":
+      [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
+
     page = new WalletsPage();
+    await page.navigateTo();
+  });
+
+  afterAll(() => {
+    browser.executeScript('window.localStorage.clear();');
   });
 
   it('should display title', () => {
-    page.navigateTo();
     expect<any>(page.getHeaderText()).toEqual('Wallets');
   });
 
@@ -80,8 +91,8 @@ describe('Wallets', () => {
     expect<any>(page.showPriceInformation()).toEqual(true);
   });
 
-  it('should decrypt wallet', () => {
-    page.navigateTo();
+  it('should decrypt wallet', async() => {
+    await page.navigateTo();
     expect<any>(page.canUnlock()).toEqual(true);
   });
 });

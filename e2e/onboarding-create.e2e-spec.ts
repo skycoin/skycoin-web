@@ -1,14 +1,20 @@
+import { browser } from 'protractor';
+
 import { OnboardingCreatePage } from './onboarding-create.po';
 
 describe('Onboarding Create', () => {
   let page: OnboardingCreatePage;
 
-  beforeEach(() => {
+  beforeAll(async() => {
     page = new OnboardingCreatePage();
+    await page.navigateTo();
+  });
+
+  afterAll(() => {
+    browser.executeScript('window.localStorage.clear();');
   });
 
   it('should display title', () => {
-    page.navigateTo();
     expect<any>(page.getHeaderText()).toEqual('Create a Wallet');
   });
 
@@ -45,8 +51,8 @@ describe('Onboarding Create', () => {
     expect<any>(page.acceptSafeguard()).toEqual(false);
   });
 
-  it('should skip wizard', () => {
-    page.navigateTo();
+  it('should skip wizard', async() => {
+    await page.navigateTo();
     expect<any>(page.skipWizard()).toContain('/wallets');
   });
 
