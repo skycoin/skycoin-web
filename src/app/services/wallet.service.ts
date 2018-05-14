@@ -225,14 +225,7 @@ export class WalletService {
     });
   }
 
-  private addWallet(wallet) {
-    this.all.first().subscribe(wallets => {
-      wallets.push(wallet);
-      this.saveWallets(wallets);
-    });
-  }
-
-  private loadBalances() {
+  loadBalances() {
     this.addresses.first().subscribe(addresses => {
       const stringified = addresses.map(address => address.address).join(',');
       this.apiService.getOutputs(stringified).subscribe(outputs => {
@@ -258,6 +251,13 @@ export class WalletService {
           this.saveWallets(wallets);
         });
       });
+    });
+  }
+
+  private addWallet(wallet) {
+    this.all.first().subscribe(wallets => {
+      wallets.push(wallet);
+      this.saveWallets(wallets);
     });
   }
 

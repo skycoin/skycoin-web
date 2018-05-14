@@ -7,6 +7,9 @@ import { HeaderComponent } from './header.component';
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
 import { Wallet } from '../../../app.datatypes';
+import { AppService } from '../../../services/app.service';
+import { Observable } from 'rxjs/Observable';
+import { BlockchainService } from '../../../services/blockchain.service';
 
 class MockPriceService {
   price: Subject<number> = new BehaviorSubject<number>(null);
@@ -16,6 +19,18 @@ class MockWalletService {
   wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
 
   sum() {
+  }
+}
+
+class MockAppService {
+  get connectionError() {
+    return Observable.of();
+  }
+}
+
+class MockBlockchainService {
+  get progress() {
+    return Observable.of();
   }
 }
 
@@ -29,7 +44,9 @@ describe('HeaderComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: PriceService, useClass: MockPriceService },
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: AppService, useClass: MockAppService },
+        { provide: BlockchainService, useClass: MockBlockchainService }
       ]
     }).compileComponents();
   }));

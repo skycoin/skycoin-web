@@ -65,6 +65,7 @@ import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
 import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
+import { AppService } from './services/app.service';
 
 @NgModule({
   declarations: [
@@ -137,6 +138,7 @@ import { FeatureService } from './services/feature.service';
     FeatureToggleModule
   ],
   providers: [
+    AppService,
     ApiService,
     BlockchainService,
     NetworkService,
