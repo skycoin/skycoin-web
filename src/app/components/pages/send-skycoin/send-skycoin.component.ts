@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
@@ -29,9 +29,9 @@ export class SendSkycoinComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
-    this.walletService.all.subscribe( (wallets) => {
-      this.wallets = wallets;
-    });
+
+    this.walletService.all
+      .subscribe(wallets => this.wallets = wallets);
   }
 
   onSendSkyCoin() {
@@ -50,7 +50,7 @@ export class SendSkycoinComponent implements OnInit {
     this.walletService.sendSkycoin(wallet, this.form.value.address, this.form.value.amount)
       .subscribe(
         () => {
-          this.resetForm();
+          this.form.reset();
           this.button.setSuccess();
         },
         error => {
@@ -67,24 +67,31 @@ export class SendSkycoinComponent implements OnInit {
     this.form = this.formBuilder.group({
       wallet: ['', Validators.required],
       address: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.min(0), Validators.max(0)]],
+      amount: ['', [Validators.required]],
       notes: [''],
     });
     this.form.controls.wallet.valueChanges.subscribe(value => {
       const balance = value && value.balance ? value.balance : 0;
       this.form.controls.amount.setValidators([
         Validators.required,
-        Validators.min(0),
+        Validators.min(0.000001),
         Validators.max(balance),
+        this.validateAmount,
       ]);
       this.form.controls.amount.updateValueAndValidity();
     });
   }
+  private validateAmount(amountControl: FormControl) {
+    if (!amountControl.value || isNaN(amountControl.value) || parseFloat(amountControl.value) <= 0) {
+      return { Invalid: true };
+    }
 
-  private resetForm() {
-    this.form.controls.wallet.reset(undefined);
-    this.form.controls.address.reset(undefined);
-    this.form.controls.amount.reset(undefined);
-    this.form.controls.notes.reset(undefined);
+    const parts = amountControl.value.toString().split('.');
+
+    if (parts.length === 2 && parts[1].length > 6) {
+      return { Invalid: true };
+    }
+
+    return null;
   }
 }

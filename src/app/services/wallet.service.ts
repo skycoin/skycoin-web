@@ -183,9 +183,6 @@ export class WalletService {
   /*
  Legacy
   */
-  folder(): Observable<string> {
-    return this.apiService.get('wallets/folderName').map(response => response.address);
-  }
 
   outputs(): Observable<any> {
     return this.getAddressesAsString()
@@ -198,51 +195,9 @@ export class WalletService {
     return this.apiService.get('pendingTxs');
   }
 
-  recent(): Observable<any[]> {
-    return this.recentTransactions.asObservable();
-  }
-
-  refreshBalances() {
-    this.all.first().subscribe(wallets => {
-      Observable.forkJoin(wallets.map(wallet => this.retrieveWalletBalance(wallet).map(response => {
-        wallet.addresses = response;
-        wallet.balance = response.map(address => address.balance >= 0 ? address.balance : 0)
-          .reduce((a , b) => a + b, 0);
-        wallet.hours = response.map(address => address.hours >= 0 ? address.hours : 0)
-          .reduce((a , b) => a + b, 0);
-        return wallet;
-      })))
-        .subscribe(newWallets => this.wallets.next(newWallets));
-    });
-  }
-
-  retrieveUpdatedTransactions(transactions) {
-    return Observable.forkJoin((transactions.map(transaction => {
-      return this.apiService.get('transaction', { txid: transaction.id }).map(response => {
-        response.amount = transaction.amount;
-        response.address = transaction.address;
-        return response;
-      });
-    })));
-  }
-
   sum(): Observable<number> {
     return this.all.map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0)
       .reduce((a , b) => a + b, 0));
-  }
-
-  transaction(txid: string): Observable<any> {
-    return this.apiService.get('transaction', { txid: txid }).flatMap(transaction => {
-      if (transaction.txn.inputs && !transaction.txn.inputs.length) {
-        return Observable.of(transaction);
-      }
-      return Observable.forkJoin(transaction.txn.inputs.map(input => this.retrieveInputAddress(input).map(response => {
-        return response.owner_address;
-      }))).map(inputs => {
-        transaction.txn.inputs = inputs;
-        return transaction;
-      });
-    });
   }
 
   private addWallet(wallet) {
@@ -261,12 +216,15 @@ export class WalletService {
             wallet.addresses.forEach(address => {
               address.balance = 0;
               address.hours = 0;
-              const output = outputs.find(o => address.address === o.address);
-              if (output) {
-                address.balance = address.balance + output.coins;
-                address.hours = address.hours + output.hours;
-              }
+
+              outputs
+                .filter(o => address.address === o.address)
+                .map(output => {
+                  address.balance = address.balance + output.coins;
+                  address.hours = address.hours + output.hours;
+                });
             });
+
             wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0)
               .reduce((a , b) => a + b, 0);
             wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0)
