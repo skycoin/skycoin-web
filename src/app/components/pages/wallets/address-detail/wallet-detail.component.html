@@ -12,7 +12,7 @@
   </div>
 </ng-container>
 <div class="-actions">
-  <div class="-button" (click)="newAddress()" *ngIf="wallet.seed && wallet.addresses[wallet.addresses.length -1].next_seed">
+  <div class="-button" (click)="onAddNewAddress()">
     <div class="-btn-plus">
       <img src="../../../../../assets/img/plus-grey.png">
       <span>New Address</span>
