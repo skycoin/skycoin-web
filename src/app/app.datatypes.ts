@@ -64,3 +64,8 @@ export class TransactionRequest {
   inputs: TransactionInput[];
   outputs: TransactionOutput[];
 }
+
+export interface TotalBalance {
+  coins: number;
+  hours: number;
+}
