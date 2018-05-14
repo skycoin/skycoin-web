@@ -19,6 +19,9 @@ export class WalletService {
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
 
+  private readonly allocationRatio = 0.25;
+  private readonly unburnedHouarsRatio = 0.5;
+
   constructor(
     private apiService: ApiService,
     private cipherProvider: CipherProvider
@@ -59,18 +62,35 @@ export class WalletService {
     const addresses = wallet.addresses.map(a => a.address).join(',');
 
     return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
-      const totalCoins = parseInt((outputs.reduce((count, output) => count + output.coins, 0) * 1000000) + '', 10);
-      const totalHours = outputs.reduce((count, output) => count + output.hours, 0);
-      const changeCoins = totalCoins - amount * 1000000;
-      const changeHours = totalHours / 4;
-      const txOutputs: TransactionOutput[] = [{ address: address, coins: amount * 1000000, hours: changeHours }];
+      const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
+      const totalCoins = parseInt((minRequiredOutputs.reduce((count, output) =>
+        count + output.coins, 0) * 1000000) + '', 10);
+
+      if (totalCoins < parseInt(amount * 1000000 + '', 10)) {
+        throw new Error('Not enough available SKY Hours to perform transaction!');
+      }
+
+      const totalHours = parseInt((minRequiredOutputs.reduce((count, output) =>
+        count + output.hours, 0)) + '', 10);
+      const changeCoins = totalCoins - parseInt(amount * 1000000 + '', 10);
+      let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
+
+      const txOutputs: TransactionOutput[] = [];
       const txInputs: TransactionInput[] = [];
 
       if (changeCoins > 0) {
-        txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins, hours: changeHours });
+        txOutputs.push({
+          address: wallet.addresses[0].address,
+          coins: changeCoins,
+          hours: totalHours * this.unburnedHouarsRatio - hoursToSend
+        });
+      } else {
+        hoursToSend = parseInt((totalHours * this.unburnedHouarsRatio) + '', 10);
       }
 
-      outputs.forEach(input => {
+      txOutputs.push({ address: address, coins: parseInt(amount * 1000000 + '', 10), hours: hoursToSend });
+
+      minRequiredOutputs.forEach(input => {
         txInputs.push({
           hash: input.hash,
           secret: wallet.addresses.find(a => a.address === input.address).secret_key,
@@ -276,5 +296,23 @@ export class WalletService {
       arr1.push(hex);
     }
     return arr1.join('');
+  }
+
+  private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {
+    outputs.sort( function(a, b) {
+      return b.coins - a.coins;
+    });
+
+    const minRequiredOutputs: Output[] = [];
+    let sumCoins = 0;
+
+    outputs.forEach(output => {
+      if (transactionAmount > sumCoins && output.hours > 0) {
+        minRequiredOutputs.push(output);
+        sumCoins = sumCoins + output.coins;
+      }
+    });
+
+    return minRequiredOutputs;
   }
 }
