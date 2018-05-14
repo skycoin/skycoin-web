@@ -22,7 +22,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AppComponent } from './app.component';
 import { ButtonComponent } from './components/layout/button/button.component';
 import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
@@ -46,7 +45,6 @@ import { TransactionDetailComponent } from './components/pages/history/transacti
 import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
 import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
 import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
-import { LoadWalletComponent } from './components/pages/wallets/load-wallet/load-wallet.component';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { WalletsComponent } from './components/pages/wallets/wallets.component';
 import { ClipboardDirective } from './directives/clipboard.directive';
@@ -58,7 +56,6 @@ import { TransactionsAmountPipe } from './pipes/transactions-amount.pipe';
 import { ApiService } from './services/api.service';
 import { BlockchainService } from './services/blockchain.service';
 import { ClipboardService } from './services/clipboard.service';
-import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
@@ -67,6 +64,7 @@ import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
 import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
+import { NumberFieldDirective } from './directives/number-field.directive';
 
 @NgModule({
   declarations: [
@@ -77,13 +75,13 @@ import { FeatureService } from './services/feature.service';
     BuyComponent,
     ChangeNameComponent,
     ClipboardDirective,
+    NumberFieldDirective,
     CreateWalletComponent,
     DateFromNowPipe,
     DateTimePipe,
     DoubleButtonComponent,
     HeaderComponent,
     HistoryComponent,
-    LoadWalletComponent,
     ModalComponent,
     NavBarComponent,
     OutputsComponent,
@@ -109,7 +107,6 @@ import { FeatureService } from './services/feature.service';
     ChangeNameComponent,
     QrCodeComponent,
     UnlockWalletComponent,
-    LoadWalletComponent,
     TransactionDetailComponent,
     OnboardingDisclaimerComponent,
     OnboardingSafeguardComponent,
@@ -135,7 +132,6 @@ import { FeatureService } from './services/feature.service';
     MatToolbarModule,
     MatTooltipModule,
     MatCheckboxModule,
-    NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(AppRoutes),
@@ -144,7 +140,6 @@ import { FeatureService } from './services/feature.service';
   providers: [
     ApiService,
     BlockchainService,
-    NetworkService,
     PurchaseService,
     WalletService,
     PriceService,

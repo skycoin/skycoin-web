@@ -19,7 +19,7 @@ export class WalletsPage {
   showLoadWallet() {
     const btnLoad = element(by.buttonText('Load Wallet'));
     return btnLoad.click().then(() => {
-      return element(by.css('app-load-wallet')).isPresent();
+      return element(by.css('app-create-wallet')).isPresent();
     });
   }
 
