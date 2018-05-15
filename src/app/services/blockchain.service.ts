@@ -62,15 +62,15 @@ export class BlockchainService {
   }
 
   private loadBlockchainBlocks() {
-    setTimeout(() => IntervalObservable
-      .create(2000)
+    IntervalObservable
+      .create(90000)
       .flatMap(() => this.getBlockchainProgress())
       .takeWhile((response: any) => !response.current || response.current !== response.highest)
       .subscribe(
         response => this.progressSubject.next(response),
         error => this.finishLoadingBlockchain(),
         () => this.completeLoading()
-      ), 3000);
+      );
   }
 
   private getBlockchainProgress() {

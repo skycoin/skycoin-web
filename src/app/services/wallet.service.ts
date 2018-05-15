@@ -180,20 +180,6 @@ export class WalletService {
       .reduce((a , b) => a + b, 0));
   }
 
-  transaction(txid: string): Observable<any> {
-    return this.apiService.get('transaction', { txid: txid }).flatMap(transaction => {
-      if (transaction.txn.inputs && !transaction.txn.inputs.length) {
-        return Observable.of(transaction);
-      }
-      return Observable.forkJoin(transaction.txn.inputs.map(input => this.retrieveInputAddress(input).map(response => {
-        return response.owner_address;
-      }))).map(inputs => {
-        transaction.txn.inputs = inputs;
-        return transaction;
-      });
-    });
-  }
-
   loadBalances() {
     this.addresses.first().subscribe(addresses => {
       const stringified = addresses.map(address => address.address).join(',');
