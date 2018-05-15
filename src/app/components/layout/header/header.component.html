@@ -4,7 +4,7 @@
     <div class="balance-container">
       <div class="balance">
         <p class="coins"><span>{{ walletService.sum() | async | number:'1.0-6' }}</span> sky</p>
-        <p class="dollars">{{ balance }}</p>
+        <p class="dollars">{{ isBalanceCalculated ? balance : 'loading..' }}</p>
       </div>
     </div>
     <div class="hour-balance">

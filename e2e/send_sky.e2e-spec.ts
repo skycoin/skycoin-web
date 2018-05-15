@@ -7,6 +7,7 @@ describe('Send Sky', () => {
   let walletPage: WalletsPage;
 
   beforeEach(() => {
+    browser.waitForAngularEnabled(false);
     page = new SendSkyPage();
     walletPage = new WalletsPage();
   });

@@ -20,7 +20,7 @@ export class WalletService {
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
   timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-  totalBalance: BehaviorSubject<TotalBalance> = new  BehaviorSubject<TotalBalance>(null);
+  totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
 
   private updateBalancesTimer: any;
   private lastBalancesUpdateTime: Date;

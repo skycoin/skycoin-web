@@ -104,11 +104,11 @@ export class WalletsPage {
     const btnCreate = element(by.buttonText('Create'));
 
     label.clear();
-    label.sendKeys('Test wallet');
+    label.sendKeys('Test create wallet');
     seed.clear();
-    seed.sendKeys('skycoin-web-e2e-test-seed');
+    seed.sendKeys('create wallet seed');
     confirm.clear();
-    confirm.sendKeys('skycoin-web-e2e-test-seed');
+    confirm.sendKeys('create wallet seed');
     return btnCreate.isEnabled().then(status => {
       if (status) {
         btnCreate.click();

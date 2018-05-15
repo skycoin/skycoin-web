@@ -1,9 +1,12 @@
+import { browser } from 'protractor';
+
 import { WalletsPage } from './wallets.po';
 
 describe('Wallets', () => {
   let page: WalletsPage;
 
   beforeEach(() => {
+    browser.waitForAngularEnabled(false);
     page = new WalletsPage();
   });
 
