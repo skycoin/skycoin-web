@@ -12,7 +12,7 @@
           <img src="../../../../../assets/img/qr-code-black.png"  (click)="showQr(output.address)" >
           <p>{{ output.address }}</p>
         </div>
-        <div class="-width-150 -hours">{{ (output.hours ? output.hours : 0) | number:'1.0-6' }}</div>
+        <div class="-width-150 -hours">{{ (output.calculated_hours ? output.calculated_hours : 0) | number:'1.0-6' }}</div>
         <div class="-width-150 -coins">{{ (output.coins ? output.coins : 0) | number:'1.0-6' }}</div>
       </div>
     </div>

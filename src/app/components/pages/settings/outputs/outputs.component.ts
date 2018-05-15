@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+
 import { WalletService } from '../../../../services/wallet.service';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { GetOutputsRequestOutput } from '../../../../app.datatypes';
 
 @Component({
   selector: 'app-outputs',
@@ -10,7 +12,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 })
 export class OutputsComponent implements OnInit {
 
-  outputs: any[];
+  outputs: GetOutputsRequestOutput[];
 
   constructor(
     private walletService: WalletService,
