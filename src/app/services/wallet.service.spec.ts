@@ -424,11 +424,11 @@ function createTransaction(addresses: string[], ownerAddress: string, destinatio
   };
 }
 
-function createOutput(address: string, hash: string, coins = 10, hours = 100): Output {
+function createOutput(address: string, hash: string, coins = 10, calculated_hours = 100): Output {
   return {
     address: address,
     coins: coins,
     hash: hash,
-    hours: hours
+    calculated_hours: calculated_hours
   };
 }

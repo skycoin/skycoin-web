@@ -7,7 +7,7 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+
 import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet } from '../app.datatypes';
 import { WalletModel } from '../models/wallet.model';
 import { ApiService } from './api.service';
@@ -15,7 +15,6 @@ import { CipherProvider } from './cipher.provider';
 
 @Injectable()
 export class WalletService {
-  recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
 
@@ -71,7 +70,7 @@ export class WalletService {
       }
 
       const totalHours = parseInt((minRequiredOutputs.reduce((count, output) =>
-        count + output.hours, 0)) + '', 10);
+        count + output.calculated_hours, 0)) + '', 10);
       const changeCoins = totalCoins - parseInt(amount * 1000000 + '', 10);
       let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
 
@@ -115,7 +114,7 @@ export class WalletService {
   }
 
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
       let currentSeed = this.ascii_to_hexa(seed);
       wallet.addresses.forEach(address => {
         const fullAddress = this.cipherProvider.generateAddress(currentSeed);
@@ -221,7 +220,7 @@ export class WalletService {
                 .filter(o => address.address === o.address)
                 .map(output => {
                   address.balance = address.balance + output.coins;
-                  address.hours = address.hours + output.hours;
+                  address.hours = address.hours + output.calculated_hours;
                 });
             });
 
@@ -259,27 +258,6 @@ export class WalletService {
     return this.apiService.get('balance', { addrs: addresses });
   }
 
-  private retrieveInputAddress(input: string) {
-    return this.apiService.get('uxout', { uxid: input });
-  }
-
-  private retrieveWalletBalance(wallet: Wallet): Observable<any> {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressBalance(address).map(balance => {
-      address.balance = balance.confirmed.coins;
-      address.hours = balance.confirmed.hours;
-      return address;
-    })));
-  }
-
-  private retrieveWalletTransactions(wallet: Wallet) {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressTransactions(address)))
-      .map(addresses => [].concat.apply([], addresses));
-  }
-
-  private retrieveWallets(): Observable<WalletModel[]> {
-    return this.apiService.get('wallets');
-  }
-
   private getAddressesAsString(): Observable<string> {
     return this.all.map(wallets => wallets.map(wallet => {
       return wallet.addresses.reduce((a, b) => {
@@ -307,12 +285,33 @@ export class WalletService {
     let sumCoins = 0;
 
     outputs.forEach(output => {
-      if (transactionAmount > sumCoins && output.hours > 0) {
+      if (transactionAmount > sumCoins && output.calculated_hours > 0) {
         minRequiredOutputs.push(output);
         sumCoins = sumCoins + output.coins;
       }
     });
 
     return minRequiredOutputs;
+  }
+
+  private retrieveInputAddress(input: string) {
+    return this.apiService.get('uxout', { uxid: input });
+  }
+
+  private retrieveWalletBalance(wallet: Wallet): Observable<any> {
+    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressBalance(address).map(balance => {
+      address.balance = balance.confirmed.coins;
+      address.hours = balance.confirmed.hours;
+      return address;
+    })));
+  }
+
+  private retrieveWalletTransactions(wallet: Wallet) {
+    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressTransactions(address)))
+      .map(addresses => [].concat.apply([], addresses));
+  }
+
+  private retrieveWallets(): Observable<WalletModel[]> {
+    return this.apiService.get('wallets');
   }
 }

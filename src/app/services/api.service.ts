@@ -5,6 +5,7 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
+
 import { GetOutputsRequest, Output } from '../app.datatypes';
 import { environment } from '../../environments/environment';
 
@@ -22,7 +23,7 @@ export class ApiService {
         address: output.address,
         coins: parseFloat(output.coins),
         hash: output.hash,
-        hours: output.calculated_hours
+        calculated_hours: output.calculated_hours
       }));
       return outputs;
     }) : Observable.of([]);
