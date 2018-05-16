@@ -16,6 +16,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   coins = 0;
   hours: number;
   balance: string;
+  hasPendingTxs: boolean;
 
   private price: number;
   private priceSubscription: Subscription;
@@ -42,6 +43,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.calculateBalance();
         }
       });
+
+    this.walletService.pendingTransactions()
+      .subscribe(txs => this.hasPendingTxs = txs.length > 0);
   }
 
   ngOnDestroy() {

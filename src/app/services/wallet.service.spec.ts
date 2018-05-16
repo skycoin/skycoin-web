@@ -25,7 +25,7 @@ describe('WalletService', () => {
           useValue: jasmine.createSpyObj('ApiService', {
             'getOutputs': Observable.of([]),
             'postTransaction': Observable.of(''),
-            'get': Observable.of({})
+            'get': Observable.of([])
           })
         },
         {

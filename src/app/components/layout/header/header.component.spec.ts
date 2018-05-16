@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 import { HeaderComponent } from './header.component';
 import { PriceService } from '../../../services/price.service';
@@ -16,6 +17,10 @@ class MockWalletService {
   totalBalance: Subject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
 
   sum() {
+  }
+
+  pendingTransactions(): Observable<any> {
+    return Observable.of([]);
   }
 }
 

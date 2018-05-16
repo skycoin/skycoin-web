@@ -13,6 +13,7 @@ import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wall
 import { WalletModel } from '../models/wallet.model';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Injectable()
 export class WalletService {
@@ -21,12 +22,12 @@ export class WalletService {
   addressesTemp: Address[];
   timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
+  pendingTxs: Subject<any[]> = new ReplaySubject<any[]>();
 
   private updateBalancesTimer: any;
   private lastBalancesUpdateTime: Date;
+  private refreshBalancesTime = 5;
   private readonly intervalTime = 60 * 1000;
-  private readonly refreshBalancesTime = 5;
-
   private readonly allocationRatio = 0.25;
   private readonly unburnedHouarsRatio = 0.5;
 
@@ -199,13 +200,34 @@ export class WalletService {
       .map(response => response.head_outputs);
   }
 
-  pendingTransactions(): Observable<any> {
+  getAllPendingTransactions(): Observable<any> {
     return this.apiService.get('pendingTxs');
+  }
+
+  pendingTransactions(): Observable<any> {
+    return this.pendingTxs.asObservable();
   }
 
   sum(): Observable<number> {
     return this.all.map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0)
       .reduce((a , b) => a + b, 0));
+  }
+
+  private refreshPendingTransactions() {
+    this.getAllPendingTransactions()
+      .subscribe(pending => {
+        const pendingTxs = [].concat
+          .apply([], pending.filter(response => response.length > 0))
+          .reduce((txs, tx) => {
+            if (!txs.find(t => t.transaction.txid === tx.transaction.txid)) {
+              txs.push(tx);
+            }
+            return txs;
+          }, []);
+
+        this.refreshBalancesTime = pendingTxs.length > 0 ? 20 : 5;
+        this.pendingTxs.next(pendingTxs);
+      });
   }
 
   private loadBalances() {
@@ -232,6 +254,7 @@ export class WalletService {
               .reduce((a , b) => a + b, 0);
           });
 
+          this.refreshPendingTransactions();
           this.calculateTotalBalance(wallets);
           this.resetBalancesUpdateTime();
         });
