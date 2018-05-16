@@ -11,7 +11,7 @@
         <div class="-width-150 -timestamp">
           <strong>{{ transaction.timestamp | dateTime }}</strong>
         </div>
-        <div class="-width-150 -amount">{{ transaction.amount }}</div>
+        <div class="-width-150 -amount">{{ (transaction.amount ? transaction.amount : 0) | number:'1.0-6' }}</div>
         <div class="flex-fill -txid">{{ transaction.txid }}</div>
       </div>
     </div>

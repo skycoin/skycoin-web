@@ -9,7 +9,13 @@
 .buttons-left {
   display: inline-block;
   padding: 0 10px;
-  width: 120px;
+  width: 200px;
+}
+
+.last-updated-time {
+  color: #D4E1FD;
+  font-size: 11px;
+  padding-left: 5px;
 }
 
 .title {
@@ -25,7 +31,7 @@
 .buttons-right {
   display: inline-block;
   text-align: right;
-  width: 120px;
+  width: 200px;
 
   button {
     display: inline-block;

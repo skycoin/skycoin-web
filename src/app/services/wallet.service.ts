@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -8,7 +8,7 @@ import 'rxjs/add/operator/mergeMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet } from '../app.datatypes';
+import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet, TotalBalance, GetOutputsRequestOutput } from '../app.datatypes';
 import { WalletModel } from '../models/wallet.model';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
@@ -17,6 +17,13 @@ import { CipherProvider } from './cipher.provider';
 export class WalletService {
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
+  timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
+
+  private updateBalancesTimer: any;
+  private lastBalancesUpdateTime: Date;
+  private readonly intervalTime = 60 * 1000;
+  private readonly refreshBalancesTime = 5;
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHouarsRatio = 0.5;
@@ -183,7 +190,7 @@ export class WalletService {
  Legacy
   */
 
-  outputs(): Observable<any> {
+  outputs(): Observable<GetOutputsRequestOutput[]> {
     return this.getAddressesAsString()
       .filter(addresses => !!addresses)
       .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
@@ -197,13 +204,6 @@ export class WalletService {
   sum(): Observable<number> {
     return this.all.map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0)
       .reduce((a , b) => a + b, 0));
-  }
-
-  private addWallet(wallet) {
-    this.all.first().subscribe(wallets => {
-      wallets.push(wallet);
-      this.saveWallets(wallets);
-    });
   }
 
   private loadBalances() {
@@ -229,9 +229,27 @@ export class WalletService {
             wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0)
               .reduce((a , b) => a + b, 0);
           });
-          this.saveWallets(wallets);
+
+          this.calculateTotalBalance(wallets);
+          this.resetBalancesUpdateTime();
         });
       });
+    });
+  }
+
+  private calculateTotalBalance(wallets: Wallet[]) {
+    const totalBalance: TotalBalance = {
+      coins: wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0).reduce((a , b) => a + b, 0),
+      hours: wallets.map(wallet => wallet.hours >= 0 ? wallet.hours : 0).reduce((a , b) => a + b, 0)
+    };
+
+    this.totalBalance.next(totalBalance);
+  }
+
+  private addWallet(wallet) {
+    this.all.first().subscribe(wallets => {
+      wallets.push(wallet);
+      this.saveWallets(wallets);
     });
   }
 
@@ -274,6 +292,34 @@ export class WalletService {
       arr1.push(hex);
     }
     return arr1.join('');
+  }
+
+  private resetBalancesUpdateTime() {
+    this.lastBalancesUpdateTime = new Date();
+    this.calculateTimeSinceLastUpdate();
+    this.restartTimer();
+  }
+
+  private restartTimer() {
+    if (this.updateBalancesTimer) {
+      clearInterval(this.updateBalancesTimer);
+    }
+    this.startTimer();
+  }
+
+  private startTimer() {
+    this.updateBalancesTimer = setInterval(() => this.calculateTimeSinceLastUpdate(), this.intervalTime);
+  }
+
+  private calculateTimeSinceLastUpdate() {
+    const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
+    const timeSinceLastUpdate = Math.abs(Math.round((diffMs / 1000 / 60)));
+
+    this.timeSinceLastBalancesUpdate.next(timeSinceLastUpdate);
+
+    if (timeSinceLastUpdate === this.refreshBalancesTime) {
+      this.loadBalances();
+    }
   }
 
   private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {

@@ -59,3 +59,8 @@ export class TransactionOutput {
   coins: number;
   hours: number;
 }
+
+export interface TotalBalance {
+  coins: number;
+  hours: number;
+}

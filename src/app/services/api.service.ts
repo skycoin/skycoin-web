@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
 
 import { GetOutputsRequest, Output } from '../app.datatypes';
 import { environment } from '../../environments/environment';
@@ -12,7 +12,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class ApiService {
 
-  private url = environment.nodeUrl;
+  private readonly url = environment.nodeUrl;
 
   constructor(private http: Http) { }
 
