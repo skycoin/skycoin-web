@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet, TotalBalance } from '../app.datatypes';
+import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet, TotalBalance, GetOutputsRequestOutput } from '../app.datatypes';
 import { WalletModel } from '../models/wallet.model';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
@@ -192,7 +192,7 @@ export class WalletService {
  Legacy
   */
 
-  outputs(): Observable<any> {
+  outputs(): Observable<GetOutputsRequestOutput[]> {
     return this.getAddressesAsString()
       .filter(addresses => !!addresses)
       .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
