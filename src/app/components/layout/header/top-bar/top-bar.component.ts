@@ -1,10 +1,33 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+
+import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.scss'],
 })
-export class TopBarComponent {
+export class TopBarComponent implements OnInit, OnDestroy {
   @Input() title: string;
+
+  timeSinceLastUpdateBalances = 0;
+  private updateBalancesSubscription: Subscription;
+
+  constructor(private walletService: WalletService) {
+  }
+
+  ngOnInit() {
+    this.updateBalancesSubscription = this.walletService.timeSinceLastBalancesUpdate
+      .subscribe((time: number) => {
+        if (time != null) {
+          this.timeSinceLastUpdateBalances = time;
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.updateBalancesSubscription.unsubscribe();
+  }
 }

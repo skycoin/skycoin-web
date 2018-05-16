@@ -1,3 +1,5 @@
+import { browser } from 'protractor';
+
 import { WalletsPage } from './wallets.po';
 
 describe('Wallets', () => {
