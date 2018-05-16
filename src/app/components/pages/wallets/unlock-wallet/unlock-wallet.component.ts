@@ -20,7 +20,7 @@ export class UnlockWalletComponent implements OnInit {
     public dialogRef: MatDialogRef<UnlockWalletComponent>,
     private formBuilder: FormBuilder,
     private walletService: WalletService,
-    private snackbar: MatSnackBar,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit() {
