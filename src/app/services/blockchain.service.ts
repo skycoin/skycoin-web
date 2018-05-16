@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import 'rxjs/add/operator/startWith';
 
 import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';
@@ -64,6 +65,7 @@ export class BlockchainService {
   private loadBlockchainBlocks() {
     IntervalObservable
       .create(90000)
+      .startWith(1)
       .flatMap(() => this.getBlockchainProgress())
       .takeWhile((response: any) => !response.current || response.current !== response.highest)
       .subscribe(

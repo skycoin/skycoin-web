@@ -1,9 +1,12 @@
+import { browser } from 'protractor';
+
 import { OnboardingCreatePage } from './onboarding-create.po';
 
 describe('Onboarding Create', () => {
   let page: OnboardingCreatePage;
 
   beforeEach(() => {
+    browser.waitForAngularEnabled(false);
     page = new OnboardingCreatePage();
   });
 

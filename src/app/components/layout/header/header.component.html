@@ -3,10 +3,15 @@
     <app-top-bar [title]="title"></app-top-bar>
     <div class="balance-container">
       <div class="balance">
+
         <p *ngIf="!highest && loading" class="loading-header">Loading...</p>
         <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
         <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> sky</p>
         <p *ngIf="!loading" class="dollars">{{ balance }}</p>
+
+        <!-- <p class="coins"><span>{{ walletService.sum() | async | number:'1.0-6' }}</span> sky</p>
+        <p class="dollars">{{ balance ? balance : 'loading..' }}</p> -->
+
       </div>
     </div>
     <div class="hour-balance">

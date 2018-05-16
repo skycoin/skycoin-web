@@ -10,13 +10,14 @@ import { Wallet } from '../../../app.datatypes';
 import { AppService } from '../../../services/app.service';
 import { Observable } from 'rxjs/Observable';
 import { BlockchainService } from '../../../services/blockchain.service';
+import { TotalBalance } from '../../../app.datatypes';
 
 class MockPriceService {
   price: Subject<number> = new BehaviorSubject<number>(null);
 }
 
 class MockWalletService {
-  wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
+  totalBalance: Subject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
 
   sum() {
   }

@@ -7,6 +7,7 @@ import { BlockchainService } from '../../../services/blockchain.service';
 import { AppService } from '../../../services/app.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
 import { Wallet } from '../../../app.datatypes';
+import { TotalBalance } from '../../../app.datatypes';
 
 @Component({
   selector: 'app-header',
@@ -16,29 +17,23 @@ import { Wallet } from '../../../app.datatypes';
 export class HeaderComponent implements OnInit, OnDestroy {
   @Input() title: string;
 
+  coins = 0;
+  hours: number;
+  balance: string;
+
   connectionError: ConnectionError;
   connectionErrorsList = ConnectionError;
   percentage: number;
   querying = true;
   current: number;
   highest: number;
-  coins: number;
-  hours: number;
   private price: number;
   private priceSubscription: Subscription;
   private walletSubscription: Subscription;
   private blockchainSubscription: Subscription;
 
-  get balance() {
-    if (this.price === null) {
-      return 'loading..';
-    }
-    const balance = Math.round(this.coins * this.price * 100) / 100;
-    return '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100) + ')';
-  }
-
   get loading() {
-    return !this.current || !this.highest || this.current !== this.highest;
+    return !this.current || !this.highest || this.current !== this.highest || !this.balance;
   }
 
   constructor(
@@ -52,15 +47,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.appService.checkConnectionState()
       .subscribe((error: ConnectionError) => this.connectionError = error);
 
-    this.priceSubscription = this.priceService.price
-      .subscribe(price => this.price = price);
-
-    this.walletSubscription = this.walletService.wallets
-      .subscribe(wallets => this.calculateBalance(wallets));
-
     this.blockchainSubscription = this.blockchainService.progress
       .filter(response => !!response)
       .subscribe(response => this.updateBlockchainProgress(response));
+
+    this.priceSubscription = this.priceService.price
+      .subscribe(price => {
+        this.price = price;
+        this.calculateBalance();
+      });
+
+    this.walletSubscription = this.walletService.totalBalance
+      .subscribe((balance: TotalBalance) => {
+        if (balance) {
+          this.coins = balance.coins;
+          this.hours = balance.hours;
+
+          this.calculateBalance();
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -69,15 +74,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.blockchainSubscription.unsubscribe();
   }
 
-  private calculateBalance(wallets: Wallet[]) {
-    this.coins = wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0).reduce((a , b) => a + b, 0);
-    this.hours = wallets.map(wallet => wallet.hours >= 0 ? wallet.hours : 0).reduce((a , b) => a + b, 0);
-  }
-
   private updateBlockchainProgress(response) {
     this.querying = false;
     this.highest = response.highest;
     this.current = response.current;
     this.percentage = this.current && this.highest ? (this.current / this.highest) : 0;
+  }
+
+  private calculateBalance() {
+    if (this.price) {
+      const balance = Math.round(this.coins * this.price * 100) / 100;
+      this.balance = '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100) + ')';
+    }
   }
 }
