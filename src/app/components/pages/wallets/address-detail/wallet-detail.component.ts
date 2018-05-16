@@ -1,9 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { ChangeNameComponent } from '../change-name/change-name.component';
+import { openUnlockWalletModal } from '../../../../utils/index';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -16,6 +19,7 @@ export class WalletDetailComponent {
   constructor(
     private walletService: WalletService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {}
 
   showQr(address) {
@@ -31,8 +35,13 @@ export class WalletDetailComponent {
     this.dialog.open(ChangeNameComponent, config);
   }
 
-  newAddress() {
-    this.walletService.addAddress(this.wallet);
+  onAddNewAddress() {
+    if (!this.wallet.seed || !this.wallet.addresses[this.wallet.addresses.length - 1].next_seed) {
+      openUnlockWalletModal(this.wallet, this.dialog).componentInstance.onWalletUnlocked
+        .subscribe(() => this.addNewAddress());
+    } else {
+      this.addNewAddress();
+    }
   }
 
   toggleEmpty() {
@@ -61,5 +70,15 @@ export class WalletDetailComponent {
     setTimeout(() => {
       address.isCopying = false;
       }, 500);
+  }
+
+  private addNewAddress() {
+    try {
+      this.walletService.addAddress(this.wallet);
+    } catch (exception) {
+      const config = new MatSnackBarConfig();
+      config.duration = 5000;
+      this.snackBar.open(exception.message, null, config);
+    }
   }
 }

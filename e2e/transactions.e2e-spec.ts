@@ -6,7 +6,6 @@ describe('Transactions', () => {
 
   beforeEach(() => {
     page = new TransactionsPage();
-
   });
 
   it('should display title', () => {

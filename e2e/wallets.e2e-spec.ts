@@ -1,3 +1,5 @@
+import { browser } from 'protractor';
+
 import { WalletsPage } from './wallets.po';
 
 describe('Wallets', () => {
@@ -83,5 +85,18 @@ describe('Wallets', () => {
   it('should decrypt wallet', () => {
     page.navigateTo();
     expect<any>(page.canUnlock()).toEqual(true);
+  });
+
+  it('should always display add new address button for the wallet', () => {
+    page.navigateTo();
+    expect<any>(page.showAddAddress()).toEqual(true);
+  });
+
+  it('should display unlock wallet component on add new address for locked wallet', () => {
+    expect<any>(page.showShowUnlockWallet()).toEqual(true);
+  });
+
+  it('should unlock wallet component on add new address for locked wallet', () => {
+    expect<any>(page.unlockWallet()).toEqual(true);
   });
 });

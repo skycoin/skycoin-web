@@ -6,14 +6,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HeaderComponent } from './header.component';
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
-import { Wallet } from '../../../app.datatypes';
+import { TotalBalance } from '../../../app.datatypes';
 
 class MockPriceService {
   price: Subject<number> = new BehaviorSubject<number>(null);
 }
 
 class MockWalletService {
-  wallets: Subject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
+  totalBalance: Subject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
 
   sum() {
   }
