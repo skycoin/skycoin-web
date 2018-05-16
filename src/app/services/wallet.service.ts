@@ -208,7 +208,7 @@ export class WalletService {
       .reduce((a , b) => a + b, 0));
   }
 
-  private loadBalances() {
+  loadBalances() {
     this.addresses.first().subscribe(addresses => {
       const stringified = addresses.map(address => address.address).join(',');
       this.apiService.getOutputs(stringified).subscribe(outputs => {
