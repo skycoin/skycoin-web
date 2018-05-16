@@ -16,12 +16,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   coins = 0;
   hours: number;
   balance: string;
-  isBalanceCalculated = false;
 
   private price: number;
   private priceSubscription: Subscription;
   private walletSubscription: Subscription;
-  private subscription: Subscription;
 
   constructor(
     private priceService: PriceService,
@@ -55,8 +53,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.price) {
       const balance = Math.round(this.coins * this.price * 100) / 100;
       this.balance = '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100) + ')';
-
-      this.isBalanceCalculated = true;
     }
   }
 }

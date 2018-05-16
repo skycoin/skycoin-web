@@ -5,7 +5,6 @@ describe('Transactions', () => {
   let page: TransactionsPage;
 
   beforeEach(() => {
-    browser.waitForAngularEnabled(false);
     page = new TransactionsPage();
   });
 

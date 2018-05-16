@@ -25,7 +25,7 @@ export class WalletService {
   private updateBalancesTimer: any;
   private lastBalancesUpdateTime: Date;
   private readonly intervalTime = 60 * 1000;
-  private readonly refreshBalancesTime = 2;
+  private readonly refreshBalancesTime = 5;
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHouarsRatio = 0.5;
@@ -206,20 +206,6 @@ export class WalletService {
   sum(): Observable<number> {
     return this.all.map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0)
       .reduce((a , b) => a + b, 0));
-  }
-
-  transaction(txid: string): Observable<any> {
-    return this.apiService.get('transaction', { txid: txid }).flatMap(transaction => {
-      if (transaction.txn.inputs && !transaction.txn.inputs.length) {
-        return Observable.of(transaction);
-      }
-      return Observable.forkJoin(transaction.txn.inputs.map(input => this.retrieveInputAddress(input).map(response => {
-        return response.owner_address;
-      }))).map(inputs => {
-        transaction.txn.inputs = inputs;
-        return transaction;
-      });
-    });
   }
 
   private loadBalances() {
