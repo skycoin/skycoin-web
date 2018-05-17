@@ -20,20 +20,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
   coins = 0;
   hours: number;
   balance: string;
-
   connectionError: ConnectionError;
   connectionErrorsList = ConnectionError;
   percentage: number;
   querying = true;
   current: number;
   highest: number;
+  isBlockchainLoading = false;
   private price: number;
   private priceSubscription: Subscription;
   private walletSubscription: Subscription;
   private blockchainSubscription: Subscription;
 
   get loading() {
-    return !this.current || !this.highest || this.current !== this.highest || !this.balance;
+    return this.isBlockchainLoading || !this.balance;
   }
 
   constructor(
@@ -76,9 +76,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private updateBlockchainProgress(response) {
     this.querying = false;
-    this.highest = response.highest;
-    this.current = response.current;
-    this.percentage = this.current && this.highest ? (this.current / this.highest) : 0;
+    this.isBlockchainLoading = response.highest !== response.current;
+
+    if (this.isBlockchainLoading) {
+      this.highest = response.highest;
+      this.current = response.current;
+    }
+
+    this.percentage = response.current && response.highest ? (response.current / response.highest) : 0;
   }
 
   private calculateBalance() {
