@@ -32,7 +32,7 @@ export interface Output {
   address: string;
   coins: number;
   hash: string;
-  hours: number;
+  calculated_hours: number;
 }
 
 export interface GetOutputsRequest {
@@ -58,11 +58,6 @@ export class TransactionOutput {
   address: string;
   coins: number;
   hours: number;
-}
-
-export class TransactionRequest {
-  inputs: TransactionInput[];
-  outputs: TransactionOutput[];
 }
 
 export interface TotalBalance {

@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 
 describe('ApiService', () => {
   let service: ApiService;
-  let mockbackend: MockBackend;
+  let mockBackEnd: MockBackend;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -20,7 +20,7 @@ describe('ApiService', () => {
 
   beforeEach(inject([ApiService, XHRBackend], (serv, mock) => {
     service = serv;
-    mockbackend = mock;
+    mockBackEnd = mock;
   }));
 
   it('should be created', () => {
