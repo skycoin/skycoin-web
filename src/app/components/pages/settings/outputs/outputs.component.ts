@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
-import { GetOutputsRequestOutput } from '../../../../app.datatypes';
+import { Wallet } from '../../../../app.datatypes';
 
 @Component({
   selector: 'app-outputs',
@@ -12,15 +12,15 @@ import { GetOutputsRequestOutput } from '../../../../app.datatypes';
 })
 export class OutputsComponent implements OnInit {
 
-  outputs: GetOutputsRequestOutput[];
+  wallets: Wallet[];
 
   constructor(
     private walletService: WalletService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    this.walletService.outputs().subscribe(outputs => this.outputs = outputs);
+    this.walletService.outputsWithWallets().subscribe(wallets => this.wallets = wallets);
   }
 
   showQr(address) {

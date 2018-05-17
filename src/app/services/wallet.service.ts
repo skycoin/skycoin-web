@@ -1,10 +1,11 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/observable/zip';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -195,6 +196,19 @@ export class WalletService {
       .filter(addresses => !!addresses)
       .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
       .map(response => response.head_outputs);
+  }
+
+  outputsWithWallets(): Observable<any> {
+    return Observable.zip(this.all, this.outputs(), (wallets: Wallet[], outputs: GetOutputsRequestOutput[]) => {
+      return wallets.map(wallet => {
+        wallet.addresses = wallet.addresses.map(address => {
+          address.outputs = outputs.filter(output => output.address === address.address);
+
+          return address;
+        });
+        return wallet;
+      });
+    });
   }
 
   pendingTransactions(): Observable<any> {

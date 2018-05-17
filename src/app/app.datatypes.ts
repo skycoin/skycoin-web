@@ -16,6 +16,7 @@ export interface Address {
   public_key?: string;
   balance?: number;
   hours?: number;
+  outputs?: GetOutputsRequestOutput[];
 }
 
 export class Transaction {
