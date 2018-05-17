@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
-import { Wallet, Address, Transaction, TransactionOutput, TransactionInput, Output } from '../app.datatypes';
+import { Wallet, Address, Transaction, TransactionOutput, TransactionInput, Output, Balance } from '../app.datatypes';
 
 describe('WalletService', () => {
   let store = {};
@@ -85,7 +85,10 @@ describe('WalletService', () => {
         addresses: [walletAddress]
       };
 
+      const expectedBalance = createBalance();
+
       spyCipherProvider.generateAddress.and.returnValue({ ...walletAddress });
+      spyApiService.get.and.returnValue(Observable.of(expectedBalance));
 
       walletService.create(walletLabel, walletSeed);
 
@@ -430,5 +433,18 @@ function createOutput(address: string, hash: string, coins = 10, calculated_hour
     coins: coins,
     hash: hash,
     calculated_hours: calculated_hours
+  };
+}
+
+function createBalance(coins = 0, hours = 0): Balance {
+  return {
+    confirmed: {
+      coins: coins,
+      hours: hours
+    },
+    predicted: {
+      coins: coins,
+      hours: hours
+    }
   };
 }
