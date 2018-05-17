@@ -23,7 +23,7 @@ export class ApiService {
         address: output.address,
         coins: parseFloat(output.coins),
         hash: output.hash,
-        hours: output.calculated_hours
+        calculated_hours: output.calculated_hours
       }));
       return outputs;
     }) : Observable.of([]);
