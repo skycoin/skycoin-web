@@ -198,7 +198,7 @@ export class WalletService {
       .map(response => response.head_outputs);
   }
 
-  outputsWithWallets(): Observable<any> {
+  outputsWithWallets(): Observable<Wallet[]> {
     return Observable.zip(this.all, this.outputs(), (wallets: Wallet[], outputs: GetOutputsRequestOutput[]) => {
       return wallets.map(wallet => {
         wallet.addresses = wallet.addresses.map(address => {

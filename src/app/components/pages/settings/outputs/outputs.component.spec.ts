@@ -7,7 +7,7 @@ import { OutputsComponent } from './outputs.component';
 import { WalletService } from '../../../../services/wallet.service';
 
 class MockWalletService {
-  outputs() {
+  outputsWithWallets() {
     return Observable.of([]);
   }
 }
