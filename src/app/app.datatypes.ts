@@ -64,3 +64,28 @@ export interface TotalBalance {
   coins: number;
   hours: number;
 }
+
+export interface Balance {
+  confirmed: {
+    coins: number;
+    hours: number;
+  };
+  predicted: {
+    coins: number;
+    hours: number;
+  };
+  addresses: {
+    [key: string]: AddressBalance
+  };
+}
+
+export interface AddressBalance {
+  confirmed: {
+    coins: number;
+    hours: number;
+  };
+  predicted: {
+    coins: number;
+    hours: number;
+  };
+}
