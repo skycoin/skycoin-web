@@ -9,7 +9,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet, TotalBalance, GetOutputsRequestOutput } from '../app.datatypes';
-import { WalletModel } from '../models/wallet.model';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 
@@ -26,7 +25,7 @@ export class WalletService {
   private readonly refreshBalancesTime = 5;
 
   private readonly allocationRatio = 0.25;
-  private readonly unburnedHouarsRatio = 0.5;
+  private readonly unburnedHoursRatio = 0.5;
 
   constructor(
     private apiService: ApiService,
@@ -83,15 +82,16 @@ export class WalletService {
 
       const txOutputs: TransactionOutput[] = [];
       const txInputs: TransactionInput[] = [];
+      const calculatedHours = parseInt((totalHours * this.unburnedHoursRatio) + '', 10);
 
       if (changeCoins > 0) {
         txOutputs.push({
           address: wallet.addresses[0].address,
           coins: changeCoins,
-          hours: totalHours * this.unburnedHouarsRatio - hoursToSend
+          hours: calculatedHours - hoursToSend
         });
       } else {
-        hoursToSend = parseInt((totalHours * this.unburnedHouarsRatio) + '', 10);
+        hoursToSend = calculatedHours;
       }
 
       txOutputs.push({ address: address, coins: parseInt(amount * 1000000 + '', 10), hours: hoursToSend });
@@ -271,11 +271,6 @@ export class WalletService {
     this.wallets.next(wallets);
   }
 
-  private retrieveAddressBalance(address: any|any[]) {
-    const addresses = Array.isArray(address) ? address.map(a => a.address).join(',') : address.address;
-    return this.apiService.get('balance', { addrs: addresses });
-  }
-
   private getAddressesAsString(): Observable<string> {
     return this.all.map(wallets => wallets.map(wallet => {
       return wallet.addresses.reduce((a, b) => {
@@ -338,26 +333,5 @@ export class WalletService {
     });
 
     return minRequiredOutputs;
-  }
-
-  private retrieveInputAddress(input: string) {
-    return this.apiService.get('uxout', { uxid: input });
-  }
-
-  private retrieveWalletBalance(wallet: Wallet): Observable<any> {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressBalance(address).map(balance => {
-      address.balance = balance.confirmed.coins;
-      address.hours = balance.confirmed.hours;
-      return address;
-    })));
-  }
-
-  private retrieveWalletTransactions(wallet: Wallet) {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressTransactions(address)))
-      .map(addresses => [].concat.apply([], addresses));
-  }
-
-  private retrieveWallets(): Observable<WalletModel[]> {
-    return this.apiService.get('wallets');
   }
 }
