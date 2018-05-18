@@ -26,7 +26,7 @@ export class WalletService {
   private readonly refreshBalancesTime = 5;
 
   private readonly allocationRatio = 0.25;
-  private readonly unburnedHouarsRatio = 0.5;
+  private readonly unburnedHoursRatio = 0.5;
 
   constructor(
     private apiService: ApiService,
@@ -83,15 +83,16 @@ export class WalletService {
 
       const txOutputs: TransactionOutput[] = [];
       const txInputs: TransactionInput[] = [];
+      const calculatedHours = parseInt((totalHours * this.unburnedHoursRatio) + '', 10);
 
       if (changeCoins > 0) {
         txOutputs.push({
           address: wallet.addresses[0].address,
           coins: changeCoins,
-          hours: totalHours * this.unburnedHouarsRatio - hoursToSend
+          hours: calculatedHours - hoursToSend
         });
       } else {
-        hoursToSend = parseInt((totalHours * this.unburnedHouarsRatio) + '', 10);
+        hoursToSend = calculatedHours;
       }
 
       txOutputs.push({ address: address, coins: parseInt(amount * 1000000 + '', 10), hours: hoursToSend });
