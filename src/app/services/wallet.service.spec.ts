@@ -445,6 +445,18 @@ function createBalance(coins = 0, hours = 0): Balance {
     predicted: {
       coins: coins,
       hours: hours
+    },
+    addresses: {
+      'address': {
+        confirmed: {
+          coins: coins,
+          hours: hours
+        },
+        predicted: {
+          coins: coins,
+          hours: hours
+        }
+      }
     }
   };
 }

@@ -74,4 +74,18 @@ export interface Balance {
     coins: number;
     hours: number;
   };
+  addresses: {
+    [key: string]: AddressBalance
+  };
+}
+
+export interface AddressBalance {
+  confirmed: {
+    coins: number;
+    hours: number;
+  };
+  predicted: {
+    coins: number;
+    hours: number;
+  };
 }

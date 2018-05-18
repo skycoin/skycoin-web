@@ -208,17 +208,27 @@ export class WalletService {
   }
 
   loadBalances() {
-    this.wallets.first().subscribe(wallets => {
-      Observable.forkJoin(wallets.map(wallet => this.retrieveWalletBalance(wallet)
-        .map(response => {
-          wallet.addresses = response;
-          wallet.balance = response.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
-          wallet.hours = response.map(address => address.hours >= 0 ? address.hours : 0).reduce((a , b) => a + b, 0);
-          return wallet;
-        })))
-        .subscribe(newWallets => {
-          this.calculateTotalBalance(newWallets);
-          this.resetBalancesUpdateTime();
+    this.addresses.first().subscribe((addresses: Address[]) => {
+      this.retrieveAddressesBalance(addresses)
+        .subscribe((balance: Balance) => {
+          this.wallets.first().subscribe(wallets => {
+            if (balance.addresses) {
+              wallets.map((wallet: Wallet) => {
+                wallet.addresses.map((address: Address) => {
+                  if (balance.addresses[address.address]) {
+                    address.balance = balance.addresses[address.address].confirmed.coins / 1000000;
+                    address.hours = balance.addresses[address.address].confirmed.hours;
+                  }
+                });
+
+                wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
+                wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0).reduce((a , b) => a + b, 0);
+              });
+            }
+
+            this.calculateTotalBalance(wallets);
+            this.resetBalancesUpdateTime();
+          });
         });
     });
   }
@@ -257,9 +267,9 @@ export class WalletService {
     this.wallets.next(wallets);
   }
 
-  private retrieveAddressBalance(address: Address | Address[]) {
-    const addresses = Array.isArray(address) ? address.map(a => a.address).join(',') : address.address;
-    return this.apiService.get('balance', { addrs: addresses });
+  private retrieveAddressesBalance(addresses: Address | Address[]): Observable<Balance> {
+    const formattedAddresses = Array.isArray(addresses) ? addresses.map(a => a.address).join(',') : addresses.address;
+    return this.apiService.get('balance', { addrs: formattedAddresses });
   }
 
   private getAddressesAsString(): Observable<string> {
@@ -324,13 +334,5 @@ export class WalletService {
     });
 
     return minRequiredOutputs;
-  }
-
-  private retrieveWalletBalance(wallet: Wallet): Observable<Address[]> {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressBalance(address).map((balance: Balance) => {
-      address.balance = balance.confirmed.coins / 1000000;
-      address.hours = balance.confirmed.hours;
-      return address;
-    })));
   }
 }
