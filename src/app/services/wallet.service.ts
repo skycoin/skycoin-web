@@ -33,7 +33,6 @@ export class WalletService {
     private cipherProvider: CipherProvider
   ) {
     this.loadWallets();
-    this.loadBalances();
   }
 
   get addresses(): Observable<any[]> {
