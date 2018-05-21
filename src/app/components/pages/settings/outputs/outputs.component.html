@@ -17,7 +17,7 @@
                 {{ output.address }} <span data-label="Copied" class="copy-label">Copy</span>
               </p>
             </div>
-            <div class="-width-150 -hours">{{ (output.calculated_hours ? output.calculated_hours : 0) | number:'1.0-6' }}</div>
+            <div class="-width-150 -hours">{{ (output.calculated_hours ? output.calculated_hours : 0) }}</div>
             <div class="-width-150 -coins">{{ (output.coins ? output.coins : 0) | number:'1.0-6' }}</div>
           </div>
         </div>
