@@ -100,7 +100,7 @@ import { NumberFieldDirective } from './directives/number-field.directive';
     TransactionsAmountPipe,
     UnlockWalletComponent,
     WalletsComponent,
-    WalletDetailComponent,
+    WalletDetailComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,

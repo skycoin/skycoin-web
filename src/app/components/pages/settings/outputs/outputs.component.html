@@ -13,7 +13,9 @@
           <div class="-output" *ngFor="let output of address.outputs">
             <div class="flex-fill -address">
               <img src="../../../../../assets/img/qr-code-black.png" (click)="showQr(output.address)">
-              <p>{{ output.address }}</p>
+              <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }" (click)="onCopyAddress(address)">
+                {{ output.address }} <span data-label="Copied" class="copy-label">Copy</span>
+              </p>
             </div>
             <div class="-width-150 -hours">{{ (output.calculated_hours ? output.calculated_hours : 0) | number:'1.0-6' }}</div>
             <div class="-width-150 -coins">{{ (output.coins ? output.coins : 0) | number:'1.0-6' }}</div>

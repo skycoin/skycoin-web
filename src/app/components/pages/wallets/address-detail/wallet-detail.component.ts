@@ -6,7 +6,7 @@ import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { ChangeNameComponent } from '../change-name/change-name.component';
-import { openUnlockWalletModal } from '../../../../utils/index';
+import { openUnlockWalletModal, copyAddress } from '../../../../utils/index';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -48,28 +48,8 @@ export class WalletDetailComponent {
     this.wallet.hideEmpty = !this.wallet.hideEmpty;
   }
 
-  copyAddress(address) {
-    const selBox = document.createElement('textarea');
-
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = address.address;
-
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
-
-    address.isCopying = true;
-
-    // wait for a while and then remove the 'copying' class
-    setTimeout(() => {
-      address.isCopying = false;
-      }, 500);
+  onCopyAddress(address) {
+    copyAddress(address);
   }
 
   private addNewAddress() {
