@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -30,7 +30,8 @@ export class WalletService {
 
   constructor(
     private apiService: ApiService,
-    private cipherProvider: CipherProvider
+    private cipherProvider: CipherProvider,
+    private _ngZone: NgZone
   ) {
     this.loadWallets();
     this.loadBalances();
@@ -304,18 +305,22 @@ export class WalletService {
   }
 
   private startTimer() {
-    this.updateBalancesTimer = setInterval(() => this.calculateTimeSinceLastUpdate(), this.intervalTime);
+    this._ngZone.runOutsideAngular(() => {
+      this.updateBalancesTimer = setInterval(() => this.calculateTimeSinceLastUpdate(), this.intervalTime);
+    });
   }
 
   private calculateTimeSinceLastUpdate() {
     const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
     const timeSinceLastUpdate = Math.abs(Math.round((diffMs / 1000 / 60)));
 
-    this.timeSinceLastBalancesUpdate.next(timeSinceLastUpdate);
+    this._ngZone.run(() => {
+      this.timeSinceLastBalancesUpdate.next(timeSinceLastUpdate);
 
-    if (timeSinceLastUpdate === this.refreshBalancesTime) {
-      this.loadBalances();
-    }
+      if (timeSinceLastUpdate === this.refreshBalancesTime) {
+        this.loadBalances();
+      }
+    });
   }
 
   private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {
