@@ -34,7 +34,6 @@ export class WalletService {
     private _ngZone: NgZone
   ) {
     this.loadWallets();
-    this.loadBalances();
   }
 
   get addresses(): Observable<any[]> {
