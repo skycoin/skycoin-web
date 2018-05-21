@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -8,9 +8,10 @@ import 'rxjs/add/operator/mergeMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet, TotalBalance, GetOutputsRequestOutput } from '../app.datatypes';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
+import { Address, Output, Transaction, TransactionInput, TransactionOutput,
+  Wallet, TotalBalance, GetOutputsRequestOutput, Balance } from '../app.datatypes';
 
 @Injectable()
 export class WalletService {
@@ -207,33 +208,28 @@ export class WalletService {
   }
 
   loadBalances() {
-    this.addresses.first().subscribe(addresses => {
-      const stringified = addresses.map(address => address.address).join(',');
-      this.apiService.getOutputs(stringified).subscribe(outputs => {
-        this.all.first().subscribe(wallets => {
-          wallets.forEach(wallet => {
-            wallet.addresses.forEach(address => {
-              address.balance = 0;
-              address.hours = 0;
-
-              outputs
-                .filter(o => address.address === o.address)
-                .map(output => {
-                  address.balance = address.balance + output.coins;
-                  address.hours = address.hours + output.calculated_hours;
+    this.addresses.first().subscribe((addresses: Address[]) => {
+      this.retrieveAddressesBalance(addresses)
+        .subscribe((balance: Balance) => {
+          this.wallets.first().subscribe(wallets => {
+            if (balance.addresses) {
+              wallets.map((wallet: Wallet) => {
+                wallet.addresses.map((address: Address) => {
+                  if (balance.addresses[address.address]) {
+                    address.balance = balance.addresses[address.address].confirmed.coins / 1000000;
+                    address.hours = balance.addresses[address.address].confirmed.hours;
+                  }
                 });
-            });
 
-            wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0)
-              .reduce((a , b) => a + b, 0);
-            wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0)
-              .reduce((a , b) => a + b, 0);
+                wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
+                wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0).reduce((a , b) => a + b, 0);
+              });
+            }
+
+            this.calculateTotalBalance(wallets);
+            this.resetBalancesUpdateTime();
           });
-
-          this.calculateTotalBalance(wallets);
-          this.resetBalancesUpdateTime();
         });
-      });
     });
   }
 
@@ -269,6 +265,11 @@ export class WalletService {
     });
     localStorage.setItem('wallets', JSON.stringify(strippedWallets));
     this.wallets.next(wallets);
+  }
+
+  private retrieveAddressesBalance(addresses: Address | Address[]): Observable<Balance> {
+    const formattedAddresses = Array.isArray(addresses) ? addresses.map(a => a.address).join(',') : addresses.address;
+    return this.apiService.get('balance', { addrs: formattedAddresses });
   }
 
   private getAddressesAsString(): Observable<string> {
