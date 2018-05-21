@@ -6,7 +6,6 @@ describe('Onboarding Create', () => {
   let page: OnboardingCreatePage;
 
   beforeEach(() => {
-    browser.waitForAngularEnabled(false);
     page = new OnboardingCreatePage();
   });
 
