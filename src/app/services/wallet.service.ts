@@ -315,10 +315,10 @@ export class WalletService {
   }
 
   private calculateTimeSinceLastUpdate() {
-    const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
-    const timeSinceLastUpdate = this.convertDecimalToInt(diffMs / 1000);
-
     this._ngZone.run(() => {
+      const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
+      const timeSinceLastUpdate = this.convertDecimalToInt(diffMs / 1000);
+
       this.timeSinceLastBalancesUpdate.next(this.convertDecimalToInt(timeSinceLastUpdate / 60));
 
       if (timeSinceLastUpdate === this.refreshBalancesTimeInSec) {
