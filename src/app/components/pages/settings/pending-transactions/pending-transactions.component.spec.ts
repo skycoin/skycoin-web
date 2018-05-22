@@ -11,7 +11,7 @@ describe('PendingTransactionsComponent', () => {
   let fixture: ComponentFixture<PendingTransactionsComponent>;
 
   class MockWalletService {
-    pendingTransactions() {
+    getAllPendingTransactions() {
       return Observable.of([]);
     }
   }

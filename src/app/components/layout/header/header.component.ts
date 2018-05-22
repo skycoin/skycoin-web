@@ -20,6 +20,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   coins = 0;
   hours: number;
   balance: string;
+  hasPendingTxs: boolean;
   connectionError: ConnectionError;
   connectionErrorsList = ConnectionError;
   percentage: number;
@@ -66,6 +67,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.calculateBalance();
         }
       });
+
+    this.walletService.hasPendingTransactions
+      .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs);
   }
 
   ngOnDestroy() {

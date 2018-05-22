@@ -25,7 +25,7 @@ describe('WalletService', () => {
           useValue: jasmine.createSpyObj('ApiService', {
             'getOutputs': Observable.of([]),
             'postTransaction': Observable.of(''),
-            'get': Observable.of({})
+            'get': Observable.of([])
           })
         },
         {
@@ -67,6 +67,10 @@ describe('WalletService', () => {
       spyCipherProvider.generateAddress.and.returnValue({ ...newAddress });
       spyOn(walletService, 'updateWallet');
 
+      spyApiService.get.and.callFake(() => {
+        return Observable.of(createBalance());
+      });
+
       walletService.addAddress(wallet);
       expect(walletService.updateWallet).toHaveBeenCalledWith(expectedWallet);
     });
@@ -88,7 +92,15 @@ describe('WalletService', () => {
       const expectedBalance = createBalance();
 
       spyCipherProvider.generateAddress.and.returnValue({ ...walletAddress });
-      spyApiService.get.and.returnValue(Observable.of(expectedBalance));
+
+      spyApiService.get.and.callFake((param) => {
+        if (param === 'balance') {
+          return Observable.of(createBalance());
+        }
+        if (param === 'pendingTxs') {
+          return Observable.of([]);
+        }
+      });
 
       walletService.create(walletLabel, walletSeed);
 
@@ -360,9 +372,9 @@ describe('WalletService', () => {
     }));
   });
 
-  describe('pendingTransactions', () => {
+  describe('getAllPendingTransactions', () => {
     it('should be called with a correct parameter', fakeAsync(() => {
-      walletService.pendingTransactions();
+      walletService.getAllPendingTransactions();
       expect(spyApiService.get).toHaveBeenCalledWith('pendingTxs');
     }));
   });
