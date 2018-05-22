@@ -5,12 +5,22 @@ import { WalletsPage } from './wallets.po';
 describe('Wallets', () => {
   let page: WalletsPage;
 
-  beforeEach(() => {
+  beforeAll(() => {
+    browser.get('/');
+    browser.executeScript(
+      `window.localStorage.setItem(\'wallets\',
+      JSON.stringify([{"label":"Test wallet","addresses":
+      [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
+
     page = new WalletsPage();
+    page.navigateTo();
+  });
+
+  afterAll(() => {
+    browser.restartSync();
   });
 
   it('should display title', () => {
-    page.navigateTo();
     expect<any>(page.getHeaderText()).toEqual('Wallets');
   });
 

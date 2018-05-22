@@ -5,12 +5,18 @@ import { OnboardingCreatePage } from './onboarding-create.po';
 describe('Onboarding Create', () => {
   let page: OnboardingCreatePage;
 
-  beforeEach(() => {
+  beforeAll(() => {
+    browser.get('/');
+
     page = new OnboardingCreatePage();
+    page.navigateTo();
+  });
+
+  afterAll(() => {
+    browser.restartSync();
   });
 
   it('should display title', () => {
-    page.navigateTo();
     expect<any>(page.getHeaderText()).toEqual('Create a Wallet');
   });
 
@@ -27,7 +33,6 @@ describe('Onboarding Create', () => {
   });
 
   it('should hide accepted disclaimer', () => {
-    // page.navigateTo();
     expect<any>(page.acceptDisclaimer()).toEqual(false);
   });
 

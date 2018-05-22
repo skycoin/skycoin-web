@@ -1,25 +1,30 @@
 import { browser } from 'protractor';
+
 import { TransactionsPage } from './transactions.po';
 
 describe('Transactions', () => {
   let page: TransactionsPage;
 
-  beforeEach(() => {
+  beforeAll(() => {
+    browser.get('/');
+    browser.executeScript(
+      `window.localStorage.setItem(\'wallets\',
+        JSON.stringify([{"label":"Test wallet","addresses":
+        [{"address":"qxmeHkwgAMfwXyaQrwv9jq3qt228xMuoT5"}]}]) );`);
+
     page = new TransactionsPage();
+    page.navigateTo();
+  });
+
+  afterAll(() => {
+    browser.restartSync();
   });
 
   it('should display title', () => {
-    page.navigateTo().then(() => {
-      browser.executeScript(
-        `window.localStorage.setItem(\'wallets\',
-          JSON.stringify([{"label":"Test wallet","addresses":
-          [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
-    });
     expect<any>(page.getHeaderText()).toEqual('Transactions');
   });
 
   it('should contain transactions', () => {
-    page.navigateTo();
     expect<any>(page.getTransactionsCount()).toBeGreaterThan(0);
   });
 
