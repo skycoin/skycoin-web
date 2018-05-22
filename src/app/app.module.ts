@@ -64,6 +64,7 @@ import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
 import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
+import { AppService } from './services/app.service';
 import { NumberFieldDirective } from './directives/number-field.directive';
 
 @NgModule({
@@ -138,6 +139,7 @@ import { NumberFieldDirective } from './directives/number-field.directive';
     FeatureToggleModule
   ],
   providers: [
+    AppService,
     ApiService,
     BlockchainService,
     PurchaseService,

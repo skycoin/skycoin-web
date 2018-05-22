@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -7,24 +7,33 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet } from '../app.datatypes';
-import { WalletModel } from '../models/wallet.model';
+
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
+import { Address, Output, Transaction, TransactionInput, TransactionOutput,
+  Wallet, TotalBalance, GetOutputsRequestOutput, Balance } from '../app.datatypes';
 
 @Injectable()
 export class WalletService {
-  recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
+  timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
+
+  private updateBalancesTimer: any;
+  private lastBalancesUpdateTime: Date;
+  private readonly intervalTime = 60 * 1000;
+  private readonly refreshBalancesTime = 5;
+
+  private readonly allocationRatio = 0.25;
+  private readonly unburnedHoursRatio = 0.5;
 
   constructor(
     private apiService: ApiService,
-    private cipherProvider: CipherProvider
+    private cipherProvider: CipherProvider,
+    private _ngZone: NgZone
   ) {
     this.loadWallets();
-    this.loadBalances();
   }
 
   get addresses(): Observable<any[]> {
@@ -59,18 +68,36 @@ export class WalletService {
     const addresses = wallet.addresses.map(a => a.address).join(',');
 
     return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
-      const totalCoins = parseInt((outputs.reduce((count, output) => count + output.coins, 0) * 1000000) + '', 10);
-      const totalHours = outputs.reduce((count, output) => count + output.hours, 0);
-      const changeCoins = totalCoins - amount * 1000000;
-      const changeHours = totalHours / 4;
-      const txOutputs: TransactionOutput[] = [{ address: address, coins: amount * 1000000, hours: changeHours }];
-      const txInputs: TransactionInput[] = [];
+      const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
+      const totalCoins = parseInt((minRequiredOutputs.reduce((count, output) =>
+        count + output.coins, 0) * 1000000) + '', 10);
 
-      if (changeCoins > 0) {
-        txOutputs.push({ address: wallet.addresses[0].address, coins: changeCoins, hours: changeHours });
+      if (totalCoins < parseInt(amount * 1000000 + '', 10)) {
+        throw new Error('Not enough available SKY Hours to perform transaction!');
       }
 
-      outputs.forEach(input => {
+      const totalHours = parseInt((minRequiredOutputs.reduce((count, output) =>
+        count + output.calculated_hours, 0)) + '', 10);
+      const changeCoins = totalCoins - parseInt(amount * 1000000 + '', 10);
+      let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
+
+      const txOutputs: TransactionOutput[] = [];
+      const txInputs: TransactionInput[] = [];
+      const calculatedHours = parseInt((totalHours * this.unburnedHoursRatio) + '', 10);
+
+      if (changeCoins > 0) {
+        txOutputs.push({
+          address: wallet.addresses[0].address,
+          coins: changeCoins,
+          hours: calculatedHours - hoursToSend
+        });
+      } else {
+        hoursToSend = calculatedHours;
+      }
+
+      txOutputs.push({ address: address, coins: parseInt(amount * 1000000 + '', 10), hours: hoursToSend });
+
+      minRequiredOutputs.forEach(input => {
         txInputs.push({
           hash: input.hash,
           secret: wallet.addresses.find(a => a.address === input.address).secret_key,
@@ -95,7 +122,7 @@ export class WalletService {
   }
 
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
       let currentSeed = this.ascii_to_hexa(seed);
       wallet.addresses.forEach(address => {
         const fullAddress = this.cipherProvider.generateAddress(currentSeed);
@@ -164,7 +191,7 @@ export class WalletService {
  Legacy
   */
 
-  outputs(): Observable<any> {
+  outputs(): Observable<GetOutputsRequestOutput[]> {
     return this.getAddressesAsString()
       .filter(addresses => !!addresses)
       .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
@@ -180,39 +207,45 @@ export class WalletService {
       .reduce((a , b) => a + b, 0));
   }
 
+  loadBalances() {
+    this.addresses.first().subscribe((addresses: Address[]) => {
+      this.retrieveAddressesBalance(addresses)
+        .subscribe((balance: Balance) => {
+          this.wallets.first().subscribe(wallets => {
+            if (balance.addresses) {
+              wallets.map((wallet: Wallet) => {
+                wallet.addresses.map((address: Address) => {
+                  if (balance.addresses[address.address]) {
+                    address.balance = balance.addresses[address.address].confirmed.coins / 1000000;
+                    address.hours = balance.addresses[address.address].confirmed.hours;
+                  }
+                });
+
+                wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
+                wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0).reduce((a , b) => a + b, 0);
+              });
+            }
+
+            this.calculateTotalBalance(wallets);
+            this.resetBalancesUpdateTime();
+          });
+        });
+    });
+  }
+
+  private calculateTotalBalance(wallets: Wallet[]) {
+    const totalBalance: TotalBalance = {
+      coins: wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0).reduce((a , b) => a + b, 0),
+      hours: wallets.map(wallet => wallet.hours >= 0 ? wallet.hours : 0).reduce((a , b) => a + b, 0)
+    };
+
+    this.totalBalance.next(totalBalance);
+  }
+
   private addWallet(wallet) {
     this.all.first().subscribe(wallets => {
       wallets.push(wallet);
       this.saveWallets(wallets);
-    });
-  }
-
-  private loadBalances() {
-    this.addresses.first().subscribe(addresses => {
-      const stringified = addresses.map(address => address.address).join(',');
-      this.apiService.getOutputs(stringified).subscribe(outputs => {
-        this.all.first().subscribe(wallets => {
-          wallets.forEach(wallet => {
-            wallet.addresses.forEach(address => {
-              address.balance = 0;
-              address.hours = 0;
-
-              outputs
-                .filter(o => address.address === o.address)
-                .map(output => {
-                  address.balance = address.balance + output.coins;
-                  address.hours = address.hours + output.hours;
-                });
-            });
-
-            wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0)
-              .reduce((a , b) => a + b, 0);
-            wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0)
-              .reduce((a , b) => a + b, 0);
-          });
-          this.saveWallets(wallets);
-        });
-      });
     });
   }
 
@@ -234,30 +267,9 @@ export class WalletService {
     this.wallets.next(wallets);
   }
 
-  private retrieveAddressBalance(address: any|any[]) {
-    const addresses = Array.isArray(address) ? address.map(a => a.address).join(',') : address.address;
-    return this.apiService.get('balance', { addrs: addresses });
-  }
-
-  private retrieveInputAddress(input: string) {
-    return this.apiService.get('uxout', { uxid: input });
-  }
-
-  private retrieveWalletBalance(wallet: Wallet): Observable<any> {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressBalance(address).map(balance => {
-      address.balance = balance.confirmed.coins;
-      address.hours = balance.confirmed.hours;
-      return address;
-    })));
-  }
-
-  private retrieveWalletTransactions(wallet: Wallet) {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressTransactions(address)))
-      .map(addresses => [].concat.apply([], addresses));
-  }
-
-  private retrieveWallets(): Observable<WalletModel[]> {
-    return this.apiService.get('wallets');
+  private retrieveAddressesBalance(addresses: Address | Address[]): Observable<Balance> {
+    const formattedAddresses = Array.isArray(addresses) ? addresses.map(a => a.address).join(',') : addresses.address;
+    return this.apiService.get('balance', { addrs: formattedAddresses });
   }
 
   private getAddressesAsString(): Observable<string> {
@@ -276,5 +288,55 @@ export class WalletService {
       arr1.push(hex);
     }
     return arr1.join('');
+  }
+
+  private resetBalancesUpdateTime() {
+    this.lastBalancesUpdateTime = new Date();
+    this.calculateTimeSinceLastUpdate();
+    this.restartTimer();
+  }
+
+  private restartTimer() {
+    if (this.updateBalancesTimer) {
+      clearInterval(this.updateBalancesTimer);
+    }
+    this.startTimer();
+  }
+
+  private startTimer() {
+    this._ngZone.runOutsideAngular(() => {
+      this.updateBalancesTimer = setInterval(() => this.calculateTimeSinceLastUpdate(), this.intervalTime);
+    });
+  }
+
+  private calculateTimeSinceLastUpdate() {
+    const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
+    const timeSinceLastUpdate = Math.abs(Math.round((diffMs / 1000 / 60)));
+
+    this._ngZone.run(() => {
+      this.timeSinceLastBalancesUpdate.next(timeSinceLastUpdate);
+
+      if (timeSinceLastUpdate === this.refreshBalancesTime) {
+        this.loadBalances();
+      }
+    });
+  }
+
+  private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {
+    outputs.sort( function(a, b) {
+      return b.coins - a.coins;
+    });
+
+    const minRequiredOutputs: Output[] = [];
+    let sumCoins = 0;
+
+    outputs.forEach(output => {
+      if (transactionAmount > sumCoins && output.calculated_hours > 0) {
+        minRequiredOutputs.push(output);
+        sumCoins = sumCoins + output.coins;
+      }
+    });
+
+    return minRequiredOutputs;
   }
 }

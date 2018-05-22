@@ -5,18 +5,19 @@ import { WalletsPage } from './wallets.po';
 describe('Wallets', () => {
   let page: WalletsPage;
 
-  beforeAll(async() => {
-    await browser.executeScript(
+  beforeAll(() => {
+    browser.get('/');
+    browser.executeScript(
       `window.localStorage.setItem(\'wallets\',
       JSON.stringify([{"label":"Test wallet","addresses":
       [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
 
     page = new WalletsPage();
-    await page.navigateTo();
+    page.navigateTo();
   });
 
   afterAll(() => {
-    browser.executeScript('window.localStorage.clear();');
+    browser.restartSync();
   });
 
   it('should display title', () => {
@@ -91,8 +92,21 @@ describe('Wallets', () => {
     expect<any>(page.showPriceInformation()).toEqual(true);
   });
 
-  it('should decrypt wallet', async() => {
-    await page.navigateTo();
+  it('should decrypt wallet', () => {
+    page.navigateTo();
     expect<any>(page.canUnlock()).toEqual(true);
+  });
+
+  it('should always display add new address button for the wallet', () => {
+    page.navigateTo();
+    expect<any>(page.showAddAddress()).toEqual(true);
+  });
+
+  it('should display unlock wallet component on add new address for locked wallet', () => {
+    expect<any>(page.showShowUnlockWallet()).toEqual(true);
+  });
+
+  it('should unlock wallet component on add new address for locked wallet', () => {
+    expect<any>(page.unlockWallet()).toEqual(true);
   });
 });

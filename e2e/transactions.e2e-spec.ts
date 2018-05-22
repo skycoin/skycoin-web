@@ -1,23 +1,23 @@
 import { browser } from 'protractor';
-import { fakeAsync } from '@angular/core/testing';
 
 import { TransactionsPage } from './transactions.po';
 
 describe('Transactions', () => {
   let page: TransactionsPage;
 
-  beforeAll(async() => {
-    await browser.executeScript(
+  beforeAll(() => {
+    browser.get('/');
+    browser.executeScript(
       `window.localStorage.setItem(\'wallets\',
-      JSON.stringify([{"label":"Test wallet","addresses":
-      [{"address":"qxmeHkwgAMfwXyaQrwv9jq3qt228xMuoT5"}]}]) );`);
+        JSON.stringify([{"label":"Test wallet","addresses":
+        [{"address":"qxmeHkwgAMfwXyaQrwv9jq3qt228xMuoT5"}]}]) );`);
 
     page = new TransactionsPage();
-    await page.navigateTo();
+    page.navigateTo();
   });
 
   afterAll(() => {
-    browser.executeScript('window.localStorage.clear();');
+    browser.restartSync();
   });
 
   it('should display title', () => {

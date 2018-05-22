@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+
 import { GetOutputsRequest, Output } from '../app.datatypes';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ApiService {
 
-  private url = environment.nodeUrl;
+  private readonly url = environment.nodeUrl;
 
   constructor(private http: Http) { }
 
@@ -22,7 +23,7 @@ export class ApiService {
         address: output.address,
         coins: parseFloat(output.coins),
         hash: output.hash,
-        hours: output.calculated_hours
+        calculated_hours: output.calculated_hours
       }));
       return outputs;
     }) : Observable.of([]);

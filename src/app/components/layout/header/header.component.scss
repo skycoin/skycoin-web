@@ -36,6 +36,10 @@
         font-size: 4em;
       }
     }
+
+    .loading-header {
+      font-size: 2em;
+    }
   }
 
   .dollars {
@@ -55,5 +59,18 @@
     line-height: 22px;
     margin: 1em 0 2em;
     padding: 0 30px;
+  }
+}
+
+.notification-bar {
+  background-color: #F44A4D;
+  color:#FBFBFB;
+  div {
+    margin:auto;
+
+    a {
+      text-decoration:none;
+      color:#FFEBEE;
+    }
   }
 }

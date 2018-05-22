@@ -47,16 +47,16 @@ export class SendSkycoinComponent implements OnInit {
 
   private send(wallet: Wallet) {
     this.button.setLoading();
-    this.walletService.sendSkycoin(wallet, this.form.value.address, this.form.value.amount)
+    this.walletService.sendSkycoin(wallet, this.form.value.address.replace(/\s/g, ''), this.form.value.amount)
       .subscribe(
         () => {
-          this.form.reset();
+          this.form.reset({wallet: ''});
           this.button.setSuccess();
         },
         error => {
           const config = new MatSnackBarConfig();
           config.duration = 300000;
-          const errorMessage = error._body ? error._body : 'Your transaction appears to be unsuccessful';
+          const errorMessage = error.message ? error.message : 'Your transaction appears to be unsuccessful';
           this.snackbar.open(errorMessage, null, config);
           this.button.setError(error);
         },
@@ -81,6 +81,7 @@ export class SendSkycoinComponent implements OnInit {
       this.form.controls.amount.updateValueAndValidity();
     });
   }
+
   private validateAmount(amountControl: FormControl) {
     if (!amountControl.value || isNaN(amountControl.value) || parseFloat(amountControl.value) <= 0) {
       return { Invalid: true };

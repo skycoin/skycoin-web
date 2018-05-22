@@ -5,13 +5,15 @@ import { OnboardingCreatePage } from './onboarding-create.po';
 describe('Onboarding Create', () => {
   let page: OnboardingCreatePage;
 
-  beforeAll(async() => {
+  beforeAll(() => {
+    browser.get('/');
+
     page = new OnboardingCreatePage();
-    await page.navigateTo();
+    page.navigateTo();
   });
 
   afterAll(() => {
-    browser.executeScript('window.localStorage.clear();');
+    browser.restartSync();
   });
 
   it('should display title', () => {
@@ -31,7 +33,6 @@ describe('Onboarding Create', () => {
   });
 
   it('should hide accepted disclaimer', () => {
-    // page.navigateTo();
     expect<any>(page.acceptDisclaimer()).toEqual(false);
   });
 
@@ -51,8 +52,8 @@ describe('Onboarding Create', () => {
     expect<any>(page.acceptSafeguard()).toEqual(false);
   });
 
-  it('should skip wizard', async() => {
-    await page.navigateTo();
+  it('should skip wizard', () => {
+    page.navigateTo();
     expect<any>(page.skipWizard()).toContain('/wallets');
   });
 

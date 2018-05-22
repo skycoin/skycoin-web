@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
-import { Wallet, Address, Transaction, TransactionOutput, TransactionInput, Output } from '../app.datatypes';
+import { Wallet, Address, Transaction, TransactionOutput, TransactionInput, Output, Balance } from '../app.datatypes';
 
 describe('WalletService', () => {
   let store = {};
@@ -85,7 +85,10 @@ describe('WalletService', () => {
         addresses: [walletAddress]
       };
 
+      const expectedBalance = createBalance();
+
       spyCipherProvider.generateAddress.and.returnValue({ ...walletAddress });
+      spyApiService.get.and.returnValue(Observable.of(expectedBalance));
 
       walletService.create(walletLabel, walletSeed);
 
@@ -200,9 +203,9 @@ describe('WalletService', () => {
   });
 
   describe('sendSkycoin', () => {
-    it('postTransaction should be called with the correct rawTransaction', fakeAsync(() => {
+    it('postTransaction should be called with the correct rawTransaction with two outputs', fakeAsync(() => {
       const address = 'address';
-      const amount = 1;
+      const amount = 21;
 
       const addresses = [
         createAddress('address1', 'secretKey1'),
@@ -212,8 +215,10 @@ describe('WalletService', () => {
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput('address1', 'hash1'),
-        createOutput('address2', 'hash2')
+        createOutput('address1', 'hash1', 5, 10),
+        createOutput('address2', 'hash2', 10, 20),
+        createOutput('address1', 'hash1', 20, 50),
+        createOutput('address2', 'hash2', 50, 0)
       ];
 
       const expectedTxInputs: TransactionInput[] = [
@@ -223,18 +228,18 @@ describe('WalletService', () => {
 
       const expectedTxOutputs: TransactionOutput[] = [
         {
-          address: address,
-          coins: 1000000,
-          hours: 5
+          address: wallet.addresses[0].address,
+          coins: 9000000,
+          hours: 18
         },
         {
-          address: wallet.addresses[0].address,
-          coins: 19000000,
-          hours: 5
+          address: address,
+          coins: 21000000,
+          hours: 17
         }
       ];
 
-      spyApiService.getOutputs.and.returnValue( Observable.of(outputs) );
+      spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
       spyCipherProvider.prepareTransaction.and.returnValue('preparedTransaction');
 
       walletService.sendSkycoin(wallet, address, amount)
@@ -246,6 +251,71 @@ describe('WalletService', () => {
       expect(spyApiService.postTransaction)
         .toHaveBeenCalledWith('preparedTransaction');
     }));
+
+    it('postTransaction should be called with the correct rawTransaction with one output', fakeAsync(() => {
+      const address = 'address';
+      const amount = 1;
+
+      const addresses = [
+        createAddress('address1', 'secretKey1'),
+      ];
+
+      const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
+
+      const outputs: Output[] = [
+        createOutput('address1', 'hash1', 1, 10),
+      ];
+
+      const expectedTxInputs: TransactionInput[] = [
+        { hash: 'hash1', secret: 'secretKey1' }
+      ];
+
+      const expectedTxOutputs: TransactionOutput[] = [
+        {
+          address: address,
+          coins: 1000000,
+          hours: 5
+        }
+      ];
+
+      spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+      spyCipherProvider.prepareTransaction.and.returnValue('preparedTransaction');
+
+      walletService.sendSkycoin(wallet, address, amount)
+        .subscribe();
+
+      expect(spyCipherProvider.prepareTransaction)
+        .toHaveBeenCalledWith(expectedTxInputs, expectedTxOutputs);
+
+      expect(spyApiService.postTransaction)
+        .toHaveBeenCalledWith('preparedTransaction');
+    }));
+
+
+    it('should be rejected for not enough Sky Hours', () => {
+      const address = 'address';
+      const amount = 2;
+
+      const addresses = [
+        createAddress('address1', 'secretKey1'),
+        createAddress('address2', 'secretKey2')
+      ];
+
+      const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
+
+      const outputs: Output[] = [
+        createOutput('address1', 'hash1', 1, 24),
+        createOutput('address2', 'hash2', 1, 0)
+      ];
+
+      spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+
+      walletService.sendSkycoin(wallet, address, amount)
+        .subscribe(
+          () => fail('should be rejected'),
+          (error) => expect(error.message).toBe('Not enough available SKY Hours to perform transaction!')
+        );
+    });
   });
 
   describe('outputs', () => {
@@ -357,11 +427,36 @@ function createTransaction(addresses: string[], ownerAddress: string, destinatio
   };
 }
 
-function createOutput(address: string, hash: string): Output {
+function createOutput(address: string, hash: string, coins = 10, calculated_hours = 100): Output {
   return {
     address: address,
-    coins: 10,
+    coins: coins,
     hash: hash,
-    hours: 10
+    calculated_hours: calculated_hours
+  };
+}
+
+function createBalance(coins = 0, hours = 0): Balance {
+  return {
+    confirmed: {
+      coins: coins,
+      hours: hours
+    },
+    predicted: {
+      coins: coins,
+      hours: hours
+    },
+    addresses: {
+      'address': {
+        confirmed: {
+          coins: coins,
+          hours: hours
+        },
+        predicted: {
+          coins: coins,
+          hours: hours
+        }
+      }
+    }
   };
 }

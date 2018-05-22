@@ -19,7 +19,7 @@ run-docker: ## runs docker container
 	--name skycoin-backend \
 	-p 6000:6000 \
 	-p 6420:6420 \
-	skycoin/skycoin \
+	skycoin/skycoin:develop \
 	-db-path=project-root/test-fixtures/blockchain-180.db \
 	-disable-networking
 

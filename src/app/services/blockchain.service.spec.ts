@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { BlockchainService } from './blockchain.service';
 import { ApiService } from './api.service';
+import { WalletService } from './wallet.service';
 
 class MockApiService {
   get() {
@@ -10,22 +11,28 @@ class MockApiService {
   }
 }
 
+class MockWalletService {
+}
+
 describe('BlockchainService', () => {
   let service: BlockchainService;
   let apiService: ApiService;
+  let walletService: WalletService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         BlockchainService,
-        { provide: ApiService, useClass: MockApiService }
+        { provide: ApiService, useClass: MockApiService },
+        { provide: WalletService, useClass: MockWalletService }
       ]
     });
   });
 
-  beforeEach(inject([BlockchainService, ApiService], (serv, mock) => {
+  beforeEach(inject([BlockchainService, ApiService, WalletService], (serv, mockApiService, mockWalletService) => {
     service = serv;
-    apiService = mock;
+    apiService = mockApiService;
+    walletService = mockWalletService;
   }));
 
   it('should be created', () => {
