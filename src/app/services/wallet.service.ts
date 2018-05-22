@@ -321,7 +321,7 @@ export class WalletService {
 
       this.timeSinceLastBalancesUpdate.next(this.convertDecimalToInt(timeSinceLastUpdate / 60));
 
-      if (timeSinceLastUpdate === this.refreshBalancesTimeInSec) {
+      if (timeSinceLastUpdate >= this.refreshBalancesTimeInSec) {
         this.loadBalances();
       }
     });
