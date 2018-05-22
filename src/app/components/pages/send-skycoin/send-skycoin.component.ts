@@ -52,6 +52,7 @@ export class SendSkycoinComponent implements OnInit {
         () => {
           this.form.reset({wallet: ''});
           this.button.setSuccess();
+          this.walletService.loadBalances();
         },
         error => {
           const config = new MatSnackBarConfig();

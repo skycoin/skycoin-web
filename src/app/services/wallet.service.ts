@@ -75,13 +75,15 @@ export class WalletService {
       const totalCoins = parseInt((minRequiredOutputs.reduce((count, output) =>
         count + output.coins, 0) * 1000000) + '', 10);
 
-      if (totalCoins < parseInt(amount * 1000000 + '', 10)) {
+      const convertedAmount = parseInt(amount * 1000000 + '', 10);
+
+      if (totalCoins < convertedAmount) {
         throw new Error('Not enough available SKY Hours to perform transaction!');
       }
 
       const totalHours = parseInt((minRequiredOutputs.reduce((count, output) =>
         count + output.calculated_hours, 0)) + '', 10);
-      const changeCoins = totalCoins - parseInt(amount * 1000000 + '', 10);
+      const changeCoins = totalCoins - convertedAmount;
       let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
 
       const txOutputs: TransactionOutput[] = [];
@@ -98,7 +100,7 @@ export class WalletService {
         hoursToSend = calculatedHours;
       }
 
-      txOutputs.push({ address: address, coins: parseInt(amount * 1000000 + '', 10), hours: hoursToSend });
+      txOutputs.push({ address: address, coins: convertedAmount, hours: hoursToSend });
 
       minRequiredOutputs.forEach(input => {
         txInputs.push({
