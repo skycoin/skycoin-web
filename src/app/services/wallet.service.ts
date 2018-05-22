@@ -8,6 +8,8 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/zip';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
@@ -20,11 +22,12 @@ export class WalletService {
   addressesTemp: Address[];
   timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
+  hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
 
   private updateBalancesTimer: any;
   private lastBalancesUpdateTime: Date;
-  private readonly intervalTime = 60 * 1000;
-  private readonly refreshBalancesTime = 5;
+  private refreshBalancesTimeInSec: number;
+  private intervalTime: number;
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHoursRatio = 0.5;
@@ -212,7 +215,7 @@ export class WalletService {
     });
   }
 
-  pendingTransactions(): Observable<any> {
+  getAllPendingTransactions(): Observable<any> {
     return this.apiService.get('pendingTxs');
   }
 
@@ -241,7 +244,8 @@ export class WalletService {
             }
 
             this.calculateTotalBalance(wallets);
-            this.resetBalancesUpdateTime();
+            const hasPendingTxs = this.refreshPendingTransactions(balance);
+            this.resetBalancesUpdateTime(hasPendingTxs);
           });
         });
     });
@@ -304,8 +308,9 @@ export class WalletService {
     return arr1.join('');
   }
 
-  private resetBalancesUpdateTime() {
+  private resetBalancesUpdateTime(hasPendingTxs: boolean) {
     this.lastBalancesUpdateTime = new Date();
+    this.resetBalancesTimerOptions(hasPendingTxs);
     this.calculateTimeSinceLastUpdate();
     this.restartTimer();
   }
@@ -324,16 +329,20 @@ export class WalletService {
   }
 
   private calculateTimeSinceLastUpdate() {
-    const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
-    const timeSinceLastUpdate = Math.abs(Math.round((diffMs / 1000 / 60)));
-
     this._ngZone.run(() => {
-      this.timeSinceLastBalancesUpdate.next(timeSinceLastUpdate);
+      const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
+      const timeSinceLastUpdate = this.convertDecimalToInt(diffMs / 1000);
 
-      if (timeSinceLastUpdate === this.refreshBalancesTime) {
+      this.timeSinceLastBalancesUpdate.next(this.convertDecimalToInt(timeSinceLastUpdate / 60));
+
+      if (timeSinceLastUpdate === this.refreshBalancesTimeInSec) {
         this.loadBalances();
       }
     });
+  }
+
+  private convertDecimalToInt(floatNumber: number): number {
+    return Math.abs(Math.round(floatNumber));
   }
 
   private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {
@@ -352,5 +361,19 @@ export class WalletService {
     });
 
     return minRequiredOutputs;
+  }
+
+  private refreshPendingTransactions(balance: Balance) {
+    const hasPendingTxs = balance.confirmed.coins !== balance.predicted.coins ||
+      balance.confirmed.hours !== balance.predicted.hours;
+
+    this.hasPendingTransactions.next(hasPendingTxs);
+
+    return hasPendingTxs;
+  }
+
+  private resetBalancesTimerOptions(hasPendingTxs: boolean) {
+    this.intervalTime = (hasPendingTxs ? 20 : 60) * 1000;
+    this.refreshBalancesTimeInSec = hasPendingTxs ? 20 : 300;
   }
 }
