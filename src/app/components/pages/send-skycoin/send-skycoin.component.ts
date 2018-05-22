@@ -47,7 +47,7 @@ export class SendSkycoinComponent implements OnInit {
 
   private send(wallet: Wallet) {
     this.button.setLoading();
-    this.walletService.sendSkycoin(wallet, this.form.value.address, this.form.value.amount)
+    this.walletService.sendSkycoin(wallet, this.form.value.address.replace(/\s/g, ''), this.form.value.amount)
       .subscribe(
         () => {
           this.form.reset({wallet: ''});

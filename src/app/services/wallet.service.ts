@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -8,35 +8,35 @@ import 'rxjs/add/operator/mergeMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
-import { Address, Output, Transaction, TransactionInput, TransactionOutput, Wallet, TotalBalance, GetOutputsRequestOutput } from '../app.datatypes';
-import { WalletModel } from '../models/wallet.model';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Address, Output, Transaction, TransactionInput, TransactionOutput,
+  Wallet, TotalBalance, GetOutputsRequestOutput, Balance } from '../app.datatypes';
 
 @Injectable()
 export class WalletService {
-  recentTransactions: Subject<any[]> = new BehaviorSubject<any[]>([]);
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
   addressesTemp: Address[];
   timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
-  pendingTxs: Subject<any[]> = new ReplaySubject<any[]>();
+  hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
 
   private updateBalancesTimer: any;
   private lastBalancesUpdateTime: Date;
-  private refreshBalancesTime = 5;
-  private readonly intervalTime = 60 * 1000;
+  private refreshBalancesTimeInSec: number;
+  private intervalTime: number;
+
   private readonly allocationRatio = 0.25;
-  private readonly unburnedHouarsRatio = 0.5;
+  private readonly unburnedHoursRatio = 0.5;
 
   constructor(
     private apiService: ApiService,
-    private cipherProvider: CipherProvider
+    private cipherProvider: CipherProvider,
+    private _ngZone: NgZone
   ) {
     this.loadWallets();
-    this.loadBalances();
   }
 
   get addresses(): Observable<any[]> {
@@ -80,21 +80,22 @@ export class WalletService {
       }
 
       const totalHours = parseInt((minRequiredOutputs.reduce((count, output) =>
-        count + output.hours, 0)) + '', 10);
+        count + output.calculated_hours, 0)) + '', 10);
       const changeCoins = totalCoins - parseInt(amount * 1000000 + '', 10);
       let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
 
       const txOutputs: TransactionOutput[] = [];
       const txInputs: TransactionInput[] = [];
+      const calculatedHours = parseInt((totalHours * this.unburnedHoursRatio) + '', 10);
 
       if (changeCoins > 0) {
         txOutputs.push({
           address: wallet.addresses[0].address,
           coins: changeCoins,
-          hours: totalHours * this.unburnedHouarsRatio - hoursToSend
+          hours: calculatedHours - hoursToSend
         });
       } else {
-        hoursToSend = parseInt((totalHours * this.unburnedHouarsRatio) + '', 10);
+        hoursToSend = calculatedHours;
       }
 
       txOutputs.push({ address: address, coins: parseInt(amount * 1000000 + '', 10), hours: hoursToSend });
@@ -124,7 +125,7 @@ export class WalletService {
   }
 
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
       let currentSeed = this.ascii_to_hexa(seed);
       wallet.addresses.forEach(address => {
         const fullAddress = this.cipherProvider.generateAddress(currentSeed);
@@ -204,61 +205,35 @@ export class WalletService {
     return this.apiService.get('pendingTxs');
   }
 
-  pendingTransactions(): Observable<any> {
-    return this.pendingTxs.asObservable();
-  }
-
   sum(): Observable<number> {
     return this.all.map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0)
       .reduce((a , b) => a + b, 0));
   }
 
-  private refreshPendingTransactions() {
-    this.getAllPendingTransactions()
-      .subscribe(pending => {
-        const pendingTxs = [].concat
-          .apply([], pending.filter(response => response.length > 0))
-          .reduce((txs, tx) => {
-            if (!txs.find(t => t.transaction.txid === tx.transaction.txid)) {
-              txs.push(tx);
-            }
-            return txs;
-          }, []);
-
-        this.refreshBalancesTime = pendingTxs.length > 0 ? 20 : 5;
-        this.pendingTxs.next(pendingTxs);
-      });
-  }
-
-  private loadBalances() {
-    this.addresses.first().subscribe(addresses => {
-      const stringified = addresses.map(address => address.address).join(',');
-      this.apiService.getOutputs(stringified).subscribe(outputs => {
-        this.all.first().subscribe(wallets => {
-          wallets.forEach(wallet => {
-            wallet.addresses.forEach(address => {
-              address.balance = 0;
-              address.hours = 0;
-
-              outputs
-                .filter(o => address.address === o.address)
-                .map(output => {
-                  address.balance = address.balance + output.coins;
-                  address.hours = address.hours + output.hours;
+  loadBalances() {
+    this.addresses.first().subscribe((addresses: Address[]) => {
+      this.retrieveAddressesBalance(addresses)
+        .subscribe((balance: Balance) => {
+          this.wallets.first().subscribe(wallets => {
+            if (balance.addresses) {
+              wallets.map((wallet: Wallet) => {
+                wallet.addresses.map((address: Address) => {
+                  if (balance.addresses[address.address]) {
+                    address.balance = balance.addresses[address.address].confirmed.coins / 1000000;
+                    address.hours = balance.addresses[address.address].confirmed.hours;
+                  }
                 });
-            });
 
-            wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0)
-              .reduce((a , b) => a + b, 0);
-            wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0)
-              .reduce((a , b) => a + b, 0);
+                wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
+                wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0).reduce((a , b) => a + b, 0);
+              });
+            }
+
+            this.calculateTotalBalance(wallets);
+            const hasPendingTxs = this.refreshPendingTransactions(balance);
+            this.resetBalancesUpdateTime(hasPendingTxs);
           });
-
-          this.refreshPendingTransactions();
-          this.calculateTotalBalance(wallets);
-          this.resetBalancesUpdateTime();
         });
-      });
     });
   }
 
@@ -296,30 +271,9 @@ export class WalletService {
     this.wallets.next(wallets);
   }
 
-  private retrieveAddressBalance(address: any|any[]) {
-    const addresses = Array.isArray(address) ? address.map(a => a.address).join(',') : address.address;
-    return this.apiService.get('balance', { addrs: addresses });
-  }
-
-  private retrieveInputAddress(input: string) {
-    return this.apiService.get('uxout', { uxid: input });
-  }
-
-  private retrieveWalletBalance(wallet: Wallet): Observable<any> {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressBalance(address).map(balance => {
-      address.balance = balance.confirmed.coins;
-      address.hours = balance.confirmed.hours;
-      return address;
-    })));
-  }
-
-  private retrieveWalletTransactions(wallet: Wallet) {
-    return Observable.forkJoin(wallet.addresses.map(address => this.retrieveAddressTransactions(address)))
-      .map(addresses => [].concat.apply([], addresses));
-  }
-
-  private retrieveWallets(): Observable<WalletModel[]> {
-    return this.apiService.get('wallets');
+  private retrieveAddressesBalance(addresses: Address | Address[]): Observable<Balance> {
+    const formattedAddresses = Array.isArray(addresses) ? addresses.map(a => a.address).join(',') : addresses.address;
+    return this.apiService.get('balance', { addrs: formattedAddresses });
   }
 
   private getAddressesAsString(): Observable<string> {
@@ -340,8 +294,9 @@ export class WalletService {
     return arr1.join('');
   }
 
-  private resetBalancesUpdateTime() {
+  private resetBalancesUpdateTime(hasPendingTxs: boolean) {
     this.lastBalancesUpdateTime = new Date();
+    this.resetBalancesTimerOptions(hasPendingTxs);
     this.calculateTimeSinceLastUpdate();
     this.restartTimer();
   }
@@ -354,18 +309,26 @@ export class WalletService {
   }
 
   private startTimer() {
-    this.updateBalancesTimer = setInterval(() => this.calculateTimeSinceLastUpdate(), this.intervalTime);
+    this._ngZone.runOutsideAngular(() => {
+      this.updateBalancesTimer = setInterval(() => this.calculateTimeSinceLastUpdate(), this.intervalTime);
+    });
   }
 
   private calculateTimeSinceLastUpdate() {
     const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
-    const timeSinceLastUpdate = Math.abs(Math.round((diffMs / 1000 / 60)));
+    const timeSinceLastUpdate = this.convertDecimalToInt(diffMs / 1000);
 
-    this.timeSinceLastBalancesUpdate.next(timeSinceLastUpdate);
+    this._ngZone.run(() => {
+      this.timeSinceLastBalancesUpdate.next(this.convertDecimalToInt(timeSinceLastUpdate / 60));
 
-    if (timeSinceLastUpdate === this.refreshBalancesTime) {
-      this.loadBalances();
-    }
+      if (timeSinceLastUpdate === this.refreshBalancesTimeInSec) {
+        this.loadBalances();
+      }
+    });
+  }
+
+  private convertDecimalToInt(floatNumber: number): number {
+    return Math.abs(Math.round(floatNumber));
   }
 
   private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {
@@ -377,12 +340,26 @@ export class WalletService {
     let sumCoins = 0;
 
     outputs.forEach(output => {
-      if (transactionAmount > sumCoins && output.hours > 0) {
+      if (transactionAmount > sumCoins && output.calculated_hours > 0) {
         minRequiredOutputs.push(output);
         sumCoins = sumCoins + output.coins;
       }
     });
 
     return minRequiredOutputs;
+  }
+
+  private refreshPendingTransactions(balance: Balance) {
+    const hasPendingTxs = balance.confirmed.coins !== balance.predicted.coins ||
+      balance.confirmed.hours !== balance.predicted.hours;
+
+    this.hasPendingTransactions.next(hasPendingTxs);
+
+    return hasPendingTxs;
+  }
+
+  private resetBalancesTimerOptions(hasPendingTxs: boolean) {
+    this.intervalTime = (hasPendingTxs ? 20 : 60) * 1000;
+    this.refreshBalancesTimeInSec = hasPendingTxs ? 20 : 300;
   }
 }

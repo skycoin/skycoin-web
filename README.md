@@ -32,3 +32,19 @@ Run `npm start` for a dev server. Navigate to `http://localhost:4200/`.
 As this is a lite client, it requires a back-end to retrieve the blockchain state and inject new transactions. For this
 purpose a full node has been set up at `http://128.199.57.221`. At the moment this requires a mapping API, but in the
 future any node can do this.
+
+## Cryptography
+
+For security reasons, this wallet does not store the the seeds, neither in the backend nor in the client, so the user must
+maintain a backup of them. The seeds are also not transmitted anywhere outside the application code.
+
+To maintain maximum compatibility with Skycoin's original code, the cryptographic functions used by this wallet are in the
+[skycoin-lite](https://github.com/skycoin/skycoin-lite) repository, coded in Go (Golang), and are transpiled using gopherjs.
+The transpiled code is in the [src/assets/scripts/main.js](/src/assets/scripts/main.js) file, in this repository.
+
+The mnemonic phrases are created using the [bip39 library](https://www.npmjs.com/package/bip39). To create mnemonic phrases
+with enough entropy, that library uses the [randombytes library](https://www.npmjs.com/package/randombytes), which uses
+[Crypto.getRandomValues()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues) for obtaining
+cryptographically strong random values. The use of the [bip39 library](https://www.npmjs.com/package/bip39) is limited to
+the creation of mnemonic phrases, the code that creates the binary seeds is in
+[skycoin-lite](https://github.com/skycoin/skycoin-lite).

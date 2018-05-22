@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
-import { Wallet, Address, Transaction, TransactionOutput, TransactionInput, Output } from '../app.datatypes';
+import { Wallet, Address, Transaction, TransactionOutput, TransactionInput, Output, Balance } from '../app.datatypes';
 
 describe('WalletService', () => {
   let store = {};
@@ -67,6 +67,10 @@ describe('WalletService', () => {
       spyCipherProvider.generateAddress.and.returnValue({ ...newAddress });
       spyOn(walletService, 'updateWallet');
 
+      spyApiService.get.and.callFake(() => {
+        return Observable.of(createBalance());
+      });
+
       walletService.addAddress(wallet);
       expect(walletService.updateWallet).toHaveBeenCalledWith(expectedWallet);
     });
@@ -85,7 +89,18 @@ describe('WalletService', () => {
         addresses: [walletAddress]
       };
 
+      const expectedBalance = createBalance();
+
       spyCipherProvider.generateAddress.and.returnValue({ ...walletAddress });
+
+      spyApiService.get.and.callFake((param) => {
+        if (param === 'balance') {
+          return Observable.of(createBalance());
+        }
+        if (param === 'pendingTxs') {
+          return Observable.of([]);
+        }
+      });
 
       walletService.create(walletLabel, walletSeed);
 
@@ -357,9 +372,9 @@ describe('WalletService', () => {
     }));
   });
 
-  describe('pendingTransactions', () => {
+  describe('getAllPendingTransactions', () => {
     it('should be called with a correct parameter', fakeAsync(() => {
-      walletService.pendingTransactions();
+      walletService.getAllPendingTransactions();
       expect(spyApiService.get).toHaveBeenCalledWith('pendingTxs');
     }));
   });
@@ -424,11 +439,36 @@ function createTransaction(addresses: string[], ownerAddress: string, destinatio
   };
 }
 
-function createOutput(address: string, hash: string, coins = 10, hours = 100): Output {
+function createOutput(address: string, hash: string, coins = 10, calculated_hours = 100): Output {
   return {
     address: address,
     coins: coins,
     hash: hash,
-    hours: hours
+    calculated_hours: calculated_hours
+  };
+}
+
+function createBalance(coins = 0, hours = 0): Balance {
+  return {
+    confirmed: {
+      coins: coins,
+      hours: hours
+    },
+    predicted: {
+      coins: coins,
+      hours: hours
+    },
+    addresses: {
+      'address': {
+        confirmed: {
+          coins: coins,
+          hours: hours
+        },
+        predicted: {
+          coins: coins,
+          hours: hours
+        }
+      }
+    }
   };
 }

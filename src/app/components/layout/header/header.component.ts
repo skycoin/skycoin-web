@@ -3,6 +3,10 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
+import { BlockchainService } from '../../../services/blockchain.service';
+import { AppService } from '../../../services/app.service';
+import { ConnectionError } from '../../../enums/connection-error.enum';
+import { Wallet } from '../../../app.datatypes';
 import { TotalBalance } from '../../../app.datatypes';
 
 @Component({
@@ -17,17 +21,37 @@ export class HeaderComponent implements OnInit, OnDestroy {
   hours: number;
   balance: string;
   hasPendingTxs: boolean;
-
+  connectionError: ConnectionError;
+  connectionErrorsList = ConnectionError;
+  percentage: number;
+  querying = true;
+  current: number;
+  highest: number;
+  isBlockchainLoading = false;
   private price: number;
   private priceSubscription: Subscription;
   private walletSubscription: Subscription;
+  private blockchainSubscription: Subscription;
+
+  get loading() {
+    return this.isBlockchainLoading || !this.balance;
+  }
 
   constructor(
+    private appService: AppService,
     private priceService: PriceService,
-    public walletService: WalletService,
+    private walletService: WalletService,
+    private blockchainService: BlockchainService
   ) {}
 
   ngOnInit() {
+    this.appService.checkConnectionState()
+      .subscribe((error: ConnectionError) => this.connectionError = error);
+
+    this.blockchainSubscription = this.blockchainService.progress
+      .filter(response => !!response)
+      .subscribe(response => this.updateBlockchainProgress(response));
+
     this.priceSubscription = this.priceService.price
       .subscribe(price => {
         this.price = price;
@@ -44,13 +68,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.walletService.pendingTransactions()
-      .subscribe(txs => this.hasPendingTxs = txs.length > 0);
+    this.walletService.hasPendingTransactions
+      .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs);
   }
 
   ngOnDestroy() {
     this.priceSubscription.unsubscribe();
     this.walletSubscription.unsubscribe();
+    this.blockchainSubscription.unsubscribe();
+  }
+
+  private updateBlockchainProgress(response) {
+    this.querying = false;
+    this.isBlockchainLoading = response.highest !== response.current;
+
+    if (this.isBlockchainLoading) {
+      this.highest = response.highest;
+      this.current = response.current;
+    }
+
+    this.percentage = response.current && response.highest ? (response.current / response.highest) : 0;
   }
 
   private calculateBalance() {

@@ -3,10 +3,14 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { HeaderComponent } from './header.component';
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
+import { Wallet } from '../../../app.datatypes';
+import { AppService } from '../../../services/app.service';
+import { BlockchainService } from '../../../services/blockchain.service';
 import { TotalBalance } from '../../../app.datatypes';
 
 class MockPriceService {
@@ -15,12 +19,21 @@ class MockPriceService {
 
 class MockWalletService {
   totalBalance: Subject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
+  hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
 
   sum() {
   }
+}
 
-  pendingTransactions(): Observable<any> {
-    return Observable.of([]);
+class MockAppService {
+  checkConnectionState()  {
+    return Observable.of(null);
+  }
+}
+
+class MockBlockchainService {
+  get progress() {
+    return Observable.of();
   }
 }
 
@@ -34,7 +47,9 @@ describe('HeaderComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: PriceService, useClass: MockPriceService },
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: AppService, useClass: MockAppService },
+        { provide: BlockchainService, useClass: MockBlockchainService }
       ]
     }).compileComponents();
   }));
