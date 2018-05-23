@@ -31,4 +31,7 @@
       <a href="https://web.telegram.org/#/im?p=@skycoinsupport">Telegram</a>
     </div>
   </mat-toolbar>
+  <mat-toolbar class="notification-bar" *ngIf="hasPendingTxs">
+    <div>There are some <a routerLink="/settings/pending-transactions">pending trasactions</a>. Data you see may not be updated.</div>
+  </mat-toolbar>
 </div>

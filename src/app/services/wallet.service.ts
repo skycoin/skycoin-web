@@ -7,6 +7,8 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
@@ -19,11 +21,12 @@ export class WalletService {
   addressesTemp: Address[];
   timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
+  hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
 
   private updateBalancesTimer: any;
   private lastBalancesUpdateTime: Date;
-  private readonly intervalTime = 60 * 1000;
-  private readonly refreshBalancesTime = 5;
+  private refreshBalancesTimeInSec: number;
+  private intervalTime: number;
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHoursRatio = 0.5;
@@ -72,13 +75,15 @@ export class WalletService {
       const totalCoins = parseInt((minRequiredOutputs.reduce((count, output) =>
         count + output.coins, 0) * 1000000) + '', 10);
 
-      if (totalCoins < parseInt(amount * 1000000 + '', 10)) {
+      const convertedAmount = parseInt(amount * 1000000 + '', 10);
+
+      if (totalCoins < convertedAmount) {
         throw new Error('Not enough available SKY Hours to perform transaction!');
       }
 
       const totalHours = parseInt((minRequiredOutputs.reduce((count, output) =>
         count + output.calculated_hours, 0)) + '', 10);
-      const changeCoins = totalCoins - parseInt(amount * 1000000 + '', 10);
+      const changeCoins = totalCoins - convertedAmount;
       let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
 
       const txOutputs: TransactionOutput[] = [];
@@ -95,7 +100,7 @@ export class WalletService {
         hoursToSend = calculatedHours;
       }
 
-      txOutputs.push({ address: address, coins: parseInt(amount * 1000000 + '', 10), hours: hoursToSend });
+      txOutputs.push({ address: address, coins: convertedAmount, hours: hoursToSend });
 
       minRequiredOutputs.forEach(input => {
         txInputs.push({
@@ -198,7 +203,7 @@ export class WalletService {
       .map(response => response.head_outputs);
   }
 
-  pendingTransactions(): Observable<any> {
+  getAllPendingTransactions(): Observable<any> {
     return this.apiService.get('pendingTxs');
   }
 
@@ -227,7 +232,8 @@ export class WalletService {
             }
 
             this.calculateTotalBalance(wallets);
-            this.resetBalancesUpdateTime();
+            const hasPendingTxs = this.refreshPendingTransactions(balance);
+            this.resetBalancesUpdateTime(hasPendingTxs);
           });
         });
     });
@@ -290,8 +296,9 @@ export class WalletService {
     return arr1.join('');
   }
 
-  private resetBalancesUpdateTime() {
+  private resetBalancesUpdateTime(hasPendingTxs: boolean) {
     this.lastBalancesUpdateTime = new Date();
+    this.resetBalancesTimerOptions(hasPendingTxs);
     this.calculateTimeSinceLastUpdate();
     this.restartTimer();
   }
@@ -310,16 +317,20 @@ export class WalletService {
   }
 
   private calculateTimeSinceLastUpdate() {
-    const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
-    const timeSinceLastUpdate = Math.abs(Math.round((diffMs / 1000 / 60)));
-
     this._ngZone.run(() => {
-      this.timeSinceLastBalancesUpdate.next(timeSinceLastUpdate);
+      const diffMs: number = this.lastBalancesUpdateTime.getTime() - new Date().getTime();
+      const timeSinceLastUpdate = this.convertDecimalToInt(diffMs / 1000);
 
-      if (timeSinceLastUpdate === this.refreshBalancesTime) {
+      this.timeSinceLastBalancesUpdate.next(this.convertDecimalToInt(timeSinceLastUpdate / 60));
+
+      if (timeSinceLastUpdate >= this.refreshBalancesTimeInSec) {
         this.loadBalances();
       }
     });
+  }
+
+  private convertDecimalToInt(floatNumber: number): number {
+    return Math.abs(Math.round(floatNumber));
   }
 
   private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {
@@ -338,5 +349,19 @@ export class WalletService {
     });
 
     return minRequiredOutputs;
+  }
+
+  private refreshPendingTransactions(balance: Balance) {
+    const hasPendingTxs = balance.confirmed.coins !== balance.predicted.coins ||
+      balance.confirmed.hours !== balance.predicted.hours;
+
+    this.hasPendingTransactions.next(hasPendingTxs);
+
+    return hasPendingTxs;
+  }
+
+  private resetBalancesTimerOptions(hasPendingTxs: boolean) {
+    this.intervalTime = (hasPendingTxs ? 20 : 60) * 1000;
+    this.refreshBalancesTimeInSec = hasPendingTxs ? 20 : 300;
   }
 }
