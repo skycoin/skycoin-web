@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material';
 import * as Bip39 from 'bip39';
 
 import { WalletService } from '../../../../services/wallet.service';
-import { MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-create-wallet',
@@ -19,7 +19,7 @@ export class CreateWalletComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data,
     public dialogRef: MatDialogRef<CreateWalletComponent>,
     private walletService: WalletService,
-    private formBuilder: FormBuilder,
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {

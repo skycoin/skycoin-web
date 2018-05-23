@@ -6,7 +6,6 @@ import { WalletService } from '../../../services/wallet.service';
 import { BlockchainService } from '../../../services/blockchain.service';
 import { AppService } from '../../../services/app.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
-import { Wallet } from '../../../app.datatypes';
 import { TotalBalance } from '../../../app.datatypes';
 
 @Component({

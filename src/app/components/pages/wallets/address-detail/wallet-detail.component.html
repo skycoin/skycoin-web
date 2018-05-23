@@ -4,7 +4,7 @@
     <div class="address-column">
       <img src="../../../../../assets/img/qr-code-black.png" (click)="showQr(address)" >
       <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }" (click)="copyAddress(address)">
-        {{ address.address }} <span data-label="Copied" class="copy-label">Copy</span>
+        {{ address.address }} <span data-label="Copied" class="copy-label">{{ 'copy.copied' | translate }}</span>
       </p>
     </div>
     <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
@@ -15,7 +15,7 @@
   <div class="-button" (click)="onAddNewAddress()">
     <div class="-btn-plus btn-add-address">
       <img src="../../../../../assets/img/plus-grey.png">
-      <span>New Address</span>
+      <span> {{ 'addressDetail.newAddress' | translate }}</span>
     </div>
 
   </div>
@@ -23,15 +23,14 @@
     <ng-container *ngIf="!wallet.hideEmpty">
       <div class="-btn-minus">
         <img src="../../../../../assets/img/minus-grey.png">
-        <span>Hide Empty</span>
+        <span>{{ 'addressDetail.hideEmpty' | translate }}</span>
       </div>
     </ng-container>
     <ng-container *ngIf="wallet.hideEmpty">
       <div class="-btn-plus">
         <img src="../../../../../assets/img/plus-grey.png">
-        <span>Show Empty</span>
+        <span>{{ 'addressDetail.showEmpty' | translate }}</span>
       </div>
-
     </ng-container>
   </div>
   <div class="flex-fill"></div>

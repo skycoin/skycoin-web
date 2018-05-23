@@ -1,0 +1,47 @@
+{
+  "general": {
+    "confirmSeed": "Confirm seed",
+    "name": "Name",
+    "seed": "Seed"
+  },
+
+  "buttons": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "load" : "Load",
+    "rename": "Rename",
+    "unlock": "Unlock"
+  },
+
+  "addressDetail": {
+    "editWallet": "Edit Wallet",
+    "hideEmpty": "Hide Empty",
+    "newAddress": "New Address",
+    "showEmpty": "Show Empty"
+  },
+  "changeName": {
+    "editWallet": "Edit Wallet"
+  },
+  "createWallet": {
+    "createWallet": "Create Wallet",
+    "loadWallet": "Load Wallet",
+    "walletDisclaimer": "Remember this seed! Keep it in a safe place. If you forget your seed, you will not be able to recover your wallet!"
+  },
+
+  "unlockWallet": {
+    "unlockWallet": "Unlock Wallet"
+  },
+
+  "wallets" : {
+    "addWallet": "Add Wallet",
+    "balance":"Balance",
+    "encryption":"Encryption",
+    "loadWallet": "Load Wallet",
+    "skyHours":"SKY Hours",
+    "wallet": "Wallet",
+    "wallets": "Wallets"
+  },
+  "copy": {
+    "copied": "Copied"
+  }
+}

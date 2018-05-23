@@ -16,7 +16,7 @@ export class WalletsComponent implements OnInit {
 
   constructor(
     private walletService: WalletService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {

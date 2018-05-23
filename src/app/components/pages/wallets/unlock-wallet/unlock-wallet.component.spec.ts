@@ -1,12 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 
 import { UnlockWalletComponent } from './unlock-wallet.component';
 import { WalletService } from '../../../../services/wallet.service';
 
 class MockWalletService {
+}
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
 }
 
 describe('UnlockWalletComponent', () => {
@@ -15,7 +23,7 @@ describe('UnlockWalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UnlockWalletComponent ],
+      declarations: [ UnlockWalletComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,

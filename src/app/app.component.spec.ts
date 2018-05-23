@@ -1,5 +1,7 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
 
 import { AppComponent } from './app.component';
 import { FeatureService } from './services/feature.service';
@@ -7,6 +9,18 @@ import { FeatureService } from './services/feature.service';
 class MockFeatureService {
   getFeatureToggleData(): any {
     return {};
+  }
+}
+
+class MockTranslateService {
+  addLangs(langs: Array<string>): void {
+  }
+
+  setDefaultLang(lang: string): void {
+  }
+
+  use(lang: string): Observable<any> {
+    return Observable.of({});
   }
 }
 
@@ -19,7 +33,8 @@ describe('AppComponent', () => {
       declarations: [ AppComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: FeatureService, useClass: MockFeatureService }
+        { provide: FeatureService, useClass: MockFeatureService },
+        { provide: TranslateService, useClass: MockTranslateService }
       ]
     }).compileComponents();
   }));

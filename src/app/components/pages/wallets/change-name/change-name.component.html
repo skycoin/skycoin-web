@@ -1,16 +1,16 @@
-<app-modal title="Edit Wallet" [dialog]="dialogRef">
+<app-modal title="changeName.editWallet" [dialog]="dialogRef">
   <div [formGroup]="form">
     <div class="form-field">
-      <label for="label">Name</label>
+      <label for="label">{{ 'general.name' | translate }}</label>
       <input formControlName="label" id="label">
     </div>
   </div>
   <div class="-buttons">
     <app-button (action)="closePopup()">
-      Cancel
+      {{ 'buttons.cancel' | translate }}
     </app-button>
     <app-button (action)="rename()" class="primary" [disabled]="!form.valid">
-      Rename
+      {{ 'buttons.rename' | translate }}
     </app-button>
   </div>
 </app-modal>

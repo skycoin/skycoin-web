@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -22,6 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
 import { AppComponent } from './app.component';
 import { ButtonComponent } from './components/layout/button/button.component';
 import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
@@ -66,6 +68,7 @@ import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
 import { AppService } from './services/app.service';
 import { NumberFieldDirective } from './directives/number-field.directive';
+import { AppTranslateLoader } from './app.translate-loader';
 
 @NgModule({
   declarations: [
@@ -136,7 +139,14 @@ import { NumberFieldDirective } from './directives/number-field.directive';
     NoopAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(AppRoutes),
-    FeatureToggleModule
+    FeatureToggleModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: AppTranslateLoader,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [
     AppService,
