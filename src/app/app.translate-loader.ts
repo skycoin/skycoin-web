@@ -1,6 +1,9 @@
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import { HttpClient } from '@angular/common/http';
+import { TranslateLoader } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
 
-export function AppTranslateLoader(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient);
+export class AppTranslateLoader implements TranslateLoader {
+  getTranslation(lang: string): Observable<any> {
+    return Observable.fromPromise(System.import(`../assets/i18n/${lang}.json`));
+  }
 }

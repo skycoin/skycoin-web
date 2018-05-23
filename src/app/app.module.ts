@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -22,7 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 import { AppComponent } from './app.component';
 import { ButtonComponent } from './components/layout/button/button.component';
@@ -143,10 +143,9 @@ import { AppTranslateLoader } from './app.translate-loader';
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: AppTranslateLoader,
-        deps: [HttpClient]
-      }
-    })
+        useClass: AppTranslateLoader,
+      },
+    }),
   ],
   providers: [
     AppService,
