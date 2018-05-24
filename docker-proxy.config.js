@@ -4,9 +4,9 @@ const PROXY_CONFIG = {
     "secure": false,
     "logLevel": "debug",
     "bypass": function (req) {
-      req.headers["origin"] = 'http://0.0.0.0:6420';
-      req.headers["host"] = '0.0.0.0:6420';
-      req.headers["referer"] = 'http://0.0.0.0:6420';
+      req.headers["origin"] = 'http://172.17.0.2:6420';
+      req.headers["host"] = '172.17.0.2:6420';
+      req.headers["referer"] = 'http://172.17.0.2:6420';
     }
   }
 };
