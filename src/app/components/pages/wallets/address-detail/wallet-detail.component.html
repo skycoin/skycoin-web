@@ -3,7 +3,7 @@
     <div class="id-column">{{ i + 1 }}</div>
     <div class="address-column">
       <img src="../../../../../assets/img/qr-code-black.png" (click)="showQr(address)" >
-      <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }" (click)="onCopyAddress(address)">
+      <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }" (click)="copyAddress(address)">
         {{ address.address }} <span data-label="Copied" class="copy-label">Copy</span>
       </p>
     </div>

@@ -10,27 +10,3 @@ export function openUnlockWalletModal (wallet: Wallet, unlockDialog: MatDialog):
 
   return unlockDialog.open(UnlockWalletComponent, config);
 }
-
-export function copyAddress(address) {
-  const selBox = document.createElement('textarea');
-
-  selBox.style.position = 'fixed';
-  selBox.style.left = '0';
-  selBox.style.top = '0';
-  selBox.style.opacity = '0';
-  selBox.value = address.address;
-
-  document.body.appendChild(selBox);
-  selBox.focus();
-  selBox.select();
-
-  document.execCommand('copy');
-  document.body.removeChild(selBox);
-
-  address.isCopying = true;
-
-  // wait for a while and then remove the 'copying' class
-  setTimeout(() => {
-    address.isCopying = false;
-  }, 500);
-}

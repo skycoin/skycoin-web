@@ -1,9 +1,5 @@
 @import '../../../../../theme/_variables.scss';
 
-.-width-150 {
-  width: 150px;
-}
-
 .-wallet-label {
   font-weight: 400;
   margin: 20px 0 5px 40px;
@@ -11,9 +7,7 @@
 
 .-headers {
   border-bottom: 1px solid #eff0f0;
-  color: rgba(30, 34, 39, 0.2);
-  display: flex;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   height: 50px;
   line-height: 50px;
@@ -29,11 +23,9 @@
 .-output {
   background-color: $white;
   border-bottom: 1px solid #eff0f0;
-  display: flex;
   font-size: $font-size-standard;
-  line-height: $row-height;
-  height: $row-height;
-  padding-left: 20px;
+  line-height: 30px;
+  padding: 10px 20px;
 
   &:first-child {
     border-top-left-radius: 15px;
@@ -45,75 +37,21 @@
     border-bottom-right-radius: 15px;
   }
 
-  .-address {
-    color: rgba(30, 34, 39, 0.6);
-    flex: 1 1 auto;
+  .-hash, .-balance {
+    font-size: 12px;
+  }
 
-    img {
-      display: inline-block;
-      height: 17px;
-      vertical-align: middle;
-      width: 17px;
-    }
+  .-balance {
+    display: flex;
+    flex-direction: row;
 
-    p {
-      display: inline-block;
-      line-height: $row-height;
-      margin: 0;
-      vertical-align: middle;
-    }
+    .-item {
+      min-width: 150px;
+      padding-right: 20px;
 
-    &:hover .copy-label {
-      display: inline-block;
+      span {
+        color: $grey-dark;
+      }
     }
   }
-
-  .-coins {
-    color: black;
-  }
-
-  .-hours {
-    color: rgba(30, 34, 39, 0.5);
-  }
-}
-
-.click-to-copy {
-  cursor: pointer;
-}
-
-.copy-label {
-  color: #0072ff;
-  display: none;
-  font-size: 12px;
-  line-height: 100%;
-  position: relative;
-  opacity: .999;
-  transition: opacity .2s ease-in-out;
-  top: -1px;
-  padding-left: 10px;
-
-  &.hidden{
-    opacity: .001;
-  }
-
-  &::after {
-    content: attr(data-label);
-    color: #0072ff;
-    display: inline-block;
-    position: absolute;
-    top: -2px;
-    left: 50%;
-    opacity: .001;
-    text-align: center;
-    -webkit-transform: translate3d(-50%,0,0);
-    transform: translate3d(-50%,0,0);
-    -webkit-backface-visibility: hidden;
-    white-space: nowrap;
-    padding-left: 11px;
-  }
-}
-
-.copying .copy-label::after {
-  -webkit-animation: floatup .5s ease-in-out;
-  animation: floatup .5s ease-in-out;
 }
