@@ -1,4 +1,5 @@
 import { browser, by, element } from 'protractor';
+
 import { SendSkyPage } from './send_sky.po';
 import { WalletsPage } from './wallets.po';
 
@@ -6,31 +7,36 @@ describe('Send Sky', () => {
   let page: SendSkyPage;
   let walletPage: WalletsPage;
 
-  beforeEach(() => {
+  beforeAll(() => {
+    browser.get('/');
+    browser.executeScript(
+      `window.localStorage.setItem(\'wallets\',
+        JSON.stringify([{"label":"Test wallet","addresses":
+        [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
+
     page = new SendSkyPage();
     walletPage = new WalletsPage();
+
+    page.navigateTo();
+  });
+
+  afterAll(() => {
+    browser.restartSync();
   });
 
   it('should preconfigure wallet', () => {
-    page.navigateTo().then(() => {
-      browser.executeScript(
-        `window.localStorage.setItem(\'wallets\',
-          JSON.stringify([{"label":"Test wallet","addresses":
-          [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
-
-        walletPage.navigateTo().then(() => {
-         walletPage.unlockFirstWallet().then((result) => {
-          if (result) {
-            const sendLink = element(by.css('[routerlink="/send"]'));
-            return sendLink.click().then(() => {
-              expect<any>(true).toBeTruthy();
-            });
-          } else {
-            expect<any>(false).toBeTruthy();
-          }
-        });
-      });
-    });
+    walletPage.navigateTo().then(() => {
+      walletPage.unlockFirstWallet().then((result) => {
+       if (result) {
+         const sendLink = element(by.css('[routerlink="/send"]'));
+         return sendLink.click().then(() => {
+           expect<any>(true).toBeTruthy();
+         });
+       } else {
+         expect<any>(false).toBeTruthy();
+       }
+     });
+   });
   });
 
   it('should display title', () => {
