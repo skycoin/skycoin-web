@@ -1,19 +1,25 @@
 <div class="sky-container sky-container-grey">
   <app-header title="Outputs"></app-header>
   <div class="container">
-    <div class="-table">
-      <div class="-headers">
-        <div class="flex-fill">Address</div>
-        <div class="-width-150">SKY Hours</div>
-        <div class="-width-150">Balance</div>
-      </div>
-      <div class="-output" *ngFor="let output of outputs">
-        <div class="flex-fill -address">
-          <img src="../../../../../assets/img/qr-code-black.png"  (click)="showQr(output.address)" >
-          <p>{{ output.address }}</p>
+    <div class="-wallet" *ngFor="let wallet of wallets">
+      <div class="-wallet-label">{{ wallet.label }}</div>
+      <div class="-wallet" *ngFor="let address of wallet.addresses">
+        <div class="-table">
+          <div class="-headers">
+            <div> {{ address.address }} </div>
+          </div>
+          <div class="-output" *ngFor="let output of address.outputs">
+            <div class="-hash">{{ output.hash }}</div>
+            <div class="-balance">
+              <div class="-item">
+                <span>Coins:</span>
+                {{ output.coins | number:'1.0-6' }}</div>
+              <div class="-item">
+                <span>Hours:</span>
+                {{ (output.calculated_hours ? output.calculated_hours : 0) }}</div>
+            </div>
+          </div>
         </div>
-        <div class="-width-150 -hours">{{ (output.calculated_hours ? output.calculated_hours : 0) | number:'1.0-6' }}</div>
-        <div class="-width-150 -coins">{{ (output.coins ? output.coins : 0) | number:'1.0-6' }}</div>
       </div>
     </div>
   </div>
