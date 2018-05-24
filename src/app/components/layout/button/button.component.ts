@@ -33,4 +33,9 @@ export class ButtonComponent {
     this.error = error['_body'];
     this.state = 2;
   }
+
+  resetState() {
+    this.state = null;
+    this.error = '';
+  }
 }
