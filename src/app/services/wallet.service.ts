@@ -14,7 +14,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput,
-  Wallet, TotalBalance, GetOutputsRequestOutput, Balance } from '../app.datatypes';
+  Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
 
 @Injectable()
 export class WalletService {
@@ -117,7 +117,7 @@ export class WalletService {
     });
   }
 
-  createTransaction(wallet: Wallet, address: string, amount: number): Observable<{ inputs: TransactionInput[], outputs: TransactionOutput[] }> {
+  createTransaction(wallet: Wallet, address: string, amount: number): Observable<Transaction> {
     const addresses = wallet.addresses.map(a => a.address).join(',');
 
     return this.apiService.getOutputs(addresses)
@@ -160,7 +160,12 @@ export class WalletService {
           });
         });
 
-        return Observable.of({ inputs: txInputs, outputs: txOutputs });
+        return Observable.of({
+          inputs: txInputs,
+          outputs: txOutputs,
+          hoursSent: hoursToSend,
+          hoursBurned: totalHours - calculatedHours
+        });
     });
   }
 

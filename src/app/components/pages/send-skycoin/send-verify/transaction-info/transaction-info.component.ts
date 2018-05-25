@@ -23,13 +23,6 @@ export class TransactionInfoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.priceService.price
       .subscribe(price => this.price = price);
-
-    if (this.isPreview) {
-      this.transaction.hoursSent = this.transaction.outputs
-        .filter(o => o.address === (<PreviewTransaction> this.transaction).to)
-        .map(o => parseInt(o.hours, 10))
-        .reduce((a, b) => a + b, 0);
-    }
   }
 
   ngOnDestroy() {

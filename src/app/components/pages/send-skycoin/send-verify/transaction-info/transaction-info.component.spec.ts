@@ -28,7 +28,7 @@ describe('TransactionInfoComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TransactionInfoComponent);
     component = fixture.componentInstance;
-    component.transaction = { balance: 0, inputs: [], outputs: [] };
+    component.transaction = { inputs: [], outputs: [] };
     fixture.detectChanges();
   });
 
