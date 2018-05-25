@@ -25,12 +25,15 @@ export class SendVerifyComponent {
     this.snackbar.dismiss();
     this.sendButton.resetState();
     this.sendButton.setLoading();
+    this.backButton.setDisabled();
 
     this.walletService.injectTransaction(this.transaction.inputs, this.transaction.outputs)
       .subscribe(
         () => this.onSuccess(),
         (error) => this.onError(error)
       );
+
+    this.walletService.loadBalances();
   }
 
   back() {
@@ -39,8 +42,7 @@ export class SendVerifyComponent {
 
   private onSuccess() {
     this.sendButton.setSuccess();
-    this.walletService.loadBalances();
-    this.onBack.emit(true);
+    setTimeout(() => this.onBack.emit(true), 3000);
   }
 
   private onError(error) {

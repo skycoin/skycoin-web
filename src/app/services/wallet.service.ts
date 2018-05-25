@@ -5,6 +5,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/observable/zip';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -122,7 +123,7 @@ export class WalletService {
     return this.apiService.getOutputs(addresses)
       .flatMap((outputs: Output[]) => {
         const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
-        const totalCoins = parseInt((minRequiredOutputs.reduce((count, output) => count + output.coins, 0)) + '', 10);
+        const totalCoins = Number(minRequiredOutputs.reduce((count, output) => count + output.coins, 0).toFixed(6));
 
         if (totalCoins < amount) {
           throw new Error('Not enough available SKY Hours to perform transaction!');
@@ -135,7 +136,7 @@ export class WalletService {
         const txInputs: TransactionInput[] = [];
         const calculatedHours = parseInt((totalHours * this.unburnedHoursRatio) + '', 10);
 
-        const changeCoins = totalCoins - amount;
+        const changeCoins = Number((totalCoins - amount).toFixed(6));
 
         if (changeCoins > 0) {
           txOutputs.push({
@@ -165,7 +166,7 @@ export class WalletService {
 
   injectTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[]): Observable<string> {
     txOutputs.forEach(output => {
-      output.coins = output.coins * this.coinsMultiplier;
+      output.coins = parseInt((output.coins * this.coinsMultiplier) + '', 10);
     });
 
     const rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
@@ -258,6 +259,19 @@ export class WalletService {
       .filter(addresses => !!addresses)
       .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
       .map(response => response.head_outputs);
+  }
+
+  outputsWithWallets(): Observable<Wallet[]> {
+    return Observable.zip(this.all, this.outputs(), (wallets: Wallet[], outputs: GetOutputsRequestOutput[]) => {
+      return wallets.map(wallet => {
+        wallet.addresses = wallet.addresses.map(address => {
+          address.outputs = outputs.filter(output => output.address === address.address);
+
+          return address;
+        });
+        return wallet;
+      });
+    });
   }
 
   getAllPendingTransactions(): Observable<any> {

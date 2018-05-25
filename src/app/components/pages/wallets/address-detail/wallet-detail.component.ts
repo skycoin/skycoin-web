@@ -44,10 +44,6 @@ export class WalletDetailComponent {
     }
   }
 
-  toggleEmpty() {
-    this.wallet.hideEmpty = !this.wallet.hideEmpty;
-  }
-
   copyAddress(address) {
     const selBox = document.createElement('textarea');
 
@@ -69,7 +65,11 @@ export class WalletDetailComponent {
     // wait for a while and then remove the 'copying' class
     setTimeout(() => {
       address.isCopying = false;
-      }, 500);
+    }, 500);
+  }
+
+  toggleEmpty() {
+    this.wallet.hideEmpty = !this.wallet.hideEmpty;
   }
 
   private addNewAddress() {

@@ -7,6 +7,8 @@
         {{ address.address }} <span data-label="Copied" class="copy-label">Copy</span>
       </p>
     </div>
+    <button class="unspent-outputs-column" mat-button
+            routerLink="/settings/outputs" [queryParams]="{ addr: address.address }">Unspent Outputs</button>
     <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
     <div class="coins-column">{{ (address.balance ? address.balance : 0) | number:'1.0-6' }}</div>
   </div>

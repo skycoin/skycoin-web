@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute } from '@angular/router';
 
 import { OutputsComponent } from './outputs.component';
 import { WalletService } from '../../../../services/wallet.service';
 
 class MockWalletService {
-  outputs() {
+  outputsWithWallets() {
     return Observable.of([]);
   }
 }
@@ -21,8 +21,8 @@ describe('OutputsComponent', () => {
       declarations: [ OutputsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: WalletService, useClass: MockWalletService },
-        { provide: MatDialog, useValue: {} }
+        { provide: ActivatedRoute, useValue: { queryParams: Observable.of({}) } },
+        { provide: WalletService, useClass: MockWalletService }
       ]
     }).compileComponents();
   }));

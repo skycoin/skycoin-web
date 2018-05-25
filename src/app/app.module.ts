@@ -106,7 +106,8 @@ import { TransactionInfoComponent } from './components/pages/send-skycoin/send-v
     WalletDetailComponent,
     SendFormComponent,
     SendVerifyComponent,
-    TransactionInfoComponent
+    TransactionInfoComponent,
+    WalletDetailComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
