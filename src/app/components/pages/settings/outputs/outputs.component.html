@@ -3,7 +3,7 @@
   <div class="container">
     <div class="-wallet" *ngFor="let wallet of wallets">
       <div class="-wallet-label">{{ wallet.label }}</div>
-      <div class="-wallet" *ngFor="let address of wallet.addresses">
+      <div class="-wallet-address" *ngFor="let address of wallet.addresses">
         <div class="-table">
           <div class="-headers">
             <div> {{ address.address }} </div>
