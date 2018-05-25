@@ -32,8 +32,6 @@ export class SendVerifyComponent {
         () => this.onSuccess(),
         (error) => this.onError(error)
       );
-
-    this.walletService.loadBalances();
   }
 
   back() {
@@ -42,6 +40,9 @@ export class SendVerifyComponent {
 
   private onSuccess() {
     this.sendButton.setSuccess();
+    this.sendButton.setDisabled();
+
+    this.walletService.loadBalances();
     setTimeout(() => this.onBack.emit(true), 3000);
   }
 
