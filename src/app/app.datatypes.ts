@@ -20,15 +20,26 @@ export interface Address {
 }
 
 export class Transaction {
-  addresses: string[];
-  balance: number;
-  block: number;
-  confirmed: boolean;
   inputs: any[];
   outputs: any[];
-  timestamp: number;
-  txid: string;
+  hoursSent?: number;
+  hoursBurned?: number;
 }
+
+export class NormalTransaction extends Transaction {
+  txid: string;
+  balance: number;
+  addresses: string[];
+  timestamp: number;
+  block: number;
+  confirmed: boolean;
+}
+
+export class PreviewTransaction extends Transaction {
+  from: string;
+  to: string;
+}
+
 export interface Output {
   address: string;
   coins: number;
@@ -53,6 +64,9 @@ export interface GetOutputsRequestOutput {
 export class TransactionInput {
   hash: string;
   secret: string;
+  address?: string;
+  coins?: number;
+  calculated_hours?: number;
 }
 
 export class TransactionOutput {

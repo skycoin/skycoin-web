@@ -13,8 +13,8 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
-import { Address, Output, Transaction, TransactionInput, TransactionOutput,
-  Wallet, TotalBalance, GetOutputsRequestOutput, Balance } from '../app.datatypes';
+import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput,
+  Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
 
 @Injectable()
 export class WalletService {
@@ -31,6 +31,7 @@ export class WalletService {
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHoursRatio = 0.5;
+  private readonly coinsMultiplier = 1000000;
 
   constructor(
     private apiService: ApiService,
@@ -116,6 +117,67 @@ export class WalletService {
     });
   }
 
+  createTransaction(wallet: Wallet, address: string, amount: number): Observable<Transaction> {
+    const addresses = wallet.addresses.map(a => a.address).join(',');
+
+    return this.apiService.getOutputs(addresses)
+      .flatMap((outputs: Output[]) => {
+        const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
+        const totalCoins = Number(minRequiredOutputs.reduce((count, output) => count + output.coins, 0).toFixed(6));
+
+        if (totalCoins < amount) {
+          throw new Error('Not enough available SKY Hours to perform transaction!');
+        }
+
+        const totalHours = parseInt((minRequiredOutputs.reduce((count, output) => count + output.calculated_hours, 0)) + '', 10);
+        let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
+
+        const txOutputs: TransactionOutput[] = [];
+        const txInputs: TransactionInput[] = [];
+        const calculatedHours = parseInt((totalHours * this.unburnedHoursRatio) + '', 10);
+
+        const changeCoins = Number((totalCoins - amount).toFixed(6));
+
+        if (changeCoins > 0) {
+          txOutputs.push({
+            address: wallet.addresses[0].address,
+            coins: changeCoins,
+            hours: calculatedHours - hoursToSend
+          });
+        } else {
+          hoursToSend = calculatedHours;
+        }
+
+        txOutputs.push({ address: address, coins: amount, hours: hoursToSend });
+
+        minRequiredOutputs.forEach(input => {
+          txInputs.push({
+            hash: input.hash,
+            secret: wallet.addresses.find(a => a.address === input.address).secret_key,
+            address: input.address,
+            calculated_hours: input.calculated_hours,
+            coins: input.coins
+          });
+        });
+
+        return Observable.of({
+          inputs: txInputs,
+          outputs: txOutputs,
+          hoursSent: hoursToSend,
+          hoursBurned: totalHours - calculatedHours
+        });
+    });
+  }
+
+  injectTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[]): Observable<string> {
+    txOutputs.forEach(output => {
+      output.coins = parseInt((output.coins * this.coinsMultiplier) + '', 10);
+    });
+
+    const rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
+    return this.apiService.postTransaction(rawTransaction);
+  }
+
   updateWallet(wallet: Wallet) {
     this.all.first().subscribe(wallets => {
       const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
@@ -180,7 +242,7 @@ export class WalletService {
       }));
   }
 
-  retrieveAddressTransactions(address: Address): Observable<Transaction[]> {
+  retrieveAddressTransactions(address: Address): Observable<NormalTransaction[]> {
     return this.apiService.get('explorer/address', { address: address.address })
       .map(transactions => transactions.map(transaction => ({
         addresses: [],
@@ -235,7 +297,7 @@ export class WalletService {
               wallets.map((wallet: Wallet) => {
                 wallet.addresses.map((address: Address) => {
                   if (balance.addresses[address.address]) {
-                    address.balance = balance.addresses[address.address].confirmed.coins / 1000000;
+                    address.balance = balance.addresses[address.address].confirmed.coins / this.coinsMultiplier;
                     address.hours = balance.addresses[address.address].confirmed.hours;
                   }
                 });

@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
-import { Wallet, Address, Transaction, TransactionOutput, TransactionInput, Output, Balance, GetOutputsRequestOutput } from '../app.datatypes';
+import { Wallet, Address, NormalTransaction, TransactionOutput, TransactionInput, Output, Balance, GetOutputsRequestOutput } from '../app.datatypes';
 
 describe('WalletService', () => {
   let store = {};
@@ -174,7 +174,7 @@ describe('WalletService', () => {
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
       walletService.retrieveAddressTransactions( createAddress() )
-        .subscribe((transactions: Transaction[]) => {
+        .subscribe((transactions: NormalTransaction[]) => {
           expect(transactions).toEqual([expectedTransaction]);
         });
     }));
@@ -189,7 +189,7 @@ describe('WalletService', () => {
       const apiResponse = createAddressTransactions(ownerAddress.address, destinationAddress, 13);
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
-      const expectedTransaction: Transaction = createTransaction([destinationAddress], ownerAddress.address, destinationAddress, 13, -13);
+      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress], ownerAddress.address, destinationAddress, 13, -13);
 
       walletService.transactions()
         .subscribe((transactions: any[]) => {
@@ -205,7 +205,7 @@ describe('WalletService', () => {
       const apiResponse = createAddressTransactions(ownerAddress, destinationAddress.address, 13);
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
-      const expectedTransaction: Transaction = createTransaction([destinationAddress.address], ownerAddress, destinationAddress.address, 13, 13);
+      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress.address], ownerAddress, destinationAddress.address, 13, 13);
 
       walletService.transactions()
         .subscribe((transactions: any[]) => {
@@ -454,7 +454,7 @@ function createAddressTransactions(ownerAddress: string, destinationAddress: str
   };
 }
 
-function createTransaction(addresses: string[], ownerAddress: string, destinationAddress: string, coins: number = 0, balance: number = 0): Transaction {
+function createTransaction(addresses: string[], ownerAddress: string, destinationAddress: string, coins: number = 0, balance: number = 0): NormalTransaction {
   return {
     addresses: addresses,
     balance: balance,

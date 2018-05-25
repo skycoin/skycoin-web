@@ -1,0 +1,30 @@
+<div [formGroup]="form">
+  <div class="form-field">
+    <label for="wallet">Send from</label>
+    <select formControlName="wallet" id="wallet">
+      <option value="" selected>Select Wallet</option>
+      <option *ngFor="let wallet of wallets"
+              [disabled]="!wallet.balance || wallet.balance <= 0"
+              [ngValue]="wallet">
+        {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} SKY
+      </option>
+    </select>
+  </div>
+
+  <div class="form-field">
+    <label for="address">Send to</label>
+    <input formControlName="address" id="address" placeholder="Recipient address">
+  </div>
+  <div class="form-field">
+    <label for="amount">Amount</label>
+    <input formControlName="amount" id="amount" placeholder="SKY" type="number">
+  </div>
+  <div class="form-field">
+    <label for="notes">Notes</label>
+    <input formControlName="notes" id="notes" placeholder="Your note here">
+  </div>
+
+  <div class="-buttons">
+    <app-button #button (action)="onVerify()" class="primary" [disabled]="!form.valid">Verify</app-button>
+  </div>
+</div>
