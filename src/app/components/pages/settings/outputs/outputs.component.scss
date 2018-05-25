@@ -1,8 +1,16 @@
 @import '../../../../../theme/_variables.scss';
 
+.-wallet {
+  margin: 30px 0;
+}
+
 .-wallet-label {
   font-weight: 400;
-  margin: 20px 0 5px 40px;
+  margin-left: 40px;
+}
+
+.-wallet-address {
+  margin-top: 10px
 }
 
 .-headers {
