@@ -15,7 +15,7 @@ import { TotalBalance } from '../../../app.datatypes';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  @Input() title: string;
+  @Input() headline: string;
 
   coins = 0;
   hours: number;
