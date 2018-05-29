@@ -1,16 +1,16 @@
-<app-modal [headline]="'Unlock Wallet'" [dialog]="dialogRef">
+<app-modal [headline]="'wallet.unlock.unlock-title'" [dialog]="dialogRef">
   <div [formGroup]="form">
     <div class="form-field">
-      <label for="seed">Seed</label>
+      <label for="seed">{{ 'wallet.unlock.seed' | translate }}</label>
       <textarea formControlName="seed" id="seed" row="2"></textarea>
     </div>
   </div>
   <div class="-buttons">
     <app-button (action)="closePopup()">
-      Cancel
+      {{ 'wallet.unlock.cancel-button' | translate }}
     </app-button>
     <app-button #unlock (action)="unlockWallet()" class="primary" [disabled]="!form.valid">
-      Unlock
+      {{ 'wallet.unlock.unlock-button' | translate }}
     </app-button>
   </div>
 </app-modal>

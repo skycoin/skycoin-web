@@ -13,10 +13,10 @@
   </div>
   <mat-menu #optionsMenu="matMenu" [overlapTrigger]="false" class="compact">
     <button mat-menu-item (click)="copyAddress($event, address)">
-      {{ address.isCopying ? 'Copied!' : 'Copy address' }}
+      {{ address.isCopying ? ('wallet.address.copied' | translate) : 'wallet.address.copy' | translate}}
     </button>
     <button mat-menu-item routerLink="/settings/outputs" [queryParams]="{ addr: address.address }">
-      Unspent Outputs
+      {{ 'wallet.address.outputs' | translate }}
     </button>
   </mat-menu>
 </ng-container>
@@ -24,7 +24,7 @@
   <div class="-button" (click)="onAddNewAddress()">
     <div class="-btn-plus btn-add-address">
       <img src="../../../../../assets/img/plus-grey.png">
-      <span>New Address</span>
+      <span>{{ 'wallet.new-address' | translate }}</span>
     </div>
 
   </div>
@@ -32,13 +32,13 @@
     <ng-container *ngIf="!wallet.hideEmpty">
       <div class="-btn-minus">
         <img src="../../../../../assets/img/minus-grey.png">
-        <span>Hide Empty</span>
+        <span>{{ 'wallet.hide-empty' | translate }}</span>
       </div>
     </ng-container>
     <ng-container *ngIf="wallet.hideEmpty">
       <div class="-btn-plus">
         <img src="../../../../../assets/img/plus-grey.png">
-        <span>Show Empty</span>
+        <span>{{ 'wallet.show-empty' | translate }}</span>
       </div>
 
     </ng-container>
@@ -47,7 +47,7 @@
   <div class="-button" (click)="editWallet()">
     <div class="-btn-edit">
       <img src="../../../../../assets/img/edit-grey.png">
-      <span>Edit Wallet</span>
+      <span>{{ 'wallet.edit' | translate }}</span>
     </div>
   </div>
 </div>
