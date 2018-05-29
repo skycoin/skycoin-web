@@ -445,6 +445,6 @@ export class WalletService {
   }
 
   private getCleanSeed(seed: string): string {
-    return seed.replace(/\r?\n|\r/g, ' ').replace(/ +/g, ' ').trim();
+    return seed.replace(/(\n|\r\n)$/, '');
   }
 }
