@@ -58,6 +58,7 @@ export class WalletService {
   }
 
   create(label: string, seed: string) {
+    seed = this.getCleanSeed(seed);
     const wallet = {
       label: label,
       seed: seed,
@@ -127,6 +128,8 @@ export class WalletService {
   }
 
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
+    seed = this.getCleanSeed(seed);
+
     return new Promise<void>((resolve) => {
       let currentSeed = this.ascii_to_hexa(seed);
       wallet.addresses.forEach(address => {
@@ -363,5 +366,9 @@ export class WalletService {
   private resetBalancesTimerOptions(hasPendingTxs: boolean) {
     this.intervalTime = (hasPendingTxs ? 20 : 60) * 1000;
     this.refreshBalancesTimeInSec = hasPendingTxs ? 20 : 300;
+  }
+
+  private getCleanSeed(seed: string): string {
+    return seed.replace(/\r?\n|\r/g, ' ').replace(/ +/g, ' ').trim();
   }
 }
