@@ -69,6 +69,16 @@ export class WalletService {
     this.loadBalances();
   }
 
+  delete(wallet: Wallet) {
+    this.all.first().subscribe(wallets => {
+      const index = wallets.indexOf(wallet);
+      wallets.splice(index, 1);
+
+      this.saveWallets(wallets);
+      this.loadBalances();
+    });
+  }
+
   sendSkycoin(wallet: Wallet, address: string, amount: number) {
     const addresses = wallet.addresses.map(a => a.address).join(',');
 

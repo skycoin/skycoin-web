@@ -1,0 +1,13 @@
+<app-modal [headline]="headerText" [dialog]="dialogRef">
+  <div class="-body">
+    {{data.text}}
+  </div>
+  <div class="-buttons">
+    <app-button (action)="closeModal(false)">
+      {{ cancelButtonText }}
+    </app-button>
+    <app-button (action)="closeModal(true)" class="primary">
+      {{ confirmButtonText }}
+    </app-button>
+  </div>
+</app-modal>
