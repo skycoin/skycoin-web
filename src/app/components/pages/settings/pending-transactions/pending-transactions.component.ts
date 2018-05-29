@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { WalletService } from '../../../../services/wallet.service';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+
+import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
   selector: 'app-pending-transactions',
