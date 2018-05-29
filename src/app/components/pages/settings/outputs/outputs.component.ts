@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute, Params } from '@angular/router';
 
 import { WalletService } from '../../../../services/wallet.service';
-import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
-import { GetOutputsRequestOutput } from '../../../../app.datatypes';
+import {  Wallet } from '../../../../app.datatypes';
 
 @Component({
   selector: 'app-outputs',
@@ -12,20 +11,37 @@ import { GetOutputsRequestOutput } from '../../../../app.datatypes';
 })
 export class OutputsComponent implements OnInit {
 
-  outputs: GetOutputsRequestOutput[];
+  wallets: Wallet[];
 
   constructor(
-    private walletService: WalletService,
-    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private walletService: WalletService
   ) { }
 
   ngOnInit() {
-    this.walletService.outputs().subscribe(outputs => this.outputs = outputs);
+    this.route.queryParams.subscribe(params => this.getWalletsOutputs(params));
   }
 
-  showQr(address) {
-    const config = new MatDialogConfig();
-    config.data = address;
-    this.dialog.open(QrCodeComponent, config);
+  private getWalletsOutputs(queryParams: Params) {
+    const address = queryParams['addr'];
+
+    this.walletService.outputsWithWallets().subscribe(wallets => {
+      if (address) {
+        const filteredWallets: Wallet[]  = wallets.filter(wallet => {
+          return wallet.addresses.find((addr) => {
+            return addr.address === address;
+          });
+        }).map(wallet => {
+          return Object.assign({}, wallet);
+        });
+
+        this.wallets = filteredWallets.map(wallet => {
+          wallet.addresses = wallet.addresses.filter(addr => addr.address === address);
+          return wallet;
+        });
+      } else {
+        this.wallets = wallets;
+      }
+    });
   }
 }

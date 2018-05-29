@@ -10,7 +10,7 @@ import { WalletService } from '../../../../services/wallet.service';
   styleUrls: ['./top-bar.component.scss'],
 })
 export class TopBarComponent implements OnInit, OnDestroy {
-  @Input() title: string;
+  @Input() headline: string;
 
   timeSinceLastUpdateBalances = 0;
   private updateBalancesSubscription: Subscription;

@@ -1,35 +1,17 @@
 <div class="sky-container sky-container-grey">
-  <app-header title="Wallets"></app-header>
+  <app-header [headline]="'Wallets'"></app-header>
   <div class="container">
-    <div [formGroup]="form" class="-paper">
-          <div class="form-field">
-            <label for="wallet">Send from</label>
-            <select formControlName="wallet" id="wallet">
-              <option value="" selected>Select Wallet</option>
-              <option *ngFor="let wallet of wallets"
-                      [disabled]="!wallet.balance || wallet.balance <= 0"
-                      [ngValue]="wallet">
-                {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} SKY
-              </option>
-            </select>
-          </div>
-
-          <div class="form-field">
-            <label for="address">Send to</label>
-            <input formControlName="address" id="address" placeholder="Recipient address">
-          </div>
-          <div class="form-field">
-            <label for="amount">Amount</label>
-            <input formControlName="amount" id="amount" placeholder="SKY" type="number">
-          </div>
-          <div class="form-field">
-            <label for="notes">Notes</label>
-            <input formControlName="notes" id="notes" placeholder="Your note here">
-          </div>
-
-      <app-button #button (action)="onSendSkyCoin()" class="primary" [disabled]="!form.valid">
-        Send
-      </app-button>
+    <div class="-paper">
+      <app-send-form
+              *ngIf="showForm"
+              [formData]="formData"
+              (onFormSubmitted)="onFormSubmitted($event)">
+      </app-send-form>
+      <app-send-verify
+              *ngIf="!showForm"
+              [transaction]="transaction"
+              (onBack)="onBack($event)">
+      </app-send-verify>
     </div>
   </div>
 </div>

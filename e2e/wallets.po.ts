@@ -135,7 +135,7 @@ export class WalletsPage {
   }
 
   expandWallet() {
-    return element.all(by.css('.-expand.rotate-90')).get(1).click().then(() => {
+    return element.all(by.css('.-wallet')).get(1).click().then(() => {
       return element(by.css('.-record')).isPresent();
     });
   }
@@ -225,7 +225,7 @@ export class WalletsPage {
   }
 
   showAddAddress() {
-    return element.all(by.css('.-expand.rotate-90')).first().click().then(() => {
+    return element.all(by.css('.-wallet')).first().click().then(() => {
       return element(by.css('.btn-add-address')).isPresent();
     });
   }

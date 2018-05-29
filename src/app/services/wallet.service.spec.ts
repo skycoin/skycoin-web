@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
-import { Wallet, Address, Transaction, TransactionOutput, TransactionInput, Output, Balance } from '../app.datatypes';
+import { Wallet, Address, NormalTransaction, TransactionOutput, TransactionInput, Output, Balance, GetOutputsRequestOutput } from '../app.datatypes';
 
 describe('WalletService', () => {
   let store = {};
@@ -174,7 +174,7 @@ describe('WalletService', () => {
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
       walletService.retrieveAddressTransactions( createAddress() )
-        .subscribe((transactions: Transaction[]) => {
+        .subscribe((transactions: NormalTransaction[]) => {
           expect(transactions).toEqual([expectedTransaction]);
         });
     }));
@@ -189,7 +189,7 @@ describe('WalletService', () => {
       const apiResponse = createAddressTransactions(ownerAddress.address, destinationAddress, 13);
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
-      const expectedTransaction: Transaction = createTransaction([destinationAddress], ownerAddress.address, destinationAddress, 13, -13);
+      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress], ownerAddress.address, destinationAddress, 13, -13);
 
       walletService.transactions()
         .subscribe((transactions: any[]) => {
@@ -205,7 +205,7 @@ describe('WalletService', () => {
       const apiResponse = createAddressTransactions(ownerAddress, destinationAddress.address, 13);
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
-      const expectedTransaction: Transaction = createTransaction([destinationAddress.address], ownerAddress, destinationAddress.address, 13, 13);
+      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress.address], ownerAddress, destinationAddress.address, 13, 13);
 
       walletService.transactions()
         .subscribe((transactions: any[]) => {
@@ -358,6 +358,38 @@ describe('WalletService', () => {
     }));
   });
 
+  describe('outputsWithWallets', () => {
+    it('should be returned outputs by wallet', fakeAsync(() => {
+      const walletAddress1 = 'address 1';
+      const walletAddress2 = 'address 2';
+      const wallet1: Wallet = Object.assign(createWallet(), { addresses: [ createAddress(walletAddress1), createAddress(walletAddress2) ] });
+      const walletAddress3 = 'address 3';
+      const wallet2: Wallet = Object.assign(createWallet(), { addresses: [ createAddress(walletAddress3) ] });
+
+      spyOnProperty(walletService, 'all', 'get').and.returnValue( Observable.of([wallet1, wallet2]) );
+
+      const output1 = createRequestOutput('hash3', walletAddress3, '33', 3 );
+      const output2 = createRequestOutput('hash2', walletAddress2, '22', 2 );
+      const output3 = createRequestOutput('hash1', walletAddress1, '11', 1 );
+
+      spyOn(walletService, 'outputs').and.returnValue( Observable.of([ output1, output2, output3 ]) );
+
+      const expectedWallet1 = Object.assign(createWallet(), { addresses: [ createAddress(walletAddress1), createAddress(walletAddress2) ] });
+      const expectedWallet2 = Object.assign(createWallet(), { addresses: [ createAddress(walletAddress3) ] });
+
+      expectedWallet1.addresses[0].outputs = [ output3 ];
+      expectedWallet1.addresses[1].outputs = [ output2 ];
+      expectedWallet2.addresses[0].outputs = [ output1 ];
+
+      const expectedOutputs = [ expectedWallet1, expectedWallet2 ];
+
+      walletService.outputsWithWallets()
+        .subscribe((walletOutputs: any[]) => {
+          expect(walletOutputs).toEqual(expectedOutputs);
+        });
+    }));
+  });
+
   describe('sum', () => {
     it('should be correct sum of the wallets, positive balances', fakeAsync(() => {
       const wallets: Wallet[] = [
@@ -399,7 +431,8 @@ function createAddress(address: string = 'address', secretKey: string = 'secret 
     public_key: publicKey,
     next_seed: nextSeed,
     balance: 0,
-    hours: 0
+    hours: 0,
+    outputs: []
   };
 }
 
@@ -421,7 +454,7 @@ function createAddressTransactions(ownerAddress: string, destinationAddress: str
   };
 }
 
-function createTransaction(addresses: string[], ownerAddress: string, destinationAddress: string, coins: number = 0, balance: number = 0): Transaction {
+function createTransaction(addresses: string[], ownerAddress: string, destinationAddress: string, coins: number = 0, balance: number = 0): NormalTransaction {
   return {
     addresses: addresses,
     balance: balance,
@@ -444,6 +477,16 @@ function createOutput(address: string, hash: string, coins = 10, calculated_hour
     address: address,
     coins: coins,
     hash: hash,
+    calculated_hours: calculated_hours
+  };
+}
+
+function createRequestOutput(hash: string, address: string, coins = '10', calculated_hours = 100): GetOutputsRequestOutput {
+  return {
+    hash: hash,
+    src_tx: 'src_tx: string',
+    address: address,
+    coins: coins,
     calculated_hours: calculated_hours
   };
 }
