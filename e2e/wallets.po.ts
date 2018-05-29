@@ -125,7 +125,7 @@ export class WalletsPage {
     label.clear();
     label.sendKeys('Test load wallet');
     seed.clear();
-    seed.sendKeys('skycoin-web-e2e-test-seed');
+    seed.sendKeys('skycoin-web-e2e-test-load-wallet-seed');
     return btnLoad.isEnabled().then(status => {
       if (status) {
         btnLoad.click();

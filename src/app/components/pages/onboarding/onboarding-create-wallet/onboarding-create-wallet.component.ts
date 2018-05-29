@@ -93,13 +93,13 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   createWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed);
-    this.showSafe();
+    this.walletService.create(this.form.value.label, this.form.value.seed)
+      .then(() => this.showSafe());
   }
 
   loadWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed);
-    this.skip();
+    this.walletService.create(this.form.value.label, this.form.value.seed)
+      .then(() => this.skip());
   }
 
   skip() {
