@@ -15,7 +15,7 @@
     </div>
   </div>
   <mat-menu #optionsMenu="matMenu" [overlapTrigger]="false" class="compact">
-    <button mat-menu-item (click)="copyAddress($event, address)">
+    <button mat-menu-item (click)="copyAddress($event, address, 1000)">
       {{ address.isCopying ? 'Copied!' : 'Copy address' }}
     </button>
     <button mat-menu-item routerLink="/settings/outputs" [queryParams]="{ addr: address.address }">

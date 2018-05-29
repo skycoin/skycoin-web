@@ -30,11 +30,11 @@
       line-height: $row-height;
       margin: 0;
       vertical-align: middle;
-    }
 
-    &:hover .copy-label {
-      display: inline-block;
-    }
+      &:hover .copy-label {
+        display: inline-block;
+      }
+    } 
   }
 
   .hours-column {
@@ -134,7 +134,6 @@
   }
 
   100% {
-    -webkit-transform: translate3d(-50%, -17px, 0);
     transform: translate3d(-50%, -17px, 0)
   }
 }
@@ -145,7 +144,6 @@
   }
 
   100% {
-    -webkit-transform: translate3d(-50%, -17px, 0);
     transform: translate3d(-50%, -17px, 0)
   }
 }
@@ -178,9 +176,8 @@
     left: 50%;
     opacity: .001;
     text-align: center;
-    -webkit-transform: translate3d(-50%,0,0);
     transform: translate3d(-50%,0,0);
-    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     white-space: nowrap;
     padding-left: 11px;
   }
