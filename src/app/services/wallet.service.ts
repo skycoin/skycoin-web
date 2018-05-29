@@ -71,7 +71,7 @@ export class WalletService {
 
       this.all.first().subscribe((wallets: Wallet[]) => {
         if (wallets.some((w: Wallet) => w.addresses[0].address === wallet.addresses[0].address)) {
-          throw new Error('trying to add an existing wallet!');
+          throw new Error('A wallet already exists with this seed');
         }
 
         this.addWallet(wallet);
