@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+
 import { Wallet } from '../../../app.datatypes';
 import { WalletService } from '../../../services/wallet.service';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
