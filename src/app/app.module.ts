@@ -69,6 +69,9 @@ import { FeatureService } from './services/feature.service';
 import { AppService } from './services/app.service';
 import { NumberFieldDirective } from './directives/number-field.directive';
 import { AppTranslateLoader } from './app.translate-loader';
+import { SendFormComponent } from './components/pages/send-skycoin/send-form/send-form.component';
+import { SendVerifyComponent } from './components/pages/send-skycoin/send-verify/send-verify.component';
+import { TransactionInfoComponent } from './components/pages/send-skycoin/send-verify/transaction-info/transaction-info.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +107,9 @@ import { AppTranslateLoader } from './app.translate-loader';
     UnlockWalletComponent,
     WalletsComponent,
     WalletDetailComponent,
+    SendFormComponent,
+    SendVerifyComponent,
+    TransactionInfoComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
