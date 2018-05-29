@@ -148,7 +148,8 @@
     "notes-label": "Notes",
     "verify-button": "Verify",
     "send-button": "Send",
-    "back-button": "Back"
+    "back-button": "Back",
+    "select-wallet" : "Select Wallet"
   },
 
   "tx": {
