@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import * as Bip39 from 'bip39';
+
 import { WalletService } from '../../../../services/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
@@ -73,28 +74,18 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   showDisclaimer() {
-    const config = new MatDialogConfig();
-    config.width = '450px';
-    config.disableClose = true;
     setTimeout(() => {
-      this.dialog.open(OnboardingDisclaimerComponent, config);
+      this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig());
     }, 0);
   }
 
   showSafe() {
-    const config = new MatDialogConfig();
-    config.width = '450px';
-    config.disableClose = true;
-    this.dialog.open(OnboardingSafeguardComponent, config).afterClosed().subscribe(result => {
+    this.dialog.open(OnboardingSafeguardComponent, this.createDialogConfig()).afterClosed().subscribe(result => {
       if (result) {
+        this.createWallet();
         this.skip();
       }
     });
-  }
-
-  createWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed);
-    this.showSafe();
   }
 
   loadWallet() {
@@ -110,8 +101,19 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.form.controls.seed.setValue(Bip39.generateMnemonic());
   }
 
+  private createWallet() {
+    this.walletService.create(this.form.value.label, this.form.value.seed);
+  }
+
   private seedMatchValidator(g: FormGroup) {
       return g.get('seed').value === g.get('confirm_seed').value
         ? null : { mismatch: true };
+  }
+
+  private createDialogConfig() {
+    const config = new MatDialogConfig();
+    config.width = '450px';
+    config.disableClose = true;
+    return config;
   }
 }
