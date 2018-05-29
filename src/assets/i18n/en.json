@@ -30,7 +30,8 @@
     "backup": "Backup Wallet",
     "explorer": "Skycoin Explorer",
     "seed": "Wallet Seed",
-    "qrcode": "QR Code"
+    "qrcode": "QR Code",
+    "disclaimer": "Disclaimer"
   },
 
   "header": {
@@ -79,6 +80,7 @@
     "wallet-desc": "If you don't have a Skycoin wallet, use the generated seed to create a new one. If you already have a wallet, toggle over to \"Load Wallet\" and enter your seed.",
     "encrypt-desc": "Increase security of your wallet by encrypting it. By entering a password below, your wallet will be encrypted. Only those with the password will be able access the wallet and remove funds.",
     "finish-button": "Finish",
+    "skip-button": "Skip",
     "back-button": "Back",
 
     "confirm": {
@@ -104,19 +106,19 @@
     "new": {
       "create-title": "Create Wallet",
       "load-title": "Load Wallet",
-      "encrypt-title": "Encrypt Wallet",
+      "encrypt-title": "Encrypt your wallet",
       "name-label": "Name",
       "seed-label": "Seed",
       "confirm-seed-label": "Confirm seed",
       "seed-warning": "Remember this seed! Keep it in a safe place. If you forget your seed, you will not be able to recover your wallet!",
       "create-button": "Create",
       "load-button": "Load",
+      "skip-button": "Skip",
       "cancel-button": "Cancel",
       "12-words": "12 words",
       "24-words": "24 words",
       "generate-12-seed": "Generate 12 word seed",
       "generate-24-seed": "Generate 24 word seed",
-      "encrypt": "Encrypt wallet",
       "encrypt-warning": "We suggest that you encrypt each one of your wallets with a password. If you forget your password, you can reset it with your seed. Make sure you have your seed saved somewhere safe before encrypting your wallet."
     },
 
@@ -216,5 +218,13 @@
     "waiting-deposit": "Waiting for Bitcoin deposit",
     "waiting-send": "Waiting to send Skycoin",
     "unknown": "Unknown"
+  },
+
+  "onboarding": {
+    "disclaimer" : {
+      "disclaimer-description": "By continuing, you understand the risks related to the use of cryptographic tokens & blockchain-based software, the Skycoin mobile wallet, and the Skycoin cryptocurrency. You understand this this product is provided as-is, and agree to the Terms and Conditions governing the usage of this product.",
+      "disclaimer-check": "Yeah, I understand.",
+      "continue-button": "Continue"
+    }
   }
 }
