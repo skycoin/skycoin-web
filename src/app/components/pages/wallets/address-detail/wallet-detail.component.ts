@@ -7,6 +7,7 @@ import { WalletService } from '../../../../services/wallet.service';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { ChangeNameComponent } from '../change-name/change-name.component';
 import { openUnlockWalletModal } from '../../../../utils/index';
+import { ConfirmationComponent } from '../../../layout/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -44,8 +45,12 @@ export class WalletDetailComponent {
     }
   }
 
-  copyAddress(event, address) {
+  copyAddress(event, address, interval = 500) {
     event.stopPropagation();
+
+    if (address.isCopying) {
+      return;
+    }
 
     const selBox = document.createElement('textarea');
 
@@ -67,11 +72,25 @@ export class WalletDetailComponent {
     // wait for a while and then remove the 'copying' class
     setTimeout(() => {
       address.isCopying = false;
-    }, 1000);
+    }, interval);
   }
 
   toggleEmpty() {
     this.wallet.hideEmpty = !this.wallet.hideEmpty;
+  }
+
+  deleteWallet() {
+    const dialogRef = this.dialog.open(ConfirmationComponent, {
+      width: '500px',
+      data: { text: `The wallet "${this.wallet.label}" will be deleted. Do you want to continue?` }
+    });
+
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.walletService.delete(this.wallet);
+        }
+      });
   }
 
   private addNewAddress() {

@@ -3,7 +3,10 @@
     <div class="id-column">{{ i + 1 }}</div>
     <div class="address-column">
       <img src="../../../../../assets/img/qr-code-black.png" (click)="showQr(address)" >
-      <p>{{ address.address }}</p>
+      <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }"
+        (click)="copyAddress($event, address)" (mouseleave)="address.isCopying = false">
+        {{ address.address }} <span data-label="Copied" class="copy-label">Copy</span>
+      </p>
     </div>
     <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
     <div class="coins-column">{{ (address.balance ? address.balance : 0) | number:'1.0-6' }}</div>
@@ -12,7 +15,7 @@
     </div>
   </div>
   <mat-menu #optionsMenu="matMenu" [overlapTrigger]="false" class="compact">
-    <button mat-menu-item (click)="copyAddress($event, address)">
+    <button mat-menu-item (click)="copyAddress($event, address, 1000)">
       {{ address.isCopying ? 'Copied!' : 'Copy address' }}
     </button>
     <button mat-menu-item routerLink="/settings/outputs" [queryParams]="{ addr: address.address }">
@@ -48,6 +51,12 @@
     <div class="-btn-edit">
       <img src="../../../../../assets/img/edit-grey.png">
       <span>Edit Wallet</span>
+    </div>
+  </div>
+  <div class="-button" (click)="deleteWallet()">
+    <div class="-btn-minus">
+      <img src="../../../../../assets/img/minus-grey.png">
+      <span>Delete Wallet</span>
     </div>
   </div>
 </div>
