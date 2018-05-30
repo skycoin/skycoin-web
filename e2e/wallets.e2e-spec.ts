@@ -56,7 +56,7 @@ describe('Wallets', () => {
     expect<any>(page.loadWalletCheckValidationLabel()).toEqual(false);
   });
 
-  it('should load wallet with already used seed', () => {
+  it('should not load wallet with already used seed', () => {
     expect<any>(page.loadExistingWallet()).toEqual(false);
   });
 
