@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import * as Bip39 from 'bip39';
 
 import { WalletService } from '../../../../services/wallet.service';
@@ -25,6 +26,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
     private walletService: WalletService,
     private router: Router,
     private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -83,14 +85,12 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.dialog.open(OnboardingSafeguardComponent, this.createDialogConfig()).afterClosed().subscribe(result => {
       if (result) {
         this.createWallet();
-        this.skip();
       }
     });
   }
 
   loadWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed);
-    this.skip();
+    this.createWallet();
   }
 
   skip() {
@@ -102,12 +102,22 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   private createWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed);
+    this.walletService.create(this.form.value.label, this.form.value.seed)
+    .then(
+      () => this.skip(),
+      (error) => this.onCreateError(error.message)
+    );
   }
 
   private seedMatchValidator(g: FormGroup) {
       return g.get('seed').value === g.get('confirm_seed').value
         ? null : { mismatch: true };
+  }
+
+  private onCreateError(errorMesasge: string) {
+    const config = new MatSnackBarConfig();
+    config.duration = 5000;
+    this.snackBar.open(errorMesasge, null, config);
   }
 
   private createDialogConfig() {

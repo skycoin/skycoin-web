@@ -1,26 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
-import { WalletService } from '../../../services/wallet.service';
-import { CreateWalletComponent } from '../../pages/wallets/create-wallet/create-wallet.component';
-
-class MockWalletService {
-}
+import { ConfirmationComponent } from './confirmation.component';
 
 describe('ConfirmationComponent', () => {
-  let component: CreateWalletComponent;
-  let fixture: ComponentFixture<CreateWalletComponent>;
+  let component: ConfirmationComponent;
+  let fixture: ComponentFixture<ConfirmationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateWalletComponent ],
+      declarations: [ ConfirmationComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        FormBuilder,
         { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: WalletService, useClass: MockWalletService },
         { provide: MatDialogRef, useValue: {} }
       ]
     })
@@ -28,7 +21,7 @@ describe('ConfirmationComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateWalletComponent);
+    fixture = TestBed.createComponent(ConfirmationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
