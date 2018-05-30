@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { PreviewTransaction, Transaction } from '../../../../../app.datatypes';
+import { Transaction } from '../../../../../app.datatypes';
 import { PriceService } from '../../../../../services/price.service';
 
 @Component({

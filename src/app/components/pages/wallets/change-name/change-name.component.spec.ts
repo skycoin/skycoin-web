@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 
@@ -9,13 +9,20 @@ import { WalletService } from '../../../../services/wallet.service';
 class MockWalletService {
 }
 
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
+
 describe('ChangeNameComponent', () => {
   let component: ChangeNameComponent;
   let fixture: ComponentFixture<ChangeNameComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChangeNameComponent ],
+      declarations: [ ChangeNameComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,

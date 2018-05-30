@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,13 +12,20 @@ class MockWalletService {
   }
 }
 
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
+
 describe('OutputsComponent', () => {
   let component: OutputsComponent;
   let fixture: ComponentFixture<OutputsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OutputsComponent ],
+      declarations: [ OutputsComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { queryParams: Observable.of({}) } },

@@ -1,11 +1,11 @@
 <div class="sky-container sky-container-grey">
-  <app-header [headline]="'Pending Transactions'"></app-header>
+  <app-header [headline]="'title.pending-txs'"></app-header>
   <div class="container">
     <div class="-table">
       <div class="-headers">
-        <div class="-width-150">Timestamp</div>
-        <div class="-width-150">Amount</div>
-        <div class="flex-fill">Transaction ID</div>
+        <div class="-width-150">{{ 'pending-txs.timestamp' | translate }}</div>
+        <div class="-width-150">{{ 'pending-txs.amount' | translate }}</div>
+        <div class="flex-fill">{{ 'pending-txs.txid' | translate }}</div>
       </div>
       <div class="-transaction" *ngFor="let transaction of transactions">
         <div class="-width-150 -timestamp">
