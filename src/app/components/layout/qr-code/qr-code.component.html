@@ -1,7 +1,7 @@
-<app-modal [headline]="'View QR Code'" [dialog]="dialogRef">
+<app-modal [headline]="'title.qr-code'" [dialog]="dialogRef">
   <div #qr class="-code"></div>
   <div class="row -address-footer">
-    <div class="-address-label">Address</div>
+    <div class="-address-label">{{ 'common.address' | translate}}</div>
     <div class="-address-address">{{ address }}</div>
     <img
         #btnImg

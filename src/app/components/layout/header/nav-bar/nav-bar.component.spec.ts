@@ -1,6 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform } from '@angular/core';
 
 import { NavBarComponent } from './nav-bar.component';
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
 
 describe('NavBarComponent', () => {
   let component: NavBarComponent;
@@ -8,7 +16,7 @@ describe('NavBarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavBarComponent ]
+      declarations: [ NavBarComponent, MockTranslatePipe ]
     })
     .compileComponents();
   }));
