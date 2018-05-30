@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule, MatDividerModule, MatIconModule, MatListModule, MatDialogModule } from '@angular/material';
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { BuyComponent } from './buy.component';
 import { PurchaseService } from '../../../services/purchase.service';
+import { Observable } from 'rxjs/Observable';
 
 class MockPurchaseService {
   all(): Observable<any[]> {
@@ -26,13 +26,6 @@ class MockDateTimePipe implements PipeTransform {
   }
 }
 
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
-
 describe('BuyComponent', () => {
   let component: BuyComponent;
   let fixture: ComponentFixture<BuyComponent>;
@@ -42,8 +35,7 @@ describe('BuyComponent', () => {
       declarations: [
         BuyComponent,
         MockTellerStatusPipe,
-        MockDateTimePipe,
-        MockTranslatePipe
+        MockDateTimePipe
       ],
       imports: [
         MatCardModule,
