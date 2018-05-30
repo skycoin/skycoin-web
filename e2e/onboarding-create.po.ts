@@ -65,6 +65,25 @@ export class OnboardingCreatePage {
     });
   }
 
+  createExistingWallet() {
+    const btnOption = element(by.buttonText('New'));
+    btnOption.click();
+    const label = element(by.css('[formcontrolname="label"]'));
+    const seed = element(by.css('[formcontrolname="seed"]'));
+    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
+    const btnCreate = element(by.buttonText('Create'));
+
+    label.clear();
+    label.sendKeys('Test wallet');
+    seed.clear();
+    seed.sendKeys('skycoin-web-e2e-test-seed');
+    confirm.clear();
+    confirm.sendKeys('skycoin-web-e2e-test-seed');
+    return btnCreate.click().then(() => {
+      return !btnCreate.isPresent();
+    });
+  }
+
   loadWallet() {
     const btnOption = element(by.buttonText('Load'));
     btnOption.click();
@@ -77,6 +96,22 @@ export class OnboardingCreatePage {
     seed.clear();
     seed.sendKeys('skycoin-web-e2e-test-seed');
     return btnLoad.isEnabled();
+  }
+
+  loadExistingWallet() {
+    const btnOption = element(by.buttonText('Load'));
+    btnOption.click();
+    const label = element(by.css('[formcontrolname="label"]'));
+    const seed = element(by.css('[formcontrolname="seed"]'));
+    const btnLoad = element(by.buttonText('Create'));
+
+    label.clear();
+    label.sendKeys('Test wallet');
+    seed.clear();
+    seed.sendKeys('skycoin-web-e2e-test-seed');
+    return btnLoad.click().then(() => {
+      return !btnLoad.isPresent();
+    });
   }
 
   skipWizard() {
