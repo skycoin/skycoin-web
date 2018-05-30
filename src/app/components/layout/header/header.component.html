@@ -3,15 +3,15 @@
     <app-top-bar [headline]="headline"></app-top-bar>
     <div class="balance-container">
       <div class="balance">
-        <p *ngIf="!highest && loading" class="loading-header">Loading...</p>
+        <p *ngIf="!highest && loading" class="loading-header">{{ 'header.loading' | translate}}</p>
         <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
-        <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> sky</p>
+        <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ 'header.coin-id' | translate}}</p>
         <p *ngIf="!loading" class="dollars">{{ balance }}</p>
       </div>
     </div>
     <div class="hour-balance">
-      <p *ngIf="loading">Syncing blocks {{ current && highest ?  '(' + current + '/'  + highest + ')' : '..' }}</p>
-      <p *ngIf="!loading">{{ hours }} SKY Hours</p>
+      <p *ngIf="loading">{{ 'header.syncing-blocks' | translate}} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '..' }}</p>
+      <p *ngIf="!loading">{{ hours }} {{ 'common.coin-hours' | translate}}</p>
     </div>
   </div>
   <app-nav-bar></app-nav-bar>
@@ -24,14 +24,14 @@
   </mat-progress-bar>
   <mat-toolbar class="notification-bar" *ngIf="connectionError">
     <div *ngIf="connectionError === connectionErrorsList.NO_ACTIVE_CONNECTIONS">
-      No connections active, web client is not connected to any other nodes!
+      {{ 'header.errors.no-connections' | translate}}
     </div>
     <div *ngIf="connectionError === connectionErrorsList.UNAVAILABLE_BACKEND">
-      Cannot reach backend. Please refresh the page and/or seek help on our
-      <a href="https://web.telegram.org/#/im?p=@skycoinsupport">Telegram</a>
+      {{ 'header.errors.no-backend1' | translate}}
+      <a href="https://web.telegram.org/#/im?p=@skycoinsupport">{{ 'header.errors.no-backend2' | translate}}</a>
     </div>
   </mat-toolbar>
   <mat-toolbar class="notification-bar" *ngIf="hasPendingTxs">
-    <div>There are some <a routerLink="/settings/pending-transactions">pending trasactions</a>. Data you see may not be updated.</div>
+    <div>{{ 'header.pending-txs1' | translate}} <a routerLink="/settings/pending-transactions">{{ 'header.pending-txs2' | translate}}</a> {{ 'header.pending-txs3' | translate}}</div>
   </mat-toolbar>
 </div>

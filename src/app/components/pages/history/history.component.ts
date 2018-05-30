@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/Subscription';
-
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
 import { TransactionDetailComponent } from './transaction-detail/transaction-detail.component';
