@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { TransactionDetailComponent } from './transaction-detail.component';
 import { PriceService } from '../../../../services/price.service';
@@ -17,6 +18,7 @@ describe('TransactionDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TransactionDetailComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
         { provide: MatDialogRef, useValue: {} },
