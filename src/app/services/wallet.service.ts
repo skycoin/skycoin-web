@@ -28,6 +28,7 @@ export class WalletService {
   private lastBalancesUpdateTime: Date;
   private refreshBalancesTimeInSec: number;
   private intervalTime: number;
+  private updatingBalance: boolean;
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHoursRatio = 0.5;
@@ -314,30 +315,41 @@ export class WalletService {
   }
 
   loadBalances() {
+    if (this.updatingBalance) {
+      return;
+    }
+
+    this.updatingBalance = true;
+
     this.addresses.first().subscribe((addresses: Address[]) => {
-      this.retrieveAddressesBalance(addresses)
-        .subscribe((balance: Balance) => {
-          this.wallets.first().subscribe(wallets => {
-            if (balance.addresses) {
-              wallets.map((wallet: Wallet) => {
-                wallet.addresses.map((address: Address) => {
-                  if (balance.addresses[address.address]) {
-                    address.balance = balance.addresses[address.address].confirmed.coins / this.coinsMultiplier;
-                    address.hours = balance.addresses[address.address].confirmed.hours;
-                  }
-                });
-
-                wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
-                wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0).reduce((a , b) => a + b, 0);
-              });
-            }
-
-            this.calculateTotalBalance(wallets);
-            const hasPendingTxs = this.refreshPendingTransactions(balance);
-            this.resetBalancesUpdateTime(hasPendingTxs);
-          });
+      this.retrieveAddressesBalance(addresses).subscribe((balance: Balance) => {
+          this.wallets.first().subscribe(
+            wallets => this.calculateBalance(wallets, balance),
+            () => this.updatingBalance = false,
+            () => this.updatingBalance = false
+          );
         });
     });
+  }
+
+  private calculateBalance(wallets: Wallet[], balance: Balance) {
+    if (balance.addresses) {
+      wallets.map((wallet: Wallet) => {
+        wallet.addresses.map((address: Address) => {
+          if (balance.addresses[address.address]) {
+            address.balance = balance.addresses[address.address].confirmed.coins / this.coinsMultiplier;
+            address.hours = balance.addresses[address.address].confirmed.hours;
+          }
+        });
+
+        wallet.balance = wallet.addresses.map(address => address.balance >= 0 ? address.balance : 0).reduce((a , b) => a + b, 0);
+        wallet.hours = wallet.addresses.map(address => address.hours >= 0 ? address.hours : 0).reduce((a , b) => a + b, 0);
+      });
+    }
+
+    this.calculateTotalBalance(wallets);
+    const hasPendingTxs = this.refreshPendingTransactions(balance);
+    this.resetBalancesUpdateTime(hasPendingTxs);
   }
 
   private calculateTotalBalance(wallets: Wallet[]) {
