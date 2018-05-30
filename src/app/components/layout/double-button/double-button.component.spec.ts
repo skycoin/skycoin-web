@@ -1,7 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
 import { DoubleButtonComponent } from './double-button.component';
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
 
 describe('DoubleButtonComponent', () => {
   let component: DoubleButtonComponent;
@@ -9,7 +16,7 @@ describe('DoubleButtonComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DoubleButtonComponent ],
+      declarations: [ DoubleButtonComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

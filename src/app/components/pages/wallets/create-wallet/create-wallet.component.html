@@ -1,23 +1,23 @@
-<app-modal [headline]="data.create ? 'Create Wallet' : 'Load Wallet'" [dialog]="dialogRef">
+<app-modal [headline]="data.create ? 'wallet.new.create-title' : 'wallet.new.load-title'" [dialog]="dialogRef">
   <div [formGroup]="form">
     <div class="form-field">
-      <label for="label">Name</label>
+      <label for="label">{{ 'wallet.new.name-label' | translate}}</label>
       <input formControlName="label" id="label">
     </div>
     <div class="form-field -valid-seed-container" [ngClass]="{'-expand':form.get('seed').valid}">
-      <label for="seed">Seed</label>
+      <label for="seed">{{ 'wallet.new.seed-label' | translate}}</label>
       <div class="-valid-box">
         <textarea formControlName="seed" id="seed" row="2"></textarea>
         <img *ngIf="!data.create" class="-valid" src="../../../../../assets/img/valid.png">
       </div>
     </div>
     <div class="-disclaimer-box" *ngIf="data.create">
-      <span class="-disclaimer-text">Remember this seed! Keep it in a safe place. If you forget your seed, you will not be able to recover your wallet!</span>
+      <span class="-disclaimer-text">{{ 'wallet.new.seed-warning' | translate}}</span>
     </div>
     <div *ngIf="data.create"
          class="form-field -valid-seed-container"
          [ngClass]="{ '-expand':form.get('confirm_seed').value === form.get('seed').value }">
-      <label for="confirm_seed">Confirm seed</label>
+      <label for="confirm_seed">{{ 'wallet.new.confirm-seed-label' | translate}}</label>
       <div class="-valid-box">
         <textarea formControlName="confirm_seed" id="confirm_seed" row="2"></textarea>
         <img class="-valid" src="../../../../../assets/img/valid.png">
@@ -26,10 +26,10 @@
   </div>
   <div class="-buttons">
     <app-button (action)="closePopup()">
-      Cancel
+      {{ 'wallet.new.cancel-button' | translate}}
     </app-button>
     <app-button (action)="createWallet()" class="primary" [disabled]="!form.valid">
-      {{ data.create ? 'Create' : 'Load'}}
+      {{ data.create ? ('wallet.new.create-button' | translate) : ('wallet.new.load-button' | translate) }}
     </app-button>
   </div>
 </app-modal>

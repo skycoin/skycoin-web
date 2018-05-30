@@ -22,6 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
 import { AppComponent } from './app.component';
 import { ButtonComponent } from './components/layout/button/button.component';
 import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
@@ -66,6 +68,7 @@ import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
 import { AppService } from './services/app.service';
 import { NumberFieldDirective } from './directives/number-field.directive';
+import { AppTranslateLoader } from './app.translate-loader';
 import { SendFormComponent } from './components/pages/send-skycoin/send-form/send-form.component';
 import { SendVerifyComponent } from './components/pages/send-skycoin/send-verify/send-verify.component';
 import { TransactionInfoComponent } from './components/pages/send-skycoin/send-verify/transaction-info/transaction-info.component';
@@ -145,7 +148,13 @@ import { ConfirmationComponent } from './components/layout/confirmation/confirma
     NoopAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(AppRoutes),
-    FeatureToggleModule
+    FeatureToggleModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useClass: AppTranslateLoader,
+      },
+    }),
   ],
   providers: [
     AppService,

@@ -17,7 +17,7 @@ describe('Onboarding Create', () => {
   });
 
   it('should display title', () => {
-    expect<any>(page.getHeaderText()).toEqual('Create a Wallet');
+    expect<any>(page.getHeaderText()).toEqual('Create Wallet');
   });
 
   it('should display disclaimer', () => {

@@ -1,10 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatSnackBar, MatMenuModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
 import { WalletDetailComponent } from './wallet-detail.component';
 import { WalletService } from '../../../../services/wallet.service';
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
 
 class MockWalletService {
 }
@@ -16,7 +23,7 @@ describe('WalletDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WalletDetailComponent ],
+      declarations: [ WalletDetailComponent, MockTranslatePipe ],
       imports: [
         RouterTestingModule,
         MatMenuModule

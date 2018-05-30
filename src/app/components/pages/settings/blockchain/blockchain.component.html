@@ -1,11 +1,11 @@
 <div class="sky-container sky-container-grey">
-  <app-header [headline]="'Blockchain'"></app-header>
+  <app-header [headline]="'title.blockchain'"></app-header>
   <div class="container">
     <div class="-paper">
       <div class="-keys">
-        Number of blocks: <br>
-        Time since last block: <br>
-        Hash of last block: <br>
+        {{ 'blockchain.blocks' | translate}} <br>
+        {{ 'blockchain.time' | translate}} <br>
+        {{ 'blockchain.hash' | translate}} <br>
       </div>
       <div class="-values" *ngIf="block && block.header">
         {{ block.header.seq }} <br>
@@ -15,9 +15,6 @@
     </div>
   </div>
 </div>
-
-
-
 
 <!--<div class="sky-container sky-container-grey">-->
   <!--<app-header title="Blockchain"></app-header>-->

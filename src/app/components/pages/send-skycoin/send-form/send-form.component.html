@@ -1,8 +1,8 @@
 <div [formGroup]="form">
   <div class="form-field">
-    <label for="wallet">Send from</label>
+    <label for="wallet">{{ 'send.from-label' | translate }}</label>
     <select formControlName="wallet" id="wallet">
-      <option value="" selected>Select Wallet</option>
+      <option value="" selected>{{ 'send.select-wallet' | translate }}</option>
       <option *ngFor="let wallet of wallets"
               [disabled]="!wallet.balance || wallet.balance <= 0"
               [ngValue]="wallet">
@@ -12,19 +12,19 @@
   </div>
 
   <div class="form-field">
-    <label for="address">Send to</label>
+    <label for="address">{{ 'send.to-label' | translate }}</label>
     <input formControlName="address" id="address" placeholder="Recipient address">
   </div>
   <div class="form-field">
-    <label for="amount">Amount</label>
+    <label for="amount">{{ 'send.amount-label' | translate }}</label>
     <input formControlName="amount" id="amount" placeholder="SKY" type="number">
   </div>
   <div class="form-field">
-    <label for="notes">Notes</label>
+    <label for="notes">{{ 'send.notes-label' | translate }}</label>
     <input formControlName="notes" id="notes" placeholder="Your note here">
   </div>
 
   <div class="-buttons">
-    <app-button #button (action)="onVerify()" class="primary" [disabled]="!form.valid">Verify</app-button>
+    <app-button #button (action)="onVerify()" class="primary" [disabled]="!form.valid">{{ 'send.verify-button' | translate }}</app-button>
   </div>
 </div>
