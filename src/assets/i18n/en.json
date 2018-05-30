@@ -73,7 +73,15 @@
     "receive-desc": "After receiving your Bitcoin, we'll send you your Skycoin. It may take anywhere between 20 minutes and an hour to receive your SKY.",
     "status-button": "Status:",
     "check-status-button": "Check Status",
-    "new-order-button": "New Order"
+    "new-order-button": "New Order",
+    "otc-disabled": "Sorry, otc has currently been disabled!",
+    "purchase": "Purchase Skycoin",
+    "details": "You can buy Skycoins directly from your wallet using our Skycoin Teller service. The current rate is 0.0002 BTC per SKY. To buy SKY, request a BTC deposit address. Once you have a BTC deposit address, any BTC deposits will   automatically be added to your selected address.",
+    "sky-address": "Sky address: ",
+    "bitcoin-address": "Bitcoin address:",
+    "refresh-button": "refresh",
+    "add-deposit-address": "Add deposit address",
+    "updated-at": "updated at:"
   },
 
   "wizard": {
