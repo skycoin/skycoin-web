@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import * as Bip39 from 'bip39';
 
 import { WalletService } from '../../../../services/wallet.service';
@@ -19,7 +19,8 @@ export class CreateWalletComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data,
     public dialogRef: MatDialogRef<CreateWalletComponent>,
     private walletService: WalletService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -31,12 +32,21 @@ export class CreateWalletComponent implements OnInit {
   }
 
   createWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed);
-    this.dialogRef.close();
+    this.walletService.create(this.form.value.label, this.form.value.seed)
+      .then(
+        () => this.dialogRef.close(),
+        (error) => this.onCreateError(error.message)
+      );
   }
 
   generateSeed() {
     this.form.controls.seed.setValue(Bip39.generateMnemonic());
+  }
+
+  private onCreateError(errorMesasge: string) {
+    const config = new MatSnackBarConfig();
+    config.duration = 5000;
+    this.snackBar.open(errorMesasge, null, config);
   }
 
   private initForm() {

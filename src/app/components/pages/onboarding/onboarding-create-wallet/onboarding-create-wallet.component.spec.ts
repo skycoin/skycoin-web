@@ -1,11 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule, MatSnackBarModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { Observable } from 'rxjs/Observable';
+
+
+
+
 
 import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.component';
 import { WalletService } from '../../../../services/wallet.service';
@@ -37,7 +41,8 @@ describe('OnboardingCreateWalletComponent', () => {
       imports: [
         MatDialogModule,
         RouterTestingModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        MatSnackBarModule
       ],
       providers: [
         FormBuilder,

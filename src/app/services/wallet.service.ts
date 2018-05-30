@@ -59,14 +59,37 @@ export class WalletService {
     this.loadBalances();
   }
 
-  create(label: string, seed: string) {
-    const wallet = {
-      label: label,
-      seed: seed,
-      addresses: [this.cipherProvider.generateAddress(this.ascii_to_hexa(seed))]
-    };
-    this.addWallet(wallet);
-    this.loadBalances();
+  create(label: string, seed: string): Promise<void> {
+    return new Promise<void>((resolve) => {
+      seed = this.getCleanSeed(seed);
+
+      const wallet = {
+        label: label,
+        seed: seed,
+        addresses: [this.cipherProvider.generateAddress(this.ascii_to_hexa(seed))]
+      };
+
+      this.all.first().subscribe((wallets: Wallet[]) => {
+        if (wallets.some((w: Wallet) => w.addresses[0].address === wallet.addresses[0].address)) {
+          throw new Error('A wallet already exists with this seed');
+        }
+
+        this.addWallet(wallet);
+        this.loadBalances();
+      });
+
+      return resolve();
+    });
+  }
+
+  delete(wallet: Wallet) {
+    this.all.first().subscribe(wallets => {
+      const index = wallets.indexOf(wallet);
+      wallets.splice(index, 1);
+
+      this.saveWallets(wallets);
+      this.loadBalances();
+    });
   }
 
   sendSkycoin(wallet: Wallet, address: string, amount: number) {
@@ -190,6 +213,8 @@ export class WalletService {
   }
 
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
+    seed = this.getCleanSeed(seed);
+
     return new Promise<void>((resolve) => {
       let currentSeed = this.ascii_to_hexa(seed);
       wallet.addresses.forEach(address => {
@@ -439,5 +464,9 @@ export class WalletService {
   private resetBalancesTimerOptions(hasPendingTxs: boolean) {
     this.intervalTime = (hasPendingTxs ? 20 : 60) * 1000;
     this.refreshBalancesTimeInSec = hasPendingTxs ? 20 : 300;
+  }
+
+  private getCleanSeed(seed: string): string {
+    return seed.replace(/(\n|\r\n)$/, '');
   }
 }
