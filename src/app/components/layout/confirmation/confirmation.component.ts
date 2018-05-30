@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
+import { Component, Input, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
@@ -12,6 +12,8 @@ export class ConfirmationComponent {
   @Input() confirmButtonText = 'Yes';
   @Input() cancelButtonText = 'No';
 
+  acceptDeletion = false;
+
   constructor(
     public dialogRef: MatDialogRef<ConfirmationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -19,5 +21,9 @@ export class ConfirmationComponent {
 
   closeModal(isConfirmed: boolean) {
     this.dialogRef.close(isConfirmed);
+  }
+
+  setAccept(event) {
+    this.acceptDeletion = event.checked ? true : false;
   }
 }

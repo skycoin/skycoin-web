@@ -2,11 +2,18 @@
   <div class="-body">
     {{data.text}}
   </div>
+
+  <div class="-check-container">
+    <mat-checkbox class="-disclaimer-check-text -check" [checked]="acceptDeletion" (change)="setAccept($event)"
+                  type="checkbox" id="terms">Yeah, I want to delete the wallet.
+    </mat-checkbox>
+  </div>
+
   <div class="-buttons">
     <app-button (action)="closeModal(false)">
       {{ cancelButtonText }}
     </app-button>
-    <app-button (action)="closeModal(true)" class="primary">
+    <app-button (action)="closeModal(true)" class="primary" [disabled]="!acceptDeletion">
       {{ confirmButtonText }}
     </app-button>
   </div>
