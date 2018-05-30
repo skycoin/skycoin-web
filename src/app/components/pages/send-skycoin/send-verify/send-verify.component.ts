@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 
 import { PreviewTransaction } from '../../../../app.datatypes';
@@ -10,7 +10,7 @@ import { ButtonComponent } from '../../../layout/button/button.component';
   templateUrl: './send-verify.component.html',
   styleUrls: ['./send-verify.component.scss'],
 })
-export class SendVerifyComponent {
+export class SendVerifyComponent implements OnDestroy {
   @ViewChild('sendButton') sendButton: ButtonComponent;
   @ViewChild('backButton') backButton: ButtonComponent;
   @Input() transaction: PreviewTransaction;
@@ -20,6 +20,10 @@ export class SendVerifyComponent {
     private walletService: WalletService,
     private snackbar: MatSnackBar
   ) {}
+
+  ngOnDestroy() {
+    this.snackbar.dismiss();
+  }
 
   send() {
     this.snackbar.dismiss();
@@ -51,5 +55,6 @@ export class SendVerifyComponent {
     config.duration = 300000;
     this.snackbar.open(error.message, null, config);
     this.sendButton.setError(error.message);
+    this.backButton.setEnabled();
   }
 }
