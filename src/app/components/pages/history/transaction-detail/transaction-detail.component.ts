@@ -1,6 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/Subscription';
+
 import { PriceService } from '../../../../services/price.service';
 
 @Component({
@@ -30,9 +31,5 @@ export class TransactionDetailComponent implements OnInit, OnDestroy {
 
   closePopup() {
     this.dialogRef.close();
-  }
-
-  showOutput(output) {
-    return !this.transaction.inputs.find(input => input.owner === output.dst);
   }
 }
