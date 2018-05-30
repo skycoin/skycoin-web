@@ -57,4 +57,13 @@ describe('Onboarding Create', () => {
     expect<any>(page.skipWizard()).toContain('/wallets');
   });
 
+  it('should not create wallet with already used seed', () => {
+    page.navigateTo();
+    expect<any>(page.createExistingWallet()).toEqual(false);
+  });
+
+  it('should not load wallet with already used seed', () => {
+    page.navigateTo();
+    expect<any>(page.loadExistingWallet()).toEqual(false);
+  });
 });
