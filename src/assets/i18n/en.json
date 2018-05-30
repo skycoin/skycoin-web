@@ -7,7 +7,8 @@
     "balance": "Balance",
     "loading": "Loading..",
     "new": "New",
-    "load": "Load"
+    "load": "Load",
+    "address": "Address"
   },
 
   "errors": {
@@ -31,7 +32,8 @@
     "explorer": "Skycoin Explorer",
     "seed": "Wallet Seed",
     "qrcode": "QR Code",
-    "disclaimer": "Disclaimer"
+    "disclaimer": "Disclaimer",
+    "qr-code": "View QR Code"
   },
 
   "header": {
@@ -41,10 +43,15 @@
     "pending-txs1": "There are some",
     "pending-txs2": "pending transactions.",
     "pending-txs3": "Data you see may not be updated.",
+    "loading": "Loading...",
+    "coin-id": "sky",
+    "updated1": "Updated:",
+    "updated2": "min ago",
+
 
     "errors": {
-      "no-connections": "No connections active, your client is not connected to any other nodes!",
-      "no-backend1": "Cannot reach backend. Please restart the app and/or seek help on our",
+      "no-connections": "No connections active, web client is not connected to any other nodes!",
+      "no-backend1": "Cannot reach backend. Please refresh the page and/or seek help on our.",
       "no-backend2": "Telegram.",
       "no-backend3": "",
       "csrf": "Security vulnerability: CSRF is not working, please exit immediately."
@@ -73,7 +80,15 @@
     "receive-desc": "After receiving your Bitcoin, we'll send you your Skycoin. It may take anywhere between 20 minutes and an hour to receive your SKY.",
     "status-button": "Status:",
     "check-status-button": "Check Status",
-    "new-order-button": "New Order"
+    "new-order-button": "New Order",
+    "otc-disabled": "Sorry, otc has currently been disabled!",
+    "purchase": "Purchase Skycoin",
+    "details": "You can buy Skycoins directly from your wallet using our Skycoin Teller service. The current rate is 0.0002 BTC per SKY. To buy SKY, request a BTC deposit address. Once you have a BTC deposit address, any BTC deposits will   automatically be added to your selected address.",
+    "sky-address": "Sky address: ",
+    "bitcoin-address": "Bitcoin address:",
+    "refresh-button": "refresh",
+    "add-deposit-address": "Add deposit address",
+    "updated-at": "updated at:"
   },
 
   "wizard": {
