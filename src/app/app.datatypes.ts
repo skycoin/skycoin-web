@@ -38,7 +38,7 @@ export class NormalTransaction extends Transaction {
 export class PreviewTransaction extends Transaction {
   from: string;
   to: string;
-  row: string;
+  encoded: string;
 }
 
 export interface Output {

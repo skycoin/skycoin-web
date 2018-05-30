@@ -27,7 +27,7 @@ describe('SendVerifyComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SendVerifyComponent);
     component = fixture.componentInstance;
-    component.transaction = { inputs: [], outputs: [], from: '', to: '', row: '' };
+    component.transaction = { inputs: [], outputs: [], from: '', to: '', encoded: '' };
     fixture.detectChanges();
   });
 

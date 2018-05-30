@@ -193,8 +193,8 @@ export class WalletService {
     });
   }
 
-  injectTransaction(rawTransaction: string): Observable<string> {
-    return this.apiService.postTransaction(rawTransaction);
+  injectTransaction(encodedTransaction: string): Observable<string> {
+    return this.apiService.postTransaction(encodedTransaction);
   }
 
   updateWallet(wallet: Wallet) {

@@ -27,7 +27,7 @@ export class SendVerifyComponent {
     this.sendButton.setLoading();
     this.backButton.setDisabled();
 
-    this.walletService.injectTransaction(this.transaction.row)
+    this.walletService.injectTransaction(this.transaction.encoded)
       .subscribe(
         () => this.onSuccess(),
         (error) => this.onError(error)
