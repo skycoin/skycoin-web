@@ -4,6 +4,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { PreviewTransaction } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
+import { parseResponseMessage } from './../../../../utils/errors';
 
 @Component({
   selector: 'app-send-verify',
@@ -51,10 +52,11 @@ export class SendVerifyComponent implements OnDestroy {
   }
 
   private onError(error) {
+    const errorMessage = parseResponseMessage(error['_body']);
     const config = new MatSnackBarConfig();
     config.duration = 300000;
-    this.snackbar.open(error.message, null, config);
-    this.sendButton.setError(error.message);
+    this.snackbar.open(errorMessage, null, config);
+    this.sendButton.setError(errorMessage);
     this.backButton.setEnabled();
   }
 }
