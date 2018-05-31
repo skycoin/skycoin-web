@@ -1,15 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
 
 import { WalletsComponent } from './wallets.component';
 import { WalletService } from '../../../services/wallet.service';
-import { Observable } from 'rxjs/Observable';
 import { Wallet } from '../../../app.datatypes';
 
 class MockWalletService {
   get all(): Observable<Wallet[]> {
     return Observable.of([]);
+  }
+}
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
   }
 }
 
@@ -19,7 +26,7 @@ describe('WalletsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WalletsComponent ],
+      declarations: [ WalletsComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: WalletService, useClass: MockWalletService },

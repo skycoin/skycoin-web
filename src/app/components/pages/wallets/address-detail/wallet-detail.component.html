@@ -5,21 +5,21 @@
       <img src="../../../../../assets/img/qr-code-black.png" (click)="showQr(address)" >
       <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }"
         (click)="copyAddress($event, address)" (mouseleave)="address.isCopying = false">
-        {{ address.address }} <span data-label="Copied" class="copy-label">Copy</span>
+        {{ address.address }} <span [attr.data-label]="'wallet.address.copied' | translate" class="copy-label">{{ 'wallet.address.copy' | translate }}</span>
       </p>
     </div>
-    <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
     <div class="coins-column">{{ (address.balance ? address.balance : 0) | number:'1.0-6' }}</div>
+    <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
     <div class="options-column">
       <mat-icon [matMenuTriggerFor]="optionsMenu">more_vert</mat-icon>
     </div>
   </div>
   <mat-menu #optionsMenu="matMenu" [overlapTrigger]="false" class="compact">
     <button mat-menu-item (click)="copyAddress($event, address, 1000)">
-      {{ address.isCopying ? 'Copied!' : 'Copy address' }}
+      {{ address.isCopying ? ('wallet.address.copied' | translate) : 'wallet.address.copy-address' | translate}}
     </button>
     <button mat-menu-item routerLink="/settings/outputs" [queryParams]="{ addr: address.address }">
-      Unspent Outputs
+      {{ 'wallet.address.outputs' | translate }}
     </button>
   </mat-menu>
 </ng-container>
@@ -27,21 +27,20 @@
   <div class="-button" (click)="onAddNewAddress()">
     <div class="-btn-plus btn-add-address">
       <img src="../../../../../assets/img/plus-grey.png">
-      <span>New Address</span>
+      <span>{{ 'wallet.new-address' | translate }}</span>
     </div>
-
   </div>
   <div class="-button" (click)="toggleEmpty()">
     <ng-container *ngIf="!wallet.hideEmpty">
       <div class="-btn-minus">
         <img src="../../../../../assets/img/minus-grey.png">
-        <span>Hide Empty</span>
+        <span>{{ 'wallet.hide-empty' | translate }}</span>
       </div>
     </ng-container>
     <ng-container *ngIf="wallet.hideEmpty">
       <div class="-btn-plus">
         <img src="../../../../../assets/img/plus-grey.png">
-        <span>Show Empty</span>
+        <span>{{ 'wallet.show-empty' | translate }}</span>
       </div>
 
     </ng-container>
@@ -50,13 +49,13 @@
   <div class="-button" (click)="editWallet()">
     <div class="-btn-edit">
       <img src="../../../../../assets/img/edit-grey.png">
-      <span>Edit Wallet</span>
+      <span>{{ 'wallet.edit' | translate }}</span>
     </div>
   </div>
   <div class="-button" (click)="deleteWallet()">
     <div class="-btn-minus">
       <img src="../../../../../assets/img/minus-grey.png">
-      <span>Delete Wallet</span>
+      <span>{{ 'wallet.delete' | translate }}</span>
     </div>
   </div>
 </div>

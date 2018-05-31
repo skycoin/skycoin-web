@@ -1,6 +1,9 @@
 .DEFAULT_GOAL := help
 .PHONY: lint check help
 
+build:
+	npm run build
+
 lint: ## runs lint
 	npm run lint
 

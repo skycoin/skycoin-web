@@ -16,6 +16,13 @@ describe('PendingTransactionsComponent', () => {
     }
   }
 
+  @Pipe({name: 'translate'})
+  class MockTranslatePipe implements PipeTransform {
+    transform() {
+      return 'translated value';
+    }
+  }
+
   @Pipe({name: 'dateTime'})
   class MockDateTimePipe implements PipeTransform {
     transform() {
@@ -28,7 +35,8 @@ describe('PendingTransactionsComponent', () => {
       imports: [ RouterTestingModule ],
       declarations: [
         PendingTransactionsComponent,
-        MockDateTimePipe
+        MockDateTimePipe,
+        MockTranslatePipe
       ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [{ provide: WalletService, useClass: MockWalletService }]

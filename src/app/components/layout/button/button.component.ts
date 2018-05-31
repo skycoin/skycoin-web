@@ -8,7 +8,7 @@ import { MatTooltip } from '@angular/material';
 })
 
 export class ButtonComponent {
-  @Input() disabled: any;
+  @Input() disabled: boolean;
   @Input() emit = false;
   @Output() action = new EventEmitter();
   @ViewChild('tooltip') tooltip: MatTooltip;
@@ -34,12 +34,18 @@ export class ButtonComponent {
   }
 
   setError(error: any) {
-    this.error = error['_body'];
+    this.error = !error || typeof error === 'string' ? error : error['_body'];
     this.state = 2;
 
-    if (this.mouseOver) {
-      setTimeout(() => this.tooltip.show(), 50);
-    }
+    setTimeout(() => {
+      if (this.mouseOver) {
+        this.tooltip.show(50);
+      }
+    }, 0);
+  }
+
+  setEnabled() {
+    this.disabled = false;
   }
 
   setDisabled() {
