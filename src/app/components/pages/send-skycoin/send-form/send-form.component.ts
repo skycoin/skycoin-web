@@ -73,7 +73,6 @@ export class SendFormComponent implements OnInit, OnDestroy {
       wallet: this.form.value.wallet,
       address: this.form.value.address,
       amount: this.form.value.amount,
-      notes: this.form.value.notes,
       transaction,
     });
   }
@@ -89,8 +88,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       wallet: ['', Validators.required],
       address: ['', Validators.required],
-      amount: ['', [Validators.required]],
-      notes: [''],
+      amount: ['', [Validators.required]]
     });
 
     this.subscription = this.form.controls.wallet.valueChanges.subscribe(value => {

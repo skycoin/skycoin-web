@@ -24,10 +24,10 @@
           <div class="-data">
             <span>{{ 'tx.status' | translate }}:</span> {{ transaction.confirmed ? 'Confirmed' : 'Pending' }}
           </div>
+          <div class="-data">
+            <span>{{ 'tx.coins' | translate }}:</span> {{ transaction.balance | number:'1.0-6' }}
+          </div>
         </ng-container>
-        <div class="-data">
-          <span>{{ 'tx.coins' | translate }}:</span> {{ transaction.balance | number:'1.0-6' }}
-        </div>
         <div class="-data" *ngIf="isPreview">
           <span>{{ 'tx.hours' | translate }}:</span>
           {{ transaction.hoursSent | number:'1.0-6' }} sent

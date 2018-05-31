@@ -66,7 +66,7 @@ export class WalletService {
       const wallet = {
         label: label,
         seed: seed,
-        addresses: [this.cipherProvider.generateAddress(this.ascii_to_hexa(seed))]
+        addresses: [this.cipherProvider.generateAddress(this.convertAsciiToHexa(seed))]
       };
 
       this.all.first().subscribe((wallets: Wallet[]) => {
@@ -187,18 +187,14 @@ export class WalletService {
           inputs: txInputs,
           outputs: txOutputs,
           hoursSent: hoursToSend,
-          hoursBurned: totalHours - calculatedHours
+          hoursBurned: totalHours - calculatedHours,
+          encoded: this.generateRawTransaction(txInputs, txOutputs)
         });
     });
   }
 
-  injectTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[]): Observable<string> {
-    txOutputs.forEach(output => {
-      output.coins = parseInt((output.coins * this.coinsMultiplier) + '', 10);
-    });
-
-    const rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
-    return this.apiService.postTransaction(rawTransaction);
+  injectTransaction(encodedTransaction: string): Observable<string> {
+    return this.apiService.postTransaction(encodedTransaction);
   }
 
   updateWallet(wallet: Wallet) {
@@ -216,7 +212,7 @@ export class WalletService {
     seed = this.getCleanSeed(seed);
 
     return new Promise<void>((resolve) => {
-      let currentSeed = this.ascii_to_hexa(seed);
+      let currentSeed = this.convertAsciiToHexa(seed);
       wallet.addresses.forEach(address => {
         const fullAddress = this.cipherProvider.generateAddress(currentSeed);
         if (fullAddress.address !== address.address) {
@@ -340,6 +336,17 @@ export class WalletService {
     });
   }
 
+  private generateRawTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[]) {
+    const convertedOutputs: TransactionOutput[] = txOutputs.map(output => {
+      return {
+        ...output,
+        coins: parseInt((output.coins * this.coinsMultiplier) + '', 10)
+      };
+    });
+
+    return this.cipherProvider.prepareTransaction(txInputs, convertedOutputs);
+  }
+
   private calculateTotalBalance(wallets: Wallet[]) {
     const totalBalance: TotalBalance = {
       coins: wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0).reduce((a , b) => a + b, 0),
@@ -388,7 +395,7 @@ export class WalletService {
     }).join(','));
   }
 
-  private ascii_to_hexa(str): string {
+  private convertAsciiToHexa(str): string {
     const arr1: string[] = [];
     for (let n = 0, l = str.length; n < l; n ++) {
       const hex = Number(str.charCodeAt(n)).toString(16);
