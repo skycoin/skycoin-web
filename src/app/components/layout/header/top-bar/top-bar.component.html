@@ -1,8 +1,8 @@
 <div class="buttons-left">
-  <span class="last-updated-time">{{ 'header.updated1' | translate }} {{ timeSinceLastUpdateBalances === 0 ? 'less than a' : timeSinceLastUpdateBalances }} {{ 'header.updated2' | translate }}</span>
+  <span class="last-updated-time">{{ 'header.updated1' | translate }} {{ timeSinceLastUpdateBalances === 0 ? ('top-bar.less-than' | translate ) : timeSinceLastUpdateBalances }} {{ 'header.updated2' | translate }}</span>
 </div>
 <div class="title">
-  {{ headline | translate }}
+  {{ headline }}
 </div>
 <div class="buttons-right">
   <mat-menu #settingsMenu="matMenu" [overlapTrigger]="false">

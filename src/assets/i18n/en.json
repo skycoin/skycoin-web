@@ -1,7 +1,7 @@
 {
   "common": {
     "coin-id": "SKY",
-    "coin-hours": "SKY Hours",
+    "coin-hours": "Coin Hours",
     "coins": "Coins",
     "hours": "Hours",
     "balance": "Balance",
@@ -51,7 +51,7 @@
 
     "errors": {
       "no-connections": "No connections active, web client is not connected to any other nodes!",
-      "no-backend1": "Cannot reach backend. Please refresh the page and/or seek help on our.",
+      "no-backend1": "Cannot reach backend. Please refresh the page and/or seek help on our",
       "no-backend2": "Telegram.",
       "no-backend3": "",
       "csrf": "Security vulnerability: CSRF is not working, please exit immediately."
@@ -113,6 +113,7 @@
     "encrypt": "Encrypt Wallet",
     "decrypt": "Decrypt Wallet",
     "edit": "Edit Wallet",
+    "delete" : "Delete Wallet",
     "add": "Add Wallet",
     "load": "Load Wallet",
     "encryption": "Encryption",
@@ -152,7 +153,8 @@
     },
 
     "address": {
-      "copy": "Copy address",
+      "copy": "Copy",
+      "copy-address": "Copy address",
       "copied": "Copied!",
       "outputs": "Unspent Outputs"
     }
@@ -166,7 +168,9 @@
     "verify-button": "Verify",
     "send-button": "Send",
     "back-button": "Back",
-    "select-wallet" : "Select Wallet"
+    "select-wallet": "Select Wallet",
+    "recipient-address": "Recipient address",
+    "your-note": "Your note here"
   },
 
   "tx": {
@@ -224,7 +228,8 @@
     "sent": "Sent",
     "received": "Received",
     "receiving": "Receiving",
-    "pending": "Pending"
+    "pending": "Pending",
+    "price-tooltip": "Calculated at the current rate"
   },
 
   "teller": {
@@ -248,5 +253,13 @@
       "disclaimer-desc": "IF YOU USE THIS WALLET YOU MAY LOSE COINS. TESTING PURPOSES ONLY.",
       "disclaimer-dismiss": "Don't show this message again"
     }
+  },
+
+  "top-bar": {
+    "less-than": "less than a"
+  },
+
+  "qr-code" : {
+    "copy-address": "Copy address to clipboard"
   }
 }

@@ -1,11 +1,11 @@
-<app-modal class="-title" [headline]="'wizard.confirm.title'" [dialog]="dialogRef" [disableDismiss]="true">
+<app-modal class="-title" [headline]="'wizard.confirm.title' | translate" [dialog]="dialogRef" [disableDismiss]="true">
   <div>
     <span class="-safe-description">
      {{ 'wizard.confirm.desc' | translate }}
     </span>
     <div class="-check-container">
       <mat-checkbox class="-safe-check-text -check" [checked]="acceptSafe" (change)="setAccept($event)"
-                   type="checkbox" id="terms">It’s safe, I swear.
+                    type="checkbox" id="terms">
         {{ 'wizard.confirm.checkbox' | translate }}
       </mat-checkbox>
     </div>

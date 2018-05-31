@@ -29,6 +29,7 @@
     <div *ngIf="connectionError === connectionErrorsList.UNAVAILABLE_BACKEND">
       {{ 'header.errors.no-backend1' | translate}}
       <a href="https://web.telegram.org/#/im?p=@skycoinsupport">{{ 'header.errors.no-backend2' | translate}}</a>
+      {{ 'header.errors.no-backend3' | translate }}
     </div>
   </mat-toolbar>
   <mat-toolbar class="notification-bar" *ngIf="hasPendingTxs">

@@ -1,4 +1,4 @@
-<app-modal [headline]="'title.qr-code'" [dialog]="dialogRef">
+<app-modal [headline]="'title.qr-code' | translate" [dialog]="dialogRef">
   <div #qr class="-code"></div>
   <div class="row -address-footer">
     <div class="-address-label">{{ 'common.address' | translate}}</div>
@@ -6,7 +6,7 @@
     <img
         #btnImg
         class="-button-qr"
-        title="Copy address to clipboard"
+        [title]="'qr-code.copy-address' | translate"
         [clipboard]=address
         (copyEvent)="onCopySuccess()">
   </div>

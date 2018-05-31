@@ -13,7 +13,9 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-sm-4 -toggle-container">
-      <app-double-button rightButtonText="common.load" leftButtonText="common.new" [activeButton]="doubleButtonActive"
+      <app-double-button [rightButtonText]="'common.load' | translate"
+                         [leftButtonText]="'common.new' | translate"
+                         [activeButton]="doubleButtonActive"
                          (onStateChange)="changeForm($event)"></app-double-button>
     </div>
   </div>
