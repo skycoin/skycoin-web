@@ -113,6 +113,7 @@
     "encrypt": "Encrypt Wallet",
     "decrypt": "Decrypt Wallet",
     "edit": "Edit Wallet",
+    "delete" : "Delete Wallet",
     "add": "Add Wallet",
     "load": "Load Wallet",
     "encryption": "Encryption",
@@ -224,7 +225,8 @@
     "sent": "Sent",
     "received": "Received",
     "receiving": "Receiving",
-    "pending": "Pending"
+    "pending": "Pending",
+    "price-tooltip": "Calculated at the current rate"
   },
 
   "teller": {
