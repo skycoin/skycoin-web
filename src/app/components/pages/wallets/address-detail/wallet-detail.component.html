@@ -8,8 +8,8 @@
         {{ address.address }} <span [attr.data-label]="'wallet.address.copied' | translate" class="copy-label">{{ 'wallet.address.copy' | translate }}</span>
       </p>
     </div>
-    <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
     <div class="coins-column">{{ (address.balance ? address.balance : 0) | number:'1.0-6' }}</div>
+    <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
     <div class="options-column">
       <mat-icon [matMenuTriggerFor]="optionsMenu">more_vert</mat-icon>
     </div>
