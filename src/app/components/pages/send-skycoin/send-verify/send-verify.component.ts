@@ -52,7 +52,7 @@ export class SendVerifyComponent implements OnDestroy {
   }
 
   private onError(error) {
-    const errorMessage = parseResponseMessage(error['_body']);
+    const errorMessage = error.message ? error.message : parseResponseMessage(error['_body']);
     const config = new MatSnackBarConfig();
     config.duration = 300000;
     this.snackbar.open(errorMessage, null, config);
