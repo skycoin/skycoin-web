@@ -368,6 +368,7 @@ describe('WalletService', () => {
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+      spyCipherProvider.prepareTransaction.and.returnValue('preparedTransaction');
 
       walletService.createTransaction(wallet, address, amount)
         .subscribe((result: any) => {
@@ -375,7 +376,8 @@ describe('WalletService', () => {
             inputs: expectedTxInputs,
             outputs: expectedTxOutputs,
             hoursSent: 17,
-            hoursBurned: 35
+            hoursBurned: 35,
+            encoded: 'preparedTransaction'
           });
         });
     }));
@@ -407,14 +409,17 @@ describe('WalletService', () => {
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+      spyCipherProvider.prepareTransaction.and.returnValue('preparedTransaction');
 
       walletService.createTransaction(wallet, address, amount)
         .subscribe((result: any) => {
+          console.info(result);
           expect(result).toEqual({
             inputs: expectedTxInputs,
             outputs: expectedTxOutputs,
             hoursSent: 5,
-            hoursBurned: 5
+            hoursBurned: 5,
+            encoded: 'preparedTransaction'
           });
         });
     }));
