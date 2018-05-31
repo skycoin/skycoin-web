@@ -5,7 +5,7 @@
       <img src="../../../../../assets/img/qr-code-black.png" (click)="showQr(address)" >
       <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }"
         (click)="copyAddress($event, address)" (mouseleave)="address.isCopying = false">
-        {{ address.address }} <span data-label="Copied" class="copy-label">Copy</span>
+        {{ address.address }} <span [attr.data-label]="'wallet.address.copied' | translate" class="copy-label">{{ 'wallet.address.copy' | translate }}</span>
       </p>
     </div>
     <div class="hours-column">{{ address.hours ? address.hours : 0 }}</div>
@@ -16,7 +16,7 @@
   </div>
   <mat-menu #optionsMenu="matMenu" [overlapTrigger]="false" class="compact">
     <button mat-menu-item (click)="copyAddress($event, address, 1000)">
-      {{ address.isCopying ? ('wallet.address.copied' | translate) : 'wallet.address.copy' | translate}}
+      {{ address.isCopying ? ('wallet.address.copied' | translate) : 'wallet.address.copy-address' | translate}}
     </button>
     <button mat-menu-item routerLink="/settings/outputs" [queryParams]="{ addr: address.address }">
       {{ 'wallet.address.outputs' | translate }}

@@ -6,7 +6,7 @@
     <img
         #btnImg
         class="-button-qr"
-        title="Copy address to clipboard"
+        [title]="'qr-code.copy-address' | translate"
         [clipboard]=address
         (copyEvent)="onCopySuccess()">
   </div>

@@ -21,7 +21,7 @@
               <span class="-timestamp">{{ transaction.timestamp * 1000 | date:'short' }}</span>
             </h4>
             <h4 *ngIf="transaction.balance > 0 && !transaction.confirmed">
-              {{ 'history.sent' | translate }} {{ 'common.coin-id' | translate }}
+              {{ 'history.receiving' | translate }} {{ 'common.coin-id' | translate }}
               <span class="-pending">{{ 'history.pending' | translate }}</span>
             </h4>
             <div class="-detail" *ngFor="let address of transaction.addresses">

@@ -13,15 +13,15 @@
 
   <div class="form-field">
     <label for="address">{{ 'send.to-label' | translate }}</label>
-    <input formControlName="address" id="address" placeholder="Recipient address">
+    <input formControlName="address" id="address" [placeholder]="'send.recipient-address' | translate" >
   </div>
   <div class="form-field">
     <label for="amount">{{ 'send.amount-label' | translate }}</label>
-    <input formControlName="amount" id="amount" placeholder="SKY" type="number">
+    <input formControlName="amount" id="amount" [placeholder]="'common.coin-id' | translate" type="number">
   </div>
   <div class="form-field">
     <label for="notes">{{ 'send.notes-label' | translate }}</label>
-    <input formControlName="notes" id="notes" placeholder="Your note here">
+    <input formControlName="notes" id="notes" [placeholder]="'send.your-note' | translate">
   </div>
 
   <div class="-buttons">
