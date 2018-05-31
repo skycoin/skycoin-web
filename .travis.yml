@@ -18,6 +18,7 @@ addons:
 
 script:
   - make check
+  - make build
 
 notifications:
   # https://github.com/kvld/travisci-telegram TravisCI Telegram Bot integration
