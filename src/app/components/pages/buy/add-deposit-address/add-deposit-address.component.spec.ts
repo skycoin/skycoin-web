@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { MatSelectModule, MatDialogRef } from '@angular/material';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { AddDepositAddressComponent } from './add-deposit-address.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { PurchaseService } from '../../../../services/purchase.service';
-import { Observable } from 'rxjs/Observable';
 
 class MockWalletService {
   get addresses(): Observable<any[]> {
@@ -17,13 +17,20 @@ class MockWalletService {
 class MockPurchaseService {
 }
 
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
+
 describe('AddDepositAddressComponent', () => {
   let component: AddDepositAddressComponent;
   let fixture: ComponentFixture<AddDepositAddressComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddDepositAddressComponent ],
+      declarations: [ AddDepositAddressComponent, MockTranslatePipe ],
       imports: [ MatSelectModule ],
       providers: [
         FormBuilder,

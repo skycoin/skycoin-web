@@ -36,6 +36,10 @@ describe('Wallets', () => {
     expect<any>(page.createWalletCheckValidationLabel()).toEqual(false);
   });
 
+  it('should not create wallet with already used seed', () => {
+    expect<any>(page.createExistingWallet()).toEqual(false);
+  });
+
   it('should create wallet', () => {
     expect<any>(page.createWallet()).toEqual(true);
   });
@@ -50,6 +54,10 @@ describe('Wallets', () => {
 
   it('should validate load wallet, empty label', () => {
     expect<any>(page.loadWalletCheckValidationLabel()).toEqual(false);
+  });
+
+  it('should not load wallet with already used seed', () => {
+    expect<any>(page.loadExistingWallet()).toEqual(false);
   });
 
   it('should load wallet', () => {
