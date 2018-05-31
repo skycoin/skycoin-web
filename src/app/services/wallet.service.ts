@@ -197,7 +197,12 @@ export class WalletService {
       output.coins = parseInt((output.coins * this.coinsMultiplier) + '', 10);
     });
 
-    const rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
+    let rawTransaction;
+    try {
+      rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
+    } catch (e) {
+      return Observable.throw(new Error(e));
+    }
     return this.apiService.postTransaction(rawTransaction);
   }
 
