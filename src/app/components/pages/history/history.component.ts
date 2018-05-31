@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
 import { TransactionDetailComponent } from './transaction-detail/transaction-detail.component';
+import { QrCodeComponent } from '../../layout/qr-code/qr-code.component';
 
 @Component({
   selector: 'app-history',
@@ -35,5 +36,13 @@ export class HistoryComponent implements OnInit {
     config.width = '750px';
     config.data = transaction;
     this.dialog.open(TransactionDetailComponent, config).afterClosed().subscribe();
+  }
+
+  showQr(event, address) {
+    event.stopPropagation();
+
+    const config = new MatDialogConfig();
+    config.data = address;
+    this.dialog.open(QrCodeComponent, config);
   }
 }
