@@ -413,7 +413,6 @@ describe('WalletService', () => {
 
       walletService.createTransaction(wallet, address, amount)
         .subscribe((result: any) => {
-          console.info(result);
           expect(result).toEqual({
             inputs: expectedTxInputs,
             outputs: expectedTxOutputs,
