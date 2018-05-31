@@ -24,7 +24,7 @@ export class PriceService {
 
   private loadPrice() {
     this.http.get(`https://api.coinmarketcap.com/v2/ticker/${this.CMC_TICKER_ID}/`)
-      .map(response => response.json()[0])
+      .map(response => response.json())
       .subscribe(response => this.price.next(response.data.quotes.USD.price));
   }
 }
