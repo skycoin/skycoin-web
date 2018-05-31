@@ -1,4 +1,4 @@
-<app-modal [headline]="data.create ? 'wallet.new.create-title' : 'wallet.new.load-title'" [dialog]="dialogRef">
+<app-modal [headline]="data.create ? ('wallet.new.create-title' | translate) : ('wallet.new.load-title' | translate)" [dialog]="dialogRef">
   <div [formGroup]="form">
     <div class="form-field">
       <label for="label">{{ 'wallet.new.name-label' | translate}}</label>

@@ -1,5 +1,5 @@
 <div class="sky-container sky-container-grey">
-  <app-header [headline]="'title.outputs'"></app-header>
+  <app-header [headline]="'title.outputs' | translate"></app-header>
   <div class="container">
     <div class="-wallet" *ngFor="let wallet of wallets">
       <div class="-wallet-label">{{ wallet.label }}</div>

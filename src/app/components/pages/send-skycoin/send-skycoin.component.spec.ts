@@ -1,7 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
 import { SendSkycoinComponent } from './send-skycoin.component';
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
 
 describe('SendSkycoinComponent', () => {
   let component: SendSkycoinComponent;
@@ -9,7 +16,7 @@ describe('SendSkycoinComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SendSkycoinComponent ],
+      declarations: [ SendSkycoinComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ]
     }).compileComponents();
   }));
