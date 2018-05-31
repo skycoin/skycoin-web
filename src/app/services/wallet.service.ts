@@ -182,7 +182,7 @@ export class WalletService {
             coins: input.coins
           });
         });
-                                               
+
         let rawTransaction;
         try {
           rawTransaction = this.generateRawTransaction(txInputs, txOutputs);
