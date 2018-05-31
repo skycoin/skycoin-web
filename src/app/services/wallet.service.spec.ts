@@ -330,6 +330,121 @@ describe('WalletService', () => {
     });
   });
 
+  describe('createTransaction', () => {
+    it('should be returned the correct observable for the two outputs', fakeAsync(() => {
+      const address = 'address';
+      const amount = 21;
+
+      const addresses = [
+        createAddress('address1', 'secretKey1'),
+        createAddress('address2', 'secretKey2')
+      ];
+
+      const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
+
+      const outputs: Output[] = [
+        createOutput('address1', 'hash1', 5, 10),
+        createOutput('address2', 'hash2', 10, 20),
+        createOutput('address1', 'hash1', 20, 50),
+        createOutput('address2', 'hash2', 50, 0)
+      ];
+
+      const expectedTxInputs: TransactionInput[] = [
+        { hash: 'hash1', secret: 'secretKey1', address: 'address1', calculated_hours: 50, coins: 20 },
+        { hash: 'hash2', secret: 'secretKey2', address: 'address2', calculated_hours: 20, coins: 10 }
+      ];
+
+      const expectedTxOutputs: TransactionOutput[] = [
+        {
+          address: wallet.addresses[0].address,
+          coins: 9,
+          hours: 18
+        },
+        {
+          address: address,
+          coins: 21,
+          hours: 17
+        }
+      ];
+
+      spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+
+      walletService.createTransaction(wallet, address, amount)
+        .subscribe((result: any) => {
+          expect(result).toEqual({
+            inputs: expectedTxInputs,
+            outputs: expectedTxOutputs,
+            hoursSent: 17,
+            hoursBurned: 35
+          });
+        });
+    }));
+
+    it('should be returned the correct observable for the one output', fakeAsync(() => {
+      const address = 'address';
+      const amount = 1;
+
+      const addresses = [
+        createAddress('address1', 'secretKey1')
+      ];
+
+      const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
+
+      const outputs: Output[] = [
+        createOutput('address1', 'hash1', 1, 10)
+      ];
+
+      const expectedTxInputs: TransactionInput[] = [
+        { hash: 'hash1', secret: 'secretKey1', address: 'address1', calculated_hours: 10, coins: 1 }
+      ];
+
+      const expectedTxOutputs: TransactionOutput[] = [
+        {
+          address: address,
+          coins: 1,
+          hours: 5
+        }
+      ];
+
+      spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+
+      walletService.createTransaction(wallet, address, amount)
+        .subscribe((result: any) => {
+          expect(result).toEqual({
+            inputs: expectedTxInputs,
+            outputs: expectedTxOutputs,
+            hoursSent: 5,
+            hoursBurned: 5
+          });
+        });
+    }));
+
+    it('should be rejected for not enough Sky Hours', () => {
+      const address = 'address';
+      const amount = 2;
+
+      const addresses = [
+        createAddress('address1', 'secretKey1'),
+        createAddress('address2', 'secretKey2')
+      ];
+
+      const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
+
+      const outputs: Output[] = [
+        createOutput('address1', 'hash1', 1, 24),
+        createOutput('address2', 'hash2', 1, 0)
+      ];
+
+      spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+
+      walletService.createTransaction(wallet, address, amount)
+        .subscribe(
+          () => fail('should be rejected'),
+          (error) => expect(error.message).toBe('Not enough available SKY Hours to perform transaction!')
+        );
+    });
+  });
+
   describe('outputs', () => {
     it('should be returned outputs', fakeAsync(() => {
       const walletAddress1 = 'address 1';
