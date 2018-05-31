@@ -23,8 +23,8 @@ export class PriceService {
   }
 
   private loadPrice() {
-    this.http.get('https://api.coinmarketcap.com/v1/ticker/skycoin/')
+    this.http.get(`https://api.coinmarketcap.com/v2/ticker/${this.CMC_TICKER_ID}/`)
       .map(response => response.json()[0])
-      .subscribe(data => this.price.next(data.price_usd));
+      .subscribe(response => this.price.next(response.data.quotes.USD.price));
   }
 }
