@@ -188,7 +188,7 @@ export class WalletService {
           outputs: txOutputs,
           hoursSent: hoursToSend,
           hoursBurned: totalHours - calculatedHours,
-          row: this.generateRawTransaction(txInputs, txOutputs)
+          encoded: this.generateRawTransaction(txInputs, txOutputs)
         });
     });
   }
