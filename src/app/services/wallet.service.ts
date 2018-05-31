@@ -322,13 +322,11 @@ export class WalletService {
     this.updatingBalance = true;
 
     this.addresses.first().subscribe((addresses: Address[]) => {
-      this.retrieveAddressesBalance(addresses).subscribe((balance: Balance) => {
-          this.wallets.first().subscribe(
-            wallets => this.calculateBalance(wallets, balance),
-            () => this.updatingBalance = false,
-            () => this.updatingBalance = false
-          );
-        });
+      this.retrieveAddressesBalance(addresses).subscribe(
+        (balance: Balance) => { this.wallets.first().subscribe(wallets => this.calculateBalance(wallets, balance)); },
+        () => this.updatingBalance = false,
+        () => this.updatingBalance = false
+      );
     });
   }
 
