@@ -19,10 +19,6 @@
     <label for="amount">{{ 'send.amount-label' | translate }}</label>
     <input formControlName="amount" id="amount" [placeholder]="'common.coin-id' | translate" type="number">
   </div>
-  <div class="form-field">
-    <label for="notes">{{ 'send.notes-label' | translate }}</label>
-    <input formControlName="notes" id="notes" [placeholder]="'send.your-note' | translate">
-  </div>
 
   <div class="-buttons">
     <app-button #button (action)="onVerify()" class="primary" [disabled]="!form.valid">{{ 'send.verify-button' | translate }}</app-button>
