@@ -77,7 +77,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   showDisclaimer() {
     setTimeout(() => {
-      this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig());
+      this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
     }, 0);
   }
 
@@ -120,10 +120,10 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.snackBar.open(errorMesasge, null, config);
   }
 
-  private createDialogConfig() {
+  private createDialogConfig(disableClose = false) {
     const config = new MatDialogConfig();
     config.width = '450px';
-    config.disableClose = true;
+    config.disableClose = disableClose;
     return config;
   }
 }
