@@ -93,54 +93,6 @@ export class WalletService {
     });
   }
 
-  sendSkycoin(wallet: Wallet, address: string, amount: number) {
-    const addresses = wallet.addresses.map(a => a.address).join(',');
-
-    return this.apiService.getOutputs(addresses).flatMap((outputs: Output[]) => {
-      const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
-      const totalCoins = parseInt((minRequiredOutputs.reduce((count, output) =>
-        count + output.coins, 0) * 1000000) + '', 10);
-
-      const convertedAmount = parseInt(amount * 1000000 + '', 10);
-
-      if (totalCoins < convertedAmount) {
-        throw new Error('Not enough available SKY Hours to perform transaction!');
-      }
-
-      const totalHours = parseInt((minRequiredOutputs.reduce((count, output) =>
-        count + output.calculated_hours, 0)) + '', 10);
-      const changeCoins = totalCoins - convertedAmount;
-      let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
-
-      const txOutputs: TransactionOutput[] = [];
-      const txInputs: TransactionInput[] = [];
-      const calculatedHours = parseInt((totalHours * this.unburnedHoursRatio) + '', 10);
-
-      if (changeCoins > 0) {
-        txOutputs.push({
-          address: wallet.addresses[0].address,
-          coins: changeCoins,
-          hours: calculatedHours - hoursToSend
-        });
-      } else {
-        hoursToSend = calculatedHours;
-      }
-
-      txOutputs.push({ address: address, coins: convertedAmount, hours: hoursToSend });
-
-      minRequiredOutputs.forEach(input => {
-        txInputs.push({
-          hash: input.hash,
-          secret: wallet.addresses.find(a => a.address === input.address).secret_key,
-        });
-      });
-
-      const rawTransaction = this.cipherProvider.prepareTransaction(txInputs, txOutputs);
-
-      return this.apiService.postTransaction(rawTransaction);
-    });
-  }
-
   createTransaction(wallet: Wallet, address: string, amount: number): Observable<Transaction> {
     const addresses = wallet.addresses.map(a => a.address).join(',');
 
