@@ -15,6 +15,11 @@ class MockTranslatePipe implements PipeTransform {
 class MockWalletService {
 }
 
+class MockMatSnackBar {
+  dismiss() {
+  }
+}
+
 describe('SendVerifyComponent', () => {
   let component: SendVerifyComponent;
   let fixture: ComponentFixture<SendVerifyComponent>;
@@ -25,7 +30,7 @@ describe('SendVerifyComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: WalletService, useClass: MockWalletService },
-        { provide: MatSnackBar, useValue: {} }
+        { provide: MatSnackBar, useClass: MockMatSnackBar }
       ]
     })
     .compileComponents();
