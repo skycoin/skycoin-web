@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
@@ -14,14 +15,25 @@ import { ConfirmationComponent } from '../../../layout/confirmation/confirmation
   templateUrl: './wallet-detail.component.html',
   styleUrls: ['./wallet-detail.component.scss'],
 })
-export class WalletDetailComponent {
+export class WalletDetailComponent implements OnInit {
   @Input() wallet: Wallet;
+
+  private deleteConfirmation1: string;
+  private deleteConfirmation2: string;
 
   constructor(
     private walletService: WalletService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private translateService: TranslateService
   ) {}
+
+  ngOnInit() {
+    this.translateService.get('wallet').subscribe(res => {
+      this.deleteConfirmation1 = res['delete-confirmation1'];
+      this.deleteConfirmation2 = res['delete-confirmation2'];
+    });
+  }
 
   showQr(address) {
     const config = new MatDialogConfig();
@@ -82,7 +94,7 @@ export class WalletDetailComponent {
   deleteWallet() {
     const dialogRef = this.dialog.open(ConfirmationComponent, {
       width: '500px',
-      data: { text: `The wallet "${this.wallet.label}" will be deleted. Do you want to continue?` }
+      data: { text: `${this.deleteConfirmation1} "${this.wallet.label}" ${this.deleteConfirmation2}` }
     });
 
     dialogRef.afterClosed()

@@ -5,7 +5,7 @@
 
   <div class="-check-container">
     <mat-checkbox class="-disclaimer-check-text -check" [checked]="acceptDeletion" (change)="setAccept($event)"
-                  type="checkbox" id="terms">Yeah, I want to delete the wallet.
+                  type="checkbox" id="terms">{{ 'wallet.delete-confirmation-check' | translate }}
     </mat-checkbox>
   </div>
 
