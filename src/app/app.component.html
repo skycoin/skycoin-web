@@ -1,10 +1,1 @@
-<feature-toggle-provider [features]="featureToggleData">
-  <feature-toggle [featureName]="'enableDisclaimerWarning'">
-    <div class="disclaimer-warning">
-      <span>{{ 'feature.disclaimer.disclaimer-desc' | translate }}</span>
-      <a title="Dismiss warning" (click)="hideDisclaimerWarning()">&times; {{ 'feature.disclaimer.disclaimer-dismiss' | translate }}</a>
-    </div>
-  </feature-toggle>
-</feature-toggle-provider>
-
 <router-outlet></router-outlet>

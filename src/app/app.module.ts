@@ -73,6 +73,7 @@ import { SendFormComponent } from './components/pages/send-skycoin/send-form/sen
 import { SendVerifyComponent } from './components/pages/send-skycoin/send-verify/send-verify.component';
 import { TransactionInfoComponent } from './components/pages/send-skycoin/send-verify/transaction-info/transaction-info.component';
 import { ConfirmationComponent } from './components/layout/confirmation/confirmation.component';
+import { DisclaimerWarningComponent } from './components/layout/disclaimer-warning/disclaimer-warning.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +112,8 @@ import { ConfirmationComponent } from './components/layout/confirmation/confirma
     SendFormComponent,
     SendVerifyComponent,
     TransactionInfoComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    DisclaimerWarningComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,

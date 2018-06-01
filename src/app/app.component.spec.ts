@@ -1,23 +1,9 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 import { AppComponent } from './app.component';
-import { FeatureService } from './services/feature.service';
-
-class MockFeatureService {
-  getFeatureToggleData(): any {
-    return {};
-  }
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
 
 class MockTranslateService {
   addLangs(langs: Array<string>): void {
@@ -37,10 +23,9 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent, MockTranslatePipe],
+      declarations: [ AppComponent],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: FeatureService, useClass: MockFeatureService },
         { provide: TranslateService, useClass: MockTranslateService }
       ]
     }).compileComponents();
