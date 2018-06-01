@@ -136,12 +136,19 @@ export class WalletService {
           });
         });
 
+        let rawTransaction;
+        try {
+          rawTransaction = this.generateRawTransaction(txInputs, txOutputs);
+        } catch (e) {
+          return Observable.throw(new Error(e));
+        }
+
         return Observable.of({
           inputs: txInputs,
           outputs: txOutputs,
           hoursSent: hoursToSend,
           hoursBurned: totalHours - calculatedHours,
-          encoded: this.generateRawTransaction(txInputs, txOutputs)
+          encoded: rawTransaction
         });
     });
   }

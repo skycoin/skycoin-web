@@ -1,6 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { CipherProvider } from './cipher.provider';
 import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
+import { WalletService } from './wallet.service';
 
 describe('CipherProvider', () => {
   let cipherProvider: CipherProvider;
@@ -19,12 +20,21 @@ describe('CipherProvider', () => {
 
   it('should generate address', () => {
     const expectedAddress: Address = {
-      address: '2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNy',
-      next_seed: 'ab9a6ae9e25d987026fc52cd6d4bfa52bf0c18f77b6286ac5bae5ff51efdbe1b',
-      public_key: '03aa0bebc25b65c771502237a256d80215eaebae0f255094bd31424700bdb7d112',
-      secret_key: 'd72b2db210877d2a6606670d2d57a125bdc2cdba20d1bab8f009eac29c111d52'
+      address: '2uATq4pdSb8Ka1YKSAAbp6Npehs3QQqTnb',
+      next_seed: '9fe8bfb01de85dbba36cbd9854ad7478cd63459fedb4c9f7847bf280ee17a32c',
+      public_key: '030a797a31100d3a7b5b403f551975e9a12f93b4d4e9e44b402b84832e0c7b89d2',
+      secret_key: '20c3db0e1f3b95d98d1f78d73c134af8f1b5dd34cc05f053da94c20d72558862'
     };
-    expect(cipherProvider.generateAddress('test seed')).toEqual(expectedAddress);
+
+    let seed = 'test seed';
+    const arr1: string[] = [];
+    for (let n = 0, l = seed.length; n < l; n ++) {
+      const hex = Number(seed.charCodeAt(n)).toString(16);
+      arr1.push(hex);
+    }
+    seed = arr1.join('');
+
+    expect(cipherProvider.generateAddress(seed)).toEqual(expectedAddress);
   });
 
   it('should prepare transaction', () => {
@@ -35,12 +45,12 @@ describe('CipherProvider', () => {
 
     const outputs: TransactionOutput[] = [{
       address: '2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNy',
-      coins: 0.01,
+      coins: 10000,
       hours: 0
     },
     {
       address: '2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNy',
-      coins: 0.01,
+      coins: 20000,
       hours: 0
     }];
 
@@ -50,3 +60,4 @@ describe('CipherProvider', () => {
     expect(actualLength).toBe(expectedLength);
   });
 });
+
