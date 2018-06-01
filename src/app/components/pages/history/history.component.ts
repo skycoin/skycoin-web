@@ -33,7 +33,7 @@ export class HistoryComponent implements OnInit {
 
   showTransaction(transaction: any) {
     const config = new MatDialogConfig();
-    config.width = '750px';
+    config.width = '800px';
     config.data = transaction;
     this.dialog.open(TransactionDetailComponent, config).afterClosed().subscribe();
   }
