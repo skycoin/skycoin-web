@@ -9,7 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class ModalComponent {
   @Input() dialog: MatDialogRef<any>;
   @Input() headline: string;
-  @Input() disableDismiss: boolean;
+  @Input() disableDismiss = false;
 
   closePopup() {
     if (!this.disableDismiss) {
