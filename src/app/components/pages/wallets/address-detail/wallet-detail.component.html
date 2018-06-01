@@ -2,7 +2,7 @@
   <div class="-record" *ngIf="!wallet.hideEmpty || address.balance">
     <div class="id-column">{{ i + 1 }}</div>
     <div class="address-column">
-      <img src="../../../../../assets/img/qr-code-black.png" (click)="showQr(address)" >
+      <img class="qr-code-button" src="../../../../../assets/img/qr-code-black.png" (click)="showQr(address)" >
       <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }"
         (click)="copyAddress($event, address)" (mouseleave)="address.isCopying = false">
         {{ address.address }} <span [attr.data-label]="'wallet.address.copied' | translate" class="copy-label">{{ 'wallet.address.copy' | translate }}</span>

@@ -234,6 +234,15 @@ mat-panel-title {
   }
 }
 
+.qr-code-button {
+  opacity: 0.6;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 /**
 On-boarding components
  */

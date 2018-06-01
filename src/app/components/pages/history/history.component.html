@@ -25,7 +25,7 @@
               <span class="-pending">{{ 'history.pending' | translate }}</span>
             </h4>
             <div class="-detail" *ngFor="let address of transaction.addresses">
-              <img src="../../../../assets/img/qr-code-black.png" (click)="showQr($event, address)">
+              <img class="qr-code-button" src="../../../../assets/img/qr-code-black.png" (click)="showQr($event, address)">
               <p>{{ address }}</p>
             </div>
           </div>
