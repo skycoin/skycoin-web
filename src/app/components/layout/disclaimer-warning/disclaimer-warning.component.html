@@ -1,0 +1,10 @@
+<feature-toggle-provider [features]="featureToggleData">
+  <feature-toggle [featureName]="'DisclaimerWarning'">
+    <div class="disclaimer-warning">
+      <span>{{ 'feature.disclaimer.disclaimer-desc' | translate }}</span>
+      <a *ngIf="!featureDisableDismiss"
+         [title]="'feature.disclaimer.dismiss-tooltip' | translate"
+         (click)="hideDisclaimerWarning()">&times; {{ 'feature.disclaimer.disclaimer-dismiss' | translate }}</a>
+    </div>
+  </feature-toggle>
+</feature-toggle-provider>

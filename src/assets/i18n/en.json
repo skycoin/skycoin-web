@@ -251,7 +251,8 @@
   "feature": {
     "disclaimer": {
       "disclaimer-desc": "IF YOU USE THIS WALLET YOU MAY LOSE COINS. TESTING PURPOSES ONLY.",
-      "disclaimer-dismiss": "Don't show this message again"
+      "disclaimer-dismiss": "Don't show this message again",
+      "dismiss-tooltip": "Dismiss warning"
     }
   },
 
