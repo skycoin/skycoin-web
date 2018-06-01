@@ -12,6 +12,13 @@ class MockDateFromNowPipe implements PipeTransform {
   }
 }
 
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
+
 class MockBlockchainService {
   lastBlock(): Observable<any> {
     return Observable.of({});
@@ -26,7 +33,8 @@ describe('BlockchainComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         BlockchainComponent,
-        MockDateFromNowPipe
+        MockDateFromNowPipe,
+        MockTranslatePipe
       ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [

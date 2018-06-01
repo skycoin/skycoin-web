@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+
 import { config } from '../../../app.config';
 import { PurchaseService } from '../../../services/purchase.service';
 import { AddDepositAddressComponent } from './add-deposit-address/add-deposit-address.component';

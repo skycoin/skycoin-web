@@ -1,12 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule, MatDialog } from '@angular/material';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, PipeTransform, Pipe } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
 import { SendFormComponent } from './send-form.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { Wallet } from '../../../../app.datatypes';
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
 
 class MockWalletService {
   get all(): Observable<Wallet[]> {
@@ -20,7 +27,7 @@ describe('SendFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SendFormComponent ],
+      declarations: [ SendFormComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       imports: [ MatSnackBarModule ],
       providers: [

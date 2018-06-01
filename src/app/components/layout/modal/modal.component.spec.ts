@@ -1,6 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform } from '@angular/core';
 
 import { ModalComponent } from './modal.component';
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
 
 describe('ModalComponent', () => {
   let component: ModalComponent;
@@ -8,7 +16,7 @@ describe('ModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalComponent ]
+      declarations: [ ModalComponent, MockTranslatePipe ]
     })
     .compileComponents();
   }));

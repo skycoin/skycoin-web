@@ -20,6 +20,7 @@ export interface Address {
 }
 
 export class Transaction {
+  balance?: number;
   inputs: any[];
   outputs: any[];
   hoursSent?: number;
@@ -28,7 +29,6 @@ export class Transaction {
 
 export class NormalTransaction extends Transaction {
   txid: string;
-  balance: number;
   addresses: string[];
   timestamp: number;
   block: number;
@@ -38,6 +38,7 @@ export class NormalTransaction extends Transaction {
 export class PreviewTransaction extends Transaction {
   from: string;
   to: string;
+  encoded: string;
 }
 
 export interface Output {

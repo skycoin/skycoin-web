@@ -214,8 +214,8 @@ describe('WalletService', () => {
     }));
   });
 
-  describe('sendSkycoin', () => {
-    it('postTransaction should be called with the correct rawTransaction with two outputs', fakeAsync(() => {
+  describe('createTransaction', () => {
+    it('should be returned the correct observable for the two outputs', fakeAsync(() => {
       const address = 'address';
       const amount = 21;
 
@@ -234,19 +234,19 @@ describe('WalletService', () => {
       ];
 
       const expectedTxInputs: TransactionInput[] = [
-        { hash: 'hash1', secret: 'secretKey1' },
-        { hash: 'hash2', secret: 'secretKey2' }
+        { hash: 'hash1', secret: 'secretKey1', address: 'address1', calculated_hours: 50, coins: 20 },
+        { hash: 'hash2', secret: 'secretKey2', address: 'address2', calculated_hours: 20, coins: 10 }
       ];
 
       const expectedTxOutputs: TransactionOutput[] = [
         {
           address: wallet.addresses[0].address,
-          coins: 9000000,
+          coins: 9,
           hours: 18
         },
         {
           address: address,
-          coins: 21000000,
+          coins: 21,
           hours: 17
         }
       ];
@@ -254,38 +254,40 @@ describe('WalletService', () => {
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
       spyCipherProvider.prepareTransaction.and.returnValue('preparedTransaction');
 
-      walletService.sendSkycoin(wallet, address, amount)
-        .subscribe();
-
-      expect(spyCipherProvider.prepareTransaction)
-        .toHaveBeenCalledWith(expectedTxInputs, expectedTxOutputs);
-
-      expect(spyApiService.postTransaction)
-        .toHaveBeenCalledWith('preparedTransaction');
+      walletService.createTransaction(wallet, address, amount)
+        .subscribe((result: any) => {
+          expect(result).toEqual({
+            inputs: expectedTxInputs,
+            outputs: expectedTxOutputs,
+            hoursSent: 17,
+            hoursBurned: 35,
+            encoded: 'preparedTransaction'
+          });
+        });
     }));
 
-    it('postTransaction should be called with the correct rawTransaction with one output', fakeAsync(() => {
+    it('should be returned the correct observable for the one output', fakeAsync(() => {
       const address = 'address';
       const amount = 1;
 
       const addresses = [
-        createAddress('address1', 'secretKey1'),
+        createAddress('address1', 'secretKey1')
       ];
 
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput('address1', 'hash1', 1, 10),
+        createOutput('address1', 'hash1', 1, 10)
       ];
 
       const expectedTxInputs: TransactionInput[] = [
-        { hash: 'hash1', secret: 'secretKey1' }
+        { hash: 'hash1', secret: 'secretKey1', address: 'address1', calculated_hours: 10, coins: 1 }
       ];
 
       const expectedTxOutputs: TransactionOutput[] = [
         {
           address: address,
-          coins: 1000000,
+          coins: 1,
           hours: 5
         }
       ];
@@ -293,16 +295,17 @@ describe('WalletService', () => {
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
       spyCipherProvider.prepareTransaction.and.returnValue('preparedTransaction');
 
-      walletService.sendSkycoin(wallet, address, amount)
-        .subscribe();
-
-      expect(spyCipherProvider.prepareTransaction)
-        .toHaveBeenCalledWith(expectedTxInputs, expectedTxOutputs);
-
-      expect(spyApiService.postTransaction)
-        .toHaveBeenCalledWith('preparedTransaction');
+      walletService.createTransaction(wallet, address, amount)
+        .subscribe((result: any) => {
+          expect(result).toEqual({
+            inputs: expectedTxInputs,
+            outputs: expectedTxOutputs,
+            hoursSent: 5,
+            hoursBurned: 5,
+            encoded: 'preparedTransaction'
+          });
+        });
     }));
-
 
     it('should be rejected for not enough Sky Hours', () => {
       const address = 'address';
@@ -322,7 +325,7 @@ describe('WalletService', () => {
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
 
-      walletService.sendSkycoin(wallet, address, amount)
+      walletService.createTransaction(wallet, address, amount)
         .subscribe(
           () => fail('should be rejected'),
           (error) => expect(error.message).toBe('Not enough available SKY Hours to perform transaction!')

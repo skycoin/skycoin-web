@@ -1,8 +1,8 @@
 <feature-toggle-provider [features]="featureToggleData">
   <feature-toggle [featureName]="'enableDisclaimerWarning'">
     <div class="disclaimer-warning">
-      <span>IF YOU USE THIS WALLET YOU MAY LOSE COINS. TESTING PURPOSES ONLY. </span>
-      <a title="Dismiss warning" (click)="hideDisclaimerWarning()">&times; Don't show this message again</a>
+      <span>{{ 'feature.disclaimer.disclaimer-desc' | translate }}</span>
+      <a title="Dismiss warning" (click)="hideDisclaimerWarning()">&times; {{ 'feature.disclaimer.disclaimer-dismiss' | translate }}</a>
     </div>
   </feature-toggle>
 </feature-toggle-provider>
