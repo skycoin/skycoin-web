@@ -21,6 +21,11 @@ class MockWalletService {
   }
 }
 
+class MockMatSnackBar {
+  dismiss() {
+  }
+}
+
 describe('SendFormComponent', () => {
   let component: SendFormComponent;
   let fixture: ComponentFixture<SendFormComponent>;
@@ -33,7 +38,7 @@ describe('SendFormComponent', () => {
       providers: [
         FormBuilder,
         { provide: WalletService, useClass: MockWalletService },
-        { provide: MatDialog, useValue: {} }
+        { provide: MatDialog, useClass: MockMatSnackBar }
       ]
     }).compileComponents();
   }));

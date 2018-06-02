@@ -42,6 +42,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.snackbar.dismiss();
   }
 
   onVerify() {
