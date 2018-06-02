@@ -39,8 +39,9 @@ export class CreateWalletComponent implements OnInit {
       );
   }
 
-  generateSeed() {
-    this.form.controls.seed.setValue(Bip39.generateMnemonic());
+  private generateSeed(entropy: number) {
+    this.walletService.generateSeed(entropy)
+      .subscribe(seed => this.form.get('seed').setValue(seed));
   }
 
   private onCreateError(errorMesasge: string) {
@@ -70,7 +71,7 @@ export class CreateWalletComponent implements OnInit {
     );
 
     if (this.data.create) {
-      this.generateSeed();
+      this.generateSeed(128);
     }
   }
 

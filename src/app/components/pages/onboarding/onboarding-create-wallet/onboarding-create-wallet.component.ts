@@ -66,7 +66,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
       );
 
     if (this.showNewForm) {
-      this.generateSeed();
+      this.generateSeed(128);
     }
   }
 
@@ -97,8 +97,9 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.router.navigate(['/wallets']);
   }
 
-  generateSeed() {
-    this.form.controls.seed.setValue(Bip39.generateMnemonic());
+  private generateSeed(entropy: number) {
+    this.walletService.generateSeed(entropy)
+      .subscribe(seed => this.form.get('seed').setValue(seed));
   }
 
   private createWallet() {

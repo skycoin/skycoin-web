@@ -286,6 +286,10 @@ export class WalletService {
     });
   }
 
+  generateSeed(entropy: number = 128): Observable<string> {
+    return this.apiService.getWalletNewSeed(entropy);
+  }
+
   private calculateBalance(wallets: Wallet[], balance: Balance) {
     if (balance.addresses) {
       wallets.map((wallet: Wallet) => {

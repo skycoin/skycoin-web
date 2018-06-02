@@ -33,6 +33,11 @@ export class ApiService {
     return this.post('injectTransaction', { rawtx: rawTransaction });
   }
 
+  getWalletNewSeed(entropy: number = 128): Observable<string> {
+    return this.get('wallet/newSeed', { entropy })
+      .map(response => response.seed);
+  }
+
   get(url, params = null, options = {}) {
     return this.http.get(this.getUrl(url, params), this.returnRequestOptions(options))
       .map((res: any) => res.json())
