@@ -20,6 +20,7 @@ export class WalletDetailComponent implements OnInit {
 
   private deleteConfirmation1: string;
   private deleteConfirmation2: string;
+  private deleteConfirmationCheck: string;
 
   constructor(
     private walletService: WalletService,
@@ -32,6 +33,7 @@ export class WalletDetailComponent implements OnInit {
     this.translateService.get('wallet').subscribe(res => {
       this.deleteConfirmation1 = res['delete-confirmation1'];
       this.deleteConfirmation2 = res['delete-confirmation2'];
+      this.deleteConfirmationCheck = res['delete-confirmation-check'];
     });
   }
 
@@ -94,7 +96,11 @@ export class WalletDetailComponent implements OnInit {
   deleteWallet() {
     const dialogRef = this.dialog.open(ConfirmationComponent, {
       width: '500px',
-      data: { text: `${this.deleteConfirmation1} "${this.wallet.label}" ${this.deleteConfirmation2}` }
+      data: {
+        text: `${this.deleteConfirmation1} "${this.wallet.label}" ${this.deleteConfirmation2}`,
+        isCheckboxDisplayed: true,
+        checkboxText: this.deleteConfirmationCheck
+      }
     });
 
     dialogRef.afterClosed()

@@ -4,8 +4,12 @@
   </div>
 
   <div class="-check-container">
-    <mat-checkbox class="-disclaimer-check-text -check" [checked]="acceptDeletion" (change)="setAccept($event)"
-                  type="checkbox" id="terms">{{ 'wallet.delete-confirmation-check' | translate }}
+    <mat-checkbox *ngIf="data.isCheckboxDisplayed"
+                  type="checkbox"
+                  class="-disclaimer-check-text -check"
+                  id="terms"
+                  [checked]="acceptDeletion"
+                  (change)="setAccept($event)">{{ data.checkboxText }}
     </mat-checkbox>
   </div>
 

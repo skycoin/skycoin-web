@@ -1,15 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { ConfirmationComponent } from './confirmation.component';
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
 
 describe('ConfirmationComponent', () => {
   let component: ConfirmationComponent;
@@ -17,7 +10,7 @@ describe('ConfirmationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmationComponent, MockTranslatePipe ],
+      declarations: [ ConfirmationComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
