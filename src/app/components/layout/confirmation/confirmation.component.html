@@ -4,7 +4,7 @@
   </div>
 
   <div class="-check-container">
-    <mat-checkbox *ngIf="data.isCheckboxDisplayed"
+    <mat-checkbox *ngIf="data.displayCheckbox"
                   type="checkbox"
                   class="-disclaimer-check-text -check"
                   id="terms"
@@ -17,7 +17,7 @@
     <app-button (action)="closeModal(false)">
       {{ cancelButtonText }}
     </app-button>
-    <app-button (action)="closeModal(true)" class="primary" [disabled]="!acceptDeletion">
+    <app-button (action)="closeModal(true)" class="primary" [disabled]="data.displayCheckbox && !acceptDeletion">
       {{ confirmButtonText }}
     </app-button>
   </div>

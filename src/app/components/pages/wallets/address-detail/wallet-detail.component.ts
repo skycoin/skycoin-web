@@ -98,7 +98,7 @@ export class WalletDetailComponent implements OnInit {
       width: '500px',
       data: {
         text: `${this.deleteConfirmation1} "${this.wallet.label}" ${this.deleteConfirmation2}`,
-        isCheckboxDisplayed: true,
+        displayCheckbox: true,
         checkboxText: this.deleteConfirmationCheck
       }
     });
