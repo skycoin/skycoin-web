@@ -81,6 +81,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private updateBlockchainProgress(response) {
+    if (response.isError) {
+      this.connectionError = response.error;
+      return;
+    }
+
     this.querying = false;
     this.isBlockchainLoading = response.highest !== response.current;
 
