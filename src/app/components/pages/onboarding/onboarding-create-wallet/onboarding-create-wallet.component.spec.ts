@@ -25,6 +25,9 @@ class MockTranslatePipe implements PipeTransform {
 
 class MockWalletService {
   all: Observable<Wallet[]> = Observable.of();
+  generateSeed(entropy) {
+    return Observable.of('');
+  }
 }
 
 describe('OnboardingCreateWalletComponent', () => {

@@ -29,7 +29,14 @@
           <input formControlName="label" id="label">
         </div>
         <div class="form-field">
-          <label for="seed">{{ 'wallet.new.seed-label' | translate }}</label>
+          <label for="seed">
+            <span>{{ 'wallet.new.seed-label' | translate }}</span>
+            <span class="generators" *ngIf="showNewForm">
+              <span (click)="generateSeed(128)" matTooltip="Generate 12 word seed">{{ 'wallet.new.12-words' | translate }}</span>
+              <span class="divider">|</span>
+              <span (click)="generateSeed(256)" matTooltip="Generate 24 word seed">{{ 'wallet.new.24-words' | translate }}</span>
+            </span>
+          </label>
           <textarea formControlName="seed" class="form-control" id="seed" rows="2"></textarea>
         </div>
         <div class="form-field" [style.visibility]="showNewForm?'visible':'hidden'">
