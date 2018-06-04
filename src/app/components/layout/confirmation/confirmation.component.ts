@@ -7,10 +7,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
   styleUrls: ['./confirmation.component.scss']
 })
 export class ConfirmationComponent {
-  @Input() text: string;
   @Input() headerText = 'Confirmation';
   @Input() confirmButtonText = 'Yes';
   @Input() cancelButtonText = 'No';
+
+  acceptDeletion = false;
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmationComponent>,
@@ -19,5 +20,9 @@ export class ConfirmationComponent {
 
   closeModal(isConfirmed: boolean) {
     this.dialogRef.close(isConfirmed);
+  }
+
+  setAccept(event) {
+    this.acceptDeletion = event.checked ? true : false;
   }
 }

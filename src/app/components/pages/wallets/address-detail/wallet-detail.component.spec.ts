@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatSnackBar, MatMenuModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
 
 import { WalletDetailComponent } from './wallet-detail.component';
 import { WalletService } from '../../../../services/wallet.service';
@@ -14,6 +16,12 @@ class MockTranslatePipe implements PipeTransform {
 }
 
 class MockWalletService {
+}
+
+class MockTranslateService {
+  get(key: string | Array<string>, interpolateParams?: Object): Observable<string | any> {
+    return Observable.of({});
+  }
 }
 
 describe('WalletDetailComponent', () => {
@@ -32,7 +40,8 @@ describe('WalletDetailComponent', () => {
       providers: [
         { provide: WalletService, useClass: MockWalletService },
         { provide: MatDialog, useValue: {} },
-        { provide: MatSnackBar, useValue: {} }
+        { provide: MatSnackBar, useValue: {} },
+        { provide: TranslateService, useClass: MockTranslateService },
       ]
     }).compileComponents();
   }));

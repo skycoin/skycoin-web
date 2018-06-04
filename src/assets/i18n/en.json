@@ -118,6 +118,9 @@
     "load": "Load Wallet",
     "encryption": "Encryption",
     "wallet": "Wallet",
+    "delete-confirmation1": "The wallet",
+    "delete-confirmation2": "will be deleted. Do you want to continue?",
+    "delete-confirmation-check": "Yeah, I want to delete the wallet.",
 
     "new": {
       "create-title": "Create Wallet",
