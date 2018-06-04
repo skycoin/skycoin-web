@@ -98,8 +98,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   private generateSeed(entropy: number) {
-    this.walletService.generateSeed(entropy)
-      .subscribe(seed => this.form.get('seed').setValue(seed));
+    this.form.controls.seed.setValue(Bip39.generateMnemonic(entropy));
   }
 
   private createWallet() {
