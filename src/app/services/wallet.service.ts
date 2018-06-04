@@ -279,8 +279,12 @@ export class WalletService {
 
     this.addresses.first().subscribe((addresses: Address[]) => {
       this.retrieveAddressesBalance(addresses).subscribe(
-        (balance: Balance) => { this.wallets.first().subscribe(wallets => this.calculateBalance(wallets, balance)); },
-        () => { this.updatingBalance = false; this.resetBalancesUpdateTime(true); },
+        (balance: Balance) => this.wallets.first().subscribe(wallets => this.calculateBalance(wallets, balance)),
+        () => {
+                this.updatingBalance = false;
+                this.totalBalance.next(null);
+                this.resetBalancesUpdateTime(true);
+              },
         () => this.updatingBalance = false
       );
     });

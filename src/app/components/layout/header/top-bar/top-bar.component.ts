@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { WalletService } from '../../../../services/wallet.service';
+import { TotalBalance } from '../../../../app.datatypes';
 
 @Component({
   selector: 'app-top-bar',
@@ -12,12 +13,18 @@ export class TopBarComponent implements OnInit, OnDestroy {
   @Input() headline: string;
 
   timeSinceLastUpdateBalances = 0;
+  isBalanceUpdated: boolean;
   private updateBalancesSubscription: Subscription;
 
   constructor(private walletService: WalletService) {
   }
 
   ngOnInit() {
+    this.walletService.totalBalance
+      .subscribe((balance: TotalBalance) => {
+        this.isBalanceUpdated = !!balance;
+      });
+
     this.updateBalancesSubscription = this.walletService.timeSinceLastBalancesUpdate
       .subscribe((time: number) => {
         if (time != null) {

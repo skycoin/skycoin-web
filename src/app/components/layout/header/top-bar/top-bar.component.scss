@@ -9,7 +9,7 @@
 .buttons-left {
   display: inline-block;
   padding: 0 10px;
-  width: 200px;
+  width: 205px;
 }
 
 .last-updated-time {
@@ -31,7 +31,7 @@
 .buttons-right {
   display: inline-block;
   text-align: right;
-  width: 200px;
+  width: 205px;
 
   button {
     display: inline-block;
@@ -45,4 +45,18 @@ button {
 
 .color-primary {
   color: #0072FF;
+}
+
+.blinking-warning-icon {
+  font-size: 18px;
+  vertical-align: middle;
+  color: orange;
+  cursor: pointer;
+  animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {
+  80% {
+    opacity: 0;
+  }
 }

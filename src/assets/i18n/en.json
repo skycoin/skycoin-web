@@ -257,7 +257,8 @@
   },
 
   "top-bar": {
-    "less-than": "less than a"
+    "less-than": "less than a",
+    "connection-error-tooltip": "Connection error, retrying"
   },
 
   "qr-code" : {
