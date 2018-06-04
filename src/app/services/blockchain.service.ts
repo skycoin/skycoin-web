@@ -6,6 +6,7 @@ import 'rxjs/add/operator/startWith';
 
 import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';
+import { ConnectionError } from '../enums/connection-error.enum';
 
 @Injectable()
 export class BlockchainService {
@@ -70,7 +71,7 @@ export class BlockchainService {
       .takeWhile((response: any) => !response.current || response.current !== response.highest)
       .subscribe(
         response => this.progressSubject.next(response),
-        error => this.finishLoadingBlockchain(),
+        error => this.onLoadBlockchainError(),
         () => this.completeLoading()
       );
   }
@@ -86,5 +87,9 @@ export class BlockchainService {
 
   private finishLoadingBlockchain() {
     this.progressSubject.next({ current: 999999999999, highest: 999999999999 });
+  }
+
+  private onLoadBlockchainError() {
+    this.progressSubject.next({ isError: true, error: ConnectionError.UNAVAILABLE_BACKEND });
   }
 }

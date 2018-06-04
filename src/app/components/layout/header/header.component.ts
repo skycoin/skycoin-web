@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.appService.checkConnectionState()
-      .subscribe((error: ConnectionError) => this.connectionError = error);
+      .subscribe((error: ConnectionError) => this.setConnectionError(error));
 
     this.blockchainSubscription = this.blockchainService.progress
       .filter(response => !!response)
@@ -81,6 +81,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private updateBlockchainProgress(response) {
+    if (response.isError) {
+      this.setConnectionError(response.error);
+      return;
+    }
+
     this.querying = false;
     this.isBlockchainLoading = response.highest !== response.current;
 
@@ -96,6 +101,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.price) {
       const balance = Math.round(this.coins * this.price * 100) / 100;
       this.balance = '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100) + ')';
+    }
+  }
+
+  private setConnectionError(error: ConnectionError) {
+    if (!this.connectionError) {
+      this.connectionError = error;
     }
   }
 }
