@@ -1,14 +1,16 @@
 <div [formGroup]="form">
   <div class="form-field">
     <label for="wallet">{{ 'send.from-label' | translate }}</label>
-    <select formControlName="wallet" id="wallet">
-      <option value="" selected>{{ 'send.select-wallet' | translate }}</option>
-      <option *ngFor="let wallet of wallets"
-              [disabled]="!wallet.balance || wallet.balance <= 0"
-              [ngValue]="wallet">
-        {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} SKY
-      </option>
-    </select>
+    <div class="-select">
+      <select formControlName="wallet" id="wallet">
+        <option value="" selected>{{ 'send.select-wallet' | translate }}</option>
+        <option *ngFor="let wallet of wallets"
+                [disabled]="!wallet.balance || wallet.balance <= 0"
+                [ngValue]="wallet">
+          {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} SKY
+        </option>
+      </select>
+    </div>
   </div>
 
   <div class="form-field">

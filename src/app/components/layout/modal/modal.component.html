@@ -1,5 +1,5 @@
 <div class="-header">
-  {{ headline }} <img src="../../../../../assets/img/close-grey.png" (click)="closePopup()">
+  {{ headline }} <img src="../../../../../assets/img/close-grey.png" (click)="closePopup()" *ngIf="!disableDismiss">
 </div>
 <div class="-body">
   <ng-content></ng-content>
