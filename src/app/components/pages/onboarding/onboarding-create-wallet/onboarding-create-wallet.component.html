@@ -30,7 +30,7 @@
         </div>
         <div class="form-field">
           <label for="seed">
-            <span>Seed</span>
+            <span>{{ 'wallet.new.seed-label' | translate }}</span>
             <span class="generators" *ngIf="showNewForm">
               <span (click)="generateSeed(128)" matTooltip="Generate 12 word seed">{{ 'wallet.new.12-words' | translate }}</span>
               <span class="divider">|</span>
