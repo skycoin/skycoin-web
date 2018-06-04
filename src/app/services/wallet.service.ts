@@ -443,7 +443,7 @@ export class WalletService {
   }
 
   private resetBalancesTimerOptions(hasPendingTxs: boolean) {
-    this.intervalTime = (hasPendingTxs ? 20 : 300) * 1000;
+    this.intervalTime = (hasPendingTxs ? 20 : 60) * 1000;
     this.refreshBalancesTimeInSec = hasPendingTxs ? 20 : 300;
   }
 
