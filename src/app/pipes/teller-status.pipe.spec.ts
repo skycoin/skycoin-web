@@ -17,22 +17,22 @@ describe('TellerStatusPipe', () => {
   });
 
   it('should work with empty string', () => {
-    expect(pipe.transform('')).toBe('Unknown');
+    expect(pipe.transform('')).toBe('teller.unknown');
   });
 
   it('should transform waiting deposit', () => {
-    expect(pipe.transform('waiting_deposit')).toBe('Waiting for Bitcoin deposit');
+    expect(pipe.transform('waiting_deposit')).toBe('teller.waiting-deposit');
   });
 
   it('should transform waiting send', () => {
-    expect(pipe.transform('waiting_send')).toBe('Waiting to send Skycoin');
+    expect(pipe.transform('waiting_send')).toBe('teller.waiting-send');
   });
 
   it('should transform waiting confirm', () => {
-    expect(pipe.transform('waiting_confirm')).toBe('Waiting for confirmation');
+    expect(pipe.transform('waiting_confirm')).toBe('teller.waiting-confirm');
   });
 
   it('should transform done', () => {
-    expect(pipe.transform('done')).toBe('Completed');
+    expect(pipe.transform('done')).toBe('teller.done');
   });
 });
