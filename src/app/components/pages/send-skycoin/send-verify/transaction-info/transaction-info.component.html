@@ -20,7 +20,7 @@
             <span>{{ 'tx.date' | translate }}:</span> {{ transaction.timestamp * 1000 | date:'short' }}
           </div>
           <div class="-data">
-            <span>{{ 'tx.status' | translate }}:</span> {{ transaction.confirmed ? 'Confirmed' : 'Pending' }}
+            <span>{{ 'tx.status' | translate }}:</span> {{ transaction.confirmed ? ('tx.confirmed' | translate) : ('tx.pending' | translate) }}
           </div>
         </ng-container>
         <div class="-data" *ngIf="isPreview">

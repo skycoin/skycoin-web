@@ -105,3 +105,12 @@ export interface AddressBalance {
     hours: number;
   };
 }
+
+export interface ConfirmationData {
+  text: string;
+  headerText: string;
+  displayCheckbox: boolean;
+  checkboxText: string;
+  confirmButtonText: string;
+  cancelButtonText: string;
+}

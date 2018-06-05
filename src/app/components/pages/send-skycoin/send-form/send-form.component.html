@@ -7,7 +7,7 @@
         <option *ngFor="let wallet of wallets"
                 [disabled]="!wallet.balance || wallet.balance <= 0"
                 [ngValue]="wallet">
-          {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} SKY
+          {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} {{ 'common.coin-id' | translate }}
         </option>
       </select>
     </div>

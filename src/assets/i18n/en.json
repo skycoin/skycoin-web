@@ -266,5 +266,11 @@
 
   "qr-code" : {
     "copy-address": "Copy address to clipboard"
+  },
+
+  "confirmation" : {
+    "header-text": "Confirmation",
+    "confirm-button": "Yes",
+    "cancel-button": "No"
   }
 }
