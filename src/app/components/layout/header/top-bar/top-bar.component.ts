@@ -13,6 +13,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   @Input() headline: string;
 
   timeSinceLastUpdateBalances = 0;
+  isBalanceObtained = false;
   isBalanceUpdated: boolean;
   private updateBalancesSubscription: Subscription;
 
@@ -22,6 +23,10 @@ export class TopBarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.walletService.totalBalance
       .subscribe((balance: TotalBalance) => {
+        if (balance && !this.isBalanceObtained) {
+          this.isBalanceObtained = true;
+        }
+
         this.isBalanceUpdated = !!balance;
       });
 

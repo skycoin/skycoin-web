@@ -1,5 +1,5 @@
 <div class="buttons-left">
-  <span class="last-updated-time">
+  <span class="last-updated-time" *ngIf="isBalanceObtained">
     {{ 'header.updated1' | translate }} {{ timeSinceLastUpdateBalances === 0 ? ('top-bar.less-than' | translate ) : timeSinceLastUpdateBalances }} {{ 'header.updated2' | translate }}
     <i *ngIf="!this.isBalanceUpdated"
        class="material-icons blinking-warning-icon"
