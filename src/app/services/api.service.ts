@@ -35,7 +35,7 @@ export class ApiService {
     return this.post('injectTransaction', { rawtx: rawTransaction });
   }
 
-  get(url, params = null, options = {}) {
+  get(url, params = null, options = {}): Observable<any> {
     return this.http.get(this.getUrl(url, params), this.returnRequestOptions(options))
       .map((res: any) => res.json())
       .catch((error: any) => this.getErrorMessage(error));
