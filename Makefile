@@ -10,6 +10,9 @@ lint: ## runs lint
 unit-test: ## runs unit tests
 	npm run test
 
+cipher-test:
+	npm run cipher-test
+
 run-docker: ## runs docker container
 	docker volume create skycoin-data
 	docker volume create skycoin-wallet

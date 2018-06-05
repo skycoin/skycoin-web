@@ -12,9 +12,14 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
-      require('@angular/cli/plugins/karma')
+      require('@angular/cli/plugins/karma'),
+      require('karma-read-json')
+    ],
+    files: [
+      { pattern: 'e2e/test-fixtures/*.json', included: false }
     ],
     client:{
+      args: ['--browserNoActivityTimeout', config.browserNoActivityTimeout],
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
