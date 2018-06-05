@@ -24,38 +24,22 @@
   </mat-menu>
 </ng-container>
 <div class="-actions">
-  <div class="-button" (click)="onAddNewAddress()">
-    <div class="-btn-plus btn-add-address">
-      <img src="../../../../../assets/img/plus-grey.png">
-      <span>{{ 'wallet.new-address' | translate }}</span>
-    </div>
+  <div class="-button btn-add-address" (click)="onAddNewAddress()">
+    <span class="-img -btn-plus">{{ 'wallet.new-address' | translate }}</span>
   </div>
   <div class="-button" (click)="toggleEmpty()">
     <ng-container *ngIf="!wallet.hideEmpty">
-      <div class="-btn-minus">
-        <img src="../../../../../assets/img/minus-grey.png">
-        <span>{{ 'wallet.hide-empty' | translate }}</span>
-      </div>
+      <span class="-img -btn-minus">{{ 'wallet.hide-empty' | translate }}</span>
     </ng-container>
     <ng-container *ngIf="wallet.hideEmpty">
-      <div class="-btn-plus">
-        <img src="../../../../../assets/img/plus-grey.png">
-        <span>{{ 'wallet.show-empty' | translate }}</span>
-      </div>
-
+      <span class="-img -btn-plus">{{ 'wallet.show-empty' | translate }}</span>
     </ng-container>
   </div>
   <div class="flex-fill"></div>
   <div class="-button" (click)="editWallet()">
-    <div class="-btn-edit">
-      <img src="../../../../../assets/img/edit-grey.png">
-      <span>{{ 'wallet.edit' | translate }}</span>
-    </div>
+    <span class="-img -btn-edit">{{ 'wallet.edit' | translate }}</span>
   </div>
   <div class="-button" (click)="deleteWallet()">
-    <div class="-btn-minus">
-      <img src="../../../../../assets/img/minus-grey.png">
-      <span>{{ 'wallet.delete' | translate }}</span>
-    </div>
+    <span class="-img -btn-minus">{{ 'wallet.delete' | translate }}</span>
   </div>
 </div>

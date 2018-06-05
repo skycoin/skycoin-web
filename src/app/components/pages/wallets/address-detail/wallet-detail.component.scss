@@ -81,48 +81,57 @@
   width: 100%;
 
   .-button {
-    cursor: pointer;
-    padding: 0 20px;
+    padding-right: 20px;
 
-    img {
-      display: inline-block;
-      float: left;
-      height: 60px;
-      padding: 14px 0;
-      width: 32px;
+    &:first-child {
+      padding-left: 5px;
     }
 
     span {
       color: #CECFD0;
-      display: inline-block;
       font-size: 12px;
       height: 60px;
-      line-height: 60px;
       margin: 0 5px;
-    }
+      cursor: pointer;
+      display: flex;
+      align-items: center;
 
-  }
-  .-button:hover {
-
-    span{
-      color: #1F2227;
-    }
-
-    .-btn-plus {
-      img {
-        content: url("../../../../../assets/img/plus-green.png");
+      &.-img::before {
+        content: '';
+        display: inline-block;
+        height: 32px;
+        width: 32px;
+        margin-right: 5px;
+        background-repeat: no-repeat;
+        background-size: 32px 32px;
       }
-    }
 
-    .-btn-minus{
-      img {
-        content: url("../../../../../assets/img/minus-red.png");
+      &.-btn-plus::before {
+        background-image: url(../../../../../assets/img/plus-grey.png);
       }
-    }
 
-    .-btn-edit{
-      img {
-        content: url("../../../../../assets/img/edit-blue.png");
+      &.-btn-minus::before {
+        background-image: url(../../../../../assets/img/minus-grey.png);
+      }
+
+      &.-btn-edit::before {
+        background-image: url(../../../../../assets/img/edit-grey.png);
+      }
+
+      &:hover {
+        color: $grey-dark;
+
+        &.-btn-plus::before {
+          background-image: url(../../../../../assets/img/plus-green.png);
+        }
+  
+        &.-btn-minus::before {
+          background-image: url(../../../../../assets/img/minus-red.png);
+        }
+  
+        &.-btn-edit::before {
+          background-image: url(../../../../../assets/img/edit-blue.png);
+        }
       }
     }
   }
