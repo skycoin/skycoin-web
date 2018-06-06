@@ -52,9 +52,7 @@ import { WalletsComponent } from './components/pages/wallets/wallets.component';
 import { ClipboardDirective } from './directives/clipboard.directive';
 import { DateFromNowPipe } from './pipes/date-from-now.pipe';
 import { DateTimePipe } from './pipes/date-time.pipe';
-import { SkyPipe } from './pipes/sky.pipe';
 import { TellerStatusPipe } from './pipes/teller-status.pipe';
-import { TransactionsAmountPipe } from './pipes/transactions-amount.pipe';
 import { ApiService } from './services/api.service';
 import { BlockchainService } from './services/blockchain.service';
 import { ClipboardService } from './services/clipboard.service';
@@ -101,11 +99,9 @@ import { DisclaimerWarningComponent } from './components/layout/disclaimer-warni
     PendingTransactionsComponent,
     QrCodeComponent,
     SendSkycoinComponent,
-    SkyPipe,
     TellerStatusPipe,
     TopBarComponent,
     TransactionDetailComponent,
-    TransactionsAmountPipe,
     UnlockWalletComponent,
     WalletsComponent,
     WalletDetailComponent,

@@ -24,14 +24,6 @@ export class BlockchainService {
     this.loadBlockchainBlocks();
   }
 
-  addressTransactions(id): Observable<any> {
-    return this.apiService.get('explorer/address', { address: id });
-  }
-
-  addressBalance(id): Observable<any> {
-    return this.apiService.get('outputs', { addrs: id });
-  }
-
   block(id): Observable<any> {
     return this.apiService.get('blocks', { start: id, end: id }).map(response => response.blocks[0]).flatMap(block => {
       return Observable.forkJoin(block.body.txns.map(transaction => {
@@ -71,7 +63,7 @@ export class BlockchainService {
       .takeWhile((response: any) => !response.current || response.current !== response.highest)
       .subscribe(
         response => this.progressSubject.next(response),
-        error => this.onLoadBlockchainError(),
+        () => this.onLoadBlockchainError(),
         () => this.completeLoading()
       );
   }
