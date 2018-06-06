@@ -90,6 +90,6 @@ export class ApiService {
     return error
       ? Observable.throw(error)
       : this.translate.get('service.api.server-error')
-          .flatMap(message => Observable.throw(message));
+          .flatMap(message => Observable.throw(new Error(message)));
   }
 }
