@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import 'rxjs/add/operator/startWith';
@@ -24,35 +23,12 @@ export class BlockchainService {
     this.loadBlockchainBlocks();
   }
 
-  block(id): Observable<any> {
-    return this.apiService.get('blocks', { start: id, end: id }).map(response => response.blocks[0]).flatMap(block => {
-      return Observable.forkJoin(block.body.txns.map(transaction => {
-        if (transaction.inputs && !transaction.inputs.length) {
-          return Observable.of(transaction);
-        }
-        return Observable.forkJoin(transaction.inputs.map(input => this.retrieveInputAddress(input).map(response => {
-          return response.owner_address;
-        }))).map(inputs => {
-          transaction.inputs = inputs;
-          return transaction;
-        });
-      })).map(transactions => {
-        block.body.txns = transactions;
-        return block;
-      });
-    });
-  }
-
   blocks(num: number = 5100) {
     return this.apiService.get('last_blocks', { num: num }).map(response => response.blocks.reverse());
   }
 
   lastBlock() {
     return this.blocks(1).map(blocks => blocks[0]);
-  }
-
-  private retrieveInputAddress(input: string) {
-    return this.apiService.get('uxout', {uxid: input});
   }
 
   private loadBlockchainBlocks() {
