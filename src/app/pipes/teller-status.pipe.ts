@@ -8,15 +8,15 @@ export class TellerStatusPipe implements PipeTransform {
   transform(value: any): any {
     switch (value) {
       case 'waiting_deposit':
-        return 'Waiting for Bitcoin deposit';
+        return 'teller.waiting-deposit';
       case 'waiting_send':
-        return 'Waiting to send Skycoin';
+        return 'teller.waiting-send';
       case 'waiting_confirm':
-        return 'Waiting for confirmation';
+        return 'teller.waiting-confirm';
       case 'done':
-        return 'Completed';
+        return 'teller.done';
       default:
-        return 'Unknown';
+        return 'teller.unknown';
     }
   }
 }

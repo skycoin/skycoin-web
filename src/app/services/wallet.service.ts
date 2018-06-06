@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
@@ -37,7 +38,8 @@ export class WalletService {
   constructor(
     private apiService: ApiService,
     private cipherProvider: CipherProvider,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private translate: TranslateService
   ) {
     this.loadWallets();
     this.lastBalancesUpdateTime = new Date();
@@ -53,8 +55,9 @@ export class WalletService {
 
   addAddress(wallet: Wallet) {
     if (!wallet.seed || !wallet.addresses[wallet.addresses.length - 1].next_seed) {
-      throw new Error('trying to generate address without seed!');
+      throw new Error(this.translate.instant('service.wallet.address-without-seed'));
     }
+
     const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
     wallet.addresses.push(this.cipherProvider.generateAddress(lastSeed));
     this.updateWallet(wallet);
@@ -73,7 +76,7 @@ export class WalletService {
 
       this.all.first().subscribe((wallets: Wallet[]) => {
         if (wallets.some((w: Wallet) => w.addresses[0].address === wallet.addresses[0].address)) {
-          throw new Error('A wallet already exists with this seed');
+          throw new Error(this.translate.instant('service.wallet.wallet-exists'));
         }
 
         this.addWallet(wallet);
@@ -103,7 +106,7 @@ export class WalletService {
         const totalCoins = Number(minRequiredOutputs.reduce((count, output) => count + output.coins, 0).toFixed(6));
 
         if (totalCoins < amount) {
-          throw new Error('Not enough available SKY Hours to perform transaction!');
+          throw new Error(this.translate.instant('service.wallet.not-enough-hours'));
         }
 
         const totalHours = parseInt((minRequiredOutputs.reduce((count, output) => count + output.calculated_hours, 0)) + '', 10);
@@ -161,9 +164,11 @@ export class WalletService {
   updateWallet(wallet: Wallet) {
     this.all.first().subscribe(wallets => {
       const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
+
       if (index === -1) {
-        throw new Error('trying to update the wallet with unknown address!');
+        throw new Error(this.translate.instant('service.wallet.unknown-address'));
       }
+
       wallets[index] = wallet;
       this.saveWallets(wallets);
     });
@@ -177,7 +182,7 @@ export class WalletService {
       wallet.addresses.forEach(address => {
         const fullAddress = this.cipherProvider.generateAddress(currentSeed);
         if (fullAddress.address !== address.address) {
-          throw new Error('Wrong seed');
+          throw new Error(this.translate.instant('service.wallet.wrong-seed'));
         }
         address.next_seed = fullAddress.next_seed;
         address.secret_key = fullAddress.secret_key;

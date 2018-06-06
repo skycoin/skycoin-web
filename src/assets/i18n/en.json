@@ -266,5 +266,24 @@
 
   "qr-code" : {
     "copy-address": "Copy address to clipboard"
+  },
+
+  "confirmation" : {
+    "header-text": "Confirmation",
+    "confirm-button": "Yes",
+    "cancel-button": "No"
+  },
+
+  "service": {
+    "api" : {
+      "server-error": "Server error"
+    },
+    "wallet": {
+      "address-without-seed": "trying to generate address without seed!",
+      "unknown-address": "trying to update the wallet with unknown address!",
+      "wallet-exists": "A wallet already exists with this seed",
+      "not-enough-hours": "Not enough available SKY Hours to perform transaction!",
+      "wrong-seed": "Wrong seed"
+    }
   }
 }

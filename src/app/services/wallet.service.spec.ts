@@ -1,6 +1,7 @@
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { TranslateService } from '@ngx-translate/core';
 
 import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
@@ -11,6 +12,7 @@ describe('WalletService', () => {
   let store = {};
   let walletService: WalletService;
   let spyApiService:  jasmine.SpyObj<ApiService>;
+  let spyTranslateService: jasmine.SpyObj<TranslateService>;
   let spyCipherProvider: jasmine.SpyObj<CipherProvider>;
 
   beforeEach(() => {
@@ -31,6 +33,10 @@ describe('WalletService', () => {
         {
           provide: CipherProvider,
           useValue: jasmine.createSpyObj('CipherProvider', ['generateAddress', 'prepareTransaction'])
+        },
+        {
+          provide: TranslateService,
+          useValue: jasmine.createSpyObj('TranslateService', ['instant'])
         }
       ]
     });
@@ -38,6 +44,7 @@ describe('WalletService', () => {
     walletService = TestBed.get(WalletService);
     spyApiService = TestBed.get(ApiService);
     spyCipherProvider = TestBed.get(CipherProvider);
+    spyTranslateService = TestBed.get(TranslateService);
   });
 
   afterEach(() => {
@@ -53,6 +60,7 @@ describe('WalletService', () => {
       const wallet = createWallet();
       wallet.seed = null;
       wallet.addresses[0].next_seed = null;
+      spyTranslateService.instant.and.returnValue('trying to generate address without seed!');
 
       expect(() => walletService.addAddress(wallet))
         .toThrowError('trying to generate address without seed!');
@@ -128,6 +136,8 @@ describe('WalletService', () => {
       const updatedWallet = createWallet();
       updatedWallet.addresses[0].address = 'non-exist address';
 
+      spyTranslateService.instant.and.returnValue('trying to update the wallet with unknown address!');
+
       expect(() => walletService.updateWallet(updatedWallet))
         .toThrowError('trying to update the wallet with unknown address!');
     });
@@ -157,6 +167,7 @@ describe('WalletService', () => {
       const wrongSeedAddress: Address = createAddress('wrong address');
 
       spyCipherProvider.generateAddress.and.returnValue(wrongSeedAddress);
+      spyTranslateService.instant.and.returnValue('Wrong seed');
 
       walletService.unlockWallet(wallet, 'wrong seed')
         .then(
@@ -324,6 +335,7 @@ describe('WalletService', () => {
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+      spyTranslateService.instant.and.returnValue('Not enough available SKY Hours to perform transaction!');
 
       walletService.createTransaction(wallet, address, amount)
         .subscribe(

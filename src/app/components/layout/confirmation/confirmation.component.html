@@ -1,6 +1,6 @@
-<app-modal [headline]="headerText" [dialog]="dialogRef">
+<app-modal [headline]="data.headerText" [dialog]="dialogRef">
   <div class="-body">
-    {{data.text}}
+    {{ data.text }}
   </div>
 
   <div class="-check-container">
@@ -15,10 +15,10 @@
 
   <div class="-buttons">
     <app-button (action)="closeModal(false)">
-      {{ cancelButtonText }}
+      {{ data.cancelButtonText }}
     </app-button>
     <app-button (action)="closeModal(true)" class="primary" [disabled]="data.displayCheckbox && !acceptDeletion">
-      {{ confirmButtonText }}
+      {{ data.confirmButtonText }}
     </app-button>
   </div>
 </app-modal>

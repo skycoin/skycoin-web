@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Wallet } from '../../../../app.datatypes';
+import { ConfirmationData, Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { ChangeNameComponent } from '../change-name/change-name.component';
@@ -21,6 +21,9 @@ export class WalletDetailComponent implements OnInit {
   private deleteConfirmation1: string;
   private deleteConfirmation2: string;
   private deleteConfirmationCheck: string;
+  private headerText: string;
+  private confirmButtonText: string;
+  private cancelButtonText: string;
 
   constructor(
     private walletService: WalletService,
@@ -34,6 +37,12 @@ export class WalletDetailComponent implements OnInit {
       this.deleteConfirmation1 = res['delete-confirmation1'];
       this.deleteConfirmation2 = res['delete-confirmation2'];
       this.deleteConfirmationCheck = res['delete-confirmation-check'];
+    });
+
+    this.translateService.get('confirmation').subscribe(res => {
+      this.headerText = res['header-text'];
+      this.confirmButtonText = res['confirm-button'];
+      this.cancelButtonText = res['cancel-button'];
     });
   }
 
@@ -96,11 +105,7 @@ export class WalletDetailComponent implements OnInit {
   deleteWallet() {
     const dialogRef = this.dialog.open(ConfirmationComponent, {
       width: '500px',
-      data: {
-        text: `${this.deleteConfirmation1} "${this.wallet.label}" ${this.deleteConfirmation2}`,
-        displayCheckbox: true,
-        checkboxText: this.deleteConfirmationCheck
-      }
+      data: this.getConfirmationData()
     });
 
     dialogRef.afterClosed()
@@ -119,5 +124,16 @@ export class WalletDetailComponent implements OnInit {
       config.duration = 5000;
       this.snackBar.open(exception.message, null, config);
     }
+  }
+
+  private getConfirmationData(): ConfirmationData {
+    return {
+      text: `${this.deleteConfirmation1} "${this.wallet.label}" ${this.deleteConfirmation2}`,
+      headerText: this.headerText,
+      displayCheckbox: true,
+      checkboxText: this.deleteConfirmationCheck,
+      confirmButtonText: this.confirmButtonText,
+      cancelButtonText: this.cancelButtonText
+    };
   }
 }

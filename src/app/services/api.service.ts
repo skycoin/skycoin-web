@@ -5,6 +5,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { TranslateService } from '@ngx-translate/core';
 
 import { GetOutputsRequest, Output } from '../app.datatypes';
 import { environment } from '../../environments/environment';
@@ -14,7 +15,8 @@ export class ApiService {
 
   private readonly url = environment.nodeUrl;
 
-  constructor(private http: Http) { }
+  constructor(private http: Http,
+              private translate: TranslateService) { }
 
   getOutputs(addresses): Observable<Output[]> {
     return addresses ? this.get('outputs', { addrs: addresses }).map((response: GetOutputsRequest) => {
@@ -33,10 +35,10 @@ export class ApiService {
     return this.post('injectTransaction', { rawtx: rawTransaction });
   }
 
-  get(url, params = null, options = {}) {
+  get(url, params = null, options = {}): Observable<any> {
     return this.http.get(this.getUrl(url, params), this.returnRequestOptions(options))
       .map((res: any) => res.json())
-      .catch((error: any) => Observable.throw(error || 'Server error'));
+      .catch((error: any) => this.getErrorMessage(error));
   }
 
   post(url, body = {}, options: any = {}) {
@@ -44,7 +46,7 @@ export class ApiService {
       options.csrf = csrf;
       return this.http.post(this.getUrl(url), body, this.returnRequestOptions(options))
         .map((res: any) => res.json())
-        .catch((error: any) => Observable.throw(error || 'Server error'));
+        .catch((error: any) => this.getErrorMessage(error));
     });
   }
 
@@ -82,5 +84,12 @@ export class ApiService {
 
   private getCsrf() {
     return this.get('csrf').map(response => response.csrf_token);
+  }
+
+  private getErrorMessage(error: any): Observable<any> {
+    return error
+      ? Observable.throw(error)
+      : this.translate.get('service.api.server-error')
+          .flatMap(message => Observable.throw(new Error(message)));
   }
 }
