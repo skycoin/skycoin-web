@@ -2,13 +2,14 @@ import { TestBed, inject } from '@angular/core/testing';
 import { readJSON } from 'karma-read-json';
 
 import { CipherProvider } from './cipher.provider';
-import { Address } from '../app.datatypes';
+
+declare var CipherExtras;
 
 describe('CipherProvider Lib', () => {
   let cipherProvider: CipherProvider;
-  const manyAddressesFilePath = 'e2e/test-fixtures/many-addresses.json';
+  const addressesFilePath = 'e2e/test-fixtures/many-addresses.json';
 
-  beforeEach(() => {
+  beforeAll(() => {
     TestBed.configureTestingModule({
       providers: [CipherProvider]
     });
@@ -16,24 +17,46 @@ describe('CipherProvider Lib', () => {
     cipherProvider = TestBed.get(CipherProvider);
   });
 
-  it('should generate many address correctly', async() => {
-    const fixtureFile = readJSON(manyAddressesFilePath);
-    const expectedAddresses = fixtureFile.keys;
+  describe('generate address', () => {
+    let actualAddresses = [];
+    let expectedAddresses = [];
 
-    let seed = atob(fixtureFile.seed);
-    seed = convertAsciiToHexa(seed);
+    beforeAll(() => {
+      const addressFixtureFile = readJSON(addressesFilePath);
+      expectedAddresses = addressFixtureFile.keys;
 
-    expectedAddresses.map(address => {
-      const generatedAddress = cipherProvider.generateAddress(seed);
+      let seed = convertAsciiToHexa(atob(addressFixtureFile.seed));
 
-      const actualAddress = {
-        address: generatedAddress.address,
-        public: generatedAddress.public_key,
-        secret: generatedAddress.secret_key
-      };
+      actualAddresses = expectedAddresses.map(address => {
+        const generatedAddress = cipherProvider.generateAddress(seed);
+        seed = generatedAddress.next_seed;
 
-      expect(actualAddress).toEqual(address);
-      seed = generatedAddress.next_seed;
+        return generatedAddress;
+      });
+    });
+
+    it('should generate many address correctly', () => {
+      const convertedAddresses = actualAddresses.map(address => {
+        return {
+          address: address.address,
+          public: address.public_key,
+          secret: address.secret_key
+        };
+      });
+
+      expect(convertedAddresses).toEqual(expectedAddresses);
+    });
+
+    it('should pass the verification', () => {
+      actualAddresses.map(address => {
+        const addressFromPubKey = CipherExtras.AddressFromPubKey(address.public_key);
+        const addressFromSecKey = CipherExtras.AddressFromSecKey(address.secret_key);
+
+        expect(addressFromPubKey && addressFromSecKey && addressFromPubKey === addressFromSecKey).toBe(true);
+
+        expect(CipherExtras.VerifySeckey(address.secret_key)).toBe(1);
+        expect(CipherExtras.VerifyPubkey(address.public_key)).toBe(1);
+      });
     });
   });
 });
