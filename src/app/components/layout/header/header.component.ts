@@ -86,8 +86,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.querying = false;
     this.isBlockchainLoading = response.highest !== response.current;
+    this.querying = !this.isBlockchainLoading && !this.isBalanceLoaded;
 
     if (this.isBlockchainLoading) {
       this.highest = response.highest;
