@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+
 import { CipherProvider } from './cipher.provider';
 import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
 

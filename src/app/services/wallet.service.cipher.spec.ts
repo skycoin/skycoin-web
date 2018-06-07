@@ -93,7 +93,7 @@ describe('WalletService with cipher:', () => {
       ];
 
       const outputs: Output[] = [
-        createOutput(addresses[0].address, '1fe7d0625540d730a396962fe616053f0e1385d10f3f2702f8a490e3c4cee075', amount, 1),
+        createOutput(addresses[0].address, amount, 1),
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
@@ -116,7 +116,7 @@ describe('WalletService with cipher:', () => {
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput(addresses[0].address, '1fe7d0625540d730a396962fe616053f0e1385d10f3f2702f8a490e3c4cee075', amount, 1),
+        createOutput(addresses[0].address, amount, 1),
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
@@ -151,11 +151,11 @@ function createAddress(): Address {
   };
 }
 
-function createOutput(address: string, hash: string, coins = 10, calculated_hours = 100): Output {
+function createOutput(address: string, coins = 10, calculated_hours = 100): Output {
   return {
     address: address,
     coins: coins,
-    hash: hash,
+    hash: '1fe7d0625540d730a396962fe616053f0e1385d10f3f2702f8a490e3c4cee075',
     calculated_hours: calculated_hours
   };
 }
