@@ -259,7 +259,7 @@ export class WalletsPage {
     seed.sendKeys('skycoin-web-e2e-test-seed');
 
     return element(by.buttonText('Unlock')).click().then(() => {
-      browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-unlock-wallet'))), 10000);
+      browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-unlock-wallet'))), 20000);
       return (element(by.css('app-unlock-wallet')).isPresent()).then((result) => {
         return !result;
       });
