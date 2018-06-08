@@ -16,6 +16,7 @@ import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput,
   Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
+import { WebWorkersHelper } from '../utils/web-workers-helper';
 
 @Injectable()
 export class WalletService {
@@ -177,22 +178,22 @@ export class WalletService {
   unlockWallet(wallet: Wallet, seed: string): Promise<void> {
     seed = this.getCleanSeed(seed);
 
-    return new Promise<void>((resolve) => {
-      let currentSeed = this.convertAsciiToHexa(seed);
-      wallet.addresses.forEach(address => {
-        const fullAddress = this.cipherProvider.generateAddress(currentSeed);
-        if (fullAddress.address !== address.address) {
-          throw new Error(this.translate.instant('service.wallet.wrong-seed'));
-        }
-        address.next_seed = fullAddress.next_seed;
-        address.secret_key = fullAddress.secret_key;
-        address.public_key = fullAddress.public_key;
-        currentSeed = fullAddress.next_seed;
-      });
+    return new Promise<void>((resolve, reject) => {
+      const currentSeed = this.convertAsciiToHexa(seed);
 
-      wallet.seed = seed;
-      this.updateWallet(wallet);
-      return resolve();
+      WebWorkersHelper.ExcecuteWorker('/assets/scripts/workers/generate-addresses.worker.js', { seed: currentSeed, addresses: wallet.addresses })
+        .subscribe(
+          (addresses) => {
+            wallet.seed = seed;
+            wallet.addresses = addresses;
+
+            this.updateWallet(wallet);
+            return resolve();
+          },
+          (error: Error) => {
+            return reject(new Error(this.translate.instant(error.message)));
+          }
+        );
     });
   }
 
