@@ -28,6 +28,10 @@ describe('Onboarding Create', () => {
     expect<any>(page.closeOutsideDisclaimer()).toEqual(true);
   });
 
+  it('should not close disclaimer by press the X button', () => {
+    expect<any>(page.closeDisclaimer()).toEqual(true);
+  });
+
   it('should disable disclaimer Continue button', () => {
     expect<any>(page.getDisclaimerButtonState()).toEqual(false);
   });
@@ -96,4 +100,10 @@ describe('Onboarding Create', () => {
     page.navigateTo();
     expect<any>(page.loadExistingWallet()).toEqual(false);
   });
+
+  it('should load wallet with correct address', () => {
+    browser.get('/wizard');
+    expect<any>(page.verifyLoadedWalletAddress()).toEqual(true);
+  });
+
 });
