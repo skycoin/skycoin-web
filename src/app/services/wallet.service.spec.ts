@@ -97,8 +97,6 @@ describe('WalletService', () => {
         addresses: [walletAddress]
       };
 
-      const expectedBalance = createBalance();
-
       spyCipherProvider.generateAddress.and.returnValue({ ...walletAddress });
 
       spyApiService.get.and.callFake((param) => {
@@ -114,6 +112,20 @@ describe('WalletService', () => {
 
       walletService.wallets.subscribe((wallets) => {
         expect(wallets[0]).toEqual(expectedWallet);
+      });
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete wallet', () => {
+      const walletToDelete = createWallet();
+      walletService.wallets = new BehaviorSubject([walletToDelete]);
+      spyApiService.get.and.callFake((param) => Observable.of(createBalance()));
+
+      walletService.delete(walletToDelete);
+
+      walletService.wallets.subscribe((wallets) => {
+        expect(wallets.length).toEqual(0);
       });
     });
   });
