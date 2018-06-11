@@ -28,12 +28,12 @@ describe('Wallets', () => {
     expect<any>(page.showAddWallet()).toEqual(true);
   });
 
-  it('should validate create wallet, seed mismatch', () => {
-    expect<any>(page.createWalletCheckValidationSeed()).toEqual(false);
-  });
-
   it('should validate create wallet, empty label', () => {
     expect<any>(page.createWalletCheckValidationLabel()).toEqual(false);
+  });
+
+  it('should validate create wallet, seed mismatch', () => {
+    expect<any>(page.createWalletCheckValidationSeed()).toEqual(false);
   });
 
   it('should not create wallet with already used seed', () => {
@@ -48,16 +48,16 @@ describe('Wallets', () => {
     expect<any>(page.showLoadWallet()).toEqual(true);
   });
 
-  it('should validate load wallet, seed', () => {
-    expect<any>(page.loadWalletCheckValidationSeed()).toEqual(false);
-  });
-
   it('should validate load wallet, empty label', () => {
     expect<any>(page.loadWalletCheckValidationLabel()).toEqual(false);
   });
 
   it('should not load wallet with already used seed', () => {
     expect<any>(page.loadExistingWallet()).toEqual(false);
+  });
+
+  it('should validate load wallet, seed', () => {
+    expect<any>(page.loadWalletCheckValidationSeed()).toEqual(false);
   });
 
   it('should load wallet', () => {
