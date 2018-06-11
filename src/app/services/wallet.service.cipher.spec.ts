@@ -59,8 +59,14 @@ describe('WalletService with cipher:', () => {
     it('on add address to wallet', () => {
       const wallet = createWallet();
       const expectedWallet = createWallet();
-      const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
-      const newAddress = cipherProvider.generateAddress(lastSeed);
+      const newAddress =
+        createAddress(
+          'fJfDHydeWopE5EbxDpH2EVf8kY47HQYb5Y',
+          'f0cecf181dc39bc99d0b9bec3fdce293c22af99af20320974eab1217d0d75b69',
+          '03c4e2d7b538a3717b6a489d3690605bc03746f1a04a4fd341a7da5b7c8fa742b3',
+          'eca11b3aaf8858756af559840d2731b865bf5f09f91355c67066d4f676af6f8a'
+      );
+
       expectedWallet.addresses.push(newAddress);
 
       spyOn(walletService, 'updateWallet');
@@ -103,7 +109,10 @@ describe('WalletService with cipher:', () => {
           (result: any) => {
           expect(result.inputs).toEqual(expectedTxInputs);
           expect(result.outputs).toEqual(expectedTxOutputs);
-        });
+        },
+          () => {
+            fail('should not be rejected');
+          });
     }));
 
     it('should rejected transaction for an invalid destination address\'', fakeAsync(() => {
@@ -123,7 +132,9 @@ describe('WalletService with cipher:', () => {
 
       walletService.createTransaction(wallet, wrongDestinationAddress, amount)
         .subscribe(
-          () => {},
+          () => {
+            fail('should be rejected');
+          },
           (error) => expect(error.message).toEqual('Error: Invalid checksum')
         );
     }));
@@ -142,12 +153,17 @@ function createWallet(label: string = 'label', seed: string = 'seed', balance: n
   };
 }
 
-function createAddress(): Address {
+function createAddress(
+  address = '2uATq4pdSb8Ka1YKSAAbp6Npehs3QQqTnb',
+  next_seed = '9fe8bfb01de85dbba36cbd9854ad7478cd63459fedb4c9f7847bf280ee17a32c',
+  public_key = '030a797a31100d3a7b5b403f551975e9a12f93b4d4e9e44b402b84832e0c7b89d2',
+  secret_key = '20c3db0e1f3b95d98d1f78d73c134af8f1b5dd34cc05f053da94c20d72558862'
+  ): Address {
   return {
-    address: '2uATq4pdSb8Ka1YKSAAbp6Npehs3QQqTnb',
-    next_seed: '9fe8bfb01de85dbba36cbd9854ad7478cd63459fedb4c9f7847bf280ee17a32c',
-    public_key: '030a797a31100d3a7b5b403f551975e9a12f93b4d4e9e44b402b84832e0c7b89d2',
-    secret_key: '20c3db0e1f3b95d98d1f78d73c134af8f1b5dd34cc05f053da94c20d72558862'
+    address: address,
+    next_seed: next_seed,
+    public_key: public_key,
+    secret_key: secret_key
   };
 }
 
