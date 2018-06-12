@@ -33,24 +33,31 @@ export class UnlockWalletComponent implements OnInit {
   }
 
   unlockWallet() {
+    this.unlockButton.setLoading();
+
     this.walletService.unlockWallet(this.data, this.form.value.seed)
-    .then(
-      () => {
-        this.dialogRef.close();
-        this.onWalletUnlocked.emit();
-      },
-      (error: Error) => {
-        const config = new MatSnackBarConfig();
-        config.duration = 5000;
-        this.snackbar.open(error.message, null, config);
-        this.unlockButton.setError({ _body: error.message });
-      },
-    );
+      .then(
+        () => this.onUnlockSuccess(),
+        (error: Error) => this.onUnlockError(error)
+      );
   }
 
   private initForm() {
     this.form = this.formBuilder.group({
       seed: [this.data.seed || '', Validators.required],
     });
+  }
+
+  private onUnlockSuccess() {
+    this.unlockButton.setSuccess();
+    this.closePopup();
+    this.onWalletUnlocked.emit();
+  }
+
+  private onUnlockError(error: Error) {
+    const config = new MatSnackBarConfig();
+    config.duration = 5000;
+    this.snackbar.open(error.message, null, config);
+    this.unlockButton.setError({ _body: error.message });
   }
 }

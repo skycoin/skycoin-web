@@ -7,6 +7,7 @@ import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Wallet, Address, NormalTransaction, TransactionOutput, TransactionInput, Output, Balance, GetOutputsRequestOutput } from '../app.datatypes';
+import { WebWorkersHelper } from '../utils/web-workers-helper';
 
 describe('WalletService', () => {
   let store = {};
@@ -157,20 +158,15 @@ describe('WalletService', () => {
 
   describe('unlockWallet', () => {
     it('wallet should be updated', fakeAsync(() => {
-      const wallet: Wallet = createWallet();
-      walletService.wallets = new BehaviorSubject([ wallet ]);
+      walletService.wallets = new BehaviorSubject([ createWallet() ]);
+      const inputWallet: Wallet = createWallet('wallet', 'no seed');
+      const correctSeed = 'seed';
 
-      const someSeed = 'some seed';
-      const expectedAddress = createAddress('address', 'new secret key', 'new public key', 'new next seed');
-
-      const expectedWallet: Wallet = createWallet('label', someSeed);
-      expectedWallet.addresses[0] = expectedAddress;
-
-      spyCipherProvider.generateAddress.and.returnValue({ ...expectedAddress });
-      walletService.unlockWallet(wallet, someSeed);
+      spyOn(WebWorkersHelper, 'ExcecuteWorker').and.returnValue(Observable.of([ createAddress() ]));
+      walletService.unlockWallet(inputWallet, correctSeed);
 
       walletService.wallets.subscribe((wallets) => {
-        expect(wallets[0]).toEqual(expectedWallet);
+        expect(wallets[0].seed).toEqual(correctSeed);
       });
     }));
 

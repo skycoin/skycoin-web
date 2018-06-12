@@ -102,7 +102,7 @@ describe('Wallets', () => {
 
   it('should decrypt wallet', () => {
     page.navigateTo();
-    expect<any>(page.canUnlock()).toEqual(true);
+    expect<any>(page.canUnlockWallet()).toEqual(true);
   });
 
   it('should always display add new address button for the wallet', () => {
