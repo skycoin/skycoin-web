@@ -36,7 +36,7 @@ export class UnlockWalletComponent implements OnInit {
     this.unlockButton.setLoading();
 
     this.walletService.unlockWallet(this.data, this.form.value.seed)
-      .then(
+      .subscribe(
         () => this.onUnlockSuccess(),
         (error: Error) => this.onUnlockError(error)
       );

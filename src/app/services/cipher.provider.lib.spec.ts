@@ -1,13 +1,12 @@
-import { TestBed, inject } from '@angular/core/testing';
 import { readJSON } from 'karma-read-json';
 
-import { CipherProvider } from './cipher.provider';
 import { testCases } from '../utils/jasmine-utils';
+import { Address } from '../app.datatypes';
 
 declare var CipherExtras;
+declare var Cipher;
 
 describe('CipherProvider Lib', () => {
-  let cipherProvider: CipherProvider;
   const addressesFilePath = 'e2e/test-fixtures/many-addresses.json';
   const inputHashesFilePath = 'e2e/test-fixtures/input-hashes.json';
 
@@ -19,30 +18,17 @@ describe('CipherProvider Lib', () => {
     'seed-0009.json', 'seed-0010.json'
   ];
 
-  beforeAll(() => {
-    TestBed.configureTestingModule({
-      providers: [CipherProvider]
-    });
-
-    cipherProvider = TestBed.get(CipherProvider);
-  });
-
   describe('generate address', () => {
     let actualAddresses = [];
     let expectedAddresses = [];
 
-    beforeAll(() => {
+    beforeAll(async () => {
       const addressFixtureFile = readJSON(addressesFilePath);
       expectedAddresses = addressFixtureFile.keys;
 
-      let seed = convertAsciiToHexa(atob(addressFixtureFile.seed));
+      const seed = convertAsciiToHexa(atob(addressFixtureFile.seed));
 
-      actualAddresses = expectedAddresses.map(address => {
-        const generatedAddress = cipherProvider.generateAddress(seed);
-        seed = generatedAddress.next_seed;
-
-        return generatedAddress;
-      });
+      actualAddresses = generateAddresses(seed, expectedAddresses);
     });
 
     it('should generate many address correctly', done => {
@@ -88,15 +74,10 @@ describe('CipherProvider Lib', () => {
 
         beforeAll(() => {
           const signaturesFixtureFile = readJSON(seedSignaturesPath + fileName);
-          let seed = convertAsciiToHexa(atob(signaturesFixtureFile.seed));
+          const seed = convertAsciiToHexa(atob(signaturesFixtureFile.seed));
           seedKeys = signaturesFixtureFile.keys;
 
-          actualAddresses = seedKeys.map(() => {
-            const generatedAddress = cipherProvider.generateAddress(seed);
-            seed = generatedAddress.next_seed;
-
-            return generatedAddress;
-          });
+          actualAddresses = generateAddresses(seed, seedKeys);
 
           testData = getSeedTestData(inputHashes, seedKeys, actualAddresses);
         });
@@ -170,4 +151,18 @@ function getSeedTestData(inputHashes, seedKeys, actualAddresses) {
   }
 
   return data;
+}
+
+function generateAddresses(seed: string, keys: any[]): Address[] {
+  return keys.map(() => {
+    const generatedAddress = Cipher.GenerateAddresses(seed);
+    seed = generatedAddress.NextSeed;
+
+    return {
+      next_seed: generatedAddress.NextSeed,
+      secret_key: generatedAddress.Secret,
+      public_key: generatedAddress.Public,
+      address: generatedAddress.Address
+    };
+  });
 }

@@ -6,6 +6,8 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/zip';
+import 'rxjs/add/observable/range';
+import 'rxjs/add/observable/from';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -54,37 +56,40 @@ export class WalletService {
     return this.wallets.asObservable().map(wallets => wallets ? wallets : []);
   }
 
-  addAddress(wallet: Wallet) {
+  addAddress(wallet: Wallet): Observable<void> {
     if (!wallet.seed || !wallet.addresses[wallet.addresses.length - 1].next_seed) {
       throw new Error(this.translate.instant('service.wallet.address-without-seed'));
     }
 
     const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
-    wallet.addresses.push(this.cipherProvider.generateAddress(lastSeed));
-    this.updateWallet(wallet);
-    this.loadBalances();
-  }
 
-  create(label: string, seed: string): Promise<void> {
-    return new Promise<void>((resolve) => {
-      seed = this.getCleanSeed(seed);
-
-      const wallet = {
-        label: label,
-        seed: seed,
-        addresses: [this.cipherProvider.generateAddress(this.convertAsciiToHexa(seed))]
-      };
-
-      this.all.first().subscribe((wallets: Wallet[]) => {
-        if (wallets.some((w: Wallet) => w.addresses[0].address === wallet.addresses[0].address)) {
-          throw new Error(this.translate.instant('service.wallet.wallet-exists'));
-        }
-
-        this.addWallet(wallet);
+    return this.cipherProvider.generateAddress(lastSeed)
+      .map((addr: Address) => {
+        wallet.addresses.push(addr);
+        this.updateWallet(wallet);
         this.loadBalances();
       });
+  }
 
-      return resolve();
+  create(label: string, seed: string): Observable<void> {
+    seed = this.getCleanSeed(seed);
+
+    return this.cipherProvider.generateAddress(this.convertAsciiToHexa(seed))
+      .map((fullAddress: Address) => {
+        const wallet = {
+          label: label,
+          seed: seed,
+          addresses: [fullAddress]
+        };
+
+        this.all.first().subscribe((wallets: Wallet[]) => {
+          if (wallets.some((w: Wallet) => w.addresses[0].address === wallet.addresses[0].address)) {
+            throw new Error(this.translate.instant('service.wallet.wallet-exists'));
+          }
+
+          this.addWallet(wallet);
+          this.loadBalances();
+        });
     });
   }
 
@@ -175,26 +180,22 @@ export class WalletService {
     });
   }
 
-  unlockWallet(wallet: Wallet, seed: string): Promise<void> {
+  unlockWallet(wallet: Wallet, seed: string): Observable<void> {
     seed = this.getCleanSeed(seed);
+    let currentSeed = this.convertAsciiToHexa(seed);
 
-    return new Promise<void>((resolve, reject) => {
-      const currentSeed = this.convertAsciiToHexa(seed);
-
-      WebWorkersHelper.ExcecuteWorker('/assets/scripts/workers/generate-addresses.worker.js', { seed: currentSeed, addresses: wallet.addresses })
-        .subscribe(
-          (addresses) => {
-            wallet.seed = seed;
-            wallet.addresses = addresses;
-
-            this.updateWallet(wallet);
-            return resolve();
-          },
-          (error: Error) => {
-            return reject(new Error(this.translate.instant(error.message)));
-          }
-        );
-    });
+    return Observable.range(0, wallet.addresses.length)
+      .flatMap((index: number) => {
+        return this.cipherProvider.generateAddress(currentSeed)
+          .map((fullAddress: Address) => {
+            wallet.addresses[index] = fullAddress;
+            currentSeed = fullAddress.next_seed;
+          });
+      })
+      .do(() => {
+        wallet.seed = seed;
+        this.updateWallet(wallet);
+      });
   }
 
   transactions(): Observable<any[]> {

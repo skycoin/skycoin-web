@@ -1,17 +1,28 @@
+import { TranslateService } from '@ngx-translate/core';
 import { TestBed, inject } from '@angular/core/testing';
+
 import { CipherProvider } from './cipher.provider';
 import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
-import { WalletService } from './wallet.service';
 
 describe('CipherProvider', () => {
   let cipherProvider: CipherProvider;
+  let spyTranslateService:  jasmine.SpyObj<TranslateService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CipherProvider]
+      providers: [
+        CipherProvider,
+        {
+          provide: TranslateService,
+          useValue: jasmine.createSpyObj('TranslateService', {
+            'instant': 'error message'
+          })
+        }
+      ]
     });
 
     cipherProvider = TestBed.get(CipherProvider);
+    spyTranslateService = TestBed.get(TranslateService);
   });
 
   it('should be created', () => {
@@ -34,7 +45,8 @@ describe('CipherProvider', () => {
     }
     seed = arr1.join('');
 
-    expect(cipherProvider.generateAddress(seed)).toEqual(expectedAddress);
+    cipherProvider.generateAddress(seed)
+      .subscribe(addr => expect(addr).toEqual(expectedAddress));
   });
 
   it('should prepare transaction', () => {

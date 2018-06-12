@@ -103,10 +103,10 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   private createWallet() {
     this.walletService.create(this.form.value.label, this.form.value.seed)
-    .then(
-      () => this.skip(),
-      (error) => this.onCreateError(error.message)
-    );
+      .subscribe(
+        () => this.skip(),
+        (error) => this.onCreateError(error.message)
+      );
   }
 
   private seedMatchValidator(g: FormGroup) {
