@@ -24,6 +24,14 @@ describe('Onboarding Create', () => {
     expect<any>(page.getDisclaimerIsShow()).toEqual(true);
   });
 
+  it('should not close disclaimer by press outside disclaimer', () => {
+    expect<any>(page.closeOutsideDisclaimer()).toEqual(true);
+  });
+
+  it('should not close disclaimer by press the X button', () => {
+    expect<any>(page.closeDisclaimer()).toEqual(true);
+  });
+
   it('should disable disclaimer Continue button', () => {
     expect<any>(page.getDisclaimerButtonState()).toEqual(false);
   });
@@ -34,6 +42,18 @@ describe('Onboarding Create', () => {
 
   it('should hide accepted disclaimer', () => {
     expect<any>(page.acceptDisclaimer()).toEqual(false);
+  });
+
+  it('should disable create new wallet button if seed do not match', () => {
+    expect<any>(page.getCreateWalletButtonState()).toEqual(false);
+  });
+
+  it('should generate 12 words seed', () => {
+    expect<any>(page.generateSeed(12)).toEqual(true);
+  });
+
+  it('should generate 24 words seed', () => {
+    expect<any>(page.generateSeed(24)).toEqual(true);
   });
 
   it('should load wallet', () => {
@@ -48,8 +68,22 @@ describe('Onboarding Create', () => {
     expect<any>(page.getSafeguardIsShow()).toEqual(true);
   });
 
+  it('should close safeguard by press the X button', () => {
+    expect<any>(page.closeSafeguard()).toEqual(false);
+    page.createWallet();
+  });
+
+  it('should close safeguard by press outside safeguard', () => {
+    expect<any>(page.closeOutsideSafeguard()).toEqual(false);
+    page.createWallet();
+  });
+
   it('should hide accepted safeguard', () => {
     expect<any>(page.acceptSafeguard()).toEqual(false);
+  });
+
+  it('should create wallet with correct address', () => {
+    expect<any>(page.verifyCreatedWalletAddress()).toEqual(true);
   });
 
   it('should skip wizard', () => {
@@ -66,4 +100,11 @@ describe('Onboarding Create', () => {
     page.navigateTo();
     expect<any>(page.loadExistingWallet()).toEqual(false);
   });
+
+  it('should load wallet with correct address', done => {
+    browser.get('/wizard');
+    expect<any>(page.verifyLoadedWalletAddress()).toEqual(true);
+    done();
+  });
+
 });

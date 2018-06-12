@@ -45,15 +45,21 @@ export class WalletsPage {
   }
 
   loadWalletCheckValidationSeed() {
+    const cancelAdd = element(by.buttonText('Cancel'));
+    const btnAdd = element(by.buttonText('Load Wallet'));
     const label = element(by.css('[formcontrolname="label"]'));
     const seed = element(by.css('[formcontrolname="seed"]'));
     const btnLoad = element(by.buttonText('Load'));
 
-    return label.clear().then(() => {
-      return label.sendKeys('Test wallet').then(() => {
-        return seed.clear().then(() => {
-          return seed.sendKeys(' ').then(() => {
-            return btnLoad.isEnabled();
+    return cancelAdd.click().then(() => {
+      return btnAdd.click().then(() => {
+        return label.clear().then(() => {
+          return label.sendKeys('Test wallet').then(() => {
+            return seed.clear().then(() => {
+              return seed.sendKeys('').then(() => {
+                return btnLoad.isEnabled();
+              });
+            });
           });
         });
       });
@@ -67,7 +73,7 @@ export class WalletsPage {
     const btnCreate = element(by.buttonText('Create'));
 
     return label.clear().then(() => {
-      return label.sendKeys(' ').then(() => {
+      return label.sendKeys('').then(() => {
         return seed.clear().then(() => {
           return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
             return confirm.clear().then(() => {
@@ -87,7 +93,7 @@ export class WalletsPage {
     const btnLoad = element(by.buttonText('Load'));
 
     return label.clear().then(() => {
-      return label.sendKeys(' ').then(() => {
+      return label.sendKeys('').then(() => {
         return seed.clear().then(() => {
           return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
             return btnLoad.isEnabled();
@@ -132,6 +138,14 @@ export class WalletsPage {
       }
       return status;
     });
+  }
+
+  waitUntilLoading() {
+    browser.wait(ExpectedConditions.presenceOf(element(by.css('snack-bar-container'))), 20000);
+  }
+
+  waitUntilWalletIsCreated() {
+    browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-create-wallet'))), 50000);
   }
 
   loadExistingWallet() {

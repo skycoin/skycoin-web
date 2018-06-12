@@ -2,6 +2,7 @@ import { readJSON } from 'karma-read-json';
 
 import { testCases } from '../utils/jasmine-utils';
 import { Address } from '../app.datatypes';
+import { convertAsciiToHexa } from '../utils/converters';
 
 declare var CipherExtras;
 declare var Cipher;
@@ -125,15 +126,6 @@ describe('CipherProvider Lib', () => {
     });
   });
 });
-
-function convertAsciiToHexa(str): string {
-  const arr1: string[] = [];
-  for (let n = 0, l = str.length; n < l; n ++) {
-    const hex = Number(str.charCodeAt(n)).toString(16);
-    arr1.push(hex !== '0' ? hex : '00');
-  }
-  return arr1.join('');
-}
 
 function getSeedTestData(inputHashes, seedKeys, actualAddresses) {
   const data = [];

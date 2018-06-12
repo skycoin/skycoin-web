@@ -7,7 +7,6 @@ import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Wallet, Address, NormalTransaction, TransactionOutput, TransactionInput, Output, Balance, GetOutputsRequestOutput } from '../app.datatypes';
-import { WebWorkersHelper } from '../utils/web-workers-helper';
 
 describe('WalletService', () => {
   let store = {};
@@ -120,6 +119,20 @@ describe('WalletService', () => {
     });
   });
 
+  describe('delete', () => {
+    it('should delete wallet', () => {
+      const walletToDelete = createWallet();
+      walletService.wallets = new BehaviorSubject([walletToDelete]);
+      spyApiService.get.and.callFake((param) => Observable.of(createBalance()));
+
+      walletService.delete(walletToDelete);
+
+      walletService.wallets.subscribe((wallets) => {
+        expect(wallets.length).toEqual(0);
+      });
+    });
+  });
+
   describe('updateWallet', () => {
     it('existing wallet should be updated', fakeAsync(() => {
       const wallet = createWallet('updated label');
@@ -151,7 +164,7 @@ describe('WalletService', () => {
       const inputWallet: Wallet = createWallet('wallet', 'no seed');
       const correctSeed = 'seed';
 
-      spyOn(WebWorkersHelper, 'ExcecuteWorker').and.returnValue(Observable.of([ createAddress() ]));
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of(createAddress()));
       walletService.unlockWallet(inputWallet, correctSeed);
 
       walletService.wallets.subscribe((wallets) => {

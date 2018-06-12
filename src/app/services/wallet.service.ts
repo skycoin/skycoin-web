@@ -8,6 +8,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/zip';
 import 'rxjs/add/observable/range';
 import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/scan';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -19,6 +20,7 @@ import { CipherProvider } from './cipher.provider';
 import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput,
   Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
 import { WebWorkersHelper } from '../utils/web-workers-helper';
+import { convertAsciiToHexa } from '../utils/converters';
 
 @Injectable()
 export class WalletService {
@@ -74,7 +76,7 @@ export class WalletService {
   create(label: string, seed: string): Observable<void> {
     seed = this.getCleanSeed(seed);
 
-    return this.cipherProvider.generateAddress(this.convertAsciiToHexa(seed))
+    return this.cipherProvider.generateAddress(convertAsciiToHexa(seed))
       .map((fullAddress: Address) => {
         const wallet = {
           label: label,
@@ -182,17 +184,14 @@ export class WalletService {
 
   unlockWallet(wallet: Wallet, seed: string): Observable<void> {
     seed = this.getCleanSeed(seed);
-    let currentSeed = this.convertAsciiToHexa(seed);
+    const currentSeed = convertAsciiToHexa(seed);
 
-    return Observable.range(0, wallet.addresses.length)
-      .flatMap((index: number) => {
-        return this.cipherProvider.generateAddress(currentSeed)
-          .map((fullAddress: Address) => {
-            wallet.addresses[index] = fullAddress;
-            currentSeed = fullAddress.next_seed;
-          });
-      })
-      .do(() => {
+    return this.verifyWalletAddresses(currentSeed, wallet)
+      .map((res: boolean) => {
+        if (!res) {
+          throw new Error(this.translate.instant('service.wallet.wrong-seed'));
+        }
+
         wallet.seed = seed;
         this.updateWallet(wallet);
       });
@@ -377,15 +376,6 @@ export class WalletService {
     }).join(','));
   }
 
-  private convertAsciiToHexa(str): string {
-    const arr1: string[] = [];
-    for (let n = 0, l = str.length; n < l; n ++) {
-      const hex = Number(str.charCodeAt(n)).toString(16);
-      arr1.push(hex);
-    }
-    return arr1.join('');
-  }
-
   private resetBalancesUpdateTime(hasPendingTxs: boolean) {
     this.resetBalancesTimerOptions(hasPendingTxs);
     this.calculateTimeSinceLastUpdate();
@@ -456,5 +446,23 @@ export class WalletService {
 
   private getCleanSeed(seed: string): string {
     return seed.replace(/(\n|\r\n)$/, '');
+  }
+
+  private verifyWalletAddresses(currentSeed: string, wallet: Wallet, index: number = 0): Observable<boolean> {
+    return this.cipherProvider.generateAddress(currentSeed)
+      .flatMap((fullAddress: Address) => {
+        if (fullAddress.address !== wallet.addresses[index].address) {
+          return Observable.of(false);
+        }
+
+        wallet.addresses[index] = fullAddress;
+        index++;
+
+        if (index === wallet.addresses.length) {
+          return Observable.of(true);
+        }
+
+        return this.verifyWalletAddresses(fullAddress.next_seed, wallet, index);
+      });
   }
 }
