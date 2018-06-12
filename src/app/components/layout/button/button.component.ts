@@ -28,6 +28,10 @@ export class ButtonComponent {
     this.state = 0;
   }
 
+  isLoading(): boolean {
+    return this.state === 0;
+  }
+
   setSuccess() {
     this.state = 1;
     setTimeout(() => this.state = null, 3000);
