@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CipherProvider } from './cipher.provider';
 import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
+import { convertAsciiToHexa } from '../utils/converters';
 
 describe('CipherProvider', () => {
   let cipherProvider: CipherProvider;
@@ -54,17 +55,6 @@ describe('CipherProvider', () => {
       .toThrowError('Invalid checksum');
   });
 });
-
-function convertAsciiToHexa(seed: string): string {
-  const arr1: string[] = [];
-  for (let n = 0, l = seed.length; n < l; n ++) {
-    const hex = Number(seed.charCodeAt(n)).toString(16);
-    arr1.push(hex);
-  }
-  seed = arr1.join('');
-
-  return seed;
-}
 
 function createAddress(): Address {
   return {

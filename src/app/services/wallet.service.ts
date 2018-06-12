@@ -16,6 +16,7 @@ import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput,
   Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
+import { convertAsciiToHexa } from '../utils/converters';
 
 @Injectable()
 export class WalletService {
@@ -71,7 +72,7 @@ export class WalletService {
       const wallet = {
         label: label,
         seed: seed,
-        addresses: [this.cipherProvider.generateAddress(this.convertAsciiToHexa(seed))]
+        addresses: [this.cipherProvider.generateAddress(convertAsciiToHexa(seed))]
       };
 
       this.all.first().subscribe((wallets: Wallet[]) => {
@@ -178,7 +179,7 @@ export class WalletService {
     seed = this.getCleanSeed(seed);
 
     return new Promise<void>((resolve) => {
-      let currentSeed = this.convertAsciiToHexa(seed);
+      let currentSeed = convertAsciiToHexa(seed);
       wallet.addresses.forEach(address => {
         const fullAddress = this.cipherProvider.generateAddress(currentSeed);
         if (fullAddress.address !== address.address) {
@@ -373,15 +374,6 @@ export class WalletService {
         return a;
       }, []).join(',');
     }).join(','));
-  }
-
-  private convertAsciiToHexa(str): string {
-    const arr1: string[] = [];
-    for (let n = 0, l = str.length; n < l; n ++) {
-      const hex = Number(str.charCodeAt(n)).toString(16);
-      arr1.push(hex);
-    }
-    return arr1.join('');
   }
 
   private resetBalancesUpdateTime(hasPendingTxs: boolean) {
