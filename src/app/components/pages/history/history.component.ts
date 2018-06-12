@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/Subscription';
+
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
 import { TransactionDetailComponent } from './transaction-detail/transaction-detail.component';
+import { QrCodeComponent } from '../../layout/qr-code/qr-code.component';
 
 @Component({
   selector: 'app-history',
@@ -17,7 +19,7 @@ export class HistoryComponent implements OnInit {
   private priceSubscription: Subscription;
 
   constructor(
-    public walletService: WalletService,
+    private walletService: WalletService,
     private priceService: PriceService,
     private dialog: MatDialog,
   ) { }
@@ -31,8 +33,16 @@ export class HistoryComponent implements OnInit {
 
   showTransaction(transaction: any) {
     const config = new MatDialogConfig();
-    config.width = '566px';
+    config.width = '800px';
     config.data = transaction;
     this.dialog.open(TransactionDetailComponent, config).afterClosed().subscribe();
+  }
+
+  showQr(event, address) {
+    event.stopPropagation();
+
+    const config = new MatDialogConfig();
+    config.data = address;
+    this.dialog.open(QrCodeComponent, config);
   }
 }

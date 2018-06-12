@@ -1,8 +1,10 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import * as Bip39 from 'bip39';
+
 import { WalletService } from '../../../../services/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
@@ -13,7 +15,7 @@ import { OnboardingSafeguardComponent } from './onboarding-safeguard/onboarding-
   templateUrl: './onboarding-create-wallet.component.html',
   styleUrls: ['./onboarding-create-wallet.component.scss'],
 })
-export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
+export class OnboardingCreateWalletComponent implements OnInit {
   showNewForm = true;
   form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
@@ -21,16 +23,14 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
 
   constructor(
     private dialog: MatDialog,
-    public walletService: WalletService,
+    private walletService: WalletService,
     private router: Router,
     private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
     this.initForm();
-  }
-
-  ngAfterViewInit() {
     this.existWallets();
   }
 
@@ -47,26 +47,17 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
 
   initForm() {
     this.form = this.formBuilder.group({
-        label: new FormControl('', Validators.compose([
-          Validators.required, Validators.minLength(2),
-        ])),
-        seed: new FormControl('', Validators.compose([
-          Validators.required, Validators.minLength(2),
-        ])),
-        confirm_seed: new FormControl('',
-          this.showNewForm ?
-            Validators.compose([
-              Validators.required,
-              Validators.minLength(2),
-            ])
-            : Validators.compose([]),
-        ),
+        label: new FormControl('', [ Validators.required ]),
+        seed: new FormControl('', [ Validators.required ]),
+        confirm_seed: new FormControl()
       },
-      this.showNewForm ? { validator: this.seedMatchValidator.bind(this) } : {},
-      );
+      {
+        validator: this.showNewForm ? this.seedMatchValidator.bind(this) : null
+      }
+    );
 
     if (this.showNewForm) {
-      this.generateSeed();
+      this.generateSeed(128);
     }
   }
 
@@ -76,44 +67,53 @@ export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit {
   }
 
   showDisclaimer() {
-    const config = new MatDialogConfig();
-    config.width = '450px';
-    config.disableClose = true;
-    this.dialog.open(OnboardingDisclaimerComponent, config);
+    setTimeout(() => {
+      this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
+    }, 0);
   }
 
   showSafe() {
-    const config = new MatDialogConfig();
-    config.width = '450px';
-    config.disableClose = true;
-    this.dialog.open(OnboardingSafeguardComponent, config).afterClosed().subscribe(result => {
+    this.dialog.open(OnboardingSafeguardComponent, this.createDialogConfig()).afterClosed().subscribe(result => {
       if (result) {
-        this.skip();
+        this.createWallet();
       }
     });
   }
 
-  createWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed);
-    this.showSafe();
-  }
-
   loadWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed);
-    this.skip();
+    this.createWallet();
   }
 
   skip() {
     this.router.navigate(['/wallets']);
   }
 
-  generateSeed() {
-    this.form.controls.seed.setValue(Bip39.generateMnemonic());
+  private generateSeed(entropy: number) {
+    this.form.controls.seed.setValue(Bip39.generateMnemonic(entropy));
+  }
+
+  private createWallet() {
+    this.walletService.create(this.form.value.label, this.form.value.seed)
+    .then(
+      () => this.skip(),
+      (error) => this.onCreateError(error.message)
+    );
   }
 
   private seedMatchValidator(g: FormGroup) {
-      return g.get('seed').value === g.get('confirm_seed').value
-        ? null : { mismatch: true };
+    return g.get('seed').value === g.get('confirm_seed').value ? null : { NotEqual: true };
   }
 
+  private onCreateError(errorMesasge: string) {
+    const config = new MatSnackBarConfig();
+    config.duration = 5000;
+    this.snackBar.open(errorMesasge, null, config);
+  }
+
+  private createDialogConfig(disableClose = false) {
+    const config = new MatDialogConfig();
+    config.width = '450px';
+    config.disableClose = disableClose;
+    return config;
+  }
 }

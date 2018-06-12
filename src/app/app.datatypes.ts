@@ -16,23 +16,36 @@ export interface Address {
   public_key?: string;
   balance?: number;
   hours?: number;
+  outputs?: GetOutputsRequestOutput[];
 }
 
 export class Transaction {
-  addresses: string[];
-  balance: number;
-  block: number;
-  confirmed: boolean;
+  balance?: number;
   inputs: any[];
   outputs: any[];
-  timestamp: number;
-  txid: string;
+  hoursSent?: number;
+  hoursBurned?: number;
 }
+
+export class NormalTransaction extends Transaction {
+  txid: string;
+  addresses: string[];
+  timestamp: number;
+  block: number;
+  confirmed: boolean;
+}
+
+export class PreviewTransaction extends Transaction {
+  from: string;
+  to: string;
+  encoded: string;
+}
+
 export interface Output {
   address: string;
   coins: number;
   hash: string;
-  hours: number;
+  calculated_hours: number;
 }
 
 export interface GetOutputsRequest {
@@ -46,12 +59,15 @@ export interface GetOutputsRequestOutput {
   src_tx: string;
   address: string;
   coins: string;
-  hours: number;
+  calculated_hours: number;
 }
 
 export class TransactionInput {
   hash: string;
   secret: string;
+  address?: string;
+  coins?: number;
+  calculated_hours?: number;
 }
 
 export class TransactionOutput {
@@ -60,7 +76,41 @@ export class TransactionOutput {
   hours: number;
 }
 
-export class TransactionRequest {
-  inputs: TransactionInput[];
-  outputs: TransactionOutput[];
+export interface TotalBalance {
+  coins: number;
+  hours: number;
+}
+
+export interface Balance {
+  confirmed: {
+    coins: number;
+    hours: number;
+  };
+  predicted: {
+    coins: number;
+    hours: number;
+  };
+  addresses: {
+    [key: string]: AddressBalance
+  };
+}
+
+export interface AddressBalance {
+  confirmed: {
+    coins: number;
+    hours: number;
+  };
+  predicted: {
+    coins: number;
+    hours: number;
+  };
+}
+
+export interface ConfirmationData {
+  text: string;
+  headerText: string;
+  displayCheckbox: boolean;
+  checkboxText: string;
+  confirmButtonText: string;
+  cancelButtonText: string;
 }

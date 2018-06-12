@@ -22,7 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
 import { AppComponent } from './app.component';
 import { ButtonComponent } from './components/layout/button/button.component';
 import { DoubleButtonComponent } from './components/layout/double-button/double-button.component';
@@ -46,24 +47,31 @@ import { TransactionDetailComponent } from './components/pages/history/transacti
 import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
 import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
 import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
-import { LoadWalletComponent } from './components/pages/wallets/load-wallet/load-wallet.component';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { WalletsComponent } from './components/pages/wallets/wallets.component';
 import { ClipboardDirective } from './directives/clipboard.directive';
 import { DateFromNowPipe } from './pipes/date-from-now.pipe';
 import { DateTimePipe } from './pipes/date-time.pipe';
-import { SkyPipe } from './pipes/sky.pipe';
 import { TellerStatusPipe } from './pipes/teller-status.pipe';
-import { TransactionsAmountPipe } from './pipes/transactions-amount.pipe';
 import { ApiService } from './services/api.service';
 import { BlockchainService } from './services/blockchain.service';
 import { ClipboardService } from './services/clipboard.service';
-import { NetworkService } from './services/network.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
 import { WalletService } from './services/wallet.service';
 import { WizardGuardService } from './services/wizard-guard.service';
 import { AppRoutes } from './app.routes';
+import { CipherProvider } from './services/cipher.provider';
+import { FeatureToggleModule } from 'ngx-feature-toggle';
+import { FeatureService } from './services/feature.service';
+import { AppService } from './services/app.service';
+import { NumberFieldDirective } from './directives/number-field.directive';
+import { AppTranslateLoader } from './app.translate-loader';
+import { SendFormComponent } from './components/pages/send-skycoin/send-form/send-form.component';
+import { SendVerifyComponent } from './components/pages/send-skycoin/send-verify/send-verify.component';
+import { TransactionInfoComponent } from './components/pages/send-skycoin/send-verify/transaction-info/transaction-info.component';
+import { ConfirmationComponent } from './components/layout/confirmation/confirmation.component';
+import { DisclaimerWarningComponent } from './components/layout/disclaimer-warning/disclaimer-warning.component';
 
 @NgModule({
   declarations: [
@@ -74,13 +82,13 @@ import { AppRoutes } from './app.routes';
     BuyComponent,
     ChangeNameComponent,
     ClipboardDirective,
+    NumberFieldDirective,
     CreateWalletComponent,
     DateFromNowPipe,
     DateTimePipe,
     DoubleButtonComponent,
     HeaderComponent,
     HistoryComponent,
-    LoadWalletComponent,
     ModalComponent,
     NavBarComponent,
     OutputsComponent,
@@ -91,14 +99,17 @@ import { AppRoutes } from './app.routes';
     PendingTransactionsComponent,
     QrCodeComponent,
     SendSkycoinComponent,
-    SkyPipe,
     TellerStatusPipe,
     TopBarComponent,
     TransactionDetailComponent,
-    TransactionsAmountPipe,
     UnlockWalletComponent,
     WalletsComponent,
     WalletDetailComponent,
+    SendFormComponent,
+    SendVerifyComponent,
+    TransactionInfoComponent,
+    ConfirmationComponent,
+    DisclaimerWarningComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -106,10 +117,10 @@ import { AppRoutes } from './app.routes';
     ChangeNameComponent,
     QrCodeComponent,
     UnlockWalletComponent,
-    LoadWalletComponent,
     TransactionDetailComponent,
     OnboardingDisclaimerComponent,
     OnboardingSafeguardComponent,
+    ConfirmationComponent
   ],
   imports: [
     BrowserModule,
@@ -132,20 +143,28 @@ import { AppRoutes } from './app.routes';
     MatToolbarModule,
     MatTooltipModule,
     MatCheckboxModule,
-    NgxDatatableModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(AppRoutes),
+    FeatureToggleModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useClass: AppTranslateLoader,
+      },
+    }),
   ],
   providers: [
+    AppService,
     ApiService,
     BlockchainService,
-    NetworkService,
     PurchaseService,
     WalletService,
     PriceService,
     ClipboardService,
     WizardGuardService,
+    CipherProvider,
+    FeatureService
   ],
   bootstrap: [AppComponent],
 })

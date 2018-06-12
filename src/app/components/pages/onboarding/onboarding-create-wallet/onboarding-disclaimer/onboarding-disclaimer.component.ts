@@ -21,5 +21,4 @@ export class OnboardingDisclaimerComponent {
   setAccept(event) {
     event.checked ? this.acceptTerms = true : this.acceptTerms = false;
   }
-
 }

@@ -21,5 +21,4 @@ export class OnboardingSafeguardComponent {
   setAccept(event) {
     event.checked ? this.acceptSafe = true : this.acceptSafe = false;
   }
-
 }

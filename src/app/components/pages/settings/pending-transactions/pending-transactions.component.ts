@@ -1,26 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { WalletService } from '../../../../services/wallet.service';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+
+import { WalletService } from '../../../../services/wallet.service';
 
 @Component({
   selector: 'app-pending-transactions',
   templateUrl: './pending-transactions.component.html',
-  styleUrls: ['./pending-transactions.component.css']
+  styleUrls: ['./pending-transactions.component.scss']
 })
 export class PendingTransactionsComponent implements OnInit {
 
   transactions: any[];
 
   constructor(
-    public walletService: WalletService,
+    private walletService: WalletService,
     private router: Router,
   ) { }
 
   ngOnInit() {
-    this.walletService.pendingTransactions().subscribe(transactions => {
-      this.transactions = this.mapTransactions(transactions);
-    });
+    this.walletService.getAllPendingTransactions()
+      .subscribe(transactions => this.transactions = this.mapTransactions(transactions));
   }
 
   onActivate(response) {
@@ -35,8 +35,9 @@ export class PendingTransactionsComponent implements OnInit {
       return transaction.transaction;
     })
     .map(transaction => {
-      transaction.amount = transaction.outputs.map(output => output.coins >= 0 ? output.coins : 0)
-        .reduce((a , b) => a + parseInt(b), 0);
+      transaction.amount = transaction.outputs
+        .map(output => output.coins >= 0 ? output.coins : 0)
+        .reduce((a, b) => a + parseFloat(b), 0);
       return transaction;
     });
   }

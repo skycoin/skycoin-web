@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+
 import { config } from '../../../app.config';
 import { PurchaseService } from '../../../services/purchase.service';
 import { AddDepositAddressComponent } from './add-deposit-address/add-deposit-address.component';
@@ -9,9 +10,9 @@ import { AddDepositAddressComponent } from './add-deposit-address/add-deposit-ad
   templateUrl: './buy.component.html',
   styleUrls: ['./buy.component.css'],
 })
-export class BuyComponent {
+export class BuyComponent implements OnInit {
 
-  orders = [];
+  orders: any[];
   otcEnabled: boolean;
   scanning = false;
 
@@ -22,10 +23,16 @@ export class BuyComponent {
     this.otcEnabled = config.otcEnabled;
   }
 
+  ngOnInit() {
+    this.purchaseService.all().subscribe((orders) => {
+      this.orders = orders;
+    });
+  }
+
   addDepositAddress() {
-    const config = new MatDialogConfig();
-    config.width = '500px';
-    this.dialog.open(AddDepositAddressComponent, config);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '500px';
+    this.dialog.open(AddDepositAddressComponent, dialogConfig);
   }
 
   searchDepositAddress(address: string) {

@@ -1,8 +1,8 @@
-import { browser, by, element } from 'protractor';
+import { browser, by, element, ElementFinder } from 'protractor';
 
 export class OnboardingCreatePage {
   navigateTo() {
-    return browser.get('/#/wizard/create');
+    return browser.get('/wizard/create');
   }
 
   getHeaderText() {
@@ -15,6 +15,21 @@ export class OnboardingCreatePage {
 
   getSafeguardIsShow() {
     return element(by.css('app-onboarding-safeguard')).isPresent();
+  }
+
+  closeOutsideDisclaimer() {
+    this.clickOutsideModal();
+    return this.getDisclaimerIsShow();
+  }
+
+  closeDisclaimer() {
+    const closeImg = element(by.css('img.btn-close'));
+    return closeImg.isPresent().then((isShown) => {
+      if (isShown) {
+        closeImg.click();
+      }
+      return this.getDisclaimerIsShow();
+    });
   }
 
   acceptDisclaimer() {
@@ -31,6 +46,16 @@ export class OnboardingCreatePage {
     });
   }
 
+  closeOutsideSafeguard() {
+    this.clickOutsideModal();
+    return this.getSafeguardIsShow();
+  }
+
+  closeSafeguard() {
+    element(by.css('img.btn-close')).click();
+    return this.getSafeguardIsShow();
+  }
+
   getDisclaimerButtonState() {
     return element(by.buttonText('Continue')).isEnabled();
   }
@@ -43,20 +68,14 @@ export class OnboardingCreatePage {
     return state;
   }
 
-  createWallet() {
-    const btnOption = element(by.buttonText('New'));
-    btnOption.click();
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
-    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
-    const btnCreate = element(by.buttonText('Create'));
+  getCreateWalletButtonState() {
+    const btnCreate = this.fillCreateWalletForm('not matched seed');
+    return btnCreate.isEnabled();
+  }
 
-    label.clear();
-    label.sendKeys('Test wallet');
-    seed.clear();
-    seed.sendKeys('test test');
-    confirm.clear();
-    confirm.sendKeys('test test');
+  createWallet() {
+    const btnCreate = this.fillCreateWalletForm();
+
     return btnCreate.isEnabled().then(status => {
       if (status) {
         btnCreate.click();
@@ -65,18 +84,57 @@ export class OnboardingCreatePage {
     });
   }
 
-  loadWallet() {
-    const btnOption = element(by.buttonText('Load'));
-    btnOption.click();
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
-    const btnLoad = element(by.buttonText('Create'));
+  createExistingWallet() {
+    const btnCreate = this.fillCreateWalletForm();
 
-    label.clear();
-    label.sendKeys('Test wallet');
-    seed.clear();
-    seed.sendKeys('test test');
+    return btnCreate.click().then(() => {
+      return !btnCreate.isPresent();
+    });
+  }
+
+  loadWallet() {
+    const btnLoad = this.fillLoadWalletForm();
     return btnLoad.isEnabled();
+  }
+
+  loadExistingWallet() {
+    const btnLoad = this.fillLoadWalletForm();
+    return btnLoad.click().then(() => {
+      return !btnLoad.isPresent();
+    });
+  }
+
+  generateSeed(wordsLength: number) {
+    const link = element(by.cssContainingText('span.generators span', `${wordsLength} words`));
+
+    return link.click().then(() => {
+      const seed = element(by.css('[formcontrolname="seed"]'));
+      return seed.getAttribute('value').then((val: string) => {
+        return val.split(' ').length === wordsLength;
+      });
+    });
+  }
+
+  verifyCreatedWalletAddress() {
+    return browser.executeScript('return window.localStorage.getItem("wallets");')
+      .then((data: string) => {
+        const wallets = JSON.parse(data);
+        return wallets[0].addresses[0].address === '2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z';
+      });
+  }
+
+  verifyLoadedWalletAddress() {
+    const walletLabel = 'Loaded wallet';
+    const btnLoad = this.fillLoadWalletForm(walletLabel, 'load seed');
+
+    return btnLoad.click().then(() => {
+      return browser.executeScript('return window.localStorage.getItem("wallets");')
+        .then((data: string) => {
+          const wallets = JSON.parse(data);
+          const loadedWallet = wallets.find(w => w.label === walletLabel);
+          return loadedWallet.addresses[0].address === '2iCJ67Giscwv4dBEghiPDzH4X9Z6ijNiEMR';
+        });
+    });
   }
 
   skipWizard() {
@@ -90,7 +148,7 @@ export class OnboardingCreatePage {
             });
           });
         });
-      }else {
+      } else {
        return btnSkip.click().then(() => {
           return browser.getCurrentUrl().then(url => {
             return url;
@@ -98,5 +156,40 @@ export class OnboardingCreatePage {
         });
       }
     });
-    }
+  }
+
+  private fillCreateWalletForm(seedText: string = 'skycoin-web-e2e-test-seed', confirmSeedText: string = 'skycoin-web-e2e-test-seed'): ElementFinder {
+    const btnOption = element(by.buttonText('New'));
+    btnOption.click();
+    const label = element(by.css('[formcontrolname="label"]'));
+    const seed = element(by.css('[formcontrolname="seed"]'));
+    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
+
+    label.clear();
+    label.sendKeys('Test wallet');
+    seed.clear();
+    seed.sendKeys(seedText);
+    confirm.clear();
+    confirm.sendKeys(confirmSeedText);
+
+    return element(by.buttonText('Create'));
+  }
+
+  private fillLoadWalletForm(walletLabel: string = 'Test wallet', seedText: string = 'skycoin-web-e2e-test-seed-load'): ElementFinder {
+    const btnOption = element(by.buttonText('Load'));
+    btnOption.click();
+    const label = element(by.css('[formcontrolname="label"]'));
+    const seed = element(by.css('[formcontrolname="seed"]'));
+
+    label.clear();
+    label.sendKeys(walletLabel);
+    seed.clear();
+    seed.sendKeys(seedText);
+
+    return element(by.buttonText('Create'));
+  }
+
+  private clickOutsideModal() {
+    return browser.executeScript('arguments[0].click()', element(by.css('.cdk-overlay-backdrop')));
+  }
 }

@@ -1,14 +1,26 @@
+import { browser } from 'protractor';
+
 import { WalletsPage } from './wallets.po';
 
 describe('Wallets', () => {
   let page: WalletsPage;
 
-  beforeEach(() => {
+  beforeAll(() => {
+    browser.get('/');
+    browser.executeScript(
+      `window.localStorage.setItem(\'wallets\',
+      JSON.stringify([{"label":"Test wallet","addresses":
+      [{"address":"2EzqAbuLosF47Vm418kYo2rnMgt6XgGaA1Z"}]}]) );`);
+
     page = new WalletsPage();
+    page.navigateTo();
+  });
+
+  afterAll(() => {
+    browser.restartSync();
   });
 
   it('should display title', () => {
-    page.navigateTo();
     expect<any>(page.getHeaderText()).toEqual('Wallets');
   });
 
@@ -16,12 +28,16 @@ describe('Wallets', () => {
     expect<any>(page.showAddWallet()).toEqual(true);
   });
 
+  it('should validate create wallet, empty label', () => {
+    expect<any>(page.createWalletCheckValidationLabel()).toEqual(false);
+  });
+
   it('should validate create wallet, seed mismatch', () => {
     expect<any>(page.createWalletCheckValidationSeed()).toEqual(false);
   });
 
-  it('should validate create wallet, empty label', () => {
-    expect<any>(page.createWalletCheckValidationLabel()).toEqual(false);
+  it('should not create wallet with already used seed', () => {
+    expect<any>(page.createExistingWallet()).toEqual(false);
   });
 
   it('should create wallet', () => {
@@ -32,12 +48,16 @@ describe('Wallets', () => {
     expect<any>(page.showLoadWallet()).toEqual(true);
   });
 
-  it('should validate load wallet, seed', () => {
-    expect<any>(page.loadWalletCheckValidationSeed()).toEqual(false);
-  });
-
   it('should validate load wallet, empty label', () => {
     expect<any>(page.loadWalletCheckValidationLabel()).toEqual(false);
+  });
+
+  it('should not load wallet with already used seed', () => {
+    expect<any>(page.loadExistingWallet()).toEqual(false);
+  });
+
+  it('should validate load wallet, seed', () => {
+    expect<any>(page.loadWalletCheckValidationSeed()).toEqual(false);
   });
 
   it('should load wallet', () => {
@@ -79,9 +99,22 @@ describe('Wallets', () => {
   it('should display price information', () => {
     expect<any>(page.showPriceInformation()).toEqual(true);
   });
-  
+
   it('should decrypt wallet', () => {
     page.navigateTo();
     expect<any>(page.canUnlock()).toEqual(true);
+  });
+
+  it('should always display add new address button for the wallet', () => {
+    page.navigateTo();
+    expect<any>(page.showAddAddress()).toEqual(true);
+  });
+
+  it('should display unlock wallet component on add new address for locked wallet', () => {
+    expect<any>(page.showShowUnlockWallet()).toEqual(true);
+  });
+
+  it('should unlock wallet component on add new address for locked wallet', () => {
+    expect<any>(page.unlockWallet()).toEqual(true);
   });
 });

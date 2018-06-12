@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { MatTooltip } from '@angular/material';
 
 @Component({
   selector: 'app-button',
@@ -7,15 +8,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 
 export class ButtonComponent {
-  @Input() disabled: any;
+  @Input() disabled: boolean;
   @Input() emit = false;
   @Output() action = new EventEmitter();
+  @ViewChild('tooltip') tooltip: MatTooltip;
 
   error: string;
-  state: number = 0;
+  state: number;
+  mouseOver = false;
 
   onClick() {
     if (!this.disabled || this.emit) {
+      this.error = '';
       this.action.emit();
     }
   }
@@ -30,7 +34,26 @@ export class ButtonComponent {
   }
 
   setError(error: any) {
-    this.error = error['_body'];
+    this.error = !error || typeof error === 'string' ? error : error['_body'];
     this.state = 2;
+
+    setTimeout(() => {
+      if (this.mouseOver) {
+        this.tooltip.show(50);
+      }
+    }, 0);
+  }
+
+  setEnabled() {
+    this.disabled = false;
+  }
+
+  setDisabled() {
+    this.disabled = true;
+  }
+
+  resetState() {
+    this.state = null;
+    this.error = '';
   }
 }

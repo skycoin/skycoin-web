@@ -1,31 +1,42 @@
-<app-modal title="Create Wallet" [dialog]="dialogRef">
+<app-modal [headline]="data.create ? ('wallet.new.create-title' | translate) : ('wallet.new.load-title' | translate)" [dialog]="dialogRef">
   <div [formGroup]="form">
     <div class="form-field">
-      <label for="label">Name</label>
+      <label for="label">{{ 'wallet.new.name-label' | translate}}</label>
       <input formControlName="label" id="label">
     </div>
-    <div class="form-field">
-      <label for="seed">Seed</label>
-      <textarea formControlName="seed" id="seed" row="2"></textarea>
+    <div class="form-field -valid-seed-container" [ngClass]="{'-expand':form.get('seed').valid}">
+      <label for="seed">
+        <span>{{ 'wallet.new.seed-label' | translate }}</span>
+        <span class="generators" *ngIf="data.create">
+          <span (click)="generateSeed(128)" [matTooltip]="'wallet.new.generate-12-seed' | translate">{{ 'wallet.new.12-words' | translate }}</span>
+          <span class="divider">|</span>
+          <span (click)="generateSeed(256)" [matTooltip]="'wallet.new.generate-24-seed' | translate">{{ 'wallet.new.24-words' | translate }}</span>
+        </span>
+      </label>
+      <div class="-valid-box">
+        <textarea formControlName="seed" id="seed" row="2"></textarea>
+        <img *ngIf="!data.create" class="-valid" src="../../../../../assets/img/valid.png">
+      </div>
     </div>
-    <div class="-disclaimer-box">
-      <span class="-disclaimer-text">Remember this seed! Keep it in a safe place. If you forget your seed, you will not be able to recover your wallet!</span>
+    <div class="-disclaimer-box" *ngIf="data.create">
+      <span class="-disclaimer-text">{{ 'wallet.new.seed-warning' | translate}}</span>
     </div>
-    <div class="form-field  -valid-seed-container" [ngClass]="{ '-expand':form.get('confirm_seed').value === form.get('seed').value }">
-      <label for="confirm_seed">Confirm seed</label>
+    <div *ngIf="data.create"
+         class="form-field -valid-seed-container"
+         [ngClass]="{ '-expand':form.get('confirm_seed').value === form.get('seed').value }">
+      <label for="confirm_seed">{{ 'wallet.new.confirm-seed-label' | translate}}</label>
       <div class="-valid-box">
         <textarea formControlName="confirm_seed" id="confirm_seed" row="2"></textarea>
-        <img  class="-valid" src="../../../../../assets/img/valid.png">
+        <img class="-valid" src="../../../../../assets/img/valid.png">
       </div>
-
     </div>
   </div>
   <div class="-buttons">
     <app-button (action)="closePopup()">
-      Cancel
+      {{ 'wallet.new.cancel-button' | translate}}
     </app-button>
     <app-button (action)="createWallet()" class="primary" [disabled]="!form.valid">
-      Create
+      {{ data.create ? ('wallet.new.create-button' | translate) : ('wallet.new.load-button' | translate) }}
     </app-button>
   </div>
 </app-modal>

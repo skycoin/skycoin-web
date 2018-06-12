@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import 'rxjs/add/operator/takeWhile';
+import { TranslateService } from '@ngx-translate/core';
+
 import { config } from './app.config';
-import { WalletService } from './services/wallet.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   current: number;
   highest: number;
@@ -16,9 +17,15 @@ export class AppComponent {
   version: string;
 
   constructor(
-    public walletService: WalletService,
+    private translate: TranslateService
   ) {
+  }
+
+  ngOnInit() {
     this.otcEnabled = config.otcEnabled;
+    this.translate.addLangs(['en']);
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
   }
 
   loading() {

@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class WalletsPage {
   navigateTo() {
-    return browser.get('/#/wallets');
+    return browser.get('/wallets');
   }
 
   getHeaderText() {
@@ -19,7 +19,7 @@ export class WalletsPage {
   showLoadWallet() {
     const btnLoad = element(by.buttonText('Load Wallet'));
     return btnLoad.click().then(() => {
-      return element(by.css('app-load-wallet')).isPresent();
+      return element(by.css('app-create-wallet')).isPresent();
     });
   }
 
@@ -34,7 +34,7 @@ export class WalletsPage {
         return seed.clear().then(() => {
           return seed.sendKeys('test test2').then(() => {
             return confirm.clear().then(() => {
-              return confirm.sendKeys('test test').then(() => {
+              return confirm.sendKeys('skycoin-web-e2e-test-seed').then(() => {
                 return btnCreate.isEnabled();
               });
             });
@@ -45,15 +45,21 @@ export class WalletsPage {
   }
 
   loadWalletCheckValidationSeed() {
+    const cancelAdd = element(by.buttonText('Cancel'));
+    const btnAdd = element(by.buttonText('Load Wallet'));
     const label = element(by.css('[formcontrolname="label"]'));
     const seed = element(by.css('[formcontrolname="seed"]'));
     const btnLoad = element(by.buttonText('Load'));
 
-    return label.clear().then(() => {
-      return label.sendKeys('Test wallet').then(() => {
-        return seed.clear().then(() => {
-          return seed.sendKeys(' ').then(() => {
-            return btnLoad.isEnabled();
+    return cancelAdd.click().then(() => {
+      return btnAdd.click().then(() => {
+        return label.clear().then(() => {
+          return label.sendKeys('Test wallet').then(() => {
+            return seed.clear().then(() => {
+              return seed.sendKeys('').then(() => {
+                return btnLoad.isEnabled();
+              });
+            });
           });
         });
       });
@@ -67,11 +73,11 @@ export class WalletsPage {
     const btnCreate = element(by.buttonText('Create'));
 
     return label.clear().then(() => {
-      return label.sendKeys(' ').then(() => {
+      return label.sendKeys('').then(() => {
         return seed.clear().then(() => {
-          return seed.sendKeys('test test').then(() => {
+          return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
             return confirm.clear().then(() => {
-              return confirm.sendKeys('test test').then(() => {
+              return confirm.sendKeys('skycoin-web-e2e-test-seed').then(() => {
                 return btnCreate.isEnabled();
               });
             });
@@ -87,13 +93,30 @@ export class WalletsPage {
     const btnLoad = element(by.buttonText('Load'));
 
     return label.clear().then(() => {
-      return label.sendKeys(' ').then(() => {
+      return label.sendKeys('').then(() => {
         return seed.clear().then(() => {
-          return seed.sendKeys('test test').then(() => {
+          return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
             return btnLoad.isEnabled();
           });
         });
       });
+    });
+  }
+
+  createExistingWallet() {
+    const label = element(by.css('[formcontrolname="label"]'));
+    const seed = element(by.css('[formcontrolname="seed"]'));
+    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
+    const btnCreate = element(by.buttonText('Create'));
+
+    label.clear();
+    label.sendKeys('Test create wallet');
+    seed.clear();
+    seed.sendKeys('skycoin-web-e2e-test-seed');
+    confirm.clear();
+    confirm.sendKeys('skycoin-web-e2e-test-seed');
+    return btnCreate.click().then(() => {
+      return !btnCreate.isPresent();
     });
   }
 
@@ -104,16 +127,30 @@ export class WalletsPage {
     const btnCreate = element(by.buttonText('Create'));
 
     label.clear();
-    label.sendKeys('Test wallet');
+    label.sendKeys('Test create wallet');
     seed.clear();
-    seed.sendKeys('test test');
+    seed.sendKeys('skycoin-web-e2e-test-create-wallet-seed');
     confirm.clear();
-    confirm.sendKeys('test test');
+    confirm.sendKeys('skycoin-web-e2e-test-create-wallet-seed');
     return btnCreate.isEnabled().then(status => {
       if (status) {
         btnCreate.click();
       }
       return status;
+    });
+  }
+
+  loadExistingWallet() {
+    const label = element(by.css('[formcontrolname="label"]'));
+    const seed = element(by.css('[formcontrolname="seed"]'));
+    const btnLoad = element(by.buttonText('Load'));
+
+    label.clear();
+    label.sendKeys('Test load wallet');
+    seed.clear();
+    seed.sendKeys('skycoin-web-e2e-test-create-wallet-seed');
+    return btnLoad.click().then(() => {
+      return !btnLoad.isPresent();
     });
   }
 
@@ -125,7 +162,7 @@ export class WalletsPage {
     label.clear();
     label.sendKeys('Test load wallet');
     seed.clear();
-    seed.sendKeys('test test');
+    seed.sendKeys('skycoin-web-e2e-test-load-wallet-seed');
     return btnLoad.isEnabled().then(status => {
       if (status) {
         btnLoad.click();
@@ -135,7 +172,7 @@ export class WalletsPage {
   }
 
   expandWallet() {
-    return element.all(by.css('.-expand.rotate-90')).first().click().then(() => {
+    return element.all(by.css('.-wallet')).get(1).click().then(() => {
       return element(by.css('.-record')).isPresent();
     });
   }
@@ -160,8 +197,9 @@ export class WalletsPage {
   }
 
   hideEmptyAddress() {
-    return element(by.css('.-btn-minus')).click().then(() => {
-      return element.all(by.css('.coins-column')).filter((address) => {
+    return element.all(by.css('.-btn-minus')).first().click().then(() => {
+      const parentWalletElement = element.all(by.css('.-wallet-detail')).first();
+      return parentWalletElement.all(by.css('.coins-column')).filter((address) => {
         return address.getText().then(value => {
           return value === '0';
         });
@@ -184,7 +222,7 @@ export class WalletsPage {
   }
 
   changeWalletName() {
-    const name = element.all(by.css('.-wallet .-label')).first();
+    const name = element.all(by.css('.-wallet .-label')).get(1);
     const label = element(by.css('[formcontrolname="label"]'));
     const btn = element(by.buttonText('Rename'));
 
@@ -205,7 +243,7 @@ export class WalletsPage {
           return element.all(by.css('.-wallet .-encryption img')).first().getAttribute('src').then(source => {
             return source.includes('unlock-grey.png');
           });
-        }else {
+        } else {
           return false;
         }
       });
@@ -215,10 +253,34 @@ export class WalletsPage {
     return element.all(by.css('.-encryption img')).first().click().then(() => {
       const seed = element(by.css('[formcontrolname="seed"]'));
       const btnUnlock = element(by.buttonText('Unlock'));
-      return seed.sendKeys('Test Wallet').then(() => {
+      return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
         return btnUnlock.click().then(() => {
-            return true;
+          return true;
         });
+      });
+    });
+  }
+
+  showAddAddress() {
+    return element.all(by.css('.-wallet')).first().click().then(() => {
+      return element(by.css('.btn-add-address')).isPresent();
+    });
+  }
+
+  showShowUnlockWallet() {
+    return element(by.css('.btn-add-address')).click().then(() => {
+      return element(by.css('app-unlock-wallet')).isPresent();
+    });
+  }
+
+  unlockWallet() {
+    const seed = element(by.css('[formcontrolname="seed"]'));
+    seed.clear();
+    seed.sendKeys('skycoin-web-e2e-test-seed');
+
+    return element(by.buttonText('Unlock')).click().then(() => {
+      return (element(by.css('app-unlock-wallet')).isPresent()).then((result) => {
+        return !result;
       });
     });
   }

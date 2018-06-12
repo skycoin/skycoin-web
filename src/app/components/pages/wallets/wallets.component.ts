@@ -1,44 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+
 import { Wallet } from '../../../app.datatypes';
 import { WalletService } from '../../../services/wallet.service';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
-import { LoadWalletComponent } from './load-wallet/load-wallet.component';
-import { UnlockWalletComponent } from './unlock-wallet/unlock-wallet.component';
+import { openUnlockWalletModal } from '../../../utils/index';
 
 @Component({
   selector: 'app-wallets',
   templateUrl: './wallets.component.html',
   styleUrls: ['./wallets.component.scss'],
 })
-export class WalletsComponent {
+export class WalletsComponent implements OnInit {
+
+  wallets: Wallet[];
 
   constructor(
-    public walletService: WalletService,
-    private dialog: MatDialog,
+    private walletService: WalletService,
+    private dialog: MatDialog
   ) {}
 
-  addWallet() {
+  ngOnInit() {
+    this.walletService.all.subscribe( (wallets) => {
+      this.wallets = wallets;
+    });
+  }
+
+  addWallet(create: boolean) {
     const config = new MatDialogConfig();
     config.width = '566px';
+    config.data = { create };
     this.dialog.open(CreateWalletComponent, config);
   }
 
-  unlockWallet(wallet: Wallet) {
-    const config = new MatDialogConfig();
-    config.width = '500px';
-    config.data = wallet;
-    this.dialog.open(UnlockWalletComponent, config);
-  }
+  unlockWallet(event, wallet: Wallet) {
+    event.stopPropagation();
 
-  loadWallet() {
-    const config = new MatDialogConfig();
-    config.width = '566px';
-    this.dialog.open(LoadWalletComponent, config);
+    openUnlockWalletModal(wallet, this.dialog);
   }
 
   toggleWallet(wallet: Wallet) {
     wallet.opened ? wallet.opened = false : wallet.opened = true;
   }
-
 }

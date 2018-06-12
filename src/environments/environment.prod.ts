@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  nodeUrl: 'https://node.skycoin.net/api/v1/',
+  cipherTest: false
 };

@@ -1,22 +1,21 @@
 @import '../../../../../theme/_variables.scss';
 
-.-width-150 {
-  width: 150px;
+.-wallet {
+  margin: 30px 0;
 }
 
-h3 {
-  font-size: 12px;
-  font-weight: 700;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 50px;
+.-wallet-label {
+  font-weight: 400;
+  margin-left: 40px;
+}
+
+.-wallet-address {
+  margin-top: 10px
 }
 
 .-headers {
   border-bottom: 1px solid #eff0f0;
-  color: rgba(30, 34, 39, 0.2);
-  display: flex;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   height: 50px;
   line-height: 50px;
@@ -32,11 +31,9 @@ h3 {
 .-output {
   background-color: $white;
   border-bottom: 1px solid #eff0f0;
-  display: flex;
   font-size: $font-size-standard;
-  line-height: $row-height;
-  height: $row-height;
-  padding-left: 20px;
+  line-height: 30px;
+  padding: 10px 20px;
 
   &:first-child {
     border-top-left-radius: 15px;
@@ -48,30 +45,21 @@ h3 {
     border-bottom-right-radius: 15px;
   }
 
-  .-address {
-    color: rgba(30, 34, 39, 0.6);
-    flex: 1 1 auto;
-
-    img {
-      display: inline-block;
-      height: 17px;
-      vertical-align: middle;
-      width: 17px;
-    }
-
-    p {
-      display: inline-block;
-      line-height: $row-height;
-      margin: 0;
-      vertical-align: middle;
-    }
+  .-hash, .-balance {
+    font-size: 12px;
   }
 
-  .-coins {
-    color: black;
-  }
+  .-balance {
+    display: flex;
+    flex-direction: row;
 
-  .-hours {
-    color: rgba(30, 34, 39, 0.5);
+    .-item {
+      min-width: 150px;
+      padding-right: 20px;
+
+      span {
+        color: $grey-dark;
+      }
+    }
   }
 }

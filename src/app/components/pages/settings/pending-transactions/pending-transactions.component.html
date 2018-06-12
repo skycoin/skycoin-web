@@ -1,21 +1,19 @@
 <div class="sky-container sky-container-grey">
-  <app-header title="Pending Transaction"></app-header>
-  <ngx-datatable #table
-                 class="material"
-                 [rows]="transactions"
-                 columnMode="flex"
-                 [headerHeight]="50"
-                 [footerHeight]="50"
-                 [rowHeight]="50"
-                 [limit]="10"
-                 [scrollbarH]="true"
-                 (activate)="onActivate($event)">
-    <ngx-datatable-column name="Timestamp" prop="timestamp" [flexGrow]="2">
-      <ng-template let-value="value" ngx-datatable-cell-template>
-        <strong>{{ value | dateTime }}</strong>
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Amount" [flexGrow]="1"></ngx-datatable-column>
-    <ngx-datatable-column name="Transaction ID" prop="txid" [flexGrow]="8"></ngx-datatable-column>
-  </ngx-datatable>
+  <app-header [headline]="'title.pending-txs' | translate"></app-header>
+  <div class="container">
+    <div class="-table">
+      <div class="-headers">
+        <div class="-width-150">{{ 'pending-txs.timestamp' | translate }}</div>
+        <div class="-width-150">{{ 'pending-txs.amount' | translate }}</div>
+        <div class="flex-fill">{{ 'pending-txs.txid' | translate }}</div>
+      </div>
+      <div class="-transaction" *ngFor="let transaction of transactions">
+        <div class="-width-150 -timestamp">
+          <strong>{{ transaction.timestamp | dateTime }}</strong>
+        </div>
+        <div class="-width-150 -amount">{{ (transaction.amount ? transaction.amount : 0) | number:'1.0-6' }}</div>
+        <div class="flex-fill -txid">{{ transaction.txid }}</div>
+      </div>
+    </div>
+  </div>
 </div>

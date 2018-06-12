@@ -11,6 +11,7 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
+import { environment } from './environments/environment';
 
 // Unfortunately there's no typing for the `__karma__` variable. Just declare it as any.
 declare const __karma__: any;
@@ -25,7 +26,14 @@ getTestBed().initTestEnvironment(
   platformBrowserDynamicTesting()
 );
 // Then we find all the tests.
-const context = require.context('./', true, /\.spec\.ts$/);
+let context = null;
+
+if (environment.cipherTest) {
+  context = require.context('./', true, /cipher\.provider\.lib\.spec\.ts$/);
+} else {
+  context = require.context('./', true, /(?!.*?cipher\.provider\.lib\.spec\.ts$)(^.*\.spec\.ts$)/);
+}
+
 // And load the modules.
 context.keys().map(context);
 // Finally, start Karma to run the tests.
