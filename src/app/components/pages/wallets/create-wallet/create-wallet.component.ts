@@ -51,22 +51,13 @@ export class CreateWalletComponent implements OnInit {
 
   private initForm() {
     this.form = this.formBuilder.group({
-        label: new FormControl('', Validators.compose([
-          Validators.required,
-          Validators.minLength(2)
-        ])),
-        seed: new FormControl('', Validators.compose([
-          Validators.required,
-          Validators.minLength(2)
-        ])),
-        confirm_seed: new FormControl('',
-            Validators.compose([
-              this.data.create ? Validators.required : null,
-              this.data.create ? Validators.minLength(2) : null,
-            ]),
-        ),
+        label: new FormControl('', [ Validators.required ]),
+        seed: new FormControl('', [ Validators.required ]),
+        confirm_seed: new FormControl(),
       },
-      { validator: this.data.create ? this.seedMatchValidator.bind(this) : null }
+      {
+        validator: this.data.create ? this.seedMatchValidator.bind(this) : null,
+      }
     );
 
     if (this.data.create) {
@@ -75,7 +66,6 @@ export class CreateWalletComponent implements OnInit {
   }
 
   private seedMatchValidator(formGroup: FormGroup) {
-    return formGroup.get('seed').value === formGroup.get('confirm_seed').value
-      ? null : { mismatch: true };
+    return formGroup.get('seed').value === formGroup.get('confirm_seed').value ? null : { NotEqual: true };
   }
 }
