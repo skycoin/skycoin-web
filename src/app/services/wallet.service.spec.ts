@@ -72,15 +72,17 @@ describe('WalletService', () => {
       const newAddress = createAddress('new address');
       expectedWallet.addresses.push(newAddress);
 
-      spyCipherProvider.generateAddress.and.returnValue({ ...newAddress });
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of({ ...newAddress }));
       spyOn(walletService, 'updateWallet');
 
       spyApiService.get.and.callFake(() => {
         return Observable.of(createBalance());
       });
 
-      walletService.addAddress(wallet);
-      expect(walletService.updateWallet).toHaveBeenCalledWith(expectedWallet);
+      walletService.addAddress(wallet)
+        .subscribe(() => {
+          expect(walletService.updateWallet).toHaveBeenCalledWith(expectedWallet);
+        });
     });
   });
 
@@ -97,7 +99,7 @@ describe('WalletService', () => {
         addresses: [walletAddress]
       };
 
-      spyCipherProvider.generateAddress.and.returnValue({ ...walletAddress });
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of({ ...walletAddress }));
 
       spyApiService.get.and.callFake((param) => {
         if (param === 'balance') {
@@ -108,11 +110,12 @@ describe('WalletService', () => {
         }
       });
 
-      walletService.create(walletLabel, walletSeed);
-
-      walletService.wallets.subscribe((wallets) => {
-        expect(wallets[0]).toEqual(expectedWallet);
-      });
+      walletService.create(walletLabel, walletSeed)
+        .subscribe(() => {
+          walletService.wallets.subscribe((wallets) => {
+            expect(wallets[0]).toEqual(expectedWallet);
+          });
+        });
     });
   });
 
@@ -131,7 +134,7 @@ describe('WalletService', () => {
   });
 
   describe('updateWallet', () => {
-    it('exist wallet should be updated', fakeAsync(() => {
+    it('existing wallet should be updated', fakeAsync(() => {
       const wallet = createWallet('updated label');
       walletService.wallets = new BehaviorSubject([ createWallet() ]);
 
@@ -157,20 +160,15 @@ describe('WalletService', () => {
 
   describe('unlockWallet', () => {
     it('wallet should be updated', fakeAsync(() => {
-      const wallet: Wallet = createWallet();
-      walletService.wallets = new BehaviorSubject([ wallet ]);
+      walletService.wallets = new BehaviorSubject([ createWallet() ]);
+      const inputWallet: Wallet = createWallet('wallet', 'no seed');
+      const correctSeed = 'seed';
 
-      const someSeed = 'some seed';
-      const expectedAddress = createAddress('address', 'new secret key', 'new public key', 'new next seed');
-
-      const expectedWallet: Wallet = createWallet('label', someSeed);
-      expectedWallet.addresses[0] = expectedAddress;
-
-      spyCipherProvider.generateAddress.and.returnValue({ ...expectedAddress });
-      walletService.unlockWallet(wallet, someSeed);
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of(createAddress()));
+      walletService.unlockWallet(inputWallet, correctSeed);
 
       walletService.wallets.subscribe((wallets) => {
-        expect(wallets[0]).toEqual(expectedWallet);
+        expect(wallets[0].seed).toEqual(correctSeed);
       });
     }));
 
@@ -178,11 +176,11 @@ describe('WalletService', () => {
       const wallet: Wallet = createWallet();
       const wrongSeedAddress: Address = createAddress('wrong address');
 
-      spyCipherProvider.generateAddress.and.returnValue(wrongSeedAddress);
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of(wrongSeedAddress));
       spyTranslateService.instant.and.returnValue('Wrong seed');
 
       walletService.unlockWallet(wallet, 'wrong seed')
-        .then(
+        .subscribe(
           () => fail('should be rejected'),
           (error) => expect(error.message).toBe('Wrong seed')
         );

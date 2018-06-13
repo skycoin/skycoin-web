@@ -117,13 +117,17 @@ export class WalletDetailComponent implements OnInit {
   }
 
   private addNewAddress() {
-    try {
-      this.walletService.addAddress(this.wallet);
-    } catch (exception) {
-      const config = new MatSnackBarConfig();
-      config.duration = 5000;
-      this.snackBar.open(exception.message, null, config);
-    }
+    this.walletService.addAddress(this.wallet)
+      .subscribe(
+        () => {},
+        (error: Error) => this.onAddAddressError(error)
+      );
+  }
+
+  private onAddAddressError(error: Error) {
+    const config = new MatSnackBarConfig();
+    config.duration = 5000;
+    this.snackBar.open(error.message, null, config);
   }
 
   private getConfirmationData(): ConfirmationData {
