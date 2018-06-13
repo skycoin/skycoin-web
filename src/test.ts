@@ -12,6 +12,7 @@ import {
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 import { environment } from './environments/environment';
+import { CipherTestMode } from './app/constants/cipher-test-mode.const';
 
 // Unfortunately there's no typing for the `__karma__` variable. Just declare it as any.
 declare const __karma__: any;
@@ -28,7 +29,7 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests.
 let context = null;
 
-if (environment.cipherTest) {
+if (environment.cipherTestMode !== CipherTestMode.NONE) {
   context = require.context('./', true, /cipher\.provider\.lib\.spec\.ts$/);
 } else {
   context = require.context('./', true, /(?!.*?cipher\.provider\.lib\.spec\.ts$)(^.*\.spec\.ts$)/);
