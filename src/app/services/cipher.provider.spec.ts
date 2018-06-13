@@ -1,17 +1,29 @@
+import { TranslateService } from '@ngx-translate/core';
 import { TestBed } from '@angular/core/testing';
 
 import { CipherProvider } from './cipher.provider';
 import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
+import { convertAsciiToHexa } from '../utils/converters';
 
 describe('CipherProvider', () => {
   let cipherProvider: CipherProvider;
+  let spyTranslateService:  jasmine.SpyObj<TranslateService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CipherProvider]
+      providers: [
+        CipherProvider,
+        {
+          provide: TranslateService,
+          useValue: jasmine.createSpyObj('TranslateService', {
+            'instant': 'error message'
+          })
+        }
+      ]
     });
 
     cipherProvider = TestBed.get(CipherProvider);
+    spyTranslateService = TestBed.get(TranslateService);
   });
 
   it('should be created', () => {
@@ -22,7 +34,8 @@ describe('CipherProvider', () => {
     const expectedAddress: Address = createAddress();
     const seed = convertAsciiToHexa('test seed');
 
-    expect(cipherProvider.generateAddress(seed)).toEqual(expectedAddress);
+    cipherProvider.generateAddress(seed)
+      .subscribe(addr => expect(addr).toEqual(expectedAddress));
   });
 
   it('should prepare transaction', () => {
@@ -54,17 +67,6 @@ describe('CipherProvider', () => {
       .toThrowError('Invalid checksum');
   });
 });
-
-function convertAsciiToHexa(seed: string): string {
-  const arr1: string[] = [];
-  for (let n = 0, l = seed.length; n < l; n ++) {
-    const hex = Number(seed.charCodeAt(n)).toString(16);
-    arr1.push(hex);
-  }
-  seed = arr1.join('');
-
-  return seed;
-}
 
 function createAddress(): Address {
   return {

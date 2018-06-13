@@ -1,4 +1,4 @@
-import { browser, by, element, ElementFinder } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions } from 'protractor';
 
 export class OnboardingCreatePage {
   navigateTo() {
@@ -116,6 +116,8 @@ export class OnboardingCreatePage {
   }
 
   verifyCreatedWalletAddress() {
+    this.waitUntilWalletIsCreated();
+
     return browser.executeScript('return window.localStorage.getItem("wallets");')
       .then((data: string) => {
         const wallets = JSON.parse(data);
@@ -128,6 +130,8 @@ export class OnboardingCreatePage {
     const btnLoad = this.fillLoadWalletForm(walletLabel, 'load seed');
 
     return btnLoad.click().then(() => {
+      this.waitUntilWalletIsCreated();
+
       return browser.executeScript('return window.localStorage.getItem("wallets");')
         .then((data: string) => {
           const wallets = JSON.parse(data);
@@ -191,5 +195,9 @@ export class OnboardingCreatePage {
 
   private clickOutsideModal() {
     return browser.executeScript('arguments[0].click()', element(by.css('.cdk-overlay-backdrop')));
+  }
+
+  private waitUntilWalletIsCreated() {
+    browser.wait(ExpectedConditions.invisibilityOf(element(by.buttonText('Create'))), 20000);
   }
 }
