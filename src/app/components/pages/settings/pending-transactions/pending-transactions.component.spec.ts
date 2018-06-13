@@ -6,10 +6,19 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { PendingTransactionsComponent } from './pending-transactions.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
+import { Wallet } from '../../../../app.datatypes';
 
 class MockWalletService {
+  get all(): Observable<Wallet[]> {
+    return Observable.of([]);
+  }
+
   getAllPendingTransactions() {
     return Observable.of([]);
+  }
+
+  getTransactionDetails() {
+    return Observable.of({});
   }
 }
 
