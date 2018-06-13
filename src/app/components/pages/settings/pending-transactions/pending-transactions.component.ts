@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
+import { Wallet } from '../../../../app.datatypes';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-pending-transactions',
@@ -19,7 +20,6 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
   constructor(
     private walletService: WalletService,
-    private router: Router,
     private navbarService: NavBarService
   ) { }
 
@@ -36,24 +36,15 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     this.navbarService.hideSwitch();
   }
 
-  onActivate(response) {
-    if (response.row && response.row.txid) {
-      this.router.navigate(['/history', response.row.txid]);
-    }
-  }
-
-  private loadTransactions(value) {
-    const showAllTransactions = value === DoubleButtonActive.LeftButton ? false : true;
-
-    this.walletService.getAllPendingTransactions().subscribe(transactions => {
-      if (!showAllTransactions) {
-        transactions.map(tran => {
-          // add logic for wallets related transactions
-        });
-      }
-
-      this.transactions = this.mapTransactions(transactions);
-    });
+  private loadTransactions(value: number) {
+    const showAllTransactions = value === DoubleButtonActive.RightButton;
+    this.walletService.getAllPendingTransactions()
+      .flatMap((transactions: any) => {
+          return showAllTransactions ? Observable.of(transactions) : this.getWalletsTransactions(transactions);
+      })
+      .subscribe(transactions => {
+        this.transactions = this.mapTransactions(transactions);
+      });
   }
 
   private mapTransactions(transactions) {
@@ -67,5 +58,29 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
         .reduce((a, b) => a + parseFloat(b), 0);
       return transaction;
     });
+  }
+
+  private getWalletsTransactions(transactions: any): Observable<any> {
+    const allTransactions = this.getUpdatedTransactions(transactions);
+
+    return Observable.zip(allTransactions, this.walletService.all, (trans: any, wallets: Wallet[]) => {
+      const walletAddresses = [];
+      wallets.forEach(wallet => {
+        wallet.addresses.forEach(address => walletAddresses.push(address.address));
+      });
+      return trans.filter(tran => tran.owner_addressses.some(address => walletAddresses.includes(address)));
+    });
+  }
+
+  private getUpdatedTransactions(transactions: any): Observable<any> {
+    return Observable.forkJoin(transactions.map((transaction: any) => {
+      return Observable.forkJoin(transaction.transaction.inputs
+        .map(input => this.walletService.getTransactionDetails(input)
+          .map(inputDetails => inputDetails.owner_address)))
+        .map((addresses) => {
+          transaction.owner_addressses = addresses;
+          return transaction;
+        });
+    }));
   }
 }
