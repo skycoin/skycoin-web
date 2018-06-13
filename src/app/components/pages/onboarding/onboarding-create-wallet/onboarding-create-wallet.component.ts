@@ -47,23 +47,14 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   initForm() {
     this.form = this.formBuilder.group({
-        label: new FormControl('', Validators.compose([
-          Validators.required, Validators.minLength(2),
-        ])),
-        seed: new FormControl('', Validators.compose([
-          Validators.required, Validators.minLength(2),
-        ])),
-        confirm_seed: new FormControl('',
-          this.showNewForm ?
-            Validators.compose([
-              Validators.required,
-              Validators.minLength(2),
-            ])
-            : Validators.compose([]),
-        ),
+        label: new FormControl('', [ Validators.required ]),
+        seed: new FormControl('', [ Validators.required ]),
+        confirm_seed: new FormControl()
       },
-      this.showNewForm ? { validator: this.seedMatchValidator.bind(this) } : {},
-      );
+      {
+        validator: this.showNewForm ? this.seedMatchValidator.bind(this) : null
+      }
+    );
 
     if (this.showNewForm) {
       this.generateSeed(128);
@@ -103,15 +94,14 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   private createWallet() {
     this.walletService.create(this.form.value.label, this.form.value.seed)
-    .then(
-      () => this.skip(),
-      (error) => this.onCreateError(error.message)
-    );
+      .subscribe(
+        () => this.skip(),
+        (error) => this.onCreateError(error.message)
+      );
   }
 
   private seedMatchValidator(g: FormGroup) {
-      return g.get('seed').value === g.get('confirm_seed').value
-        ? null : { mismatch: true };
+    return g.get('seed').value === g.get('confirm_seed').value ? null : { NotEqual: true };
   }
 
   private onCreateError(errorMesasge: string) {

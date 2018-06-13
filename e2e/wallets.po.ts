@@ -1,4 +1,4 @@
-import { browser, by, element } from 'protractor';
+import { browser, by, element, ExpectedConditions } from 'protractor';
 
 export class WalletsPage {
   navigateTo() {
@@ -45,15 +45,21 @@ export class WalletsPage {
   }
 
   loadWalletCheckValidationSeed() {
+    const cancelAdd = element(by.buttonText('Cancel'));
+    const btnAdd = element(by.buttonText('Load Wallet'));
     const label = element(by.css('[formcontrolname="label"]'));
     const seed = element(by.css('[formcontrolname="seed"]'));
     const btnLoad = element(by.buttonText('Load'));
 
-    return label.clear().then(() => {
-      return label.sendKeys('Test wallet').then(() => {
-        return seed.clear().then(() => {
-          return seed.sendKeys(' ').then(() => {
-            return btnLoad.isEnabled();
+    return cancelAdd.click().then(() => {
+      return btnAdd.click().then(() => {
+        return label.clear().then(() => {
+          return label.sendKeys('Test wallet').then(() => {
+            return seed.clear().then(() => {
+              return seed.sendKeys('').then(() => {
+                return btnLoad.isEnabled();
+              });
+            });
           });
         });
       });
@@ -67,7 +73,7 @@ export class WalletsPage {
     const btnCreate = element(by.buttonText('Create'));
 
     return label.clear().then(() => {
-      return label.sendKeys(' ').then(() => {
+      return label.sendKeys('').then(() => {
         return seed.clear().then(() => {
           return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
             return confirm.clear().then(() => {
@@ -87,7 +93,7 @@ export class WalletsPage {
     const btnLoad = element(by.buttonText('Load'));
 
     return label.clear().then(() => {
-      return label.sendKeys(' ').then(() => {
+      return label.sendKeys('').then(() => {
         return seed.clear().then(() => {
           return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
             return btnLoad.isEnabled();
@@ -132,6 +138,14 @@ export class WalletsPage {
       }
       return status;
     });
+  }
+
+  waitUntilLoading() {
+    browser.wait(ExpectedConditions.presenceOf(element(by.css('snack-bar-container'))), 20000);
+  }
+
+  waitUntilWalletIsCreated() {
+    browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-create-wallet'))), 50000);
   }
 
   loadExistingWallet() {
@@ -231,25 +245,11 @@ export class WalletsPage {
     });
   }
 
-  canUnlock() {
-     return this.unlockFirstWallet().then(result => {
-       if (result) {
-          return element.all(by.css('.-wallet .-encryption img')).first().getAttribute('src').then(source => {
-            return source.includes('unlock-grey.png');
-          });
-        } else {
-          return false;
-        }
-      });
-  }
-
-  unlockFirstWallet(): any {
+  canUnlockWallet() {
     return element.all(by.css('.-encryption img')).first().click().then(() => {
-      const seed = element(by.css('[formcontrolname="seed"]'));
-      const btnUnlock = element(by.buttonText('Unlock'));
-      return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
-        return btnUnlock.click().then(() => {
-          return true;
+      return this.unlockWallet().then(() => {
+        return element.all(by.css('.-wallet .-encryption img')).first().getAttribute('src').then(source => {
+          return source.includes('unlock-grey.png');
         });
       });
     });
@@ -273,6 +273,7 @@ export class WalletsPage {
     seed.sendKeys('skycoin-web-e2e-test-seed');
 
     return element(by.buttonText('Unlock')).click().then(() => {
+      browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-unlock-wallet'))), 20000);
       return (element(by.css('app-unlock-wallet')).isPresent()).then((result) => {
         return !result;
       });
@@ -280,6 +281,7 @@ export class WalletsPage {
   }
 
   showPriceInformation() {
+    browser.wait(ExpectedConditions.presenceOf(element(by.css('.balance p.dollars'))), 5000);
     return element(by.css('.balance p.dollars')).getText().then(text => {
       return this._checkHeaderPriceFormat(text);
     });

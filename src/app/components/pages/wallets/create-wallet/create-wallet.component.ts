@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import * as Bip39 from 'bip39';
 
 import { WalletService } from '../../../../services/wallet.service';
+import { ButtonComponent } from '../../../layout/button/button.component';
 
 @Component({
   selector: 'app-create-wallet',
@@ -12,6 +13,7 @@ import { WalletService } from '../../../../services/wallet.service';
   styleUrls: ['./create-wallet.component.scss'],
 })
 export class CreateWalletComponent implements OnInit {
+  @ViewChild('create') createButton: ButtonComponent;
   form: FormGroup;
   seed: string;
 
@@ -32,9 +34,11 @@ export class CreateWalletComponent implements OnInit {
   }
 
   createWallet() {
+    this.createButton.setLoading();
+
     this.walletService.create(this.form.value.label, this.form.value.seed)
-      .then(
-        () => this.dialogRef.close(),
+      .subscribe(
+        () => this.onCreateSuccess(),
         (error) => this.onCreateError(error.message)
       );
   }
@@ -43,7 +47,14 @@ export class CreateWalletComponent implements OnInit {
     this.form.controls.seed.setValue(Bip39.generateMnemonic(entropy));
   }
 
+  private onCreateSuccess() {
+    this.createButton.setSuccess();
+    this.dialogRef.close();
+  }
+
   private onCreateError(errorMesasge: string) {
+    this.createButton.setSuccess();
+
     const config = new MatSnackBarConfig();
     config.duration = 5000;
     this.snackBar.open(errorMesasge, null, config);
@@ -51,22 +62,13 @@ export class CreateWalletComponent implements OnInit {
 
   private initForm() {
     this.form = this.formBuilder.group({
-        label: new FormControl('', Validators.compose([
-          Validators.required,
-          Validators.minLength(2)
-        ])),
-        seed: new FormControl('', Validators.compose([
-          Validators.required,
-          Validators.minLength(2)
-        ])),
-        confirm_seed: new FormControl('',
-            Validators.compose([
-              this.data.create ? Validators.required : null,
-              this.data.create ? Validators.minLength(2) : null,
-            ]),
-        ),
+        label: new FormControl('', [ Validators.required ]),
+        seed: new FormControl('', [ Validators.required ]),
+        confirm_seed: new FormControl(),
       },
-      { validator: this.data.create ? this.seedMatchValidator.bind(this) : null }
+      {
+        validator: this.data.create ? this.seedMatchValidator.bind(this) : null,
+      }
     );
 
     if (this.data.create) {
@@ -75,7 +77,6 @@ export class CreateWalletComponent implements OnInit {
   }
 
   private seedMatchValidator(formGroup: FormGroup) {
-    return formGroup.get('seed').value === formGroup.get('confirm_seed').value
-      ? null : { mismatch: true };
+    return formGroup.get('seed').value === formGroup.get('confirm_seed').value ? null : { NotEqual: true };
   }
 }

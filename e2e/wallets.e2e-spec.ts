@@ -28,28 +28,26 @@ describe('Wallets', () => {
     expect<any>(page.showAddWallet()).toEqual(true);
   });
 
-  it('should validate create wallet, seed mismatch', () => {
-    expect<any>(page.createWalletCheckValidationSeed()).toEqual(false);
-  });
-
   it('should validate create wallet, empty label', () => {
     expect<any>(page.createWalletCheckValidationLabel()).toEqual(false);
   });
 
+  it('should validate create wallet, seed mismatch', () => {
+    expect<any>(page.createWalletCheckValidationSeed()).toEqual(false);
+  });
+
   it('should not create wallet with already used seed', () => {
     expect<any>(page.createExistingWallet()).toEqual(false);
+    page.waitUntilLoading();
   });
 
   it('should create wallet', () => {
     expect<any>(page.createWallet()).toEqual(true);
+    page.waitUntilWalletIsCreated();
   });
 
   it('should show load wallet', () => {
     expect<any>(page.showLoadWallet()).toEqual(true);
-  });
-
-  it('should validate load wallet, seed', () => {
-    expect<any>(page.loadWalletCheckValidationSeed()).toEqual(false);
   });
 
   it('should validate load wallet, empty label', () => {
@@ -60,8 +58,13 @@ describe('Wallets', () => {
     expect<any>(page.loadExistingWallet()).toEqual(false);
   });
 
+  it('should validate load wallet, seed', () => {
+    expect<any>(page.loadWalletCheckValidationSeed()).toEqual(false);
+  });
+
   it('should load wallet', () => {
     expect<any>(page.loadWallet()).toEqual(true);
+    page.waitUntilWalletIsCreated();
   });
 
   it('should expand wallet', () => {
@@ -102,7 +105,7 @@ describe('Wallets', () => {
 
   it('should decrypt wallet', () => {
     page.navigateTo();
-    expect<any>(page.canUnlock()).toEqual(true);
+    expect<any>(page.canUnlockWallet()).toEqual(true);
   });
 
   it('should always display add new address button for the wallet', () => {
