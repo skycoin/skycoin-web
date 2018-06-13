@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatCheckboxModule } from '@angular/material';
+import { MatCheckboxModule, MatProgressSpinnerModule, MatIconModule, MatTooltipModule } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
 import { OnboardingEncryptWalletComponent } from './onboarding-encrypt-wallet.component';
+import { ButtonComponent } from '../../../layout/button/button.component';
 
 @Pipe({name: 'translate'})
 class MockTranslatePipe implements PipeTransform {
@@ -18,8 +19,17 @@ describe('OnboardingEncryptWalletComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OnboardingEncryptWalletComponent, MockTranslatePipe ],
-      imports: [ MatCheckboxModule ],
+      declarations: [
+        OnboardingEncryptWalletComponent,
+        ButtonComponent,
+        MockTranslatePipe
+      ],
+      imports: [
+        MatCheckboxModule,
+        MatTooltipModule,
+        MatIconModule,
+        MatProgressSpinnerModule
+      ],
       providers: [ FormBuilder ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

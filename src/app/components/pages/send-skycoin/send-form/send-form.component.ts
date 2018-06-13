@@ -46,6 +46,10 @@ export class SendFormComponent implements OnInit, OnDestroy {
   }
 
   onVerify() {
+    if (!this.form.valid || this.button.isLoading()) {
+      return;
+    }
+
     this.snackbar.dismiss();
     this.button.resetState();
 
