@@ -75,9 +75,10 @@ describe('WalletService with cipher:', () => {
         return Observable.of(createBalance());
       });
 
-      walletService.addAddress(wallet);
-
-      expect(walletService.updateWallet).toHaveBeenCalledWith(expectedWallet);
+      walletService.addAddress(wallet)
+        .subscribe(() => {
+          expect(walletService.updateWallet).toHaveBeenCalledWith(expectedWallet);
+        });
     });
   });
 

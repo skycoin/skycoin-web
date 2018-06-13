@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import * as Bip39 from 'bip39';
 
 import { WalletService } from '../../../../services/wallet.service';
+import { ButtonComponent } from '../../../layout/button/button.component';
 
 @Component({
   selector: 'app-create-wallet',
@@ -12,6 +13,7 @@ import { WalletService } from '../../../../services/wallet.service';
   styleUrls: ['./create-wallet.component.scss'],
 })
 export class CreateWalletComponent implements OnInit {
+  @ViewChild('create') createButton: ButtonComponent;
   form: FormGroup;
   seed: string;
 
@@ -32,9 +34,11 @@ export class CreateWalletComponent implements OnInit {
   }
 
   createWallet() {
+    this.createButton.setLoading();
+
     this.walletService.create(this.form.value.label, this.form.value.seed)
-      .then(
-        () => this.dialogRef.close(),
+      .subscribe(
+        () => this.onCreateSuccess(),
         (error) => this.onCreateError(error.message)
       );
   }
@@ -43,7 +47,14 @@ export class CreateWalletComponent implements OnInit {
     this.form.controls.seed.setValue(Bip39.generateMnemonic(entropy));
   }
 
+  private onCreateSuccess() {
+    this.createButton.setSuccess();
+    this.dialogRef.close();
+  }
+
   private onCreateError(errorMesasge: string) {
+    this.createButton.setSuccess();
+
     const config = new MatSnackBarConfig();
     config.duration = 5000;
     this.snackBar.open(errorMesasge, null, config);

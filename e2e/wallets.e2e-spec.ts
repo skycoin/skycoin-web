@@ -38,10 +38,12 @@ describe('Wallets', () => {
 
   it('should not create wallet with already used seed', () => {
     expect<any>(page.createExistingWallet()).toEqual(false);
+    page.waitUntilLoading();
   });
 
   it('should create wallet', () => {
     expect<any>(page.createWallet()).toEqual(true);
+    page.waitUntilWalletIsCreated();
   });
 
   it('should show load wallet', () => {
@@ -62,6 +64,7 @@ describe('Wallets', () => {
 
   it('should load wallet', () => {
     expect<any>(page.loadWallet()).toEqual(true);
+    page.waitUntilWalletIsCreated();
   });
 
   it('should expand wallet', () => {
@@ -102,7 +105,7 @@ describe('Wallets', () => {
 
   it('should decrypt wallet', () => {
     page.navigateTo();
-    expect<any>(page.canUnlock()).toEqual(true);
+    expect<any>(page.canUnlockWallet()).toEqual(true);
   });
 
   it('should always display add new address button for the wallet', () => {
