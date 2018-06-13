@@ -124,7 +124,7 @@ export class WalletsPage {
     const label = element(by.css('[formcontrolname="label"]'));
     const seed = element(by.css('[formcontrolname="seed"]'));
     const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
-    const btnCreate = element(by.buttonText('Create'));
+    const btnCreate = element(by.css('.primary'));
 
     label.clear();
     label.sendKeys('Test create wallet');
@@ -141,7 +141,7 @@ export class WalletsPage {
   }
 
   waitUntilLoading() {
-    browser.wait(ExpectedConditions.presenceOf(element(by.css('snack-bar-container'))), 20000);
+    browser.wait(ExpectedConditions.invisibilityOf(element(by.css('mat-spinner'))));
   }
 
   waitUntilWalletIsCreated() {
