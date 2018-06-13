@@ -19,6 +19,10 @@ export class OnboardingEncryptWalletComponent implements OnInit {
     private formBuilder: FormBuilder,
   ) { }
 
+  get isWorking() {
+    return this.button.isLoading();
+  }
+
   ngOnInit() {
     this.initEncryptForm();
   }
@@ -50,8 +54,11 @@ export class OnboardingEncryptWalletComponent implements OnInit {
     }
 
     this.button.setLoading();
-
     this.onPasswordCreated.emit(this.form.enabled ? this.form.get('password').value : null);
+  }
+
+  emitBack() {
+    this.onBack.emit();
   }
 
   private passwordMatchValidator(g: FormGroup) {
