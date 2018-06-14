@@ -7,10 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { Observable } from 'rxjs/Observable';
 
-
-
-
-
 import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { Wallet } from '../../../../app.datatypes';
