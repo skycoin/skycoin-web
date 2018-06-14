@@ -14,5 +14,5 @@
   <ng-content></ng-content>
   <mat-icon *ngIf="state === 1">done</mat-icon>
   <mat-icon *ngIf="state === 2">error</mat-icon>
-  <mat-spinner *ngIf="state === 0" class="in-button"></mat-spinner>
+  <mat-spinner *ngIf="state === 0" [color]="spinnerStyle" class="in-button"></mat-spinner>
 </button>
