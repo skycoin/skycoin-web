@@ -222,7 +222,9 @@
     "timestamp": "Timestamp",
     "amount": "Amount",
     "txid": "Transaction ID",
-    "none": "No pending transactions"
+    "none": "No pending transactions",
+    "my": "Mine",
+    "all": "All"
   },
 
   "history": {
