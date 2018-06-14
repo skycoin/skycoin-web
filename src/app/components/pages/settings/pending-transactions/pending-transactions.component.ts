@@ -64,11 +64,15 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     const allTransactions = this.getUpdatedTransactions(transactions);
 
     return Observable.zip(allTransactions, this.walletService.all, (trans: any, wallets: Wallet[]) => {
-      const walletAddresses = [];
+      const walletAddresses = new Set<string>();
       wallets.forEach(wallet => {
-        wallet.addresses.forEach(address => walletAddresses.push(address.address));
+        wallet.addresses.forEach(address => walletAddresses.add(address.address));
       });
-      return trans.filter(tran => tran.owner_addressses.some(address => walletAddresses.includes(address)));
+
+      return trans.filter(tran =>
+        tran.owner_addressses.some(address => walletAddresses.has(address)) ||
+          tran.transaction.outputs.some(output => walletAddresses.has(output.dst))
+      );
     });
   }
 
