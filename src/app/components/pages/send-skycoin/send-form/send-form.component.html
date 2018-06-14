@@ -19,7 +19,7 @@
   </div>
   <div class="form-field">
     <label for="amount">{{ 'send.amount-label' | translate }}</label>
-    <input formControlName="amount" id="amount" [placeholder]="'common.coin-id' | translate" type="number">
+    <input formControlName="amount" id="amount" [placeholder]="'common.coin-id' | translate" type="number" (keydown.enter)="onVerify()">
   </div>
 
   <div class="-buttons">

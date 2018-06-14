@@ -43,7 +43,7 @@ describe('Wallets', () => {
 
   it('should create wallet', () => {
     expect<any>(page.createWallet()).toEqual(true);
-    page.waitUntilWalletIsCreated();
+    page.waitUntilLoading();
   });
 
   it('should show load wallet', () => {
