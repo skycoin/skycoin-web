@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { ButtonComponent } from '../../../layout/button/button.component';
 
 @Component({
   selector: 'app-onboarding-encrypt-wallet',
@@ -7,11 +9,19 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   styleUrls: ['./onboarding-encrypt-wallet.component.scss'],
 })
 export class OnboardingEncryptWalletComponent implements OnInit {
+  @ViewChild('button') button: ButtonComponent;
+  @Output() onPasswordCreated = new EventEmitter<string|null>();
+  @Output() onBack = new EventEmitter();
+
   form: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
   ) { }
+
+  get isWorking() {
+    return this.button.isLoading();
+  }
 
   ngOnInit() {
     this.initEncryptForm();
@@ -36,6 +46,19 @@ export class OnboardingEncryptWalletComponent implements OnInit {
 
   setEncrypt(event) {
     event.checked ? this.form.enable() : this.form.disable();
+  }
+
+  emitCreatedPassword() {
+    if ((this.form.enabled && !this.form.valid) || this.button.isLoading()) {
+      return;
+    }
+
+    this.button.setLoading();
+    this.onPasswordCreated.emit(this.form.enabled ? this.form.get('password').value : null);
+  }
+
+  emitBack() {
+    this.onBack.emit();
   }
 
   private passwordMatchValidator(g: FormGroup) {

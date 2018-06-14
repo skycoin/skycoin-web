@@ -53,11 +53,10 @@ export class CreateWalletComponent implements OnInit {
   }
 
   private onCreateError(errorMesasge: string) {
-    this.createButton.setSuccess();
-
     const config = new MatSnackBarConfig();
     config.duration = 5000;
     this.snackBar.open(errorMesasge, null, config);
+    this.createButton.setError({ _body: errorMesasge });
   }
 
   private initForm() {

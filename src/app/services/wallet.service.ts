@@ -1,14 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/zip';
-import 'rxjs/add/observable/range';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/scan';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -19,7 +14,6 @@ import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput,
   Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
-import { WebWorkersHelper } from '../utils/web-workers-helper';
 import { convertAsciiToHexa } from '../utils/converters';
 
 @Injectable()
@@ -169,7 +163,7 @@ export class WalletService {
     return this.apiService.postTransaction(encodedTransaction);
   }
 
-  updateWallet(wallet: Wallet) {
+  updateWallet(wallet: Wallet, shouldSave: boolean = true) {
     this.all.first().subscribe(wallets => {
       const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
 
@@ -178,7 +172,10 @@ export class WalletService {
       }
 
       wallets[index] = wallet;
-      this.saveWallets(wallets);
+
+      if (shouldSave) {
+        this.saveWallets(wallets);
+      }
     });
   }
 
@@ -193,7 +190,7 @@ export class WalletService {
         }
 
         wallet.seed = seed;
-        this.updateWallet(wallet);
+        this.updateWallet(wallet, false);
       });
   }
 

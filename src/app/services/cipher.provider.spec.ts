@@ -1,4 +1,3 @@
-import { TranslateService } from '@ngx-translate/core';
 import { TestBed } from '@angular/core/testing';
 
 import { CipherProvider } from './cipher.provider';
@@ -7,23 +6,15 @@ import { convertAsciiToHexa } from '../utils/converters';
 
 describe('CipherProvider', () => {
   let cipherProvider: CipherProvider;
-  let spyTranslateService:  jasmine.SpyObj<TranslateService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        CipherProvider,
-        {
-          provide: TranslateService,
-          useValue: jasmine.createSpyObj('TranslateService', {
-            'instant': 'error message'
-          })
-        }
+        CipherProvider
       ]
     });
 
     cipherProvider = TestBed.get(CipherProvider);
-    spyTranslateService = TestBed.get(TranslateService);
   });
 
   it('should be created', () => {

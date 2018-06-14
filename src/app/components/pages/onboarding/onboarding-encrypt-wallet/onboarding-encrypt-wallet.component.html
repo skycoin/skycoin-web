@@ -25,16 +25,18 @@
         </div>
         <div class="form-field">
           <label for="confirm">{{ 'password.confirm-label' | translate }}</label>
-          <input class="-input" type="password" formControlName="confirm" id="confirm" [ngClass]="{ disable: form.disabled }">
+          <input class="-input" type="password" formControlName="confirm" id="confirm"
+                [ngClass]="{ disable: form.disabled }"
+                (keydown.enter)="emitCreatedPassword()">
         </div>
       </form>
     </div>
   </div>
   <div class="row -buttons-footer">
-    <app-button class="dark -button-min-margin" [disabled]="!form.valid" >
+    <app-button class="dark -button-min-margin" [disabled]="!form.valid" (action)="emitCreatedPassword()" #button>
       {{ 'wizard.finish-button' | translate }}
     </app-button>
-    <app-button class="ghost -button-min-margin">
+    <app-button class="ghost -button-min-margin" (action)="emitBack()" [ngClass]="{ '-hidden': isWorking }">
       {{ 'wizard.skip-button' | translate }}
     </app-button>
   </div>
