@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
-import { WebWorkersHelper } from '../utils/web-workers-helper';
+import { CipherWebWorkerHelper, CipherWebWorkerOperations } from '../utils/cipher-web-worker-helper';
 
 declare var Cipher;
 
@@ -13,7 +13,7 @@ export class CipherProvider {
   }
 
   generateAddress(seed): Observable<Address> {
-    return WebWorkersHelper.ExcecuteWorker('/assets/scripts/workers/generate-addresses.worker.js', seed)
+    return CipherWebWorkerHelper.ExcecuteWorker(CipherWebWorkerOperations.CreateAdress, seed)
       .map((address) => this.convertToAddress(address))
       .catch((error: Error) => Observable.throw(new Error(error.message)));
   }
