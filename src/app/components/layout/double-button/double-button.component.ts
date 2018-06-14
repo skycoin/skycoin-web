@@ -9,14 +9,11 @@ export enum DoubleButtonActive {RightButton, LeftButton}
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class DoubleButtonComponent implements OnInit {
-  @Input()
-  rightButtonText: any;
-  @Input()
-  leftButtonText: any;
-  @Input()
-  activeButton: DoubleButtonActive;
-  @Output()
-  onStateChange = new EventEmitter();
+  @Input() rightButtonText: any;
+  @Input() leftButtonText: any;
+  @Input() activeButton: DoubleButtonActive;
+  @Input() className = '';
+  @Output() onStateChange = new EventEmitter();
   rightActive = false;
 
   ngOnInit() {

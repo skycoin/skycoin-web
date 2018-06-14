@@ -47,12 +47,17 @@
     </div>
   </div>
   <div class="row -buttons-footer">
-    <app-button class="dark -button-min-margin" [disabled]="!form.valid"
+    <app-button #create
+                class="dark -button-min-margin"
+                [disabled]="!form.valid"
+                [spinnerStyle]="'accent'"
                 (action)="showNewForm ? showSafe() : loadWallet()">
       {{ 'wallet.new.create-button' | translate }}
     </app-button>
     <app-button *ngIf="haveWallets"
-      class="ghost -button-min-margin" (action)="skip()">
+                [disabled]="isWalletCreating"
+                class="ghost -button-min-margin"
+                (action)="skip()">
       {{ 'wallet.new.skip-button' | translate }}
     </app-button>
   </div>

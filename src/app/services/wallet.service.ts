@@ -268,6 +268,10 @@ export class WalletService {
     return this.apiService.get('pendingTxs');
   }
 
+  getTransactionDetails(uxid: string): Observable<any> {
+    return this.apiService.get('uxout', { uxid: uxid });
+  }
+
   sum(): Observable<number> {
     return this.all.map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0)
       .reduce((a , b) => a + b, 0));

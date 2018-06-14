@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -20,6 +20,8 @@ export class OnboardingCreateWalletComponent implements OnInit {
   form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
   haveWallets = false;
+  isWalletCreating = false;
+  @ViewChild('create') createButton;
 
   constructor(
     private dialog: MatDialog,
@@ -93,10 +95,20 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   private createWallet() {
+    this.createButton.setLoading();
+    this.isWalletCreating = true;
+
     this.walletService.create(this.form.value.label, this.form.value.seed)
       .subscribe(
-        () => this.skip(),
-        (error) => this.onCreateError(error.message)
+        () => {
+            this.createButton.setSuccess();
+            this.skip();
+        },
+        (error) => {
+          this.onCreateError(error.message);
+          this.createButton.setError(error.message);
+          this.isWalletCreating = false;
+        }
       );
   }
 

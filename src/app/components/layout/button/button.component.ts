@@ -10,6 +10,7 @@ import { MatTooltip } from '@angular/material';
 export class ButtonComponent {
   @Input() disabled: boolean;
   @Input() emit = false;
+  @Input() spinnerStyle = 'primary';
   @Output() action = new EventEmitter();
   @ViewChild('tooltip') tooltip: MatTooltip;
 
