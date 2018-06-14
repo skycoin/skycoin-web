@@ -4,7 +4,7 @@
       <label for="label">{{ 'wallet.new.name-label' | translate}}</label>
       <input formControlName="label" id="label">
     </div>
-    <div class="form-field -valid-seed-container" [ngClass]="{'-expand':form.get('seed').valid}">
+    <div class="form-field -valid-seed-container" [ngClass]="{'-expand':form.get('seed').valid && !data.create}">
       <label for="seed">
         <span>{{ 'wallet.new.seed-label' | translate }}</span>
         <span class="generators" *ngIf="data.create">

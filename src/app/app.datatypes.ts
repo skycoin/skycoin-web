@@ -7,6 +7,7 @@ export interface Wallet {
   hidden?: boolean;
   opened?: boolean;
   hideEmpty?: boolean;
+  coinId?: number;
 }
 
 export interface Address {

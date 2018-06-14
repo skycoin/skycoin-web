@@ -3,8 +3,6 @@ import { readJSON } from 'karma-read-json';
 import { testCases } from '../utils/jasmine-utils';
 import { Address } from '../app.datatypes';
 import { convertAsciiToHexa } from '../utils/converters';
-import { environment } from '../../environments/environment';
-import { CipherTestMode } from '../constants/cipher-test-mode.const';
 
 declare var CipherExtras;
 declare var Cipher;
@@ -21,7 +19,9 @@ describe('CipherProvider Lib', () => {
     'seed-0009.json', 'seed-0010.json'
   ];
 
-  const testSettings = environment.cipherTestMode === CipherTestMode.EXTENSIVE
+  const extensiveMode = 'extensive';
+
+  const testSettings = process.argv.length > 0 && process.argv[0] === extensiveMode
     ? { addressCount: 1000, seedFilesCount: 11 }
     : { addressCount: 30, seedFilesCount: 2 };
 
