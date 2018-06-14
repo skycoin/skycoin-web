@@ -1,17 +1,28 @@
+@import '../../../../../theme/variables';
+
+.-wrapper {
+  margin: 30px;
+}
+
 .-paper {
   background-color: #fbfbfb;
-  border-radius: 10px;
+  border-radius: 15px;
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.01), 1px 1px 2px 2px rgba(0, 0, 0, 0.01);
-  padding: 30px;
-  margin: 30px;
-  font-size: 13px;
+  padding: 20px;
+  font-size: $font-size-standard;
+}
 
-  .-keys {
-    display: inline-block;
+.-item {
+  &:not(:last-child) {
+    margin-bottom: 20px;
   }
 
-  .-values {
-    color: rgba(30,34,39,.5);
-    display: inline-block;
+  .-key {
+    color: $grey-dark;
+    margin-bottom: 5px;
+  }
+
+  .-value {
+    word-break: break-all;
   }
 }

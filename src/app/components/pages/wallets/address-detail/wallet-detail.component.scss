@@ -1,8 +1,12 @@
 @import '../../../../../theme/_variables.scss';
 
+.-records {
+  background-color: darken($white, 2%);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
 .-record {
-  background-color: $white;
-  border-bottom: 1px solid #eff0f0;
   display: flex;
   font-size: $font-size-standard;
   line-height: $row-height;
@@ -34,7 +38,7 @@
       &:hover .copy-label {
         display: inline-block;
       }
-    } 
+    }
   }
 
   .hours-column {
@@ -76,9 +80,15 @@
 }
 
 .-actions {
+  background-color: #fafafa;
   border-bottom: 1px solid #eff0f0;
   display: flex;
   width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03) !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  z-index: 100;
+  position: relative;
 
   .-button {
     padding-right: 20px;
@@ -124,11 +134,11 @@
         &.-btn-plus::before {
           background-image: url(../../../../../assets/img/plus-green.png);
         }
-  
+
         &.-btn-minus::before {
           background-image: url(../../../../../assets/img/minus-red.png);
         }
-  
+
         &.-btn-edit::before {
           background-image: url(../../../../../assets/img/edit-blue.png);
         }
