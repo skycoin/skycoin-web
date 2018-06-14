@@ -39,23 +39,13 @@ describe('CipherProvider', () => {
       createTransactionOutput('2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNy', 20000)
     ];
 
-    const actualLength = cipherProvider.prepareTransaction(inputs, outputs).length;
-    const expectedLength = 440;
+    cipherProvider.prepareTransaction(inputs, outputs)
+      .subscribe((rowTx: string) => {
+        const actualLength = rowTx.length;
+        const expectedLength = 440;
 
-    expect(actualLength).toBe(expectedLength);
-  });
-
-  it('should be rejected for an invalid destination address', () => {
-    const inputs: TransactionInput[] = [
-      createTransactionInput()
-    ];
-
-    const outputs: TransactionOutput[] = [
-      createTransactionOutput('2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNz')
-    ];
-
-    expect(() => cipherProvider.prepareTransaction(inputs, outputs))
-      .toThrowError('Invalid checksum');
+        expect(actualLength).toBe(expectedLength);
+      });
   });
 });
 
