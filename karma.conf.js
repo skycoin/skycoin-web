@@ -4,6 +4,13 @@
 process.env.CHROME_BIN = require('puppeteer').executablePath()
 
 module.exports = function (config) {
+ 
+  var cipherParamIndex = process.argv.indexOf('--cipher');
+  // check if command line has cipher parameter with not empty value
+  if (cipherParamIndex > -1 && (cipherParamIndex + 1) < process.argv.length && process.argv[cipherParamIndex + 1]) {
+    var cipherMode = process.argv[cipherParamIndex + 1];
+  }
+
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular/cli'],
@@ -18,7 +25,9 @@ module.exports = function (config) {
     files: [
       { pattern: 'e2e/test-fixtures/*.json', included: false }
     ],
-    client:{
+    client: {
+      // this works only with `karma start`, not `karma run`.
+      cipher: cipherMode,
       args: ['--browserNoActivityTimeout', config.browserNoActivityTimeout],
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
