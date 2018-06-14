@@ -96,7 +96,8 @@ describe('WalletService', () => {
         seed: walletSeed,
         balance: 0,
         hours: 0,
-        addresses: [walletAddress]
+        addresses: [walletAddress],
+        coinId: 1
       };
 
       spyCipherProvider.generateAddress.and.returnValue(Observable.of({ ...walletAddress }));
@@ -445,7 +446,8 @@ function createWallet(label: string = 'label', seed: string = 'seed', balance: n
     hours: 0,
     addresses: [
       createAddress()
-    ]
+    ],
+    coinId: 1
   };
 }
 
