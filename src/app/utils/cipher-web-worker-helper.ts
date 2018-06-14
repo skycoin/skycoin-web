@@ -2,7 +2,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { isString } from 'util';
 
-export enum CipherWebWorkerOperations {
+export enum CipherWebWorkerOperation {
   CreateAdress = 0,
   PrepareTransaction = 1,
 }
@@ -15,26 +15,11 @@ export class CipherWebWorkerHelper {
   private static readonly activeWorks: Map<number, Subject<any>> = new Map<number, Subject<any>>();
   private static initialized = false;
 
-  static ExcecuteWorker(operation: CipherWebWorkerOperations, data: any): Observable<any> {
+  static ExcecuteWorker(operation: CipherWebWorkerOperation, data: any): Observable<any> {
 
     if (!CipherWebWorkerHelper.initialized) {
       CipherWebWorkerHelper.initialized = true;
-
-      CipherWebWorkerHelper.worker.addEventListener('message', (e: MessageEvent) => {
-        if (isString(e.data.result) && (e.data.result as string).startsWith(CipherWebWorkerHelper.errPrefix)) {
-          // Return the error message without the content of errPrefix.
-          CipherWebWorkerHelper.activeWorks[e.data.workID].error(
-            new Error((e.data.result as string).substr(
-              CipherWebWorkerHelper.errPrefix.length,
-              (e.data.result as string).length - CipherWebWorkerHelper.errPrefix.length)
-          ));
-        } else {
-          // Return the result.
-          CipherWebWorkerHelper.activeWorks[e.data.workID].next(e.data.result);
-        }
-        CipherWebWorkerHelper.activeWorks[e.data.workID].complete();
-        CipherWebWorkerHelper.activeWorks.delete(e.data.workID);
-      });
+      CipherWebWorkerHelper.worker.addEventListener('message', CipherWebWorkerHelper.eventListener);
     }
 
     const workID = Math.floor(Math.random() * 100000000000000);
@@ -44,5 +29,21 @@ export class CipherWebWorkerHelper {
     CipherWebWorkerHelper.worker.postMessage({operation: operation, data: data, workID: workID});
 
     return workSubject.asObservable();
+  }
+
+  private static eventListener(e: MessageEvent) {
+    if (isString(e.data.result) && (e.data.result as string).startsWith(CipherWebWorkerHelper.errPrefix)) {
+      // Return the error message without the content of errPrefix.
+      CipherWebWorkerHelper.activeWorks[e.data.workID].error(
+        new Error((e.data.result as string).substr(
+          CipherWebWorkerHelper.errPrefix.length,
+          (e.data.result as string).length - CipherWebWorkerHelper.errPrefix.length)
+      ));
+    } else {
+      // Return the result.
+      CipherWebWorkerHelper.activeWorks[e.data.workID].next(e.data.result);
+    }
+    CipherWebWorkerHelper.activeWorks[e.data.workID].complete();
+    CipherWebWorkerHelper.activeWorks.delete(e.data.workID);
   }
 }
