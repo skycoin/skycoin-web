@@ -13,6 +13,9 @@ unit-test: ## runs unit tests
 cipher-test:
 	npm run cipher-test
 
+cipher-test-extensive:
+	npm run cipher-test-extensive
+
 run-docker: ## runs docker container
 	docker volume create skycoin-data
 	docker volume create skycoin-wallet

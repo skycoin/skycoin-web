@@ -31,6 +31,10 @@ export class BlockchainService {
     return this.blocks(1).map(blocks => blocks[0]);
   }
 
+  coinSupply() {
+    return this.apiService.get('coinSupply');
+  }
+
   private loadBlockchainBlocks() {
     IntervalObservable
       .create(90000)

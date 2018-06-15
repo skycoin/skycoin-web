@@ -15,6 +15,7 @@ import { CipherProvider } from './cipher.provider';
 import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput,
   Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
 import { convertAsciiToHexa } from '../utils/converters';
+import { coinsId, defaultCoinId } from '../constants/coins-id.const';
 
 @Injectable()
 export class WalletService {
@@ -75,7 +76,8 @@ export class WalletService {
         const wallet = {
           label: label,
           seed: seed,
-          addresses: [fullAddress]
+          addresses: [fullAddress],
+          coinId: coinsId.sky
         };
 
         this.all.first().subscribe((wallets: Wallet[]) => {
@@ -268,6 +270,10 @@ export class WalletService {
     return this.apiService.get('pendingTxs');
   }
 
+  getTransactionDetails(uxid: string): Observable<any> {
+    return this.apiService.get('uxout', { uxid: uxid });
+  }
+
   sum(): Observable<number> {
     return this.all.map(wallets => wallets.map(wallet => wallet.balance >= 0 ? wallet.balance : 0)
       .reduce((a , b) => a + b, 0));
@@ -344,7 +350,13 @@ export class WalletService {
   private loadWallets() {
     const storedWallets: string = localStorage.getItem('wallets');
     if (storedWallets) {
-      this.wallets.next( JSON.parse(storedWallets) );
+      const wallets: Wallet[] = JSON.parse(storedWallets);
+
+      wallets.filter(wallet => !wallet.coinId).forEach((wallet) => {
+        wallet.coinId = defaultCoinId;
+      });
+
+      this.wallets.next(wallets);
     }
   }
 
@@ -353,7 +365,7 @@ export class WalletService {
     wallets.forEach(wallet => {
       const strippedAddresses: Address[] = [];
       wallet.addresses.forEach(address => strippedAddresses.push({ address: address.address }));
-      strippedWallets.push({ label: wallet.label, addresses: strippedAddresses });
+      strippedWallets.push({ coinId: wallet.coinId, label: wallet.label, addresses: strippedAddresses });
     });
     localStorage.setItem('wallets', JSON.stringify(strippedWallets));
     this.wallets.next(wallets);

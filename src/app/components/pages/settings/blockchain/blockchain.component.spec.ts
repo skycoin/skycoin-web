@@ -23,6 +23,10 @@ class MockBlockchainService {
   lastBlock(): Observable<any> {
     return Observable.of({});
   }
+
+  coinSupply(): Observable<any> {
+    return Observable.of({});
+  }
 }
 
 describe('BlockchainComponent', () => {
