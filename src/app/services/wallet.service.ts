@@ -144,20 +144,16 @@ export class WalletService {
           });
         });
 
-        let rawTransaction;
-        try {
-          rawTransaction = this.generateRawTransaction(txInputs, txOutputs);
-        } catch (e) {
-          return Observable.throw(new Error(e));
-        }
-
-        return Observable.of({
-          inputs: txInputs,
-          outputs: txOutputs,
-          hoursSent: hoursToSend,
-          hoursBurned: totalHours - calculatedHours,
-          encoded: rawTransaction
-        });
+        return this.generateRawTransaction(txInputs, txOutputs)
+          .flatMap((rawTransaction: string) => {
+            return Observable.of({
+              inputs: txInputs,
+              outputs: txOutputs,
+              hoursSent: hoursToSend,
+              hoursBurned: totalHours - calculatedHours,
+              encoded: rawTransaction
+            });
+          });
     });
   }
 
@@ -320,7 +316,7 @@ export class WalletService {
     this.resetBalancesUpdateTime(hasPendingTxs);
   }
 
-  private generateRawTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[]) {
+  private generateRawTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[]): Observable<string> {
     const convertedOutputs: TransactionOutput[] = txOutputs.map(output => {
       return {
         ...output,

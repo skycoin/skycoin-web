@@ -274,7 +274,7 @@ describe('WalletService', () => {
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
-      spyCipherProvider.prepareTransaction.and.returnValue('preparedTransaction');
+      spyCipherProvider.prepareTransaction.and.returnValue(Observable.of('preparedTransaction'));
 
       walletService.createTransaction(wallet, address, amount)
         .subscribe((result: any) => {
@@ -315,7 +315,7 @@ describe('WalletService', () => {
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
-      spyCipherProvider.prepareTransaction.and.returnValue('preparedTransaction');
+      spyCipherProvider.prepareTransaction.and.returnValue(Observable.of('preparedTransaction'));
 
       walletService.createTransaction(wallet, address, amount)
         .subscribe((result: any) => {
