@@ -128,6 +128,10 @@
         background-image: url(../../../../../assets/img/edit-grey.png);
       }
 
+      &.-btn-delete::before {
+        background-image: url(../../../../../assets/img/delete-grey.png);
+      }
+
       &:hover {
         color: $grey-dark;
 
@@ -141,6 +145,10 @@
 
         &.-btn-edit::before {
           background-image: url(../../../../../assets/img/edit-blue.png);
+        }
+
+        &.-btn-delete::before {
+          background-image: url(../../../../../assets/img/delete-red.png);
         }
       }
     }
