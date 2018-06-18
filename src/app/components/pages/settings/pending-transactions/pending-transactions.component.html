@@ -3,16 +3,21 @@
   <div class="container">
     <div class="-table">
       <div class="-headers">
-        <div class="-width-150">{{ 'pending-txs.timestamp' | translate }}</div>
-        <div class="-width-150">{{ 'common.coin-id' | translate }}</div>
         <div class="flex-fill">{{ 'pending-txs.txid' | translate }}</div>
+        <div class="-width-150">{{ 'common.coin-id' | translate }}</div>
+        <div class="-width-150">{{ 'pending-txs.timestamp' | translate }}</div>
       </div>
-      <div class="-transaction" *ngFor="let transaction of transactions">
-        <div class="-width-150 -timestamp">
-          <strong>{{ transaction.timestamp | dateTime }}</strong>
+      <div class="-body">
+        <ng-container *ngIf="transactions.length">
+          <div class="-row" *ngFor="let transaction of transactions">
+            <div class="flex-fill -txid">{{ transaction.txid }}</div>
+            <div class="-width-150 -amount">{{ (transaction.amount ? transaction.amount : 0) | number:'1.0-6' }}</div>
+            <div class="-width-150 -timestamp">{{ transaction.timestamp | dateTime }}</div>
+          </div>
+        </ng-container>
+        <div class="-row" *ngIf="!transactions.length">
+          <div class="flex-fill">{{ 'pending-txs.none' | translate }}</div>
         </div>
-        <div class="-width-150 -amount">{{ (transaction.amount ? transaction.amount : 0) | number:'1.0-6' }}</div>
-        <div class="flex-fill -txid">{{ transaction.txid }}</div>
       </div>
     </div>
   </div>
