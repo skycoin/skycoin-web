@@ -3,12 +3,18 @@ importScripts('main.js');
 onmessage = function(e) {
   try {
     switch(e.data.operation) {
-      case 0:
+      case 0: {
         postMessage({result: Cipher.GenerateAddresses(e.data.data), workID: e.data.workID});
-      case 1:
+        break;
+      }
+      case 1: {
         postMessage({result: Cipher.PrepareTransaction(e.data.data.inputs, e.data.data.outputs), workID: e.data.workID});
-      default:
+        break;
+      }
+      default: {
         postMessage({result: 0, workID: e.data.workID});
+        break;
+      }
     }
   } catch(err) {
     // The error message must be prefixed with "Error:" to be recognized as an error
