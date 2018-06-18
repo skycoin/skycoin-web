@@ -35,7 +35,7 @@
     <app-button (action)="closePopup()">
       {{ 'wallet.new.cancel-button' | translate}}
     </app-button>
-    <app-button #create (action)="createWallet()" class="primary" [disabled]="!form.valid">
+    <app-button #create (action)="createWallet()" class="primary btn-create" [disabled]="!form.valid">
       {{ data.create ? ('wallet.new.create-button' | translate) : ('wallet.new.load-button' | translate) }}
     </app-button>
   </div>
