@@ -1,8 +1,8 @@
-import { BaseCoin } from './basecoin.coin';
+import { BaseCoin } from './basecoin';
 import { coinsId } from '../constants/coins-id.const';
 import { environment } from '../../environments/environment';
 
-export class SkyCoin extends BaseCoin {
+export class SkycoinCoin extends BaseCoin {
   constructor() {
     super({
       id: coinsId.sky,
