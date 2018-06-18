@@ -1,65 +1,30 @@
 @import '../../../../../theme/_variables.scss';
 
-.-wallet {
-  margin: 30px 0;
+.-text-right {
+  text-align: right;
 }
 
-.-wallet-label {
-  font-weight: 400;
-  margin-left: 40px;
+.-grey {
+  color: $grey-dark;
 }
 
-.-wallet-address {
-  margin-top: 10px
+.-row.-small {
+  height: $row-height / 1.5;
+  line-height: $row-height / 1.5;
 }
 
-.-headers {
-  border-bottom: 1px solid #eff0f0;
-  font-size: 13px;
-  font-weight: 700;
-  height: 50px;
-  line-height: 50px;
-  padding-left: 20px;
+.-hash {
+  margin-left: 27px;
+  word-break: break-all;
 }
 
-.-table {
-  border-radius: 15px;
-  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.01), 1px 1px 2px 2px rgba(0, 0, 0, 0.01);
-  margin: 0 30px;
-}
+.-address {
+  color: $grey-dark;
 
-.-output {
-  background-color: $white;
-  border-bottom: 1px solid #eff0f0;
-  font-size: $font-size-standard;
-  line-height: 30px;
-  padding: 10px 20px;
-
-  &:first-child {
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-
-  &:last-child {
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-  }
-
-  .-hash, .-balance {
-    font-size: 12px;
-  }
-
-  .-balance {
-    display: flex;
-    flex-direction: row;
-
-    .-item {
-      min-width: 150px;
-      padding-right: 20px;
-
-      span {
-        color: $grey-dark;
-      }
-    }
+  img {
+    width: 17px;
+    vertical-align: sub;
+    margin-right: 10px;
+    cursor: pointer;
   }
 }

@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
-  transactions: any[];
+  transactions: any[] = [];
   private navbarSubscription: ISubscription;
 
   constructor(

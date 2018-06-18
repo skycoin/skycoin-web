@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialogModule } from '@angular/material';
 
 import { OutputsComponent } from './outputs.component';
 import { WalletService } from '../../../../services/wallet.service';
@@ -26,6 +27,7 @@ describe('OutputsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ OutputsComponent, MockTranslatePipe ],
+      imports: [ MatDialogModule ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { queryParams: Observable.of({}) } },
