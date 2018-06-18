@@ -136,6 +136,16 @@ mat-spinner.in-button {
     stroke: #000;
     opacity: 0.3;
   }
+
+  &.big {
+    height: 36px !important;
+    width: 36px !important;
+
+    svg {
+      height: 36px !important;
+      width: 36px !important;
+    }
+  }
 }
 
 snack-bar-container {
