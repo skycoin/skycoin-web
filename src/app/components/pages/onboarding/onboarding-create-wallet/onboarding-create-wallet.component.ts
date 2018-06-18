@@ -41,7 +41,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
       if (wallets.length === 0) {
         this.haveWallets = false;
         this.showDisclaimer();
-      }else {
+      } else {
         this.haveWallets = true;
       }
     });
@@ -100,15 +100,8 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
     this.walletService.create(this.form.value.label, this.form.value.seed)
       .subscribe(
-        () => {
-            this.createButton.setSuccess();
-            this.skip();
-        },
-        (error) => {
-          this.onCreateError(error.message);
-          this.createButton.setError(error.message);
-          this.isWalletCreating = false;
-        }
+        () => this.onCreateSuccess(),
+        (error) => this.onCreateError(error.message)
       );
   }
 
@@ -116,10 +109,19 @@ export class OnboardingCreateWalletComponent implements OnInit {
     return g.get('seed').value === g.get('confirm_seed').value ? null : { NotEqual: true };
   }
 
+  private onCreateSuccess() {
+    this.createButton.setSuccess();
+    this.skip();
+    this.isWalletCreating = false;
+  }
+
   private onCreateError(errorMesasge: string) {
     const config = new MatSnackBarConfig();
     config.duration = 5000;
     this.snackBar.open(errorMesasge, null, config);
+
+    this.createButton.setError(errorMesasge);
+    this.isWalletCreating = false;
   }
 
   private createDialogConfig(disableClose = false) {
