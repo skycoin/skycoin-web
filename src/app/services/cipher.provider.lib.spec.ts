@@ -1,3 +1,4 @@
+import '../../assets/scripts/main.js';
 import { readJSON } from 'karma-read-json';
 
 import { testCases } from '../utils/jasmine-utils';
