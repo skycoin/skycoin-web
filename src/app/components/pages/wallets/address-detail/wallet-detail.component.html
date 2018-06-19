@@ -1,13 +1,16 @@
 <div class="-actions">
-  <div class="-button btn-add-address" (click)="onAddNewAddress()">
-    <span class="-img -btn-plus">{{ 'wallet.new-address' | translate }}</span>
+  <div class="-button btn-add-address" (click)="onAddNewAddress()" [ngClass]="{ 'disabled': isAddressCreating }">
+    <span [ngClass]="{ '-btn-plus -img': !isAddressCreating }">
+      <mat-spinner *ngIf="isAddressCreating" [color]="spinnerStyle" class="in-button small"></mat-spinner>
+      {{ 'wallet.new-address' | translate }}
+    </span>
   </div>
   <div class="-button" (click)="toggleEmpty()">
     <ng-container *ngIf="!wallet.hideEmpty">
-      <span class="-img -btn-minus">{{ 'wallet.hide-empty' | translate }}</span>
+      <span class="-img -btn-minus -hide-empty">{{ 'wallet.hide-empty' | translate }}</span>
     </ng-container>
     <ng-container *ngIf="wallet.hideEmpty">
-      <span class="-img -btn-plus">{{ 'wallet.show-empty' | translate }}</span>
+      <span class="-img -btn-plus -show-empty">{{ 'wallet.show-empty' | translate }}</span>
     </ng-container>
   </div>
   <div class="flex-fill"></div>
