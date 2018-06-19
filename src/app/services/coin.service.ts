@@ -3,35 +3,37 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { BaseCoin } from '../coins/basecoin';
 import { SkycoinCoin } from '../coins/skycoin.coin';
 import { TestCoin } from '../coins/test.coin';
+import { coinsId } from '../constants/coins-id.const';
 
 export class CoinService {
 
   currentCoin: BehaviorSubject<BaseCoin> = new BehaviorSubject<BaseCoin>(null);
+  coins: BaseCoin[] = [];
 
-  private coins: BaseCoin[] = [];
   private readonly storageKey = 'currentCoin';
+  private readonly defaultCoinId = coinsId.sky;
 
   constructor() {
-    this.loadCurrentCoin();
     this.loadAvailableCoins();
+    this.loadCurrentCoin();
   }
 
   changeCoin(coin: BaseCoin) {
     this.currentCoin.next(coin);
 
-    this.saveCoin(coin);
+    this.saveCoin(coin.id);
   }
 
   private loadCurrentCoin() {
-    const storedCoin: string = localStorage.getItem(this.storageKey);
-    if (storedCoin) {
-      const coin: BaseCoin = JSON.parse(storedCoin);
-      this.currentCoin.next(coin);
-    }
+    const storedCoinId = localStorage.getItem(this.storageKey);
+    const coinId = storedCoinId ? +storedCoinId : this.defaultCoinId;
+
+    const coin = this.coins.find((c: BaseCoin) => c.id === coinId);
+    this.currentCoin.next(coin);
   }
 
-  private saveCoin(coin) {
-    localStorage.setItem(this.storageKey, JSON.stringify(coin));
+  private saveCoin(coinId: number) {
+    localStorage.setItem(this.storageKey, coinId.toString());
   }
 
   private loadAvailableCoins() {
