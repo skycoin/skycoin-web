@@ -74,6 +74,7 @@ import { ConfirmationComponent } from './components/layout/confirmation/confirma
 import { DisclaimerWarningComponent } from './components/layout/disclaimer-warning/disclaimer-warning.component';
 import { NavBarService } from './services/nav-bar.service';
 import { CoinService } from './services/coin.service';
+import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +112,8 @@ import { CoinService } from './services/coin.service';
     SendVerifyComponent,
     TransactionInfoComponent,
     ConfirmationComponent,
-    DisclaimerWarningComponent
+    DisclaimerWarningComponent,
+    LoadingContentComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,

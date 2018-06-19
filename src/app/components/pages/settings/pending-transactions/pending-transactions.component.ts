@@ -15,6 +15,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
+  isLoading = false;
   transactions: any[] = [];
   private navbarSubscription: ISubscription;
 
@@ -37,13 +38,17 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
   }
 
   private loadTransactions(value: number) {
+    this.isLoading = true;
+
     const showAllTransactions = value === DoubleButtonActive.RightButton;
     this.walletService.getAllPendingTransactions()
+      .delay(32)
       .flatMap((transactions: any) => {
           return showAllTransactions ? Observable.of(transactions) : this.getWalletsTransactions(transactions);
       })
       .subscribe(transactions => {
         this.transactions = this.mapTransactions(transactions);
+        this.isLoading = false;
       });
   }
 
@@ -61,6 +66,10 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
   }
 
   private getWalletsTransactions(transactions: any): Observable<any> {
+    if (transactions.length === 0) {
+      return Observable.of([]);
+    }
+
     const allTransactions = this.getUpdatedTransactions(transactions);
 
     return Observable.zip(allTransactions, this.walletService.all, (trans: any, wallets: Wallet[]) => {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   templateUrl: './blockchain.component.html',
@@ -15,7 +16,13 @@ export class BlockchainComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.blockchainService.lastBlock().subscribe(block => this.block = block);
-    this.blockchainService.coinSupply().subscribe(coinSupply => this.coinSupply = coinSupply);
+    Observable.forkJoin(
+      this.blockchainService.lastBlock(),
+      this.blockchainService.coinSupply()
+    )
+    .subscribe(([block, coinSupply]) => {
+      this.block = block;
+      this.coinSupply = coinSupply;
+    });
   }
 }
