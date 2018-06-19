@@ -24,35 +24,20 @@ export class WalletsPage {
   }
 
   createWalletCheckValidationSeed() {
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
-    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
     const btnCreate = element(by.buttonText('Create'));
-
-    return label.clear().then(() => {
-      return label.sendKeys('Test wallet').then(() => {
-        return seed.clear().then(() => {
-          return seed.sendKeys('test test2').then(() => {
-            return confirm.clear().then(() => {
-              return confirm.sendKeys('skycoin-web-e2e-test-seed').then(() => {
-                return btnCreate.isEnabled();
-              });
-            });
-          });
-        });
-      });
-    });
+    this.fillWalletForm('Test wallet', 'test test2', 'skycoin-web-e2e-test-seed');
+    return btnCreate.isEnabled();
   }
 
   loadWalletCheckValidationSeed() {
     const cancelAdd = element(by.buttonText('Cancel'));
-    const btnAdd = element(by.buttonText('Load Wallet'));
+    const btnLoadWallet = element(by.buttonText('Load Wallet'));
     const label = element(by.css('[formcontrolname="label"]'));
     const seed = element(by.css('[formcontrolname="seed"]'));
     const btnLoad = element(by.buttonText('Load'));
 
     return cancelAdd.click().then(() => {
-      return btnAdd.click().then(() => {
+      return btnLoadWallet.click().then(() => {
         return label.clear().then(() => {
           return label.sendKeys('Test wallet').then(() => {
             return seed.clear().then(() => {
@@ -67,76 +52,44 @@ export class WalletsPage {
   }
 
   createWalletCheckValidationLabel() {
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
-    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
     const btnCreate = element(by.buttonText('Create'));
-
-    return label.clear().then(() => {
-      return label.sendKeys('').then(() => {
-        return seed.clear().then(() => {
-          return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
-            return confirm.clear().then(() => {
-              return confirm.sendKeys('skycoin-web-e2e-test-seed').then(() => {
-                return btnCreate.isEnabled();
-              });
-            });
-          });
-        });
-      });
-    });
+    this.fillWalletForm('', 'skycoin-web-e2e-test-seed', 'skycoin-web-e2e-test-seed');
+    return btnCreate.isEnabled();
   }
 
   loadWalletCheckValidationLabel() {
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
     const btnLoad = element(by.buttonText('Load'));
-
-    return label.clear().then(() => {
-      return label.sendKeys('').then(() => {
-        return seed.clear().then(() => {
-          return seed.sendKeys('skycoin-web-e2e-test-seed').then(() => {
-            return btnLoad.isEnabled();
-          });
-        });
-      });
-    });
+    this.fillWalletForm('', 'skycoin-web-e2e-test-seed');
+    return btnLoad.isEnabled();
   }
 
   createExistingWallet() {
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
-    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
     const btnCreate = element(by.buttonText('Create'));
-
-    label.clear();
-    label.sendKeys('Test create wallet');
-    seed.clear();
-    seed.sendKeys('skycoin-web-e2e-test-seed');
-    confirm.clear();
-    confirm.sendKeys('skycoin-web-e2e-test-seed');
+    this.fillWalletForm('Test create wallet', 'skycoin-web-e2e-test-seed', 'skycoin-web-e2e-test-seed');
     return btnCreate.click().then(() => {
       return !btnCreate.isPresent();
     });
   }
 
   createWallet() {
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
-    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
-    const btnCreate = element(by.css('.primary'));
+    const btnCreate = element(by.css('.btn-create > button'));
+    this.fillWalletForm(
+      'Test create wallet',
+      'skycoin-web-e2e-test-create-wallet-seed',
+      'skycoin-web-e2e-test-create-wallet-seed'
+    );
 
-    label.clear();
-    label.sendKeys('Test create wallet');
-    seed.clear();
-    seed.sendKeys('skycoin-web-e2e-test-create-wallet-seed');
-    confirm.clear();
-    confirm.sendKeys('skycoin-web-e2e-test-create-wallet-seed');
     return btnCreate.isEnabled().then(status => {
-      if (status) {
-        btnCreate.click();
+      if (!status) {
+        return false;
       }
-      return status;
+
+      btnCreate.click();
+      this.waitUntilLoading();
+
+      return this.getWalletAddress().then((address) => {
+        return address === '2KLc8ha9uAzSLsytwsAKo8avjmVXyyvTH7e';
+      });
     });
   }
 
@@ -149,39 +102,39 @@ export class WalletsPage {
   }
 
   loadExistingWallet() {
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
     const btnLoad = element(by.buttonText('Load'));
-
-    label.clear();
-    label.sendKeys('Test load wallet');
-    seed.clear();
-    seed.sendKeys('skycoin-web-e2e-test-create-wallet-seed');
+    this.fillWalletForm('Test load wallet', 'skycoin-web-e2e-test-create-wallet-seed');
     return btnLoad.click().then(() => {
       return !btnLoad.isPresent();
     });
   }
 
   loadWallet() {
-    const label = element(by.css('[formcontrolname="label"]'));
-    const seed = element(by.css('[formcontrolname="seed"]'));
     const btnLoad = element(by.buttonText('Load'));
-
-    label.clear();
-    label.sendKeys('Test load wallet');
-    seed.clear();
-    seed.sendKeys('skycoin-web-e2e-test-load-wallet-seed');
+    this.fillWalletForm('Test load wallet', 'skycoin-web-e2e-test-load-wallet-seed');
     return btnLoad.isEnabled().then(status => {
-      if (status) {
-        btnLoad.click();
+      if (!status) {
+        return false;
       }
-      return status;
+
+      btnLoad.click();
+      this.waitUntilLoading();
+
+      return this.getWalletAddress().then((address) => {
+        return address === 'quS3czcXyeqSAhrza7df643P4yGS8PNPap';
+      });
     });
   }
 
   expandWallet() {
     return element.all(by.css('.-wallet')).get(1).click().then(() => {
       return element(by.css('.-record')).isPresent();
+    });
+  }
+
+  checkQrDialogAddress() {
+    return element(by.css('.-address-address')).getText().then((address: string) => {
+      return address === 'quS3czcXyeqSAhrza7df643P4yGS8PNPap';
     });
   }
 
@@ -198,9 +151,13 @@ export class WalletsPage {
   }
 
   addAddress() {
-    const records = element.all(by.css('.-record')).count();
     return element(by.css('.-btn-plus')).click().then(() => {
-      return element.all(by.css('.-record')).count() > records;
+      return browser.wait(() => {
+        const lastRecord = element.all(by.css('.-record')).last();
+        return lastRecord.element(by.css('.address-column')).getText().then((address) => {
+          return address === 'bSp3JvfGiHzumCpdaWT7tGRtejwhLDd2zv';
+        });
+      }, 5000);
     });
   }
 
@@ -230,15 +187,16 @@ export class WalletsPage {
   }
 
   changeWalletName() {
-    const name = element.all(by.css('.-wallet .-label')).get(1);
+    const name = element.all(by.css('.-wallet .-label')).last();
     const label = element(by.css('[formcontrolname="label"]'));
     const btn = element(by.buttonText('Rename'));
+    const newWalletName = 'New Wallet Name';
 
     return label.clear().then(() => {
-      return label.sendKeys('New Wallet Name').then(() => {
+      return label.sendKeys(newWalletName).then(() => {
         return btn.click().then(() => {
           return name.getText().then(value => {
-            return value === 'New Wallet Name';
+            return value === newWalletName;
           });
         });
       });
@@ -247,7 +205,7 @@ export class WalletsPage {
 
   canUnlockWallet() {
     return element.all(by.css('.-encryption img')).first().click().then(() => {
-      return this.unlockWallet().then(() => {
+      return this.unlockWallet('skycoin-web-e2e-test-seed').then(() => {
         return element.all(by.css('.-wallet .-encryption img')).first().getAttribute('src').then(source => {
           return source.includes('unlock-grey.png');
         });
@@ -256,7 +214,7 @@ export class WalletsPage {
   }
 
   showAddAddress() {
-    return element.all(by.css('.-wallet')).first().click().then(() => {
+    return element.all(by.css('.-wallet')).get(1).click().then(() => {
       return element(by.css('.btn-add-address')).isPresent();
     });
   }
@@ -267,10 +225,10 @@ export class WalletsPage {
     });
   }
 
-  unlockWallet() {
+  unlockWallet(seedText: string = 'skycoin-web-e2e-test-create-wallet-seed') {
     const seed = element(by.css('[formcontrolname="seed"]'));
     seed.clear();
-    seed.sendKeys('skycoin-web-e2e-test-seed');
+    seed.sendKeys(seedText);
 
     return element(by.buttonText('Unlock')).click().then(() => {
       browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-unlock-wallet'))), 20000);
@@ -280,14 +238,95 @@ export class WalletsPage {
     });
   }
 
-  showPriceInformation() {
-    browser.wait(ExpectedConditions.presenceOf(element(by.css('.balance p.dollars'))), 5000);
-    return element(by.css('.balance p.dollars')).getText().then(text => {
-      return this._checkHeaderPriceFormat(text);
+  checkThirdAddress() {
+    const lastRecord = element.all(by.css('.-record')).last();
+    return lastRecord.element(by.css('.address-column')).getText().then((address) => {
+      return address === 'rK1CMcqXjJ59H7XXs9xR3JZMejWs56FsmY';
     });
   }
 
-  _checkHeaderPriceFormat(price: string) {
+  showPriceInformation() {
+    browser.wait(ExpectedConditions.presenceOf(element(by.css('.balance p.dollars'))), 5000);
+    return element(by.css('.balance p.dollars')).getText().then(text => {
+      return this.checkHeaderPriceFormat(text);
+    });
+  }
+
+  openDeleteWalletDialog() {
+    return element.all(by.css('.btn-delete-wallet')).first().click().then(() => {
+      return element(by.css('app-confirmation')).isPresent();
+    });
+  }
+
+  cancelDeleteConfirmation() {
+    let walletCount = 0;
+    element.all(by.css('.-wallet')).count().then((count) => walletCount = count);
+
+    return element(by.buttonText('No')).click().then(() => {
+      return element.all(by.css('.-wallet')).count().then((count) => {
+        return count === walletCount;
+      });
+    });
+  }
+
+  deleteWallet() {
+    const walletNameToDelete = 'Test create wallet';
+
+    return element.all(by.css('.btn-delete-wallet')).first().click().then(() => {
+      return element(by.css('.-disclaimer-check-text')).click().then(() => {
+        return element(by.buttonText('Yes')).click().then(() => {
+          return element.all(by.css('.-wallet')).then(() => {
+            return this.walletExist(walletNameToDelete).then((isWalletExistAfter) => {
+              return !isWalletExistAfter;
+            });
+          });
+        });
+      });
+    });
+  }
+
+  private walletExist(name: string) {
+    return browser.executeScript(`return window.localStorage.getItem('wallets');`)
+      .then((result: string) => {
+        const wallets = JSON.parse(result);
+        return !!wallets.find(wallet => wallet.label === name);
+      });
+  }
+
+  private fillWalletForm(labelText: string, seedText: string, confirmSeedText = null) {
+    const label = element(by.css('[formcontrolname="label"]'));
+    const seed = element(by.css('[formcontrolname="seed"]'));
+    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
+
+    return label.clear().then(() => {
+      return label.sendKeys(labelText).then(() => {
+        return seed.clear().then(() => {
+          return seed.sendKeys(seedText).then(() => {
+            if (confirmSeedText) {
+              return confirm.clear().then(() => {
+                return confirm.sendKeys(confirmSeedText);
+              });
+            }
+          });
+        });
+      });
+    });
+  }
+
+  private getWalletAddress() {
+    const walletElement = element.all(by.css('.-wallet')).last();
+
+    return walletElement.click().then(() => {
+      const recordElement = element.all(by.css('app-wallet-detail')).last().element(by.css('.-record'));
+      return recordElement.isPresent().then((status) => {
+        if (status) {
+          return recordElement.element(by.css('.address-column')).getText().then(txt => txt);
+        }
+      });
+    });
+  }
+
+  private checkHeaderPriceFormat(price: string) {
     const reg = /^\$[0-9]+.[0-9]{2}\s\(\$[0-9]+.[0-9]{2}\)$/;
     return price.match(reg) ?  true :  false;
   }
