@@ -152,7 +152,7 @@ export class WalletsPage {
   }
 
   hideEmptyAddress() {
-    return element.all(by.css('.-btn-minus')).first().click().then(() => {
+    return element.all(by.css('.-hide-empty')).first().click().then(() => {
       const parentWalletElement = element.all(by.css('.-wallet-detail')).first();
       return parentWalletElement.all(by.css('.coins-column')).filter((address) => {
         return address.getText().then(value => {
@@ -163,7 +163,7 @@ export class WalletsPage {
   }
 
   showEmptyAddress() {
-    return element.all(by.css('.-btn-plus')).get(1).click().then(() => {
+    return element.all(by.css('.-show-empty')).first().click().then(() => {
       return element.all(by.css('.-record')).count().then(count => {
         return count > 0;
       });
