@@ -32,11 +32,21 @@ export class WalletsPage {
   loadWalletCheckValidationSeed() {
     const cancelAdd = element(by.buttonText('Cancel'));
     const btnLoadWallet = element(by.buttonText('Load Wallet'));
+    const label = element(by.css('[formcontrolname="label"]'));
+    const seed = element(by.css('[formcontrolname="seed"]'));
     const btnLoad = element(by.buttonText('Load'));
 
     return cancelAdd.click().then(() => {
       return btnLoadWallet.click().then(() => {
-        return btnLoad.isEnabled();
+        return label.clear().then(() => {
+          return label.sendKeys('Test wallet').then(() => {
+            return seed.clear().then(() => {
+              return seed.sendKeys('').then(() => {
+                return btnLoad.isEnabled();
+              });
+            });
+          });
+        });
       });
     });
   }
@@ -260,13 +270,13 @@ export class WalletsPage {
   }
 
   deleteWallet() {
-    const walletNameToDelete = 'Test Create Name';
+    const walletNameToDelete = 'Test create wallet';
 
     return element.all(by.css('.btn-delete-wallet')).first().click().then(() => {
       return element(by.css('.-disclaimer-check-text')).click().then(() => {
         return element(by.buttonText('Yes')).click().then(() => {
-          return element.all(by.css('.-wallet')).count().then(() => {
-            return this.isWalletExist(walletNameToDelete).then((isWalletExistAfter) => {
+          return element.all(by.css('.-wallet')).then(() => {
+            return this.walletExist(walletNameToDelete).then((isWalletExistAfter) => {
               return !isWalletExistAfter;
             });
           });
@@ -275,7 +285,7 @@ export class WalletsPage {
     });
   }
 
-  private isWalletExist(name: string) {
+  private walletExist(name: string) {
     return browser.executeScript(`return window.localStorage.getItem('wallets');`)
       .then((result: string) => {
         const wallets = JSON.parse(result);
