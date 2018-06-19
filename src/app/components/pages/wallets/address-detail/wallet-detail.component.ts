@@ -18,6 +18,8 @@ import { ConfirmationComponent } from '../../../layout/confirmation/confirmation
 export class WalletDetailComponent implements OnInit {
   @Input() wallet: Wallet;
 
+  isAddressCreating = false;
+
   private deleteConfirmation1: string;
   private deleteConfirmation2: string;
   private deleteConfirmationCheck: string;
@@ -117,14 +119,20 @@ export class WalletDetailComponent implements OnInit {
   }
 
   private addNewAddress() {
-    this.walletService.addAddress(this.wallet)
-      .subscribe(
-        () => {},
-        (error: Error) => this.onAddAddressError(error)
-      );
+    this.isAddressCreating = true;
+
+    setTimeout(() => {
+      this.walletService.addAddress(this.wallet)
+        .subscribe(
+          () => { this.isAddressCreating = false; },
+          (error: Error) => this.onAddAddressError(error)
+        );
+    }, 0);
   }
 
   private onAddAddressError(error: Error) {
+    this.isAddressCreating = false;
+
     const config = new MatSnackBarConfig();
     config.duration = 5000;
     this.snackBar.open(error.message, null, config);
