@@ -73,6 +73,7 @@ import { TransactionInfoComponent } from './components/pages/send-skycoin/send-v
 import { ConfirmationComponent } from './components/layout/confirmation/confirmation.component';
 import { DisclaimerWarningComponent } from './components/layout/disclaimer-warning/disclaimer-warning.component';
 import { NavBarService } from './services/nav-bar.service';
+import { CoinService } from './services/coin.service';
 import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
 
 @NgModule({
@@ -168,7 +169,8 @@ import { LoadingContentComponent } from './components/layout/loading-content/loa
     WizardGuardService,
     CipherProvider,
     FeatureService,
-    NavBarService
+    NavBarService,
+    CoinService
   ],
   bootstrap: [AppComponent],
 })
