@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { BaseCoin } from '../coins/basecoin';
 import { SkycoinCoin } from '../coins/skycoin.coin';
 import { TestCoin } from '../coins/test.coin';
-import { coinsId } from '../constants/coins-id.const';
+import { defaultCoinId } from '../constants/coins-id.const';
 
 export class CoinService {
 
@@ -11,7 +11,6 @@ export class CoinService {
   coins: BaseCoin[] = [];
 
   private readonly storageKey = 'currentCoin';
-  private readonly defaultCoinId = coinsId.sky;
 
   constructor() {
     this.loadAvailableCoins();
@@ -26,7 +25,7 @@ export class CoinService {
 
   private loadCurrentCoin() {
     const storedCoinId = localStorage.getItem(this.storageKey);
-    const coinId = storedCoinId ? +storedCoinId : this.defaultCoinId;
+    const coinId = storedCoinId ? +storedCoinId : defaultCoinId;
 
     const coin = this.coins.find((c: BaseCoin) => c.id === coinId);
     this.currentCoin.next(coin);
