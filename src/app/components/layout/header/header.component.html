@@ -24,7 +24,7 @@
       [mode]="querying ? 'query' : 'determinate'"
       [value]="percentage * 100">
   </mat-progress-bar>
-  <mat-toolbar class="notification-bar" *ngIf="connectionError">
+  <mat-toolbar class="notification-bar" *ngIf="connectionError != null">
     <div *ngIf="connectionError === connectionErrorsList.NO_ACTIVE_CONNECTIONS">
       {{ 'header.errors.no-connections' | translate}}
     </div>
