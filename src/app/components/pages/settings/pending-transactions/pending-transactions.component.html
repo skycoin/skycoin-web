@@ -1,7 +1,8 @@
 <div class="sky-container sky-container-grey">
   <app-header [headline]="'title.pending-txs' | translate"></app-header>
   <div class="container">
-    <div class="-table">
+    <app-loading-content [isLoading]="isLoading" [noDataText]="'pending-txs.none'" *ngIf="isLoading || transactions.length === 0"></app-loading-content>
+    <div *ngIf="!!transactions && transactions.length > 0" class="-table">
       <div class="-headers">
         <div class="flex-fill">{{ 'pending-txs.txid' | translate }}</div>
         <div class="-width-150">{{ 'common.coin-id' | translate }}</div>
@@ -15,9 +16,6 @@
             <div class="-width-150 -timestamp">{{ transaction.timestamp | dateTime }}</div>
           </div>
         </ng-container>
-        <div class="-row" *ngIf="!transactions.length">
-          <div class="flex-fill">{{ 'pending-txs.none' | translate }}</div>
-        </div>
       </div>
     </div>
   </div>
