@@ -1,7 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
 import { LoadingContentComponent } from './loading-content.component';
+
+@Pipe({name: 'translate'})
+class MockTranslatePipe implements PipeTransform {
+  transform() {
+    return 'translated value';
+  }
+}
 
 describe('ConfirmationComponent', () => {
   let component: LoadingContentComponent;
@@ -9,7 +16,10 @@ describe('ConfirmationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoadingContentComponent ],
+      declarations: [
+        LoadingContentComponent,
+        MockTranslatePipe
+      ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
