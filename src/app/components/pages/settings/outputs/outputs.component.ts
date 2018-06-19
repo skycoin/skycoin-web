@@ -13,7 +13,6 @@ import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 })
 export class OutputsComponent implements OnInit {
 
-  isLoading = false;
   wallets: Wallet[];
 
   constructor(
@@ -33,7 +32,6 @@ export class OutputsComponent implements OnInit {
   }
 
   private getWalletsOutputs(queryParams: Params) {
-    this.isLoading = true;
     const address = queryParams['addr'];
 
     this.walletService.outputsWithWallets().subscribe(wallets => {
@@ -53,8 +51,6 @@ export class OutputsComponent implements OnInit {
       } else {
         this.wallets = wallets;
       }
-
-      this.isLoading = false;
     });
   }
 }

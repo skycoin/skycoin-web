@@ -42,6 +42,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
     const showAllTransactions = value === DoubleButtonActive.RightButton;
     this.walletService.getAllPendingTransactions()
+      .delay(32)
       .flatMap((transactions: any) => {
           return showAllTransactions ? Observable.of(transactions) : this.getWalletsTransactions(transactions);
       })

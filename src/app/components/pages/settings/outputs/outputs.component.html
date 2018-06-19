@@ -1,7 +1,7 @@
 <div class="sky-container sky-container-grey">
   <app-header [headline]="'title.outputs' | translate"></app-header>
   <div class="container">
-    <app-loading-content [isLoading]="isLoading" *ngIf="isLoading || !wallets"></app-loading-content>
+    <app-loading-content *ngIf="!wallets"></app-loading-content>
     <div class="-table" *ngFor="let wallet of wallets">
       <div class="-headers">
         <div class="flex-fill">{{ wallet.label }}</div>

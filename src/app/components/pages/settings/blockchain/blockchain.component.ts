@@ -10,15 +10,12 @@ import { Observable } from 'rxjs/Observable';
 export class BlockchainComponent implements OnInit {
   block: any;
   coinSupply: any;
-  isLoading = false;
 
   constructor(
     private blockchainService: BlockchainService,
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
-
     Observable.forkJoin(
       this.blockchainService.lastBlock(),
       this.blockchainService.coinSupply()
@@ -26,8 +23,6 @@ export class BlockchainComponent implements OnInit {
     .subscribe(([block, coinSupply]) => {
       this.block = block;
       this.coinSupply = coinSupply;
-
-      this.isLoading = false;
     });
   }
 }

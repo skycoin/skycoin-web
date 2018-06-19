@@ -6,5 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./loading-content.component.scss']
 })
 export class LoadingContentComponent {
-  @Input() isLoading = false;
+  @Input() isLoading = true;
+  @Input() noDataText = 'tx.none';
 }
