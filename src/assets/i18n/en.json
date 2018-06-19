@@ -13,7 +13,8 @@
     "fetch-version": "Unable to fetch latest release version from Github",
     "incorrect-password": "Incorrect password",
     "api-disabled": "API disabled",
-    "no-wallet": "Wallet does not exist"
+    "no-wallet": "Wallet does not exist",
+    "no-outputs": "No unspent outputs"
   },
 
   "title": {
@@ -191,7 +192,8 @@
     "outputs": "Outputs",
     "confirmed": "Confirmed",
     "pending": "Pending",
-    "current-rate": "Calculated at the current rate"
+    "current-rate": "Calculated at the current rate",
+    "none": "There are still no transactions to show"
   },
 
   "backup": {
@@ -223,7 +225,7 @@
   "pending-txs": {
     "timestamp": "Timestamp",
     "txid": "Transaction ID",
-    "none": "No pending transactions",
+    "none": "Currently there are no pending transactions",
     "my": "Mine",
     "all": "All"
   },

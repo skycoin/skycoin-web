@@ -1,4 +1,5 @@
 @import 'theme/_variables';
+@import 'theme/_tables';
 @import '~bootstrap/scss/bootstrap-grid.scss';
 
 /* You can add global styles to this file, and also import other style files */
@@ -130,10 +131,30 @@ mat-spinner.in-button {
     height: 24px !important;
     width: 24px !important;
   }
+  
+  &.small {
+    height: 18px !important;
+    width: 18px !important;
+  
+    svg {
+      height: 18px !important;
+      width: 18px !important;
+    }
+  }
 
   circle {
     stroke: #000;
     opacity: 0.3;
+  }
+
+  &.big {
+    height: 36px !important;
+    width: 36px !important;
+
+    svg {
+      height: 36px !important;
+      width: 36px !important;
+    }
   }
 }
 
@@ -373,4 +394,8 @@ General Helpers
 
 .rotate-270 {
   transform: rotate(270deg);
+}
+
+.disabled {
+  pointer-events: none;
 }

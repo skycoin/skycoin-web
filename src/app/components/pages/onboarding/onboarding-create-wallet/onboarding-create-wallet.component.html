@@ -14,7 +14,7 @@
     </div>
   </div>
   <div class="row justify-content-center">
-    <div class="col-sm-4 -toggle-container">
+    <div class="col-sm-4 -toggle-container" [style.visibility]="isWalletCreating ? 'hidden' : 'visible'">
       <app-double-button [rightButtonText]="'common.load' | translate"
                          [leftButtonText]="'common.new' | translate"
                          [activeButton]="doubleButtonActive"
@@ -39,7 +39,7 @@
           </label>
           <textarea formControlName="seed" class="form-control" id="seed" rows="2"></textarea>
         </div>
-        <div class="form-field" [style.visibility]="showNewForm?'visible':'hidden'">
+        <div class="form-field" [style.visibility]="showNewForm ? 'visible' : 'hidden'">
           <label for="confirm_seed">{{ 'wallet.new.confirm-seed-label' | translate }}</label>
           <textarea formControlName="confirm_seed" class="form-control" id="confirm_seed" rows="2"></textarea>
         </div>
@@ -54,7 +54,7 @@
                 (action)="showNewForm ? showSafe() : loadWallet()">
       {{ 'wallet.new.create-button' | translate }}
     </app-button>
-    <app-button *ngIf="haveWallets"
+    <app-button *ngIf="haveWallets && !isWalletCreating"
                 [disabled]="isWalletCreating"
                 class="ghost -button-min-margin"
                 (action)="skip()">

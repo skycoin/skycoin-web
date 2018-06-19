@@ -27,6 +27,7 @@
       height: 17px;
       vertical-align: middle;
       width: 17px;
+      margin-right: 10px;
     }
 
     p {
@@ -213,4 +214,9 @@
 .copying .copy-label::after {
   -webkit-animation: floatup .5s ease-in-out;
   animation: floatup .5s ease-in-out;
+}
+
+mat-spinner {
+  margin-left: 7px;
+  margin-right: 12px;
 }

@@ -73,6 +73,7 @@ import { TransactionInfoComponent } from './components/pages/send-skycoin/send-v
 import { ConfirmationComponent } from './components/layout/confirmation/confirmation.component';
 import { DisclaimerWarningComponent } from './components/layout/disclaimer-warning/disclaimer-warning.component';
 import { NavBarService } from './services/nav-bar.service';
+import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import { NavBarService } from './services/nav-bar.service';
     SendVerifyComponent,
     TransactionInfoComponent,
     ConfirmationComponent,
-    DisclaimerWarningComponent
+    DisclaimerWarningComponent,
+    LoadingContentComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
