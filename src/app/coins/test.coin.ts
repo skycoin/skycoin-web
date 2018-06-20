@@ -10,7 +10,8 @@ export class TestCoin extends BaseCoin {
       nodeVersion: environment.production ? '0.23.0' : '0.23.1-rc2',
       coinName: 'Testcoin',
       coinSymbol: 'TEST',
-      hoursName: 'Test Hours'
+      hoursName: 'Test Hours',
+      cmcTickerId: 1
     });
   }
 }
