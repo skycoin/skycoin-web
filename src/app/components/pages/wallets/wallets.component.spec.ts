@@ -23,7 +23,8 @@ class MockCoinService {
     nodeVersion: 'v1',
     coinName: 'test coin',
     coinSymbol: 'test',
-    hoursName: 'test'
+    hoursName: 'test',
+    cmcTickerId: 1
   });
 }
 
