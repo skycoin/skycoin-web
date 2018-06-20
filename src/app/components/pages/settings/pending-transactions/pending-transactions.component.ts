@@ -30,7 +30,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.navbarService.showSwitch('pending-txs.my', 'pending-txs.all');
+    this.navbarService.showSwitch('pending-txs.my', 'pending-txs.all', DoubleButtonActive.LeftButton);
 
     this.navbarSubscription = this.navbarService.activeComponent.subscribe(value => {
       this.loadTransactions(value);
@@ -48,6 +48,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
   private loadTransactions(value: number) {
     this.isLoading = true;
+    this.transactions = [];
 
     const showAllTransactions = value === DoubleButtonActive.RightButton;
     this.walletService.getAllPendingTransactions()

@@ -10,7 +10,8 @@ export class SkycoinCoin extends BaseCoin {
       nodeVersion: environment.production ? '0.23.0' : '0.23.1-rc2',
       coinName: 'Skycoin',
       coinSymbol: 'SKY',
-      hoursName: 'Coin Hours'
+      hoursName: 'Coin Hours',
+      cmcTickerId: 1619
     });
   }
 }

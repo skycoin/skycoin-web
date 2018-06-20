@@ -49,22 +49,33 @@ export class OutputsComponent implements OnInit, OnDestroy {
     const address = queryParams['addr'];
 
     this.walletService.outputsWithWallets().subscribe(wallets => {
-      if (address) {
-        const filteredWallets: Wallet[]  = wallets.filter(wallet => {
-          return wallet.addresses.find((addr) => {
-            return addr.address === address;
-          });
-        }).map(wallet => {
-          return Object.assign({}, wallet);
-        });
+      this.wallets = !!address
+        ? this.getOutputsForSpecificAddress(wallets, address)
+        : this.getOutputs(wallets);
+    });
+  }
 
-        this.wallets = filteredWallets.map(wallet => {
-          wallet.addresses = wallet.addresses.filter(addr => addr.address === address);
-          return wallet;
-        });
-      } else {
-        this.wallets = wallets;
-      }
+  private getOutputsForSpecificAddress(wallets, address: string) {
+    const filteredWallets: Wallet[]  = wallets.filter(wallet => {
+      return wallet.addresses.find((addr) => {
+        return addr.address === address;
+      });
+    }).map(wallet => {
+      return Object.assign({}, wallet);
+    });
+
+    return filteredWallets.map(wallet => {
+      wallet.addresses = wallet.addresses.filter(addr => addr.address === address);
+      return wallet;
+    });
+  }
+
+  private getOutputs(wallets) {
+    const copiedWallets = wallets.map(wallet => Object.assign({}, wallet));
+
+    return copiedWallets.filter(wallet => {
+      wallet.addresses = wallet.addresses.filter(addr => addr.outputs.length > 0);
+      return wallet.addresses.length > 0;
     });
   }
 }
