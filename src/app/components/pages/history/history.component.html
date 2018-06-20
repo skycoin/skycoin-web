@@ -10,19 +10,19 @@
           </div>
           <div class="-address">
             <h4 *ngIf="transaction.balance < 0 && transaction.confirmed">
-              {{ 'history.sent' | translate }} {{ 'common.coin-id' | translate }}
+              {{ 'history.sent' | translate }} {{ currentCoin.coinSymbol }}
               <span class="-timestamp">{{ transaction.timestamp * 1000 | date:'short' }}</span>
             </h4>
             <h4 *ngIf="transaction.balance < 0 && !transaction.confirmed">
-              {{ 'history.sending' | translate }} {{ 'common.coin-id' | translate }}
+              {{ 'history.sending' | translate }} {{ currentCoin.coinSymbol }}
               <span class="-pending">{{ 'history.pending' | translate }}</span>
             </h4>
             <h4 *ngIf="transaction.balance > 0 && transaction.confirmed">
-              {{ 'history.received' | translate }}  {{ 'common.coin-id' | translate }}
+              {{ 'history.received' | translate }}  {{ currentCoin.coinSymbol }}
               <span class="-timestamp">{{ transaction.timestamp * 1000 | date:'short' }}</span>
             </h4>
             <h4 *ngIf="transaction.balance > 0 && !transaction.confirmed">
-              {{ 'history.receiving' | translate }} {{ 'common.coin-id' | translate }}
+              {{ 'history.receiving' | translate }} {{ currentCoin.coinSymbol }}
               <span class="-pending">{{ 'history.pending' | translate }}</span>
             </h4>
             <div class="-detail" *ngFor="let address of transaction.addresses">
@@ -31,7 +31,7 @@
             </div>
           </div>
           <div class="-balance">
-            <h4>{{ transaction.balance | number:'1.0-6' }} {{ 'common.coin-id' | translate }}</h4>
+            <h4>{{ transaction.balance | number:'1.0-6' }} {{ currentCoin.coinSymbol }}</h4>
             <p *ngIf="price" [matTooltip]="'history.price-tooltip' | translate">
              {{ transaction.balance * price | currency:'USD':'symbol':'1.2-2' }}<span>*</span>
             </p>
