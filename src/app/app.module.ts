@@ -64,7 +64,6 @@ import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
 import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
-import { AppService } from './services/app.service';
 import { NumberFieldDirective } from './directives/number-field.directive';
 import { AppTranslateLoader } from './app.translate-loader';
 import { SendFormComponent } from './components/pages/send-skycoin/send-form/send-form.component';
@@ -159,7 +158,6 @@ import { LoadingContentComponent } from './components/layout/loading-content/loa
     }),
   ],
   providers: [
-    AppService,
     ApiService,
     BlockchainService,
     PurchaseService,

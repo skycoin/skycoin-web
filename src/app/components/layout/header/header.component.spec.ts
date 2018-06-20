@@ -8,7 +8,6 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { HeaderComponent } from './header.component';
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
-import { AppService } from '../../../services/app.service';
 import { BlockchainService } from '../../../services/blockchain.service';
 import { TotalBalance } from '../../../app.datatypes';
 
@@ -21,12 +20,6 @@ class MockWalletService {
   hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
 
   sum() {
-  }
-}
-
-class MockAppService {
-  checkConnectionState()  {
-    return Observable.of(null);
   }
 }
 
@@ -54,7 +47,6 @@ describe('HeaderComponent', () => {
       providers: [
         { provide: PriceService, useClass: MockPriceService },
         { provide: WalletService, useClass: MockWalletService },
-        { provide: AppService, useClass: MockAppService },
         { provide: BlockchainService, useClass: MockBlockchainService }
       ]
     }).compileComponents();

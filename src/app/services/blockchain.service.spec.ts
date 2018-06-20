@@ -6,8 +6,12 @@ import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';
 
 class MockApiService {
-  get() {
-    return Observable.of({});
+  get(url: string) {
+    if (url === 'network/connections') {
+      return Observable.of({ connections: [] });
+    } else {
+      return Observable.of({});
+    }
   }
 }
 

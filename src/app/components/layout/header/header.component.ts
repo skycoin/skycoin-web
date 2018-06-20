@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
 import { BlockchainService } from '../../../services/blockchain.service';
-import { AppService } from '../../../services/app.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
 import { TotalBalance } from '../../../app.datatypes';
 
@@ -20,7 +19,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   hours: number;
   balance: string;
   hasPendingTxs: boolean;
-  connectionError: ConnectionError;
+  connectionError: ConnectionError = null;
   connectionErrorsList = ConnectionError;
   percentage: number;
   querying = true;
@@ -39,16 +38,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private appService: AppService,
     private priceService: PriceService,
     private walletService: WalletService,
     private blockchainService: BlockchainService
   ) {}
 
   ngOnInit() {
-    this.appService.checkConnectionState()
-      .subscribe((error: ConnectionError) => this.setConnectionError(error));
-
     this.blockchainSubscription = this.blockchainService.progress
       .filter(response => !!response)
       .subscribe(response => this.updateBlockchainProgress(response));
