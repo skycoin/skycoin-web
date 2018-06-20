@@ -12,10 +12,14 @@ export class NavBarService {
     this.activeComponent.next(value);
   }
 
-  showSwitch(leftText: string, rightText: string) {
+  showSwitch(leftText: string, rightText: string, initialSwitchState: number | null = null) {
     this.switchVisible = true;
     this.leftText = leftText;
     this.rightText = rightText;
+
+    if (initialSwitchState) {
+      this.setActiveComponent(initialSwitchState);
+    }
   }
 
   hideSwitch() {
