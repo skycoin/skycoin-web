@@ -7,6 +7,8 @@ import { Observable } from 'rxjs/Observable';
 import { HistoryComponent } from './history.component';
 import { WalletService } from '../../../services/wallet.service';
 import { PriceService } from '../../../services/price.service';
+import { BaseCoin } from '../../../coins/basecoin';
+import { CoinService } from '../../../services/coin.service';
 
 class MockWalletService {
   transactions(): Observable<any[]> {
@@ -16,6 +18,10 @@ class MockWalletService {
 
 class MockPriceService {
   price: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+}
+
+class MockCoinService {
+  currentCoin = new BehaviorSubject<BaseCoin>(null);
 }
 
 @Pipe({name: 'translate'})
@@ -36,7 +42,8 @@ describe('HistoryComponent', () => {
       providers: [
         MatDialog,
         { provide: WalletService, useClass: MockWalletService },
-        { provide: PriceService, useClass: MockPriceService }
+        { provide: PriceService, useClass: MockPriceService },
+        { provide: CoinService, useClass: MockCoinService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

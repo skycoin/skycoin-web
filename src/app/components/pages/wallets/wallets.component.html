@@ -4,8 +4,8 @@
     <div class="-headers">
       <div class="-width-250">{{ 'wallet.wallet' | translate }}</div>
       <div class="flex-fill">{{ 'wallet.encryption' | translate }}</div>
-      <div class="-width-150 -align-right">{{ 'common.coin-id' | translate }}</div>
-      <div class="-width-150 -align-right">{{ 'common.coin-hours' | translate }}</div>
+      <div class="-width-150 -align-right">{{ currentCoin.coinSymbol }}</div>
+      <div class="-width-150 -align-right">{{ currentCoin.hoursName }}</div>
     </div>
     <div class="-wallets">
       <ng-container *ngFor="let wallet of wallets">
