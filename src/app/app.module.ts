@@ -64,7 +64,6 @@ import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
 import { FeatureToggleModule } from 'ngx-feature-toggle';
 import { FeatureService } from './services/feature.service';
-import { AppService } from './services/app.service';
 import { NumberFieldDirective } from './directives/number-field.directive';
 import { AppTranslateLoader } from './app.translate-loader';
 import { SendFormComponent } from './components/pages/send-skycoin/send-form/send-form.component';
@@ -73,6 +72,8 @@ import { TransactionInfoComponent } from './components/pages/send-skycoin/send-v
 import { ConfirmationComponent } from './components/layout/confirmation/confirmation.component';
 import { DisclaimerWarningComponent } from './components/layout/disclaimer-warning/disclaimer-warning.component';
 import { NavBarService } from './services/nav-bar.service';
+import { CoinService } from './services/coin.service';
+import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import { NavBarService } from './services/nav-bar.service';
     SendVerifyComponent,
     TransactionInfoComponent,
     ConfirmationComponent,
-    DisclaimerWarningComponent
+    DisclaimerWarningComponent,
+    LoadingContentComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -156,7 +158,6 @@ import { NavBarService } from './services/nav-bar.service';
     }),
   ],
   providers: [
-    AppService,
     ApiService,
     BlockchainService,
     PurchaseService,
@@ -166,7 +167,8 @@ import { NavBarService } from './services/nav-bar.service';
     WizardGuardService,
     CipherProvider,
     FeatureService,
-    NavBarService
+    NavBarService,
+    CoinService
   ],
   bootstrap: [AppComponent],
 })

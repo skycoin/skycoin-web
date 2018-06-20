@@ -27,6 +27,7 @@
       height: 17px;
       vertical-align: middle;
       width: 17px;
+      margin-right: 10px;
     }
 
     p {
@@ -128,6 +129,10 @@
         background-image: url(../../../../../assets/img/edit-grey.png);
       }
 
+      &.-btn-delete::before {
+        background-image: url(../../../../../assets/img/delete-grey.png);
+      }
+
       &:hover {
         color: $grey-dark;
 
@@ -141,6 +146,10 @@
 
         &.-btn-edit::before {
           background-image: url(../../../../../assets/img/edit-blue.png);
+        }
+
+        &.-btn-delete::before {
+          background-image: url(../../../../../assets/img/delete-red.png);
         }
       }
     }
@@ -205,4 +214,9 @@
 .copying .copy-label::after {
   -webkit-animation: floatup .5s ease-in-out;
   animation: floatup .5s ease-in-out;
+}
+
+mat-spinner {
+  margin-left: 7px;
+  margin-right: 12px;
 }

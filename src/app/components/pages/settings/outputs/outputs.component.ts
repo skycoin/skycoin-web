@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 
 import { WalletService } from '../../../../services/wallet.service';
-import {  Wallet } from '../../../../app.datatypes';
+import { Wallet } from '../../../../app.datatypes';
+import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 
 @Component({
   selector: 'app-outputs',
@@ -15,11 +17,18 @@ export class OutputsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private walletService: WalletService
+    private walletService: WalletService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => this.getWalletsOutputs(params));
+  }
+
+  showQr(address) {
+    const config = new MatDialogConfig();
+    config.data = address;
+    this.dialog.open(QrCodeComponent, config);
   }
 
   private getWalletsOutputs(queryParams: Params) {

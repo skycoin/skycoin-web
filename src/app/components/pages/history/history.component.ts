@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -13,7 +13,7 @@ import { QrCodeComponent } from '../../layout/qr-code/qr-code.component';
   styleUrls: ['./history.component.scss'],
 })
 
-export class HistoryComponent implements OnInit {
+export class HistoryComponent implements OnInit, OnDestroy {
   public transactions: any[];
   public price: number;
   private priceSubscription: Subscription;
@@ -29,6 +29,10 @@ export class HistoryComponent implements OnInit {
     this.walletService.transactions().subscribe(transactions => {
       this.transactions = transactions;
     });
+  }
+
+  ngOnDestroy() {
+    this.priceSubscription.unsubscribe();
   }
 
   showTransaction(transaction: any) {
