@@ -6,11 +6,14 @@ import { FormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { Wallet } from '../../../../app.datatypes';
 import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
+import { CoinService } from '../../../../services/coin.service';
+import { BaseCoin } from '../../../../coins/basecoin';
 
 @Pipe({name: 'translate'})
 class MockTranslatePipe implements PipeTransform {
@@ -24,6 +27,10 @@ class MockWalletService {
   generateSeed(entropy) {
     return Observable.of('');
   }
+}
+
+class MockCoinService {
+  currentCoin = new BehaviorSubject<BaseCoin>(null);
 }
 
 describe('OnboardingCreateWalletComponent', () => {
@@ -45,7 +52,8 @@ describe('OnboardingCreateWalletComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: CoinService, useClass: MockCoinService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

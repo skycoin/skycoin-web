@@ -15,7 +15,7 @@ import { CipherProvider } from './cipher.provider';
 import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput,
   Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
 import { convertAsciiToHexa } from '../utils/converters';
-import { coinsId, defaultCoinId } from '../constants/coins-id.const';
+import { defaultCoinId } from '../constants/coins-id.const';
 
 @Injectable()
 export class WalletService {
@@ -68,7 +68,7 @@ export class WalletService {
       });
   }
 
-  create(label: string, seed: string): Observable<void> {
+  create(label: string, seed: string, coinId: number): Observable<void> {
     seed = this.getCleanSeed(seed);
 
     return this.cipherProvider.generateAddress(convertAsciiToHexa(seed))
@@ -77,7 +77,7 @@ export class WalletService {
           label: label,
           seed: seed,
           addresses: [fullAddress],
-          coinId: coinsId.sky
+          coinId: coinId
         };
 
         this.all.first().subscribe((wallets: Wallet[]) => {

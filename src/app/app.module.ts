@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MatInputModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
@@ -74,6 +74,7 @@ import { DisclaimerWarningComponent } from './components/layout/disclaimer-warni
 import { NavBarService } from './services/nav-bar.service';
 import { CoinService } from './services/coin.service';
 import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
+import { SelectCoinComponent } from './components/layout/select-coin/select-coin.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { LoadingContentComponent } from './components/layout/loading-content/loa
     TransactionInfoComponent,
     ConfirmationComponent,
     DisclaimerWarningComponent,
-    LoadingContentComponent
+    LoadingContentComponent,
+    SelectCoinComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -148,6 +150,7 @@ import { LoadingContentComponent } from './components/layout/loading-content/loa
     MatCheckboxModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
+    FormsModule,
     RouterModule.forRoot(AppRoutes),
     FeatureToggleModule,
     TranslateModule.forRoot({
