@@ -1,4 +1,4 @@
-<app-modal [headline]="'wallet.unlock.unlock-title' | translate" [dialog]="dialogRef">
+<app-modal [headline]="'wallet.unlock.unlock-title' | translate" [dialog]="dialogRef" [loadingProgress]="loadingProgress">
   <div [formGroup]="form">
     <div class="form-field">
       <label for="seed">{{ 'wallet.unlock.seed' | translate }}</label>
