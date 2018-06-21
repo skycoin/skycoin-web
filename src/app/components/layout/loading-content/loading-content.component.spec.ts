@@ -10,7 +10,7 @@ class MockTranslatePipe implements PipeTransform {
   }
 }
 
-describe('ConfirmationComponent', () => {
+describe('LoadingContentComponent', () => {
   let component: LoadingContentComponent;
   let fixture: ComponentFixture<LoadingContentComponent>;
 

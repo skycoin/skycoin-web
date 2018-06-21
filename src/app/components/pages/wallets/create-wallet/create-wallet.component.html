@@ -4,6 +4,12 @@
       <label for="label">{{ 'wallet.new.name-label' | translate}}</label>
       <input formControlName="label" id="label">
     </div>
+    <div class="form-field">
+      <label for="coin">{{ 'wallet.new.select-coin' | translate}}</label>
+      <div class="-select">
+        <app-select-coin formControlName="coin" id="coin"></app-select-coin>
+      </div>
+    </div>
     <div class="form-field -valid-seed-container" [ngClass]="{'-expand':form.get('seed').valid && !data.create}">
       <label for="seed">
         <span>{{ 'wallet.new.seed-label' | translate }}</span>
