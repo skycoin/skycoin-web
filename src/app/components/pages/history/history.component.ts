@@ -6,6 +6,8 @@ import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
 import { TransactionDetailComponent } from './transaction-detail/transaction-detail.component';
 import { QrCodeComponent } from '../../layout/qr-code/qr-code.component';
+import { BaseCoin } from '../../../coins/basecoin';
+import { CoinService } from '../../../services/coin.service';
 
 @Component({
   selector: 'app-history',
@@ -14,14 +16,18 @@ import { QrCodeComponent } from '../../layout/qr-code/qr-code.component';
 })
 
 export class HistoryComponent implements OnInit, OnDestroy {
+  currentCoin: BaseCoin;
+
   public transactions: any[];
   public price: number;
   private priceSubscription: Subscription;
+  private coinSubscription: Subscription;
 
   constructor(
     private walletService: WalletService,
     private priceService: PriceService,
     private dialog: MatDialog,
+    private coinService: CoinService
   ) { }
 
   ngOnInit() {
@@ -29,10 +35,14 @@ export class HistoryComponent implements OnInit, OnDestroy {
     this.walletService.transactions().subscribe(transactions => {
       this.transactions = transactions;
     });
+
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
   }
 
   ngOnDestroy() {
     this.priceSubscription.unsubscribe();
+    this.coinSubscription.unsubscribe();
   }
 
   showTransaction(transaction: any) {

@@ -5,15 +5,15 @@
     <app-top-bar [headline]="headline"></app-top-bar>
     <div class="balance-container">
       <div class="balance">
-        <p *ngIf="!highest && loading" class="loading-header">{{ 'header.loading' | translate}}</p>
+        <p *ngIf="!highest && loading" class="loading-header">{{ 'header.loading' | translate }}</p>
         <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
-        <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ 'header.coin-id' | translate}}</p>
+        <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>
         <p *ngIf="!loading" class="dollars">{{ balance }}</p>
       </div>
     </div>
     <div class="hour-balance">
-      <p *ngIf="loading">{{ 'header.syncing-blocks' | translate}} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '..' }}</p>
-      <p *ngIf="!loading">{{ hours }} {{ 'common.coin-hours' | translate}}</p>
+      <p *ngIf="loading">{{ 'header.syncing-blocks' | translate }} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '..' }}</p>
+      <p *ngIf="!loading">{{ hours }} {{ currentCoin.hoursName }}</p>
     </div>
   </div>
   <app-nav-bar></app-nav-bar>
@@ -26,15 +26,15 @@
   </mat-progress-bar>
   <mat-toolbar class="notification-bar" *ngIf="connectionError != null">
     <div *ngIf="connectionError === connectionErrorsList.NO_ACTIVE_CONNECTIONS">
-      {{ 'header.errors.no-connections' | translate}}
+      {{ 'header.errors.no-connections' | translate }}
     </div>
     <div *ngIf="connectionError === connectionErrorsList.UNAVAILABLE_BACKEND">
-      {{ 'header.errors.no-backend1' | translate}}
-      <a href="https://web.telegram.org/#/im?p=@skycoinsupport">{{ 'header.errors.no-backend2' | translate}}</a>
+      {{ 'header.errors.no-backend1' | translate }}
+      <a href="https://web.telegram.org/#/im?p=@skycoinsupport">{{ 'header.errors.no-backend2' | translate }}</a>
       {{ 'header.errors.no-backend3' | translate }}
     </div>
   </mat-toolbar>
   <mat-toolbar class="notification-bar" *ngIf="hasPendingTxs">
-    <div>{{ 'header.pending-txs1' | translate}} <a routerLink="/settings/pending-transactions">{{ 'header.pending-txs2' | translate}}</a> {{ 'header.pending-txs3' | translate}}</div>
+    <div>{{ 'header.pending-txs1' | translate }} <a routerLink="/settings/pending-transactions">{{ 'header.pending-txs2' | translate }}</a> {{ 'header.pending-txs3' | translate }}</div>
   </mat-toolbar>
 </div>

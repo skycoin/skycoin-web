@@ -1,8 +1,5 @@
 {
   "common": {
-    "coin-id": "SKY",
-    "coin-hours": "Coin Hours",
-    "hours": "Hours",
     "loading": "Loading..",
     "new": "New",
     "load": "Load",
@@ -43,10 +40,8 @@
     "pending-txs2": "pending transactions.",
     "pending-txs3": "Data you see may not be updated.",
     "loading": "Loading...",
-    "coin-id": "sky",
     "updated1": "Updated:",
     "updated2": "min ago",
-
 
     "errors": {
       "no-connections": "No connections active, web client is not connected to any other nodes!",
