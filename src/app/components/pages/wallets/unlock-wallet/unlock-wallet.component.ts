@@ -37,9 +37,9 @@ export class UnlockWalletComponent implements OnInit {
     this.unlockButton.setLoading();
 
     const onProgressChanged = new EventEmitter<number>();
-    onProgressChanged.subscribe((progress) => {
-      this.loadingProgress = progress;
-    });
+    if (this.data.addresses.length > 1) {
+      onProgressChanged.subscribe((progress) => this.loadingProgress = progress);
+    }
 
     this.walletService.unlockWallet(this.data, this.form.value.seed, onProgressChanged)
       .subscribe(
