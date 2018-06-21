@@ -9,6 +9,8 @@ import { WalletService } from '../../../../services/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
 import { OnboardingSafeguardComponent } from './onboarding-safeguard/onboarding-safeguard.component';
+import { CoinService } from '../../../../services/coin.service';
+import { BaseCoin } from '../../../../coins/basecoin';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -16,51 +18,30 @@ import { OnboardingSafeguardComponent } from './onboarding-safeguard/onboarding-
   styleUrls: ['./onboarding-create-wallet.component.scss'],
 })
 export class OnboardingCreateWalletComponent implements OnInit {
+  @ViewChild('create') createButton;
   showNewForm = true;
   form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
   haveWallets = false;
   isWalletCreating = false;
-  @ViewChild('create') createButton;
+  private defaultCoin: BaseCoin;
 
   constructor(
     private dialog: MatDialog,
     private walletService: WalletService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private coinService: CoinService
   ) { }
 
   ngOnInit() {
-    this.initForm();
     this.existWallets();
-  }
 
-  existWallets() {
-    this.walletService.all.subscribe(wallets => {
-      if (wallets.length === 0) {
-        this.haveWallets = false;
-        this.showDisclaimer();
-      } else {
-        this.haveWallets = true;
-      }
+    this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
+      this.defaultCoin = coin;
+      this.initForm();
     });
-  }
-
-  initForm() {
-    this.form = this.formBuilder.group({
-        label: new FormControl('', [ Validators.required ]),
-        seed: new FormControl('', [ Validators.required ]),
-        confirm_seed: new FormControl()
-      },
-      {
-        validator: this.showNewForm ? this.seedMatchValidator.bind(this) : null
-      }
-    );
-
-    if (this.showNewForm) {
-      this.generateSeed(128);
-    }
   }
 
   changeForm(newState) {
@@ -90,6 +71,34 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.router.navigate(['/wallets']);
   }
 
+  private existWallets() {
+    this.walletService.all.subscribe(wallets => {
+      if (wallets.length === 0) {
+        this.haveWallets = false;
+        this.showDisclaimer();
+      } else {
+        this.haveWallets = true;
+      }
+    });
+  }
+
+  private initForm() {
+    this.form = this.formBuilder.group({
+        label: new FormControl('', [ Validators.required ]),
+        coin: new FormControl(this.defaultCoin, [ Validators.required ]),
+        seed: new FormControl('', [ Validators.required ]),
+        confirm_seed: new FormControl()
+      },
+      {
+        validator: this.showNewForm ? this.seedMatchValidator.bind(this) : null
+      }
+    );
+
+    if (this.showNewForm) {
+      this.generateSeed(128);
+    }
+  }
+
   private generateSeed(entropy: number) {
     this.form.controls.seed.setValue(Bip39.generateMnemonic(entropy));
   }
@@ -98,7 +107,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.createButton.setLoading();
     this.isWalletCreating = true;
 
-    this.walletService.create(this.form.value.label, this.form.value.seed)
+    this.walletService.create(this.form.value.label, this.form.value.seed, this.form.value.coin.id)
       .subscribe(
         () => this.onCreateSuccess(),
         (error) => this.onCreateError(error.message)

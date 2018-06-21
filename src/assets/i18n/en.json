@@ -1,8 +1,5 @@
 {
   "common": {
-    "coin-id": "SKY",
-    "coin-hours": "Coin Hours",
-    "hours": "Hours",
     "loading": "Loading..",
     "new": "New",
     "load": "Load",
@@ -43,10 +40,8 @@
     "pending-txs2": "pending transactions.",
     "pending-txs3": "Data you see may not be updated.",
     "loading": "Loading...",
-    "coin-id": "sky",
     "updated1": "Updated:",
     "updated2": "min ago",
-
 
     "errors": {
       "no-connections": "No connections active, web client is not connected to any other nodes!",
@@ -137,7 +132,8 @@
       "24-words": "24 words",
       "generate-12-seed": "Generate 12 word seed",
       "generate-24-seed": "Generate 24 word seed",
-      "encrypt-warning": "We suggest that you encrypt each one of your wallets with a password. If you forget your password, you can reset it with your seed. Make sure you have your seed saved somewhere safe before encrypting your wallet."
+      "encrypt-warning": "We suggest that you encrypt each one of your wallets with a password. If you forget your password, you can reset it with your seed. Make sure you have your seed saved somewhere safe before encrypting your wallet.",
+      "select-coin": "Select coin"
     },
 
     "unlock": {

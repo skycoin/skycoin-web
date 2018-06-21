@@ -6,6 +6,8 @@ import * as Bip39 from 'bip39';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
+import { CoinService } from '../../../../services/coin.service';
+import { BaseCoin } from '../../../../coins/basecoin';
 
 @Component({
   selector: 'app-create-wallet',
@@ -22,11 +24,15 @@ export class CreateWalletComponent implements OnInit {
     public dialogRef: MatDialogRef<CreateWalletComponent>,
     private walletService: WalletService,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private coinService: CoinService
   ) { }
 
   ngOnInit() {
-    this.initForm();
+    this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => {
+        this.initForm(coin);
+      });
   }
 
   closePopup() {
@@ -36,7 +42,7 @@ export class CreateWalletComponent implements OnInit {
   createWallet() {
     this.createButton.setLoading();
 
-    this.walletService.create(this.form.value.label, this.form.value.seed)
+    this.walletService.create(this.form.value.label, this.form.value.seed, this.form.value.coin.id)
       .subscribe(
         () => this.onCreateSuccess(),
         (error) => this.onCreateError(error.message)
@@ -59,9 +65,10 @@ export class CreateWalletComponent implements OnInit {
     this.createButton.setError({ _body: errorMesasge });
   }
 
-  private initForm() {
+  private initForm(defaultCoin: BaseCoin) {
     this.form = this.formBuilder.group({
         label: new FormControl('', [ Validators.required ]),
+        coin: new FormControl(defaultCoin, [ Validators.required ]),
         seed: new FormControl('', [ Validators.required ]),
         confirm_seed: new FormControl(),
       },

@@ -7,6 +7,8 @@ import { NavBarService } from '../../../../services/nav-bar.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { Wallet } from '../../../../app.datatypes';
 import { Observable } from 'rxjs/Observable';
+import { BaseCoin } from '../../../../coins/basecoin';
+import { CoinService } from '../../../../services/coin.service';
 
 @Component({
   selector: 'app-pending-transactions',
@@ -17,28 +19,36 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   transactions: any[] = [];
+  currentCoin: BaseCoin;
   private navbarSubscription: ISubscription;
+  private coinSubscription: ISubscription;
 
   constructor(
     private walletService: WalletService,
-    private navbarService: NavBarService
+    private navbarService: NavBarService,
+    private coinService: CoinService
   ) { }
 
   ngOnInit() {
-    this.navbarService.showSwitch('pending-txs.my', 'pending-txs.all');
+    this.navbarService.showSwitch('pending-txs.my', 'pending-txs.all', DoubleButtonActive.LeftButton);
 
     this.navbarSubscription = this.navbarService.activeComponent.subscribe(value => {
       this.loadTransactions(value);
     });
+
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
   }
 
   ngOnDestroy() {
     this.navbarSubscription.unsubscribe();
+    this.coinSubscription.unsubscribe();
     this.navbarService.hideSwitch();
   }
 
   private loadTransactions(value: number) {
     this.isLoading = true;
+    this.transactions = [];
 
     const showAllTransactions = value === DoubleButtonActive.RightButton;
     this.walletService.getAllPendingTransactions()

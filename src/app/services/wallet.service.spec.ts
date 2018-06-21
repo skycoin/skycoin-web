@@ -91,6 +91,7 @@ describe('WalletService', () => {
     it('should create wallet', () => {
       const walletLabel = 'wallet label';
       const walletSeed = 'wallet seed';
+      const walletCoinId = 1;
       const walletAddress = createAddress();
       const expectedWallet = {
         label: walletLabel,
@@ -98,7 +99,7 @@ describe('WalletService', () => {
         balance: 0,
         hours: 0,
         addresses: [walletAddress],
-        coinId: 1
+        coinId: walletCoinId
       };
 
       spyCipherProvider.generateAddress.and.returnValue(Observable.of({ ...walletAddress }));
@@ -112,7 +113,7 @@ describe('WalletService', () => {
         }
       });
 
-      walletService.create(walletLabel, walletSeed)
+      walletService.create(walletLabel, walletSeed, walletCoinId)
         .subscribe(() => {
           walletService.wallets.subscribe((wallets) => {
             expect(wallets[0]).toEqual(expectedWallet);

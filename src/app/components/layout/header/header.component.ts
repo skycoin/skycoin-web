@@ -6,6 +6,8 @@ import { WalletService } from '../../../services/wallet.service';
 import { BlockchainService } from '../../../services/blockchain.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
 import { TotalBalance } from '../../../app.datatypes';
+import { CoinService } from '../../../services/coin.service';
+import { BaseCoin } from '../../../coins/basecoin';
 
 @Component({
   selector: 'app-header',
@@ -25,6 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   querying = true;
   current: number;
   highest: number;
+  currentCoin: BaseCoin;
 
   private isBlockchainLoading = false;
   private isBalanceLoaded = false;
@@ -32,6 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private priceSubscription: Subscription;
   private walletSubscription: Subscription;
   private blockchainSubscription: Subscription;
+  private coinSubscription: Subscription;
 
   get loading() {
     return this.isBlockchainLoading || !this.balance || !this.isBalanceLoaded;
@@ -40,7 +44,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private priceService: PriceService,
     private walletService: WalletService,
-    private blockchainService: BlockchainService
+    private blockchainService: BlockchainService,
+    private coinService: CoinService
   ) {}
 
   ngOnInit() {
@@ -67,12 +72,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.walletService.hasPendingTransactions
       .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs);
+
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
   }
 
   ngOnDestroy() {
     this.priceSubscription.unsubscribe();
     this.walletSubscription.unsubscribe();
     this.blockchainSubscription.unsubscribe();
+    this.coinSubscription.unsubscribe();
   }
 
   private updateBlockchainProgress(response) {
