@@ -10,6 +10,8 @@ import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
 import { BlockchainService } from '../../../services/blockchain.service';
 import { TotalBalance } from '../../../app.datatypes';
+import { CoinService } from '../../../services/coin.service';
+import { BaseCoin } from '../../../coins/basecoin';
 
 class MockPriceService {
   price: Subject<number> = new BehaviorSubject<number>(null);
@@ -27,6 +29,10 @@ class MockBlockchainService {
   get progress() {
     return Observable.of();
   }
+}
+
+class MockCoinService {
+  currentCoin = new BehaviorSubject<BaseCoin>(null);
 }
 
 @Pipe({name: 'translate'})
@@ -47,7 +53,8 @@ describe('HeaderComponent', () => {
       providers: [
         { provide: PriceService, useClass: MockPriceService },
         { provide: WalletService, useClass: MockWalletService },
-        { provide: BlockchainService, useClass: MockBlockchainService }
+        { provide: BlockchainService, useClass: MockBlockchainService },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     }).compileComponents();
   }));

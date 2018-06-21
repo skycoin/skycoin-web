@@ -9,6 +9,8 @@ import { WalletService } from '../../../../services/wallet.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
 import { Wallet } from '../../../../app.datatypes';
 import { openUnlockWalletModal } from '../../../../utils/index';
+import { BaseCoin } from '../../../../coins/basecoin';
+import { CoinService } from '../../../../services/coin.service';
 
 @Component({
   selector: 'app-send-form',
@@ -23,14 +25,17 @@ export class SendFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   wallets: Wallet[];
   transactions = [];
+  currentCoin: BaseCoin;
 
   private subscription: ISubscription;
+  private coinSubscription: ISubscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private walletService: WalletService,
     private snackbar: MatSnackBar,
-    private unlockDialog: MatDialog
+    private unlockDialog: MatDialog,
+    private coinService: CoinService
   ) {}
 
   ngOnInit() {
@@ -38,10 +43,14 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
     this.walletService.all
       .subscribe(wallets => this.wallets = wallets);
+
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.coinSubscription.unsubscribe();
     this.snackbar.dismiss();
   }
 

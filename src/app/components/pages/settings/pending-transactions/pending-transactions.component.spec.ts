@@ -7,6 +7,8 @@ import { PendingTransactionsComponent } from './pending-transactions.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
 import { Wallet } from '../../../../app.datatypes';
+import { BaseCoin } from '../../../../coins/basecoin';
+import { CoinService } from '../../../../services/coin.service';
 
 class MockWalletService {
   get all(): Observable<Wallet[]> {
@@ -28,6 +30,10 @@ class MockNavBarService {
   showSwitch(leftText: any, rightText: any) {}
 
   hideSwitch() {}
+}
+
+class MockCoinService {
+  currentCoin = new BehaviorSubject<BaseCoin>(null);
 }
 
 @Pipe({name: 'translate'})
@@ -58,7 +64,8 @@ describe('PendingTransactionsComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: WalletService, useClass: MockWalletService },
-        { provide: NavBarService, useClass: MockNavBarService }
+        { provide: NavBarService, useClass: MockNavBarService },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     }).compileComponents();
   }));

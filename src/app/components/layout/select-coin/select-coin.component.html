@@ -1,0 +1,5 @@
+<select [ngModel]="selectedCoin" (ngModelChange)="onCoinChanged($event)">
+  <option *ngFor="let coin of coins" [ngValue]="coin">
+    {{ coin.coinName }} ({{ coin.coinSymbol }})
+  </option>
+</select>
