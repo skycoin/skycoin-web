@@ -18,6 +18,7 @@ export class CreateWalletComponent implements OnInit {
   @ViewChild('create') createButton: ButtonComponent;
   form: FormGroup;
   seed: string;
+  disableDismiss = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
@@ -41,11 +42,15 @@ export class CreateWalletComponent implements OnInit {
 
   createWallet() {
     this.createButton.setLoading();
+    this.disableDismiss = true;
 
     this.walletService.create(this.form.value.label, this.form.value.seed, this.form.value.coin.id)
       .subscribe(
         () => this.onCreateSuccess(),
-        (error) => this.onCreateError(error.message)
+        (error) => {
+          this.onCreateError(error.message);
+          this.disableDismiss = false;
+        }
       );
   }
 

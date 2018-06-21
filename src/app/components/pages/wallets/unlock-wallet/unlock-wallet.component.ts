@@ -15,6 +15,7 @@ export class UnlockWalletComponent implements OnInit {
   @Output() onWalletUnlocked = new EventEmitter<void>();
   @ViewChild('unlock') unlockButton;
   form: FormGroup;
+  disableDismiss = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: Wallet,
@@ -34,11 +35,15 @@ export class UnlockWalletComponent implements OnInit {
 
   unlockWallet() {
     this.unlockButton.setLoading();
+    this.disableDismiss = true;
 
     this.walletService.unlockWallet(this.data, this.form.value.seed)
       .subscribe(
         () => this.onUnlockSuccess(),
-        (error: Error) => this.onUnlockError(error)
+        (error: Error) => {
+          this.onUnlockError(error);
+          this.disableDismiss = false;
+        }
       );
   }
 

@@ -1,4 +1,4 @@
-<app-modal [headline]="'wallet.unlock.unlock-title' | translate" [dialog]="dialogRef">
+<app-modal [headline]="'wallet.unlock.unlock-title' | translate" [dialog]="dialogRef" [disableDismiss]="disableDismiss">
   <div [formGroup]="form">
     <div class="form-field">
       <label for="seed">{{ 'wallet.unlock.seed' | translate }}</label>
@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="-buttons">
-    <app-button (action)="closePopup()">
+    <app-button (action)="closePopup()" [disabled]="disableDismiss">
       {{ 'wallet.unlock.cancel-button' | translate }}
     </app-button>
     <app-button #unlock (action)="unlockWallet()" class="primary" [disabled]="!form.valid">
