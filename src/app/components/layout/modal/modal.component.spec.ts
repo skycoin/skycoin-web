@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { ModalComponent } from './modal.component';
 
@@ -16,7 +16,8 @@ describe('ModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalComponent, MockTranslatePipe ]
+      declarations: [ ModalComponent, MockTranslatePipe ],
+      schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();
   }));
