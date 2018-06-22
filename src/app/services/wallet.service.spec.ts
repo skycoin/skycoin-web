@@ -7,6 +7,7 @@ import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Wallet, Address, NormalTransaction, TransactionOutput, TransactionInput, Output, Balance, GetOutputsRequestOutput } from '../app.datatypes';
+import { EventEmitter } from '@angular/core';
 
 describe('WalletService', () => {
   let store = {};
@@ -167,7 +168,7 @@ describe('WalletService', () => {
       const correctSeed = 'seed';
 
       spyCipherProvider.generateAddress.and.returnValue(Observable.of(createAddress()));
-      walletService.unlockWallet(inputWallet, correctSeed);
+      walletService.unlockWallet(inputWallet, correctSeed, new EventEmitter<number>());
 
       walletService.wallets.subscribe((wallets) => {
         expect(wallets[0].seed).toEqual(correctSeed);
@@ -181,7 +182,7 @@ describe('WalletService', () => {
       spyCipherProvider.generateAddress.and.returnValue(Observable.of(wrongSeedAddress));
       spyTranslateService.instant.and.returnValue('Wrong seed');
 
-      walletService.unlockWallet(wallet, 'wrong seed')
+      walletService.unlockWallet(wallet, 'wrong seed', new EventEmitter<number>())
         .subscribe(
           () => fail('should be rejected'),
           (error) => expect(error.message).toBe('Wrong seed')

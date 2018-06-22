@@ -44,7 +44,7 @@ import { BlockchainComponent } from './components/pages/settings/blockchain/bloc
 import { OutputsComponent } from './components/pages/settings/outputs/outputs.component';
 import { PendingTransactionsComponent } from './components/pages/settings/pending-transactions/pending-transactions.component';
 import { TransactionDetailComponent } from './components/pages/history/transaction-detail/transaction-detail.component';
-import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
+import { WalletDetailComponent } from './components/pages/wallets/wallet-detail/wallet-detail.component';
 import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
 import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';

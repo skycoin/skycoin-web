@@ -43,6 +43,7 @@ export class CreateWalletComponent implements OnInit {
   createWallet() {
     this.createButton.setLoading();
     this.disableDismiss = true;
+    this.dialogRef.disableClose = true;
 
     this.walletService.create(this.form.value.label, this.form.value.seed, this.form.value.coin.id)
       .subscribe(
@@ -50,6 +51,7 @@ export class CreateWalletComponent implements OnInit {
         (error) => {
           this.onCreateError(error.message);
           this.disableDismiss = false;
+          this.dialogRef.disableClose = false;
         }
       );
   }
