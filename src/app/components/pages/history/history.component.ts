@@ -31,13 +31,16 @@ export class HistoryComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => {
+        this.transactions = null;
+        this.currentCoin = coin;
+      });
+
     this.priceSubscription = this.priceService.price.subscribe(price => this.price = price);
     this.walletService.transactions().subscribe(transactions => {
       this.transactions = transactions;
     });
-
-    this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
   }
 
   ngOnDestroy() {

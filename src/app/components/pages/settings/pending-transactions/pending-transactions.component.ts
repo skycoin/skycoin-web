@@ -30,14 +30,17 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => {
+        this.currentCoin = coin;
+        this.loadTransactions(this.navbarService.activeComponent.getValue());
+      });
+
     this.navbarService.showSwitch('pending-txs.my', 'pending-txs.all', DoubleButtonActive.LeftButton);
 
     this.navbarSubscription = this.navbarService.activeComponent.subscribe(value => {
       this.loadTransactions(value);
     });
-
-    this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
   }
 
   ngOnDestroy() {
@@ -54,7 +57,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     this.walletService.getAllPendingTransactions()
       .delay(32)
       .flatMap((transactions: any) => {
-          return showAllTransactions ? Observable.of(transactions) : this.getWalletsTransactions(transactions);
+        return showAllTransactions ? Observable.of(transactions) : this.getWalletsTransactions(transactions);
       })
       .subscribe(transactions => {
         this.transactions = this.mapTransactions(transactions);
@@ -67,12 +70,12 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
       transaction.transaction.timestamp = moment(transaction.received).unix();
       return transaction.transaction;
     })
-    .map(transaction => {
-      transaction.amount = transaction.outputs
-        .map(output => output.coins >= 0 ? output.coins : 0)
-        .reduce((a, b) => a + parseFloat(b), 0);
-      return transaction;
-    });
+      .map(transaction => {
+        transaction.amount = transaction.outputs
+          .map(output => output.coins >= 0 ? output.coins : 0)
+          .reduce((a, b) => a + parseFloat(b), 0);
+        return transaction;
+      });
   }
 
   private getWalletsTransactions(transactions: any): Observable<any> {
@@ -90,7 +93,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
       return trans.filter(tran =>
         tran.owner_addressses.some(address => walletAddresses.has(address)) ||
-          tran.transaction.outputs.some(output => walletAddresses.has(output.dst))
+        tran.transaction.outputs.some(output => walletAddresses.has(output.dst))
       );
     });
   }

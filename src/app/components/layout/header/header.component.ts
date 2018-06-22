@@ -49,6 +49,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => {
+        this.resetBalance();
+        this.currentCoin = coin;
+      });
+
     this.blockchainSubscription = this.blockchainService.progress
       .filter(response => !!response)
       .subscribe(response => this.updateBlockchainProgress(response));
@@ -72,9 +78,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.walletService.hasPendingTransactions
       .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs);
+  }
 
-    this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+  onCoinChanged(coin: BaseCoin) {
+    this.coinService.changeCoin(coin);
   }
 
   ngOnDestroy() {
@@ -82,6 +89,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.walletSubscription.unsubscribe();
     this.blockchainSubscription.unsubscribe();
     this.coinSubscription.unsubscribe();
+  }
+
+  private resetBalance() {
+    this.coins = 0;
+    this.price = null;
+    this.balance = null;
+    this.isBalanceLoaded = false;
   }
 
   private updateBlockchainProgress(response) {

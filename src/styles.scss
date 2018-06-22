@@ -283,6 +283,38 @@ mat-panel-title {
   }
 }
 
+.-select-coin {
+  text-align: right;
+  margin: 0;
+  background-color: black;
+  padding: 7px 5px;
+
+  span {
+    font-size: 13px;
+    color: white;
+  }
+
+  .-select {
+    display: inline-block;
+
+    &::after {
+      background-size: 20px 20px;
+      height: 20px;
+      width: 20px;
+    }
+  }
+
+  select {
+    background-color: #ffffff;
+    border: 2px solid rgb(249, 249, 249);
+    border-radius: 6px;
+    line-height: 20px;
+    padding: 0px 25px 0px 10px;
+    appearance: none;
+    font-size: 12px;
+  }
+}
+
 /**
 On-boarding components
  */

@@ -29,10 +29,13 @@ export class OutputsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => this.getWalletsOutputs(params));
-
     this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+      .subscribe((coin: BaseCoin) => {
+        this.wallets = null;
+        this.currentCoin = coin;
+      });
+
+    this.route.queryParams.subscribe(params => this.getWalletsOutputs(params));
   }
 
   ngOnDestroy() {
@@ -49,6 +52,11 @@ export class OutputsComponent implements OnInit, OnDestroy {
     const address = queryParams['addr'];
 
     this.walletService.outputsWithWallets().subscribe(wallets => {
+      if (wallets.length === 0) {
+        this.wallets = [];
+        return;
+      }
+
       this.wallets = !!address
         ? this.getOutputsForSpecificAddress(wallets, address)
         : this.getOutputs(wallets);
