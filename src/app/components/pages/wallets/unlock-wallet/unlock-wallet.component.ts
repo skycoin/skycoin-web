@@ -15,6 +15,7 @@ export class UnlockWalletComponent implements OnInit {
   @Output() onWalletUnlocked = new EventEmitter<void>();
   @ViewChild('unlock') unlockButton;
   form: FormGroup;
+  disableDismiss = false;
   loadingProgress = 0;
 
   constructor(
@@ -35,6 +36,8 @@ export class UnlockWalletComponent implements OnInit {
 
   unlockWallet() {
     this.unlockButton.setLoading();
+    this.disableDismiss = true;
+    this.dialogRef.disableClose = true;
 
     const onProgressChanged = new EventEmitter<number>();
     if (this.data.addresses.length > 1) {
@@ -44,7 +47,11 @@ export class UnlockWalletComponent implements OnInit {
     this.walletService.unlockWallet(this.data, this.form.value.seed, onProgressChanged)
       .subscribe(
         () => this.onUnlockSuccess(),
-        (error: Error) => this.onUnlockError(error)
+        (error: Error) => {
+          this.onUnlockError(error);
+          this.disableDismiss = false;
+          this.dialogRef.disableClose = false;
+        }
       );
   }
 

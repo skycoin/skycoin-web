@@ -30,6 +30,8 @@ export class WalletsPage {
   }
 
   loadWalletCheckValidationSeed() {
+    browser.wait(ExpectedConditions.elementToBeClickable(element(by.buttonText('Cancel'))), 50000);
+
     const cancelAdd = element(by.buttonText('Cancel'));
     const btnLoadWallet = element(by.buttonText('Load Wallet'));
     const label = element(by.css('[formcontrolname="label"]'));
@@ -41,7 +43,7 @@ export class WalletsPage {
         return label.clear().then(() => {
           return label.sendKeys('Test wallet').then(() => {
             return seed.clear().then(() => {
-              return seed.sendKeys('').then(() => {
+              return seed.clear().then(() => {
                 return btnLoad.isEnabled();
               });
             });
