@@ -15,6 +15,7 @@ export class UnlockWalletComponent implements OnInit {
   @Output() onWalletUnlocked = new EventEmitter<void>();
   @ViewChild('unlock') unlockButton;
   form: FormGroup;
+  loadingProgress = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: Wallet,
@@ -35,7 +36,12 @@ export class UnlockWalletComponent implements OnInit {
   unlockWallet() {
     this.unlockButton.setLoading();
 
-    this.walletService.unlockWallet(this.data, this.form.value.seed)
+    const onProgressChanged = new EventEmitter<number>();
+    if (this.data.addresses.length > 1) {
+      onProgressChanged.subscribe((progress) => this.loadingProgress = progress);
+    }
+
+    this.walletService.unlockWallet(this.data, this.form.value.seed, onProgressChanged)
       .subscribe(
         () => this.onUnlockSuccess(),
         (error: Error) => this.onUnlockError(error)

@@ -10,6 +10,7 @@ export class ModalComponent {
   @Input() dialog: MatDialogRef<any>;
   @Input() headline: string;
   @Input() disableDismiss = false;
+  @Input() loadingProgress: number;
 
   closePopup() {
     if (!this.disableDismiss) {
