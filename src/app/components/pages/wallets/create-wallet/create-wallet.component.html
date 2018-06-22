@@ -1,4 +1,4 @@
-<app-modal [headline]="data.create ? ('wallet.new.create-title' | translate) : ('wallet.new.load-title' | translate)" [dialog]="dialogRef">
+<app-modal [headline]="data.create ? ('wallet.new.create-title' | translate) : ('wallet.new.load-title' | translate)" [dialog]="dialogRef" [disableDismiss]="disableDismiss">
   <div [formGroup]="form">
     <div class="form-field">
       <label for="label">{{ 'wallet.new.name-label' | translate}}</label>
@@ -38,7 +38,7 @@
     </div>
   </div>
   <div class="-buttons">
-    <app-button (action)="closePopup()">
+    <app-button (action)="closePopup()" [disabled]="disableDismiss">
       {{ 'wallet.new.cancel-button' | translate}}
     </app-button>
     <app-button #create (action)="createWallet()" class="primary btn-create" [disabled]="!form.valid">
