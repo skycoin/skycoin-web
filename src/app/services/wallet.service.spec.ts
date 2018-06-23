@@ -7,7 +7,12 @@ import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Wallet, Address, NormalTransaction, TransactionOutput, TransactionInput, Output, Balance, GetOutputsRequestOutput } from '../app.datatypes';
+import { CoinService } from './coin.service';
 import { EventEmitter } from '@angular/core';
+
+class MockCoinService {
+  currentCoin = new BehaviorSubject({ cmcTickerId: 1, id: 1 });
+}
 
 describe('WalletService', () => {
   let store = {};
@@ -38,7 +43,8 @@ describe('WalletService', () => {
         {
           provide: TranslateService,
           useValue: jasmine.createSpyObj('TranslateService', ['instant'])
-        }
+        },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     });
 

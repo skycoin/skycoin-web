@@ -16,6 +16,8 @@ import { Address, Output, NormalTransaction, TransactionInput, TransactionOutput
   Wallet, TotalBalance, GetOutputsRequestOutput, Balance, Transaction } from '../app.datatypes';
 import { convertAsciiToHexa } from '../utils/converters';
 import { defaultCoinId } from '../constants/coins-id.const';
+import { BaseCoin } from '../coins/basecoin';
+import { CoinService } from './coin.service';
 
 @Injectable()
 export class WalletService {
@@ -39,7 +41,8 @@ export class WalletService {
     private apiService: ApiService,
     private cipherProvider: CipherProvider,
     private _ngZone: NgZone,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private coinService: CoinService
   ) {
     this.loadWallets();
     this.lastBalancesUpdateTime = new Date();
@@ -49,8 +52,16 @@ export class WalletService {
     return this.all.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
   }
 
+  get isWalletsExist(): Observable<boolean> {
+    return this.wallets.map(wallets => wallets ? wallets.length > 0 : false);
+  }
+
   get all(): Observable<Wallet[]> {
-    return this.wallets.asObservable().map(wallets => wallets ? wallets : []);
+    return this.wallets.asObservable()
+      .flatMap(wallets => this.coinService.currentCoin
+        .map((coin: BaseCoin) => wallets.filter(wallet => wallet.coinId === coin.id))
+      )
+      .map(wallets => wallets ? wallets : []);
   }
 
   addAddress(wallet: Wallet): Observable<void> {
@@ -92,7 +103,7 @@ export class WalletService {
   }
 
   delete(wallet: Wallet) {
-    this.all.first().subscribe(wallets => {
+    this.wallets.first().subscribe(wallets => {
       const index = wallets.indexOf(wallet);
       wallets.splice(index, 1);
 
@@ -162,7 +173,7 @@ export class WalletService {
   }
 
   updateWallet(wallet: Wallet, shouldSave: boolean = true) {
-    this.all.first().subscribe(wallets => {
+    this.wallets.first().subscribe(wallets => {
       const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
 
       if (index === -1) {
@@ -194,35 +205,37 @@ export class WalletService {
 
   transactions(): Observable<any[]> {
     return this.addresses
-      .filter(addresses => !!addresses.length)
-      .first()
       .flatMap(addresses => {
-        this.addressesTemp = addresses;
-        return Observable.forkJoin(addresses.map(address => this.retrieveAddressTransactions(address)));
-      })
-      .map(transactions => [].concat.apply([], transactions).sort((a, b) =>  b.timestamp - a.timestamp))
-      .map(transactions => transactions.reduce((array, item) => {
-        if (!array.find(trans => trans.txid === item.txid)) {
-          array.push(item);
+        if (addresses.length === 0) {
+          return Observable.of([]);
         }
-        return array;
-      }, []))
-      .map(transactions => transactions.map(transaction => {
-        const outgoing = !!this.addressesTemp.find(address => transaction.inputs[0].owner === address.address);
-        transaction.outputs.forEach(output => {
-          if (outgoing && !this.addressesTemp.find(address => output.dst === address.address)) {
-            transaction.addresses.push(output.dst);
-            transaction.balance = transaction.balance - parseFloat(output.coins);
-          }
-          if (!outgoing && this.addressesTemp.find(address => output.dst === address.address)) {
-            transaction.addresses.push(output.dst);
-            transaction.balance = transaction.balance + parseFloat(output.coins);
-          }
-          return transaction;
-        });
 
-        return transaction;
-      }));
+        this.addressesTemp = addresses;
+        return Observable.forkJoin(addresses.map(address => this.retrieveAddressTransactions(address)))
+          .map(transactions => [].concat.apply([], transactions).sort((a, b) =>  b.timestamp - a.timestamp))
+          .map(transactions => transactions.reduce((array, item) => {
+            if (!array.find(trans => trans.txid === item.txid)) {
+              array.push(item);
+            }
+            return array;
+          }, []))
+          .map(transactions => transactions.map(transaction => {
+            const outgoing = !!this.addressesTemp.find(address => transaction.inputs[0].owner === address.address);
+            transaction.outputs.forEach(output => {
+              if (outgoing && !this.addressesTemp.find(address => output.dst === address.address)) {
+                transaction.addresses.push(output.dst);
+                transaction.balance = transaction.balance - parseFloat(output.coins);
+              }
+              if (!outgoing && this.addressesTemp.find(address => output.dst === address.address)) {
+                transaction.addresses.push(output.dst);
+                transaction.balance = transaction.balance + parseFloat(output.coins);
+              }
+              return transaction;
+            });
+
+            return transaction;
+          }));
+      });
   }
 
   retrieveAddressTransactions(address: Address): Observable<NormalTransaction[]> {
@@ -244,9 +257,11 @@ export class WalletService {
 
   outputs(): Observable<GetOutputsRequestOutput[]> {
     return this.getAddressesAsString()
-      .filter(addresses => !!addresses)
-      .flatMap(addresses => this.apiService.get('outputs', { addrs: addresses }))
-      .map(response => response.head_outputs);
+      .flatMap(addresses => {
+        return addresses
+          ? this.apiService.get('outputs', { addrs: addresses }).map(response => response.head_outputs)
+          : Observable.of([]);
+      });
   }
 
   outputsWithWallets(): Observable<Wallet[]> {
@@ -282,17 +297,24 @@ export class WalletService {
 
     this.updatingBalance = true;
 
-    this.addresses.first().subscribe((addresses: Address[]) => {
+    this.addresses.subscribe((addresses: Address[]) => {
+      if (addresses.length === 0) {
+        this.breakUpdatingBalance({ coins: 0, hours: 0 });
+        return;
+      }
+
       this.retrieveAddressesBalance(addresses).subscribe(
-        (balance: Balance) => this.wallets.first().subscribe(wallets => this.calculateBalance(wallets, balance)),
-        () => {
-                this.updatingBalance = false;
-                this.totalBalance.next(null);
-                this.resetBalancesUpdateTime(true);
-              },
+        (balance: Balance) => this.all.first().subscribe(wallets => this.calculateBalance(wallets, balance)),
+        () => this.breakUpdatingBalance(null),
         () => this.updatingBalance = false
       );
     });
+  }
+
+  private breakUpdatingBalance(balance: TotalBalance) {
+    this.updatingBalance = false;
+    this.totalBalance.next(balance);
+    this.resetBalancesUpdateTime(true);
   }
 
   private calculateBalance(wallets: Wallet[], balance: Balance) {
@@ -337,7 +359,7 @@ export class WalletService {
   }
 
   private addWallet(wallet) {
-    this.all.first().subscribe(wallets => {
+    this.wallets.first().subscribe(wallets => {
       wallets.push(wallet);
       this.saveWallets(wallets);
     });

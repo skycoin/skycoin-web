@@ -72,8 +72,8 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   private existWallets() {
-    this.walletService.all.subscribe(wallets => {
-      if (wallets.length === 0) {
+    this.walletService.isWalletsExist.subscribe(result => {
+      if (!result) {
         this.haveWallets = false;
         this.showDisclaimer();
       } else {

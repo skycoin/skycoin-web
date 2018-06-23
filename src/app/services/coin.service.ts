@@ -19,7 +19,6 @@ export class CoinService {
 
   changeCoin(coin: BaseCoin) {
     this.currentCoin.next(coin);
-
     this.saveCoin(coin.id);
   }
 
