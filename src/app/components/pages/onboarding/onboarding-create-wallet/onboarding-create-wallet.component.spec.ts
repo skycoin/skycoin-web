@@ -23,7 +23,7 @@ class MockTranslatePipe implements PipeTransform {
 }
 
 class MockWalletService {
-  all: Observable<Wallet[]> = Observable.of();
+  isWalletsExist: Observable<boolean> = Observable.of();
   generateSeed(entropy) {
     return Observable.of('');
   }

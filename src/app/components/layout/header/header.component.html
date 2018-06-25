@@ -1,6 +1,13 @@
 <div class="-container">
   <app-disclaimer-warning></app-disclaimer-warning>
 
+  <div class="-select-coin">
+    <span>Choose coin:</span>
+    <div class="-select">
+      <app-select-coin [selectedCoin]="currentCoin" (onCoinChanged)="onCoinChanged($event)"></app-select-coin>
+    </div>
+  </div>
+
   <div class="large-header">
     <app-top-bar [headline]="headline"></app-top-bar>
     <div class="balance-container">
@@ -18,11 +25,11 @@
   </div>
   <app-nav-bar></app-nav-bar>
   <mat-progress-bar
-      *ngIf="loading"
-      class="example-margin"
-      color="primary"
-      [mode]="querying ? 'query' : 'determinate'"
-      [value]="percentage * 100">
+    [style.visibility]="loading ? 'visible' : 'hidden'"
+    class="progress-bar"
+    color="primary"
+    [mode]="querying ? 'query' : 'determinate'"
+    [value]="percentage * 100">
   </mat-progress-bar>
   <mat-toolbar class="notification-bar" *ngIf="connectionError != null">
     <div *ngIf="connectionError === connectionErrorsList.NO_ACTIVE_CONNECTIONS">

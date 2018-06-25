@@ -1,31 +1,34 @@
 <div class="sky-container sky-container-grey">
   <app-header [headline]="'title.wallets' | translate"></app-header>
   <div class="container">
-    <div class="-headers">
-      <div class="-width-250">{{ 'wallet.wallet' | translate }}</div>
-      <div class="flex-fill">{{ 'wallet.encryption' | translate }}</div>
-      <div class="-width-150 -align-right">{{ currentCoin.coinSymbol }}</div>
-      <div class="-width-150 -align-right">{{ currentCoin.hoursName }}</div>
-    </div>
-    <div class="-wallets">
-      <ng-container *ngFor="let wallet of wallets">
-        <div class="-body">
-          <div class="-wallet" (click)="toggleWallet(wallet)">
-            <div class="-width-250 -label" [attr.title]="wallet.label">{{ wallet.label }}</div>
-            <div class="flex-fill -encryption">
-              <img src="../../../../assets/img/lock-gold.png" (click)="unlockWallet($event, wallet)" *ngIf="!wallet.seed">
-              <img src="../../../../assets/img/unlock-grey.png" *ngIf="wallet.seed">
+    <app-loading-content *ngIf="!wallets || wallets.length === 0" [isLoading]="!wallets" [noDataText]="'errors.no-wallets'"></app-loading-content>
+    <div *ngIf="!!wallets && wallets.length > 0">
+      <div class="-headers">
+        <div class="-width-250">{{ 'wallet.wallet' | translate }}</div>
+        <div class="flex-fill">{{ 'wallet.encryption' | translate }}</div>
+        <div class="-width-150 -align-right">{{ currentCoin.coinSymbol }}</div>
+        <div class="-width-150 -align-right">{{ currentCoin.hoursName }}</div>
+      </div>
+      <div class="-wallets">
+        <ng-container *ngFor="let wallet of wallets">
+          <div class="-body">
+            <div class="-wallet" (click)="toggleWallet(wallet)">
+              <div class="-width-250 -label" [attr.title]="wallet.label">{{ wallet.label }}</div>
+              <div class="flex-fill -encryption">
+                <img src="../../../../assets/img/lock-gold.png" (click)="unlockWallet($event, wallet)" *ngIf="!wallet.seed">
+                <img src="../../../../assets/img/unlock-grey.png" *ngIf="wallet.seed">
+              </div>
+              <div class="-width-150 -coins">{{ (wallet.balance ? wallet.balance : 0) | number:'1.0-6' }}</div>
+              <div class="-width-150 -hours">{{ wallet.hours ? wallet.hours : 0 }}</div>
+              <div class="-expand">
+                <img src="../../../../assets/img/chevron-right-grey.png"
+                     [ngClass]="{'rotate-270': wallet.opened, 'rotate-90': !wallet.opened}">
+              </div>
             </div>
-            <div class="-width-150 -coins">{{ (wallet.balance ? wallet.balance : 0) | number:'1.0-6' }}</div>
-            <div class="-width-150 -hours">{{ wallet.hours ? wallet.hours : 0 }}</div>
-            <div class="-expand">
-              <img src="../../../../assets/img/chevron-right-grey.png"
-                   [ngClass]="{'rotate-270': wallet.opened, 'rotate-90': !wallet.opened}">
-            </div>
+            <app-wallet-detail [wallet]="wallet" *ngIf="wallet.opened"></app-wallet-detail>
           </div>
-          <app-wallet-detail [wallet]="wallet" *ngIf="wallet.opened"></app-wallet-detail>
-        </div>
-      </ng-container>
+        </ng-container>
+      </div>
     </div>
     <div class="action-buttons">
       <button mat-button (click)="addWallet(true)">
