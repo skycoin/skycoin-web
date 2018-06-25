@@ -2,7 +2,7 @@
   <app-disclaimer-warning></app-disclaimer-warning>
 
   <div class="-select-coin">
-    <span>Choose coin:</span>
+    <span>{{ 'header.choose-coin' | translate }}</span>
     <div class="-select">
       <app-select-coin [selectedCoin]="currentCoin" (onCoinChanged)="onCoinChanged($event)"></app-select-coin>
     </div>

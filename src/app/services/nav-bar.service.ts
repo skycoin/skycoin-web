@@ -8,7 +8,7 @@ export class NavBarService {
   leftText: string;
   rightText: string;
 
-  setActiveComponent(value: number) {
+  setActiveComponent(value = 1) {
     this.activeComponent.next(value);
   }
 
