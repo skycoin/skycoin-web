@@ -11,7 +11,7 @@ import { CoinService } from './coin.service';
 import { EventEmitter } from '@angular/core';
 
 class MockCoinService {
-  currentCoin = new BehaviorSubject({ cmcTickerId: 1, id: 1 });
+  currentCoin = new BehaviorSubject({ cmcTickerId: 1, id: 1, hoursName: 'SKY Hours' });
 }
 
 describe('WalletService', () => {
@@ -354,7 +354,15 @@ describe('WalletService', () => {
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
-      spyTranslateService.instant.and.returnValue('Not enough available SKY Hours to perform transaction!');
+      spyTranslateService.instant.and.callFake((param) => {
+        if (param === 'service.wallet.not-enough-hours1') {
+          return 'Not enough available';
+        }
+
+        if (param === 'service.wallet.not-enough-hours2') {
+          return 'to perform transaction!';
+        }
+      });
 
       walletService.createTransaction(wallet, address, amount)
         .subscribe(
