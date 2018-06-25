@@ -96,7 +96,7 @@
 
     "confirm": {
       "title": "Safeguard your seed!",
-      "desc": "We want to make sure that you wrote down your seed and stored it in a safe place. If you forget your seed, you WILL NOT be able to recover your Skycoin wallet!",
+      "desc": "We want to make sure that you wrote down your seed and stored it in a safe place. If you forget your seed, you WILL NOT be able to recover your wallet!",
       "checkbox": "It’s safe, I swear.",
       "button": "Continue"
     }
@@ -248,7 +248,7 @@
 
   "onboarding": {
     "disclaimer" : {
-      "disclaimer-description": "By continuing, you understand the risks related to the use of cryptographic tokens & blockchain-based software, the Skycoin mobile wallet, and the Skycoin cryptocurrency. You understand this this product is provided as-is, and agree to the Terms and Conditions governing the usage of this product.",
+      "disclaimer-description": "By continuing, you understand the risks related to the use of cryptographic tokens & blockchain-based software, the Skycoin wallets, and the Skycoin cryptocurrency. You understand this this product is provided as-is, and agree to the Terms and Conditions governing the usage of this product.",
       "disclaimer-check": "Yeah, I understand.",
       "continue-button": "Continue"
     }
@@ -285,7 +285,8 @@
       "address-without-seed": "trying to generate address without seed!",
       "unknown-address": "trying to update the wallet with unknown address!",
       "wallet-exists": "A wallet already exists with this seed",
-      "not-enough-hours": "Not enough available SKY Hours to perform transaction!",
+      "not-enough-hours1": "Not enough available",
+      "not-enough-hours2": "to perform transaction!",
       "wrong-seed": "Wrong seed"
     }
   }
