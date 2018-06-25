@@ -30,6 +30,8 @@ class MockNavBarService {
   showSwitch(leftText: any, rightText: any) {}
 
   hideSwitch() {}
+
+  setActiveComponent() {}
 }
 
 class MockCoinService {
