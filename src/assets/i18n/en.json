@@ -26,7 +26,7 @@
     "transactions": "Transactions",
     "pending-txs": "Pending Transactions",
     "backup": "Backup Wallet",
-    "explorer": "Skycoin Explorer",
+    "explorer": "Explorer",
     "seed": "Wallet Seed",
     "qrcode": "QR Code",
     "disclaimer": "Disclaimer",
@@ -43,6 +43,7 @@
     "loading": "Loading...",
     "updated1": "Updated:",
     "updated2": "min ago",
+    "choose-coin": "Choose coin:",
 
     "errors": {
       "no-connections": "No connections active, web client is not connected to any other nodes!",
@@ -208,10 +209,10 @@
     "blocks": "Number of blocks:",
     "time": "Time since last block:",
     "hash": "Hash of last block:",
-    "current-supply": "Current SKY supply",
-    "total-supply": "Total SKY supply",
-    "current-coinhour-supply": "Current Coin Hours supply",
-    "total-coinhour-supply": "Total Coin Hours supply"
+    "current-supply1": "Current",
+    "current-supply2": "supply",
+    "total-supply1": "Total",
+    "total-supply2": "supply"
   },
 
   "network": {
