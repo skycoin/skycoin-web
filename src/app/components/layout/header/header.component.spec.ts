@@ -23,11 +23,17 @@ class MockWalletService {
 
   sum() {
   }
+
+  loadBalances() {
+  }
 }
 
 class MockBlockchainService {
   get progress() {
     return Observable.of();
+  }
+
+  loadBlockchainBlocks() {
   }
 }
 
