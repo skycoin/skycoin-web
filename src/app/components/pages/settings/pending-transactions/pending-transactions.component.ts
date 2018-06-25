@@ -16,10 +16,10 @@ import { CoinService } from '../../../../services/coin.service';
   styleUrls: ['./pending-transactions.component.scss']
 })
 export class PendingTransactionsComponent implements OnInit, OnDestroy {
-
   isLoading = false;
   transactions: any[] = [];
   currentCoin: BaseCoin;
+
   private navbarSubscription: ISubscription;
   private coinSubscription: ISubscription;
 

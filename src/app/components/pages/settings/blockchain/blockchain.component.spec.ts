@@ -2,8 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BlockchainComponent } from './blockchain.component';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
+import { BaseCoin } from '../../../../coins/basecoin';
+import { CoinService } from '../../../../services/coin.service';
 
 @Pipe({name: 'dateFromNow'})
 class MockDateFromNowPipe implements PipeTransform {
@@ -29,6 +32,10 @@ class MockBlockchainService {
   }
 }
 
+class MockCoinService {
+  currentCoin = new BehaviorSubject<BaseCoin>(null);
+}
+
 describe('BlockchainComponent', () => {
   let component: BlockchainComponent;
   let fixture: ComponentFixture<BlockchainComponent>;
@@ -42,7 +49,8 @@ describe('BlockchainComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: BlockchainService, useClass: MockBlockchainService }
+        { provide: BlockchainService, useClass: MockBlockchainService },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     }).compileComponents();
   }));
