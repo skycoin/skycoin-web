@@ -1,18 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
 import { Observable } from 'rxjs/Observable';
+import { CoinService } from '../../../../services/coin.service';
+import { BaseCoin } from '../../../../coins/basecoin';
 
 @Component({
   templateUrl: './blockchain.component.html',
   styleUrls: ['./blockchain.component.scss']
 })
-export class BlockchainComponent implements OnInit {
+export class BlockchainComponent implements OnInit, OnDestroy {
   block: any;
   coinSupply: any;
+  currentCoin: BaseCoin;
+
+  private coinSubscription: Subscription;
 
   constructor(
     private blockchainService: BlockchainService,
+    private coinService: CoinService
   ) { }
 
   ngOnInit() {
@@ -24,5 +31,12 @@ export class BlockchainComponent implements OnInit {
       this.block = block;
       this.coinSupply = coinSupply;
     });
+
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+  }
+
+  ngOnDestroy() {
+    this.coinSubscription.unsubscribe();
   }
 }

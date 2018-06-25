@@ -26,7 +26,7 @@
     "transactions": "Transactions",
     "pending-txs": "Pending Transactions",
     "backup": "Backup Wallet",
-    "explorer": "Skycoin Explorer",
+    "explorer": "Explorer",
     "seed": "Wallet Seed",
     "qrcode": "QR Code",
     "disclaimer": "Disclaimer",
@@ -43,6 +43,7 @@
     "loading": "Loading...",
     "updated1": "Updated:",
     "updated2": "min ago",
+    "choose-coin": "Choose coin:",
 
     "errors": {
       "no-connections": "No connections active, web client is not connected to any other nodes!",
@@ -87,7 +88,7 @@
   },
 
   "wizard": {
-    "wallet-desc": "If you don't have a Skycoin wallet, use the generated seed to create a new one. If you already have a wallet, toggle over to \"Load Wallet\" and enter your seed.",
+    "wallet-desc": "If you don't have a wallet, use the generated seed to create a new one. If you already have a wallet, toggle over to \"Load Wallet\" and enter your seed.",
     "encrypt-desc": "Increase security of your wallet by encrypting it. By entering a password below, your wallet will be encrypted. Only those with the password will be able access the wallet and remove funds.",
     "finish-button": "Finish",
     "skip-button": "Skip",
@@ -208,10 +209,10 @@
     "blocks": "Number of blocks:",
     "time": "Time since last block:",
     "hash": "Hash of last block:",
-    "current-supply": "Current SKY supply",
-    "total-supply": "Total SKY supply",
-    "current-coinhour-supply": "Current Coin Hours supply",
-    "total-coinhour-supply": "Total Coin Hours supply"
+    "current-supply1": "Current",
+    "current-supply2": "supply",
+    "total-supply1": "Total",
+    "total-supply2": "supply"
   },
 
   "network": {
