@@ -33,7 +33,16 @@ class MockBlockchainService {
 }
 
 class MockCoinService {
-  currentCoin = new BehaviorSubject<BaseCoin>(null);
+  currentCoin = new BehaviorSubject<BaseCoin>({
+    id: 1,
+    nodeUrl: 'nodeUrl',
+    nodeVersion: 'v1',
+    coinName: 'test coin',
+    coinSymbol: 'test',
+    hoursName: 'test',
+    cmcTickerId: 1,
+    coinExplorer: 'testUrl'
+  });
 }
 
 describe('BlockchainComponent', () => {

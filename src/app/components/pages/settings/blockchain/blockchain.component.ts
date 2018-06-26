@@ -4,6 +4,7 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
 import { CoinService } from '../../../../services/coin.service';
+import { BaseCoin } from '../../../../coins/basecoin';
 
 @Component({
   templateUrl: './blockchain.component.html',
@@ -12,6 +13,7 @@ import { CoinService } from '../../../../services/coin.service';
 export class BlockchainComponent implements OnInit, OnDestroy {
   block: any;
   coinSupply: any;
+  currentCoin: BaseCoin;
 
   private coinSubscription: ISubscription;
 

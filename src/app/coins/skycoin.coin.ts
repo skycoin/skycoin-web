@@ -11,7 +11,8 @@ export class SkycoinCoin extends BaseCoin {
       coinName: 'Skycoin',
       coinSymbol: 'SKY',
       hoursName: 'Coin Hours',
-      cmcTickerId: 1619
+      cmcTickerId: 1619,
+      coinExplorer: 'https://explorer.skycoin.net'
     });
   }
 }
