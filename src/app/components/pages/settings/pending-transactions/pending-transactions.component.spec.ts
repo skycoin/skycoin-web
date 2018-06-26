@@ -1,56 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { PendingTransactionsComponent } from './pending-transactions.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
-import { Wallet } from '../../../../app.datatypes';
-import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
-
-class MockWalletService {
-  get all(): Observable<Wallet[]> {
-    return Observable.of([]);
-  }
-
-  getAllPendingTransactions() {
-    return Observable.of([]);
-  }
-
-  getTransactionDetails() {
-    return Observable.of({});
-  }
-}
-
-class MockNavBarService {
-  activeComponent = new BehaviorSubject({});
-
-  showSwitch(leftText: any, rightText: any) {}
-
-  hideSwitch() {}
-
-  setActiveComponent() {}
-}
-
-class MockCoinService {
-  currentCoin = new BehaviorSubject<BaseCoin>(null);
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
-
-@Pipe({name: 'dateTime'})
-class MockDateTimePipe implements PipeTransform {
-  transform() {
-    return 'transformed value';
-  }
-}
+import {
+  MockTranslatePipe,
+  MockDateTimePipe,
+  MockNavBarService,
+  MockCoinService,
+  MockWalletService
+} from '../../../../utils/test-mocks';
 
 describe('PendingTransactionsComponent', () => {
   let component: PendingTransactionsComponent;

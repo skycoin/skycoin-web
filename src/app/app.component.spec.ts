@@ -1,21 +1,9 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 import { AppComponent } from './app.component';
-
-class MockTranslateService {
-  addLangs(langs: Array<string>): void {
-  }
-
-  setDefaultLang(lang: string): void {
-  }
-
-  use(lang: string): Observable<any> {
-    return Observable.of({});
-  }
-}
+import { MockTranslateService } from './utils/test-mocks';
 
 describe('AppComponent', () => {
   let component: AppComponent;
