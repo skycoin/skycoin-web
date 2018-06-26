@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { TotalBalance } from '../../../../app.datatypes';
@@ -19,8 +19,8 @@ export class TopBarComponent implements OnInit, OnDestroy {
   isBalanceUpdated: boolean;
   currentCoin: BaseCoin;
 
-  private updateBalancesSubscription: Subscription;
-  private coinSubscription: Subscription;
+  private updateBalancesSubscription: ISubscription;
+  private coinSubscription: ISubscription;
 
   constructor(private walletService: WalletService,
               private coinService: CoinService) {
