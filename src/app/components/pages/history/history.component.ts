@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Subscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
@@ -20,8 +20,8 @@ export class HistoryComponent implements OnInit, OnDestroy {
 
   public transactions: any[];
   public price: number;
-  private priceSubscription: Subscription;
-  private coinSubscription: Subscription;
+  private priceSubscription: ISubscription;
+  private coinSubscription: ISubscription;
 
   constructor(
     private walletService: WalletService,
