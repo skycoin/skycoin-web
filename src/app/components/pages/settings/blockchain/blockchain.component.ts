@@ -24,7 +24,8 @@ export class BlockchainComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.coinSubscription = this.coinService.currentCoin
-      .subscribe(() => {
+      .subscribe((coin) => {
+        this.currentCoin = coin;
         this.block = null;
         this.coinSupply = null;
 
