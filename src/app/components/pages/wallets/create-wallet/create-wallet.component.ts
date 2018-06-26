@@ -16,9 +16,12 @@ import { BaseCoin } from '../../../../coins/basecoin';
 })
 export class CreateWalletComponent implements OnInit {
   @ViewChild('create') createButton: ButtonComponent;
+
   form: FormGroup;
   seed: string;
   disableDismiss = false;
+
+  private currentCoin: BaseCoin;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
@@ -30,10 +33,8 @@ export class CreateWalletComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => {
-        this.initForm(coin);
-      });
+    this.currentCoin = this.coinService.currentCoin.getValue();
+    this.initForm(this.currentCoin);
   }
 
   closePopup() {
@@ -44,10 +45,13 @@ export class CreateWalletComponent implements OnInit {
     this.createButton.setLoading();
     this.disableDismiss = true;
     this.dialogRef.disableClose = true;
+    const coinToCreate: BaseCoin = this.form.value.coin;
 
-    this.walletService.create(this.form.value.label, this.form.value.seed, this.form.value.coin.id)
+    this.walletService.create(this.form.value.label, this.form.value.seed, coinToCreate.id)
       .subscribe(
-        () => this.onCreateSuccess(),
+        () => {
+          this.onCreateSuccess(coinToCreate);
+        },
         (error) => {
           this.onCreateError(error.message);
           this.disableDismiss = false;
@@ -60,9 +64,13 @@ export class CreateWalletComponent implements OnInit {
     this.form.controls.seed.setValue(Bip39.generateMnemonic(entropy));
   }
 
-  private onCreateSuccess() {
+  private onCreateSuccess(coin: BaseCoin) {
     this.createButton.setSuccess();
     this.dialogRef.close();
+
+    if (coin.id !== this.currentCoin.id) {
+      this.coinService.changeCoin(coin);
+    }
   }
 
   private onCreateError(errorMesasge: string) {
