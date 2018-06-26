@@ -24,7 +24,8 @@ class MockCoinService {
     coinName: 'test coin',
     coinSymbol: 'test',
     hoursName: 'test',
-    cmcTickerId: 1
+    cmcTickerId: 1,
+    coinExplorer: 'testUrl'
   });
 }
 

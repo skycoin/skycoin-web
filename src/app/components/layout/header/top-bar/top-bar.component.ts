@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { TotalBalance } from '../../../../app.datatypes';
+import { CoinService } from '../../../../services/coin.service';
+import { BaseCoin } from '../../../../coins/basecoin';
 
 @Component({
   selector: 'app-top-bar',
@@ -15,9 +17,13 @@ export class TopBarComponent implements OnInit, OnDestroy {
   timeSinceLastUpdateBalances = 0;
   isBalanceObtained = false;
   isBalanceUpdated: boolean;
-  private updateBalancesSubscription: Subscription;
+  currentCoin: BaseCoin;
 
-  constructor(private walletService: WalletService) {
+  private updateBalancesSubscription: Subscription;
+  private coinSubscription: Subscription;
+
+  constructor(private walletService: WalletService,
+              private coinService: CoinService) {
   }
 
   ngOnInit() {
@@ -36,9 +42,13 @@ export class TopBarComponent implements OnInit, OnDestroy {
           this.timeSinceLastUpdateBalances = time;
         }
       });
+
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
   }
 
   ngOnDestroy() {
     this.updateBalancesSubscription.unsubscribe();
+    this.coinSubscription.unsubscribe();
   }
 }
