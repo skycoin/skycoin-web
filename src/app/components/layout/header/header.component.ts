@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   highest: number;
   currentCoin: BaseCoin;
 
-  private isBlockchainLoading = false;
+  private isBlockchainLoading = true;
   private isBalanceLoaded = false;
   private price: number;
   private priceSubscription: Subscription;
@@ -51,8 +51,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.coinSubscription = this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => {
+        this.reloadBlockchain();
         this.reloadBalance();
-        this.blockchainService.loadBlockchainBlocks();
         this.currentCoin = coin;
       });
 
@@ -99,6 +99,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isBalanceLoaded = false;
 
     this.walletService.loadBalances();
+  }
+
+  private reloadBlockchain() {
+    this.isBlockchainLoading = true;
+    this.percentage = null;
+    this.current = null;
+    this.highest = null;
+
+    this.blockchainService.loadBlockchainBlocks();
   }
 
   private updateBlockchainProgress(response) {
