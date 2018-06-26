@@ -10,7 +10,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.component';
 import { WalletService } from '../../../../services/wallet.service';
-import { Wallet } from '../../../../app.datatypes';
 import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
@@ -23,7 +22,7 @@ class MockTranslatePipe implements PipeTransform {
 }
 
 class MockWalletService {
-  isWalletsExist: Observable<boolean> = Observable.of();
+  haveWallets: Observable<boolean> = Observable.of();
   generateSeed(entropy) {
     return Observable.of('');
   }

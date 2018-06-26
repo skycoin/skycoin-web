@@ -54,7 +54,7 @@ export class WalletService {
     return this.all.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
   }
 
-  get isWalletsExist(): Observable<boolean> {
+  get haveWallets(): Observable<boolean> {
     return this.wallets.map(wallets => wallets ? wallets.length > 0 : false);
   }
 
@@ -102,7 +102,7 @@ export class WalletService {
           this.addWallet(wallet);
           this.loadBalances();
         });
-    });
+      });
   }
 
   delete(wallet: Wallet) {
@@ -170,7 +170,7 @@ export class WalletService {
               encoded: rawTransaction
             });
           });
-    });
+      });
   }
 
   injectTransaction(encodedTransaction: string): Observable<string> {

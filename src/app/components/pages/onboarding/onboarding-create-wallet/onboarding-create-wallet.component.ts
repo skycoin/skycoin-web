@@ -24,7 +24,6 @@ export class OnboardingCreateWalletComponent implements OnInit {
   doubleButtonActive = DoubleButtonActive.LeftButton;
   haveWallets = false;
   isWalletCreating = false;
-  private defaultCoin: BaseCoin;
 
   constructor(
     private dialog: MatDialog,
@@ -37,16 +36,12 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   ngOnInit() {
     this.existWallets();
-
-    this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
-      this.defaultCoin = coin;
-      this.initForm();
-    });
+    this.initForm(this.coinService.currentCoin.getValue());
   }
 
   changeForm(newState) {
     newState === DoubleButtonActive.RightButton ? this.showNewForm = false : this.showNewForm = true;
-    this.initForm();
+    this.initForm(this.coinService.currentCoin.getValue());
   }
 
   showDisclaimer() {
@@ -72,7 +67,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   private existWallets() {
-    this.walletService.isWalletsExist.subscribe(result => {
+    this.walletService.haveWallets.subscribe(result => {
       if (!result) {
         this.haveWallets = false;
         this.showDisclaimer();
@@ -82,10 +77,10 @@ export class OnboardingCreateWalletComponent implements OnInit {
     });
   }
 
-  private initForm() {
+  private initForm(defaultCoin: BaseCoin) {
     this.form = this.formBuilder.group({
         label: new FormControl('', [ Validators.required ]),
-        coin: new FormControl(this.defaultCoin, [ Validators.required ]),
+        coin: new FormControl(defaultCoin, [ Validators.required ]),
         seed: new FormControl('', [ Validators.required ]),
         confirm_seed: new FormControl()
       },
