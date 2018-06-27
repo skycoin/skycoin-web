@@ -114,8 +114,8 @@
     "load": "Load Wallet",
     "encryption": "Encryption",
     "wallet": "Wallet",
-    "delete-confirmation1": "The wallet",
-    "delete-confirmation2": "will be deleted. Do you want to continue?",
+    "delete-confirmation1": "WARNING: the wallet",
+    "delete-confirmation2": "will be deleted. If you forget your seed, you will not be able to recover this wallet! Do you want to continue?",
     "delete-confirmation-check": "Yeah, I want to delete the wallet.",
 
     "new": {
