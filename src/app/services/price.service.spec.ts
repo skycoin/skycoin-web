@@ -1,14 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { MockBackend } from '@angular/http/testing';
 import { HttpModule, XHRBackend } from '@angular/http';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { PriceService } from './price.service';
 import { CoinService } from './coin.service';
-
-class MockCoinService {
-  currentCoin = new BehaviorSubject({ cmcTickerId: 1 });
-}
+import { MockCoinService } from '../utils/test-mocks';
 
 describe('PriceService', () => {
   let priceService: PriceService;

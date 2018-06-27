@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+import { ISubscription } from 'rxjs/Subscription';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
-import { Observable } from 'rxjs/Observable';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
 
@@ -15,7 +15,7 @@ export class BlockchainComponent implements OnInit, OnDestroy {
   coinSupply: any;
   currentCoin: BaseCoin;
 
-  private coinSubscription: Subscription;
+  private coinSubscription: ISubscription;
 
   constructor(
     private blockchainService: BlockchainService,
@@ -23,17 +23,21 @@ export class BlockchainComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    Observable.forkJoin(
-      this.blockchainService.lastBlock(),
-      this.blockchainService.coinSupply()
-    )
-    .subscribe(([block, coinSupply]) => {
-      this.block = block;
-      this.coinSupply = coinSupply;
-    });
-
     this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+      .subscribe((coin) => {
+        this.currentCoin = coin;
+        this.block = null;
+        this.coinSupply = null;
+
+        Observable.forkJoin(
+          this.blockchainService.lastBlock(),
+          this.blockchainService.coinSupply()
+        )
+          .subscribe(([block, coinSupply]) => {
+            this.block = block;
+            this.coinSupply = coinSupply;
+          });
+      });
   }
 
   ngOnDestroy() {

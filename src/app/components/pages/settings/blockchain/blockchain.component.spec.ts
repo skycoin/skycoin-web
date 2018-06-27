@@ -1,49 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BlockchainComponent } from './blockchain.component';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
-import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
-
-@Pipe({name: 'dateFromNow'})
-class MockDateFromNowPipe implements PipeTransform {
-  transform() {
-    return 'transformed value';
-  }
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
-
-class MockBlockchainService {
-  lastBlock(): Observable<any> {
-    return Observable.of({});
-  }
-
-  coinSupply(): Observable<any> {
-    return Observable.of({});
-  }
-}
-
-class MockCoinService {
-  currentCoin = new BehaviorSubject<BaseCoin>({
-    id: 1,
-    nodeUrl: 'nodeUrl',
-    nodeVersion: 'v1',
-    coinName: 'test coin',
-    coinSymbol: 'test',
-    hoursName: 'test',
-    cmcTickerId: 1,
-    coinExplorer: 'testUrl'
-  });
-}
+import { MockTranslatePipe, MockCoinService, MockDateFromNowPipe, MockBlockchainService } from '../../../../utils/test-mocks';
 
 describe('BlockchainComponent', () => {
   let component: BlockchainComponent;

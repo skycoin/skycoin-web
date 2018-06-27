@@ -1,14 +1,8 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { NumberFieldDirective } from './number-field.directive';
-
-@Component({
-  template: `<input type="text" appNumberField>`
-})
-class TestComponent {
-}
+import { TestComponent } from '../utils/test-mocks';
 
 describe('Directive: NumberField', () => {
   beforeEach(() => {

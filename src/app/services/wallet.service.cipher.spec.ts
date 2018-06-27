@@ -1,17 +1,13 @@
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
 import { Wallet, Address, TransactionOutput, TransactionInput, Output, Balance } from '../app.datatypes';
 import { CoinService } from './coin.service';
-
-class MockCoinService {
-  currentCoin = new BehaviorSubject({ cmcTickerId: 1 });
-}
+import { MockCoinService } from '../utils/test-mocks';
 
 describe('WalletService with cipher:', () => {
   let store = {};

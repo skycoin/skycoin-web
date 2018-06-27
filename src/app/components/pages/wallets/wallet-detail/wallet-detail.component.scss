@@ -37,7 +37,7 @@
       vertical-align: middle;
 
       &:hover .copy-label {
-        display: inline-block;
+        opacity: .999;
       }
     }
   }
@@ -182,11 +182,11 @@
 
 .copy-label {
   color: #0072ff;
-  display: none;
+  display: inline-block;
   font-size: 12px;
   line-height: 100%;
   position: relative;
-  opacity: .999;
+  opacity: 0;
   transition: opacity .2s ease-in-out;
   top: -1px;
   padding-left: 10px;

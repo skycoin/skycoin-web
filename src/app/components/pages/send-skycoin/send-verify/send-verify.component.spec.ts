@@ -1,24 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { SendVerifyComponent } from './send-verify.component';
 import { WalletService } from '../../../../services/wallet.service';
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
-
-class MockWalletService {
-}
-
-class MockMatSnackBar {
-  dismiss() {
-  }
-}
+import { MockTranslatePipe, MockWalletService, MockMatSnackBar } from '../../../../utils/test-mocks';
 
 describe('SendVerifyComponent', () => {
   let component: SendVerifyComponent;
