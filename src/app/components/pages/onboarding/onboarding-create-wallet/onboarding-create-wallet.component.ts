@@ -19,11 +19,14 @@ import { BaseCoin } from '../../../../coins/basecoin';
 })
 export class OnboardingCreateWalletComponent implements OnInit {
   @ViewChild('create') createButton;
+
   showNewForm = true;
   form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
   haveWallets = false;
   isWalletCreating = false;
+
+  private currentCoin: BaseCoin;
 
   constructor(
     private dialog: MatDialog,
@@ -36,12 +39,13 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   ngOnInit() {
     this.existWallets();
-    this.initForm(this.coinService.currentCoin.getValue());
+    this.currentCoin = this.coinService.currentCoin.getValue();
+    this.initForm();
   }
 
   changeForm(newState) {
     newState === DoubleButtonActive.RightButton ? this.showNewForm = false : this.showNewForm = true;
-    this.initForm(this.coinService.currentCoin.getValue());
+    this.initForm();
   }
 
   showDisclaimer() {
@@ -77,10 +81,10 @@ export class OnboardingCreateWalletComponent implements OnInit {
     });
   }
 
-  private initForm(defaultCoin: BaseCoin) {
+  private initForm() {
     this.form = this.formBuilder.group({
         label: new FormControl('', [ Validators.required ]),
-        coin: new FormControl(defaultCoin, [ Validators.required ]),
+        coin: new FormControl(this.currentCoin, [ Validators.required ]),
         seed: new FormControl('', [ Validators.required ]),
         confirm_seed: new FormControl()
       },
@@ -101,10 +105,11 @@ export class OnboardingCreateWalletComponent implements OnInit {
   private createWallet() {
     this.createButton.setLoading();
     this.isWalletCreating = true;
+    const coinToCreate: BaseCoin = this.form.value.coin;
 
-    this.walletService.create(this.form.value.label, this.form.value.seed, this.form.value.coin.id)
+    this.walletService.create(this.form.value.label, this.form.value.seed, coinToCreate.id)
       .subscribe(
-        () => this.onCreateSuccess(),
+        () => this.onCreateSuccess(coinToCreate),
         (error) => this.onCreateError(error.message)
       );
   }
@@ -113,10 +118,14 @@ export class OnboardingCreateWalletComponent implements OnInit {
     return g.get('seed').value === g.get('confirm_seed').value ? null : { NotEqual: true };
   }
 
-  private onCreateSuccess() {
+  private onCreateSuccess(coin: BaseCoin) {
     this.createButton.setSuccess();
     this.skip();
     this.isWalletCreating = false;
+
+    if (coin.id !== this.currentCoin.id) {
+      this.coinService.changeCoin(coin);
+    }
   }
 
   private onCreateError(errorMesasge: string) {

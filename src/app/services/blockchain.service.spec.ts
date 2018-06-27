@@ -1,22 +1,9 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { Observable } from 'rxjs/Observable';
 
 import { BlockchainService } from './blockchain.service';
 import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';
-
-class MockApiService {
-  get(url: string) {
-    if (url === 'network/connections') {
-      return Observable.of({ connections: [] });
-    } else {
-      return Observable.of({});
-    }
-  }
-}
-
-class MockWalletService {
-}
+import { MockApiService, MockWalletService } from '../utils/test-mocks';
 
 describe('BlockchainService', () => {
   let service: BlockchainService;
