@@ -247,13 +247,6 @@ export class WalletsPage {
     });
   }
 
-  showPriceInformation() {
-    browser.wait(ExpectedConditions.presenceOf(element(by.css('.balance p.dollars'))), 5000);
-    return element(by.css('.balance p.dollars')).getText().then(text => {
-      return this.checkHeaderPriceFormat(text);
-    });
-  }
-
   openDeleteWalletDialog() {
     return element.all(by.css('.btn-delete-wallet')).first().click().then(() => {
       return element(by.css('app-confirmation')).isPresent();
@@ -326,10 +319,5 @@ export class WalletsPage {
         }
       });
     });
-  }
-
-  private checkHeaderPriceFormat(price: string) {
-    const reg = /^\$[0-9]+.[0-9]{2}\s\(\$[0-9]+.[0-9]{2}\)$/;
-    return price.match(reg) ?  true :  false;
   }
 }

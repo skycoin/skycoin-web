@@ -303,7 +303,7 @@ export class WalletService {
 
     this.updatingBalance = true;
 
-    this.addresses.subscribe((addresses: Address[]) => {
+    this.addresses.first().subscribe((addresses: Address[]) => {
       if (addresses.length === 0) {
         this.breakUpdatingBalance({ coins: 0, hours: 0 });
         return;
@@ -501,3 +501,4 @@ export class WalletService {
       });
   }
 }
+
