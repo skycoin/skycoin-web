@@ -83,7 +83,7 @@ export class MockCoinService {
 
 export class MockWalletService {
   hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
-  isWalletsExist: Observable<boolean> = Observable.of();
+  haveWallets: Observable<boolean> = Observable.of();
 
   get timeSinceLastBalancesUpdate(): Observable<void> {
     return Observable.of();
@@ -123,6 +123,9 @@ export class MockWalletService {
   getTransactionDetails() {
     return Observable.of({});
   }
+
+  loadBalances() {
+  }
 }
 
 export class MockPriceService {
@@ -140,6 +143,9 @@ export class MockBlockchainService {
 
   coinSupply(): Observable<any> {
     return Observable.of({});
+  }
+
+  loadBlockchainBlocks() {
   }
 }
 

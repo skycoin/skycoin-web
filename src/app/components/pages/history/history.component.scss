@@ -51,10 +51,12 @@
 
   .-address {
     flex: 1;
-.-detail{
-  display:flex;
-  margin-bottom: 4px;
-}
+
+    .-detail {
+      display:flex;
+      margin-bottom: 4px;
+    }
+
     h4 {
       color: #1e2227;
       font-size: 13px;
@@ -115,5 +117,5 @@
   }
 }
 .-transaction:hover{
-    background-color:#FBFBFB;
+  background-color:#f7f7f7;
 }
