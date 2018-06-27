@@ -103,10 +103,6 @@ describe('Wallets', () => {
     expect<any>(page.changeWalletName()).toEqual(true);
   });
 
-  it('should display price information', () => {
-    expect<any>(page.showPriceInformation()).toEqual(true);
-  });
-
   it('should unlock wallet', () => {
     page.navigateTo();
     expect<any>(page.canUnlockWallet()).toEqual(true);

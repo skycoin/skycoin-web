@@ -15,7 +15,7 @@ export class WizardGuardService implements CanActivate {
   canActivate(next: ActivatedRouteSnapshot,
               state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return new Promise<boolean>((resolve, reject) => {
-      this.walletService.isWalletsExist.subscribe(result => {
+      this.walletService.haveWallets.subscribe(result => {
         if (!result) {
           this.router.navigate(['/wizard']);
           return resolve(false);
