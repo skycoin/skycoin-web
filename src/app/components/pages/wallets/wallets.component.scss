@@ -75,9 +75,13 @@
     padding: 3px;
     width: 38px;
     cursor: pointer;
+
+    &.-lock:hover {
+      background-color: #f2f2f2;
+    }
   }
 
-  .-expand{
+  .-expand {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -87,6 +91,15 @@
     img {
       width: $row-detail-size;
       height: $row-detail-size;
+      opacity: 0.3;
+    }
+  }
+
+  &:hover {
+    background-color: #f7f7f7;
+
+    .-expand img {
+      opacity: 1;
     }
   }
 }

@@ -15,7 +15,7 @@
             <div class="-wallet" (click)="toggleWallet(wallet)">
               <div class="-width-250 -label" [attr.title]="wallet.label">{{ wallet.label }}</div>
               <div class="flex-fill -encryption">
-                <img src="../../../../assets/img/lock-gold.png" (click)="unlockWallet($event, wallet)" *ngIf="!wallet.seed">
+                <img src="../../../../assets/img/lock-gold.png" class="-lock" (click)="unlockWallet($event, wallet)" *ngIf="!wallet.seed">
                 <img src="../../../../assets/img/unlock-grey.png" *ngIf="wallet.seed">
               </div>
               <div class="-width-150 -coins">{{ (wallet.balance ? wallet.balance : 0) | number:'1.0-6' }}</div>
