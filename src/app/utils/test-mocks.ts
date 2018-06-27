@@ -123,6 +123,9 @@ export class MockWalletService {
   getTransactionDetails() {
     return Observable.of({});
   }
+
+  loadBalances() {
+  }
 }
 
 export class MockPriceService {
@@ -140,6 +143,9 @@ export class MockBlockchainService {
 
   coinSupply(): Observable<any> {
     return Observable.of({});
+  }
+
+  loadBlockchainBlocks() {
   }
 }
 
