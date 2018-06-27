@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   highest: number;
   currentCoin: BaseCoin;
 
-  private isBlockchainLoading = false;
+  private isBlockchainLoading = true;
   private isBalanceLoaded = false;
   private price: number;
   private priceSubscription: ISubscription;
@@ -51,7 +51,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.coinSubscription = this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => {
-        this.resetBalance();
+        this.reloadBlockchain();
+        this.reloadBalance();
         this.currentCoin = coin;
       });
 
@@ -91,11 +92,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.coinSubscription.unsubscribe();
   }
 
-  private resetBalance() {
+  private reloadBalance() {
     this.coins = 0;
     this.price = null;
     this.balance = null;
     this.isBalanceLoaded = false;
+
+    this.walletService.loadBalances();
+  }
+
+  private reloadBlockchain() {
+    this.isBlockchainLoading = true;
+    this.percentage = null;
+    this.current = null;
+    this.highest = null;
+
+    this.blockchainService.loadBlockchainBlocks();
   }
 
   private updateBlockchainProgress(response) {
@@ -104,8 +116,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.connectionError = null;
     this.isBlockchainLoading = response.highest !== response.current;
-    this.querying = !this.isBlockchainLoading && !this.isBalanceLoaded;
+    this.querying = !this.isBlockchainLoading;
 
     if (this.isBlockchainLoading) {
       this.highest = response.highest;
