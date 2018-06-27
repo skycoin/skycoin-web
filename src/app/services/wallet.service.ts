@@ -54,7 +54,7 @@ export class WalletService {
     return this.all.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
   }
 
-  get isWalletsExist(): Observable<boolean> {
+  get haveWallets(): Observable<boolean> {
     return this.wallets.map(wallets => wallets ? wallets.length > 0 : false);
   }
 
