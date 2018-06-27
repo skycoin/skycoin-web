@@ -15,7 +15,7 @@ export class CoinService {
   constructor() {
     this.loadAvailableCoins();
     this.loadCurrentCoin();
-    this.saveCoin(this.currentCoin.getValue().id);
+    sessionStorage.setItem(this.storageKey, this.currentCoin.getValue().id.toString());
   }
 
   changeCoin(coin: BaseCoin) {
