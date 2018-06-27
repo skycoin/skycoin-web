@@ -15,6 +15,7 @@ export class CoinService {
   constructor() {
     this.loadAvailableCoins();
     this.loadCurrentCoin();
+    sessionStorage.setItem(this.storageKey, this.currentCoin.getValue().id.toString());
   }
 
   changeCoin(coin: BaseCoin) {
@@ -23,15 +24,15 @@ export class CoinService {
   }
 
   private loadCurrentCoin() {
-    const storedCoinId = localStorage.getItem(this.storageKey);
+    const storedCoinId = sessionStorage.getItem(this.storageKey) || localStorage.getItem(this.storageKey);
     const coinId = storedCoinId ? +storedCoinId : defaultCoinId;
-
     const coin = this.coins.find((c: BaseCoin) => c.id === coinId);
     this.currentCoin.next(coin);
   }
 
   private saveCoin(coinId: number) {
     localStorage.setItem(this.storageKey, coinId.toString());
+    sessionStorage.setItem(this.storageKey, coinId.toString());
   }
 
   private loadAvailableCoins() {
