@@ -6,13 +6,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { WalletService } from './wallet.service';
 import { ApiService } from './api.service';
 import { CipherProvider } from './cipher.provider';
-import { Wallet, Address, NormalTransaction, TransactionOutput, TransactionInput, Output, Balance, GetOutputsRequestOutput } from '../app.datatypes';
 import { CoinService } from './coin.service';
 import { EventEmitter } from '@angular/core';
-
-class MockCoinService {
-  currentCoin = new BehaviorSubject({ cmcTickerId: 1, id: 1 });
-}
+import { MockCoinService } from '../utils/test-mocks';
+import {
+  Wallet,
+  Address,
+  NormalTransaction,
+  TransactionOutput,
+  TransactionInput,
+  Output,
+  Balance,
+  GetOutputsRequestOutput } from '../app.datatypes';
 
 describe('WalletService', () => {
   let store = {};
@@ -337,7 +342,7 @@ describe('WalletService', () => {
         });
     }));
 
-    it('should be rejected for not enough Sky Hours', () => {
+    it('should be rejected for not enough hours', () => {
       const address = 'address';
       const amount = 2;
 
@@ -354,12 +359,20 @@ describe('WalletService', () => {
       ];
 
       spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
-      spyTranslateService.instant.and.returnValue('Not enough available SKY Hours to perform transaction!');
+      spyTranslateService.instant.and.callFake((param) => {
+        if (param === 'service.wallet.not-enough-hours1') {
+          return 'Not enough available';
+        }
+
+        if (param === 'service.wallet.not-enough-hours2') {
+          return 'to perform transaction!';
+        }
+      });
 
       walletService.createTransaction(wallet, address, amount)
         .subscribe(
           () => fail('should be rejected'),
-          (error) => expect(error.message).toBe('Not enough available SKY Hours to perform transaction!')
+          (error) => expect(error.message).toBe('Not enough available Test Hours to perform transaction!')
         );
     });
   });

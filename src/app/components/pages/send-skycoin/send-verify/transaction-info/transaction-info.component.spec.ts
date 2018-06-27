@@ -1,35 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { TransactionInfoComponent } from './transaction-info.component';
 import { PriceService } from '../../../../../services/price.service';
-import { BaseCoin } from '../../../../../coins/basecoin';
 import { CoinService } from '../../../../../services/coin.service';
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
-
-class MockPriceService {
-  price: Subject<number> = new BehaviorSubject<number>(null);
-}
-
-class MockCoinService {
-  currentCoin = new BehaviorSubject<BaseCoin>({
-    id: 1,
-    nodeUrl: 'nodeUrl',
-    nodeVersion: 'v1',
-    coinName: 'test coin',
-    coinSymbol: 'test',
-    hoursName: 'test',
-    cmcTickerId: 1
-  });
-}
+import { MockTranslatePipe, MockPriceService, MockCoinService } from '../../../../../utils/test-mocks';
 
 describe('TransactionInfoComponent', () => {
   let component: TransactionInfoComponent;

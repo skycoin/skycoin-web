@@ -16,10 +16,10 @@ import { CoinService } from '../../../../services/coin.service';
   styleUrls: ['./pending-transactions.component.scss']
 })
 export class PendingTransactionsComponent implements OnInit, OnDestroy {
-
   isLoading = false;
   transactions: any[] = [];
   currentCoin: BaseCoin;
+
   private navbarSubscription: ISubscription;
   private coinSubscription: ISubscription;
 
@@ -33,7 +33,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     this.coinSubscription = this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => {
         this.currentCoin = coin;
-        this.loadTransactions(this.navbarService.activeComponent.getValue());
+        this.navbarService.setActiveComponent();
       });
 
     this.navbarService.showSwitch('pending-txs.my', 'pending-txs.all', DoubleButtonActive.LeftButton);

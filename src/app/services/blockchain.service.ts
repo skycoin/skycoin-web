@@ -88,12 +88,12 @@ export class BlockchainService {
   private checkConnectionState(): Observable<any> {
     return this.apiService.get('network/connections')
       .map((status: any) => {
-        if (status.connections.length === 0) {
+        if (!status.connections || status.connections.length === 0) {
           this.onLoadBlockchainError(ConnectionError.NO_ACTIVE_CONNECTIONS);
-          return Observable.of(null);
+          return null;
         }
 
-        return Observable.of(status);
+        return status;
       });
   }
 }

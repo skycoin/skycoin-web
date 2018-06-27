@@ -32,6 +32,7 @@ export class WalletService {
   private refreshBalancesTimeInSec: number;
   private intervalTime: number;
   private updatingBalance: boolean;
+  private currentCoin: BaseCoin;
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHoursRatio = 0.5;
@@ -46,6 +47,7 @@ export class WalletService {
   ) {
     this.loadWallets();
     this.lastBalancesUpdateTime = new Date();
+    this.coinService.currentCoin.subscribe((coin) => this.currentCoin = coin);
   }
 
   get addresses(): Observable<any[]> {
@@ -91,8 +93,9 @@ export class WalletService {
           coinId: coinId
         };
 
-        this.all.first().subscribe((wallets: Wallet[]) => {
-          if (wallets.some((w: Wallet) => w.addresses[0].address === wallet.addresses[0].address)) {
+        this.wallets.first().subscribe((wallets: Wallet[]) => {
+          if (wallets.some((wlt: Wallet) =>
+              wlt.addresses[0].address === wallet.addresses[0].address && wlt.coinId === wallet.coinId)) {
             throw new Error(this.translate.instant('service.wallet.wallet-exists'));
           }
 
@@ -121,7 +124,9 @@ export class WalletService {
         const totalCoins = Number(minRequiredOutputs.reduce((count, output) => count + output.coins, 0).toFixed(6));
 
         if (totalCoins < amount) {
-          throw new Error(this.translate.instant('service.wallet.not-enough-hours'));
+          throw new Error(
+            `${this.translate.instant('service.wallet.not-enough-hours1')} ${ this.currentCoin.hoursName } ${ this.translate.instant('service.wallet.not-enough-hours2') }`
+          );
         }
 
         const totalHours = parseInt((minRequiredOutputs.reduce((count, output) => count + output.calculated_hours, 0)) + '', 10);
@@ -174,7 +179,8 @@ export class WalletService {
 
   updateWallet(wallet: Wallet, shouldSave: boolean = true) {
     this.wallets.first().subscribe(wallets => {
-      const index = wallets.findIndex(w => w.addresses[0].address === wallet.addresses[0].address);
+      const index = wallets.findIndex(wlt =>
+        wlt.addresses[0].address === wallet.addresses[0].address && wlt.coinId === wallet.coinId);
 
       if (index === -1) {
         throw new Error(this.translate.instant('service.wallet.unknown-address'));

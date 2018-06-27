@@ -1,35 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialogModule, MatDialog } from '@angular/material';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 
 import { HistoryComponent } from './history.component';
 import { WalletService } from '../../../services/wallet.service';
 import { PriceService } from '../../../services/price.service';
-import { BaseCoin } from '../../../coins/basecoin';
 import { CoinService } from '../../../services/coin.service';
-
-class MockWalletService {
-  transactions(): Observable<any[]> {
-    return Observable.of([]);
-  }
-}
-
-class MockPriceService {
-  price: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-}
-
-class MockCoinService {
-  currentCoin = new BehaviorSubject<BaseCoin>(null);
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
+import { MockTranslatePipe, MockPriceService, MockCoinService, MockWalletService } from '../../../utils/test-mocks';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;

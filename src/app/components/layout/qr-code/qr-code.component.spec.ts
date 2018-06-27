@@ -1,15 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { QrCodeComponent } from './qr-code.component';
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
+import { MockTranslatePipe } from '../../../utils/test-mocks';
 
 describe('QrCodeComponent', () => {
   let component: QrCodeComponent;

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
@@ -32,10 +32,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private isBlockchainLoading = true;
   private isBalanceLoaded = false;
   private price: number;
-  private priceSubscription: Subscription;
-  private walletSubscription: Subscription;
-  private blockchainSubscription: Subscription;
-  private coinSubscription: Subscription;
+  private priceSubscription: ISubscription;
+  private walletSubscription: ISubscription;
+  private blockchainSubscription: ISubscription;
+  private coinSubscription: ISubscription;
 
   get loading() {
     return this.isBlockchainLoading || !this.balance || !this.isBalanceLoaded;

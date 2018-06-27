@@ -1,30 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatMenuModule, MatIconModule, MatTooltipModule } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import { Pipe, PipeTransform } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { TopBarComponent } from './top-bar.component';
 import { WalletService } from '../../../../services/wallet.service';
-import { TotalBalance } from '../../../../app.datatypes';
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
-
-class MockWalletService {
-  get timeSinceLastBalancesUpdate(): Observable<void> {
-    return Observable.of();
-  }
-
-  get totalBalance(): BehaviorSubject<TotalBalance> {
-    return new BehaviorSubject<TotalBalance>(null);
-  }
-}
+import { CoinService } from '../../../../services/coin.service';
+import { MockTranslatePipe, MockWalletService, MockCoinService } from '../../../../utils/test-mocks';
 
 describe('TopBarComponent', () => {
   let component: TopBarComponent;
@@ -40,7 +21,8 @@ describe('TopBarComponent', () => {
         RouterTestingModule
       ],
       providers: [
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     })
     .compileComponents();

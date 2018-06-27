@@ -1,17 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckboxModule, MatProgressSpinnerModule, MatIconModule, MatTooltipModule } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { OnboardingEncryptWalletComponent } from './onboarding-encrypt-wallet.component';
 import { ButtonComponent } from '../../../layout/button/button.component';
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
+import { MockTranslatePipe } from '../../../../utils/test-mocks';
 
 describe('OnboardingEncryptWalletComponent', () => {
   let component: OnboardingEncryptWalletComponent;
