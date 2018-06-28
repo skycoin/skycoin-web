@@ -1,9 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import 'rxjs/add/operator/startWith';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/startWith';
 
 import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';
@@ -14,6 +14,7 @@ export class BlockchainService {
   private progressSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private isLoaded = false;
   private intervalSubscription: Subscription;
+  private intervalPeriod = 90000;
 
   get progress() {
     return this.progressSubject.asObservable();
@@ -46,7 +47,7 @@ export class BlockchainService {
       .subscribe(() => {
           this.ngZone.runOutsideAngular(() => {
             this.intervalSubscription = IntervalObservable
-              .create(90000)
+              .create(this.intervalPeriod)
               .startWith(1)
               .flatMap(() => this.getBlockchainProgress())
               .takeWhile((response: any) => !response.current || !this.isLoaded)
@@ -68,10 +69,16 @@ export class BlockchainService {
     this.ngZone.run(() => {
       this.progressSubject.next(response);
 
+      this.calculateIntervalPeriod(response);
+
       if (response.current === response.highest) {
         this.completeLoading();
       }
     });
+  }
+
+  private calculateIntervalPeriod(response: { highest: number, current: number }) {
+    this.intervalPeriod = (response.highest - response.current) <= 5 ? 90000 : 5000;
   }
 
   private completeLoading() {
