@@ -1,9 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import 'rxjs/add/operator/startWith';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/takeWhile';
 
 import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';

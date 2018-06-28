@@ -1,9 +1,9 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AppComponent } from './app.component';
-import { MockTranslateService } from './utils/test-mocks';
+import { MockLanguageService } from './utils/test-mocks';
+import { LanguageService } from './services/language.service';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -14,7 +14,7 @@ describe('AppComponent', () => {
       declarations: [ AppComponent],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: TranslateService, useClass: MockTranslateService }
+        { provide: LanguageService, useClass: MockLanguageService }
       ]
     }).compileComponents();
   }));
