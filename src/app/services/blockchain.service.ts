@@ -14,7 +14,9 @@ export class BlockchainService {
   private progressSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private isLoaded = false;
   private intervalSubscription: Subscription;
-  private intervalPeriod = 90000;
+  private readonly defaultPeriod = 90000;
+  private readonly fastPeriod = 5000;
+  private intervalPeriod = this.defaultPeriod;
 
   get progress() {
     return this.progressSubject.asObservable();
@@ -44,21 +46,24 @@ export class BlockchainService {
     this.isLoaded = false;
     this.checkConnectionState()
       .filter(status => !!status)
-      .subscribe(() => {
-          this.ngZone.runOutsideAngular(() => {
-            this.intervalSubscription = IntervalObservable
-              .create(this.intervalPeriod)
-              .startWith(1)
-              .flatMap(() => this.getBlockchainProgress())
-              .takeWhile((response: any) => !response.current || !this.isLoaded)
-              .subscribe(
-                (response: any) => this.onBlockchainProgress(response),
-                () => this.onLoadBlockchainError()
-              );
-          });
-        },
+      .subscribe(
+        () => this.startLoadingBlockchain(),
         () => this.onLoadBlockchainError()
       );
+  }
+
+  private startLoadingBlockchain() {
+    this.ngZone.runOutsideAngular(() => {
+      this.intervalSubscription = IntervalObservable
+        .create(this.intervalPeriod)
+        .startWith(1)
+        .flatMap(() => this.getBlockchainProgress())
+        .takeWhile((response: any) => !response.current || !this.isLoaded)
+        .subscribe(
+          (response: any) => this.onBlockchainProgress(response),
+          () => this.onLoadBlockchainError()
+        );
+    });
   }
 
   private getBlockchainProgress() {
@@ -69,16 +74,19 @@ export class BlockchainService {
     this.ngZone.run(() => {
       this.progressSubject.next(response);
 
-      this.calculateIntervalPeriod(response);
+      if ((response.highest - response.current) <= 5 && this.intervalPeriod !== this.fastPeriod) {
+        setTimeout(() => {
+          this.intervalSubscription.unsubscribe();
+          this.intervalPeriod = this.fastPeriod;
+
+          this.startLoadingBlockchain();
+        }, this.fastPeriod);
+      }
 
       if (response.current === response.highest) {
         this.completeLoading();
       }
     });
-  }
-
-  private calculateIntervalPeriod(response: { highest: number, current: number }) {
-    this.intervalPeriod = (response.highest - response.current) <= 5 ? 5000 : 90000;
   }
 
   private completeLoading() {
