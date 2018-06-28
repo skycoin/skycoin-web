@@ -182,3 +182,10 @@ export class MockApiService {
 
 export class MockClipboardService {
 }
+
+export class MockLanguageService {
+  currentLanguage = new BehaviorSubject<string>('en');
+
+  loadLanguageSettings() {
+  }
+}
