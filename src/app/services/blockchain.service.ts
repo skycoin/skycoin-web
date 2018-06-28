@@ -78,7 +78,7 @@ export class BlockchainService {
   }
 
   private calculateIntervalPeriod(response: { highest: number, current: number }) {
-    this.intervalPeriod = (response.highest - response.current) <= 5 ? 90000 : 5000;
+    this.intervalPeriod = (response.highest - response.current) <= 5 ? 5000 : 90000;
   }
 
   private completeLoading() {
