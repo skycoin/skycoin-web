@@ -44,6 +44,7 @@
     "updated1": "Updated:",
     "updated2": "min ago",
     "choose-coin": "Choose coin:",
+    "select-language": "Language:",
 
     "errors": {
       "no-connections": "No connections active, web client is not connected to any other nodes!",

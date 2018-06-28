@@ -4,6 +4,7 @@ import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/takeWhile';
 
 import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';

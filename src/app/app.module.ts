@@ -75,6 +75,7 @@ import { NavBarService } from './services/nav-bar.service';
 import { CoinService } from './services/coin.service';
 import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
 import { SelectCoinComponent } from './components/layout/select-coin/select-coin.component';
+import { LanguageService } from './services/language.service';
 
 @NgModule({
   declarations: [
@@ -171,7 +172,8 @@ import { SelectCoinComponent } from './components/layout/select-coin/select-coin
     CipherProvider,
     FeatureService,
     NavBarService,
-    CoinService
+    CoinService,
+    LanguageService
   ],
   bootstrap: [AppComponent],
 })

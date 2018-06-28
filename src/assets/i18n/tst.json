@@ -1,0 +1,294 @@
+{
+  "common": {
+    "loading": "TST:Loading..",
+    "new": "TST:New",
+    "load": "TST:Load",
+    "address": "TST:Address"
+  },
+
+  "errors": {
+    "fetch-version": "TST:Unable to fetch latest release version from Github",
+    "incorrect-password": "TST:Incorrect password",
+    "api-disabled": "TST:API disabled",
+    "no-wallet": "TST:Wallet does not exist",
+    "no-outputs": "TST:No unspent outputs",
+    "no-wallets": "TST:Currently there are no wallets"
+  },
+
+  "title": {
+    "wallets": "TST:Wallets",
+    "send": "TST:Send",
+    "history": "TST:History",
+    "buy-coin": "TST:Buy Skycoin",
+    "network": "TST:Networking",
+    "blockchain": "TST:Blockchain",
+    "outputs": "TST:Outputs",
+    "transactions": "TST:Transactions",
+    "pending-txs": "TST:Pending Transactions",
+    "backup": "TST:Backup Wallet",
+    "explorer": "TST:Explorer",
+    "seed": "TST:Wallet Seed",
+    "qrcode": "TST:QR Code",
+    "disclaimer": "TST:Disclaimer",
+    "qr-code": "TST:View QR Code"
+  },
+
+  "header": {
+    "syncing-blocks": "TST:Syncing blocks",
+    "update1": "TST:Wallet update",
+    "update2": "TST:available.",
+    "pending-txs1": "TST:There are some",
+    "pending-txs2": "TST:pending transactions.",
+    "pending-txs3": "TST:Data you see may not be updated.",
+    "loading": "TST:Loading...",
+    "updated1": "TST:Updated:",
+    "updated2": "TST:min ago",
+    "choose-coin": "TST:Choose coin:",
+    "select-language": "TST:Language:",
+
+    "errors": {
+      "no-connections": "TST:No connections active, web client is not connected to any other nodes!",
+      "no-backend1": "TST:Cannot reach backend. Please refresh the page and/or seek help on our",
+      "no-backend2": "TST:Telegram.",
+      "no-backend3": "TST:",
+      "csrf": "TST:Security vulnerability: CSRF is not working, please exit immediately."
+    }
+  },
+
+  "password": {
+    "title": "TST:Enter Password",
+    "label": "TST:Password",
+    "confirm-label": "TST:Confirm password",
+    "button": "TST:Proceed"
+  },
+
+  "buy": {
+    "deposit-address": "TST:Choose an address to generate a BTC deposit link for:",
+    "select-address": "TST:Select address",
+    "generate": "TST:Generate",
+    "deposit-location": "TST:Deposit Location",
+    "deposit-location-desc": "TST:Choose a wallet where you'd like us to deposit your Skycoin after we receive your Bitcoin.",
+    "make-choice": "TST:Make a choice",
+    "wallets-desc": "TST:Each time a new wallet and address are selected, a new BTC address is generated. A single Skycoin address can have up to 5 BTC addresses assigned to it.",
+    "send": "TST:Send Bitcoin",
+    "send-desc": "TST:Send Bitcoin to the address below. Once received, we will deposit the Skycoin to a new address in the wallet selected above at the current rate of {{ rate }} SKY/BTC.",
+    "fraction-warning": "TST:Only send multiple of the SKY/BTC rate! Skycoin is sent in whole number; fractional SKY is not sent!",
+    "receive": "TST:Receive Sky",
+    "receive-desc": "TST:After receiving your Bitcoin, we'll send you your Skycoin. It may take anywhere between 20 minutes and an hour to receive your SKY.",
+    "status-button": "TST:Status:",
+    "check-status-button": "TST:Check Status",
+    "new-order-button": "TST:New Order",
+    "otc-disabled": "TST:Sorry, otc has currently been disabled!",
+    "purchase": "TST:Purchase Skycoin",
+    "details": "TST:You can buy Skycoins directly from your wallet using our Skycoin Teller service. The current rate is 0.0002 BTC per SKY. To buy SKY, request a BTC deposit address. Once you have a BTC deposit address, any BTC deposits will   automatically be added to your selected address.",
+    "sky-address": "TST:Sky address: ",
+    "bitcoin-address": "TST:Bitcoin address:",
+    "refresh-button": "TST:refresh",
+    "add-deposit-address": "TST:Add deposit address",
+    "updated-at": "TST:updated at:"
+  },
+
+  "wizard": {
+    "wallet-desc": "TST:If you don't have a wallet, use the generated seed to create a new one. If you already have a wallet, toggle over to \"Load Wallet\" and enter your seed.",
+    "encrypt-desc": "TST:Increase security of your wallet by encrypting it. By entering a password below, your wallet will be encrypted. Only those with the password will be able access the wallet and remove funds.",
+    "finish-button": "TST:Finish",
+    "skip-button": "TST:Skip",
+    "back-button": "TST:Back",
+
+    "confirm": {
+      "title": "TST:Safeguard your seed!",
+      "desc": "TST:We want to make sure that you wrote down your seed and stored it in a safe place. If you forget your seed, you WILL NOT be able to recover your wallet!",
+      "checkbox": "TST:It’s safe, I swear.",
+      "button": "TST:Continue"
+    }
+  },
+
+  "wallet": {
+    "new-address": "TST:New Address",
+    "show-empty": "TST:Show Empty",
+    "hide-empty": "TST:Hide Empty",
+    "encrypt": "TST:Encrypt Wallet",
+    "decrypt": "TST:Decrypt Wallet",
+    "edit": "TST:Edit Wallet",
+    "delete" : "Delete Wallet",
+    "add": "TST:Add Wallet",
+    "load": "TST:Load Wallet",
+    "encryption": "TST:Encryption",
+    "wallet": "TST:Wallet",
+    "delete-confirmation1": "TST:WARNING: the wallet",
+    "delete-confirmation2": "TST:will be deleted. If you forget your seed, you will not be able to recover this wallet! Do you want to continue?",
+    "delete-confirmation-check": "TST:Yeah, I want to delete the wallet.",
+
+    "new": {
+      "create-title": "TST:Create Wallet",
+      "load-title": "TST:Load Wallet",
+      "encrypt-title": "TST:Encrypt your wallet",
+      "name-label": "TST:Name",
+      "seed-label": "TST:Seed",
+      "confirm-seed-label": "TST:Confirm seed",
+      "seed-warning": "TST:Remember this seed! Keep it in a safe place. If you forget your seed, you will not be able to recover your wallet!",
+      "create-button": "TST:Create",
+      "load-button": "TST:Load",
+      "skip-button": "TST:Skip",
+      "cancel-button": "TST:Cancel",
+      "12-words": "TST:12 words",
+      "24-words": "TST:24 words",
+      "generate-12-seed": "TST:Generate 12 word seed",
+      "generate-24-seed": "TST:Generate 24 word seed",
+      "encrypt-warning": "TST:We suggest that you encrypt each one of your wallets with a password. If you forget your password, you can reset it with your seed. Make sure you have your seed saved somewhere safe before encrypting your wallet.",
+      "select-coin": "TST:Select coin"
+    },
+
+    "unlock": {
+      "unlock-title": "TST:Unlock Wallet",
+      "seed": "TST:Seed",
+      "cancel-button": "TST:Cancel",
+      "unlock-button": "TST:Unlock"
+    },
+
+    "rename": {
+      "title": "TST:Rename Wallet",
+      "name-label": "TST:Name",
+      "cancel-button": "TST:Cancel",
+      "rename-button": "TST:Rename"
+    },
+
+    "address": {
+      "copy": "TST:Copy",
+      "copy-address": "TST:Copy address",
+      "copied": "TST:Copied!",
+      "outputs": "TST:Unspent Outputs"
+    }
+  },
+
+  "send": {
+    "from-label": "TST:Send from",
+    "to-label": "TST:Send to",
+    "amount-label": "TST:Amount",
+    "notes-label": "TST:Notes",
+    "verify-button": "TST:Verify",
+    "send-button": "TST:Send",
+    "back-button": "TST:Back",
+    "select-wallet": "TST:Select Wallet",
+    "recipient-address": "TST:Recipient address",
+    "your-note": "TST:Your note here"
+  },
+
+  "tx": {
+    "transaction": "TST:Transaction",
+    "confirm-transaction": "TST:Confirm Transaction",
+    "from": "TST:From",
+    "to": "TST:To",
+    "date": "TST:Date",
+    "status": "TST:Status",
+    "coins": "TST:Coins",
+    "hours": "TST:Hours",
+    "id": "TST:Tx ID",
+    "show-more": "TST:Show more",
+    "hours-sent": "TST:sent",
+    "hours-burned": "TST:burned",
+    "inputs": "TST:Inputs",
+    "outputs": "TST:Outputs",
+    "confirmed": "TST:Confirmed",
+    "pending": "TST:Pending",
+    "current-rate": "TST:Calculated at the current rate",
+    "none": "TST:There are still no transactions to show"
+  },
+
+  "backup": {
+    "wallet-directory": "TST:Wallet Directory:",
+    "seed-warning": "TST:BACKUP YOUR SEED. ON PAPER. IN A SAFE PLACE. As long as you have your seed, you can recover your coins.",
+    "desc": "TST:Use the table below to get seeds from your encrypted wallets. <br>To get seeds from unencrypted wallets, open the folder above, open the .wlt files in a text editor and recover the seeds.",
+    "close-button": "TST:Close",
+    "wallet": "TST:Wallet Label",
+    "filename": "TST:Filename",
+    "seed": "TST:Seed",
+    "show-seed": "TST:Show seed"
+  },
+
+  "blockchain": {
+    "blocks": "TST:Number of blocks:",
+    "time": "TST:Time since last block:",
+    "hash": "TST:Hash of last block:",
+    "current-supply1": "TST:Current",
+    "current-supply2": "TST:supply",
+    "total-supply1": "TST:Total",
+    "total-supply2": "TST:supply"
+  },
+
+  "network": {
+    "automatic-peers": "TST:Automatic peers",
+    "default-peers": "TST:Default peers"
+  },
+
+  "pending-txs": {
+    "timestamp": "TST:Timestamp",
+    "txid": "TST:Transaction ID",
+    "none": "TST:Currently there are no pending transactions",
+    "my": "TST:Mine",
+    "all": "TST:All"
+  },
+
+  "history": {
+    "tx-detail": "TST:Transaction Detail",
+    "sending": "TST:Sending",
+    "sent": "TST:Sent",
+    "received": "TST:Received",
+    "receiving": "TST:Receiving",
+    "pending": "TST:Pending",
+    "price-tooltip": "TST:Calculated at the current rate"
+  },
+
+  "teller": {
+    "done": "TST:Completed",
+    "waiting-confirm": "TST:Waiting for confirmation",
+    "waiting-deposit": "TST:Waiting for Bitcoin deposit",
+    "waiting-send": "TST:Waiting to send Skycoin",
+    "unknown": "TST:Unknown"
+  },
+
+  "onboarding": {
+    "disclaimer" : {
+      "disclaimer-description": "TST:By continuing, you understand the risks related to the use of cryptographic tokens & blockchain-based software, the Skycoin wallets, and the Skycoin cryptocurrency. You understand this this product is provided as-is, and agree to the Terms and Conditions governing the usage of this product.",
+      "disclaimer-check": "TST:Yeah, I understand.",
+      "continue-button": "TST:Continue"
+    }
+  },
+
+  "feature": {
+    "disclaimer": {
+      "disclaimer-desc": "TST:IF YOU USE THIS WALLET YOU MAY LOSE COINS. TESTING PURPOSES ONLY.",
+      "disclaimer-dismiss": "TST:Don't show this message again",
+      "dismiss-tooltip": "TST:Dismiss warning"
+    }
+  },
+
+  "top-bar": {
+    "less-than": "TST:less than a",
+    "connection-error-tooltip": "TST:Connection error, retrying"
+  },
+
+  "qr-code" : {
+    "copy-address": "TST:Copy address to clipboard"
+  },
+
+  "confirmation" : {
+    "header-text": "TST:Confirmation",
+    "confirm-button": "TST:Yes",
+    "cancel-button": "TST:No"
+  },
+
+  "service": {
+    "api" : {
+      "server-error": "TST:Server error"
+    },
+    "wallet": {
+      "address-without-seed": "TST:trying to generate address without seed!",
+      "unknown-address": "TST:trying to update the wallet with unknown address!",
+      "wallet-exists": "TST:A wallet already exists with this seed",
+      "not-enough-hours1": "TST:Not enough available",
+      "not-enough-hours2": "TST:to perform transaction!",
+      "wrong-seed": "TST:Wrong seed"
+    }
+  }
+}

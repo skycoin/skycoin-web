@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import 'rxjs/add/operator/takeWhile';
-import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from './services/language.service';
 
 import { config } from './app.config';
 
@@ -10,22 +9,18 @@ import { config } from './app.config';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-
   current: number;
   highest: number;
   otcEnabled: boolean;
   version: string;
 
   constructor(
-    private translate: TranslateService
-  ) {
-  }
+    private languageService: LanguageService
+  ) {}
 
   ngOnInit() {
     this.otcEnabled = config.otcEnabled;
-    this.translate.addLangs(['en']);
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+    this.languageService.loadLanguageSettings();
   }
 
   loading() {

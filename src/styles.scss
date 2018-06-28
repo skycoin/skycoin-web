@@ -283,11 +283,16 @@ mat-panel-title {
   }
 }
 
-.-select-coin {
+.-header-row {
   text-align: right;
   margin: 0;
   background-color: black;
   padding: 7px 5px;
+
+  .-header-column {
+    display: inline-block;
+    margin-left: 10px;
+  }
 
   span {
     font-size: 13px;
