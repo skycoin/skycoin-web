@@ -8,15 +8,20 @@ import 'rxjs/add/operator/map';
 import { TranslateService } from '@ngx-translate/core';
 
 import { GetOutputsRequest, Output } from '../app.datatypes';
-import { environment } from '../../environments/environment';
+import { CoinService } from './coin.service';
+import { BaseCoin } from '../coins/basecoin';
 
 @Injectable()
 export class ApiService {
 
-  private readonly url = environment.nodeUrl;
+  private url: string;
 
   constructor(private http: Http,
-              private translate: TranslateService) { }
+              private translate: TranslateService,
+              private coinService: CoinService) {
+    this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.url = coin.nodeUrl);
+  }
 
   getOutputs(addresses): Observable<Output[]> {
     return addresses ? this.get('outputs', { addrs: addresses }).map((response: GetOutputsRequest) => {

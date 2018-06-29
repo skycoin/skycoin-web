@@ -4,7 +4,8 @@ import { HttpModule, XHRBackend } from '@angular/http';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ApiService } from './api.service';
-import { MockTranslateService } from '../utils/test-mocks';
+import { MockTranslateService, MockCoinService } from '../utils/test-mocks';
+import { CoinService } from './coin.service';
 
 describe('ApiService', () => {
   let service: ApiService;
@@ -16,7 +17,8 @@ describe('ApiService', () => {
       providers: [
         ApiService,
         { provide: XHRBackend, useClass: MockBackend },
-        { provide: TranslateService, useClass: MockTranslateService }
+        { provide: TranslateService, useClass: MockTranslateService },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     });
   });
