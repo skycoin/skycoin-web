@@ -12,7 +12,8 @@ export class TestCoin extends BaseCoin {
       coinSymbol: 'TEST',
       hoursName: 'Test Hours',
       cmcTickerId: 1,
-      coinExplorer: 'https://explorer.testcoin.net'
+      coinExplorer: 'https://explorer.testcoin.net',
+      imageName: 'testcoin-header.png'
     });
   }
 }

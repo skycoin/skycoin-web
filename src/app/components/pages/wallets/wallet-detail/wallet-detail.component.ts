@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,23 +9,17 @@ import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { ChangeNameComponent } from '../change-name/change-name.component';
 import { openUnlockWalletModal } from '../../../../utils/index';
 import { ConfirmationComponent } from '../../../layout/confirmation/confirmation.component';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-wallet-detail',
   templateUrl: './wallet-detail.component.html',
   styleUrls: ['./wallet-detail.component.scss'],
 })
-export class WalletDetailComponent implements OnInit {
+export class WalletDetailComponent {
   @Input() wallet: Wallet;
 
   isAddressCreating = false;
-
-  private deleteConfirmation1: string;
-  private deleteConfirmation2: string;
-  private deleteConfirmationCheck: string;
-  private headerText: string;
-  private confirmButtonText: string;
-  private cancelButtonText: string;
 
   constructor(
     private walletService: WalletService,
@@ -33,20 +27,6 @@ export class WalletDetailComponent implements OnInit {
     private snackBar: MatSnackBar,
     private translateService: TranslateService
   ) {}
-
-  ngOnInit() {
-    this.translateService.get('wallet').subscribe(res => {
-      this.deleteConfirmation1 = res['delete-confirmation1'];
-      this.deleteConfirmation2 = res['delete-confirmation2'];
-      this.deleteConfirmationCheck = res['delete-confirmation-check'];
-    });
-
-    this.translateService.get('confirmation').subscribe(res => {
-      this.headerText = res['header-text'];
-      this.confirmButtonText = res['confirm-button'];
-      this.cancelButtonText = res['cancel-button'];
-    });
-  }
 
   showQr(address) {
     const config = new MatDialogConfig();
@@ -105,9 +85,19 @@ export class WalletDetailComponent implements OnInit {
   }
 
   deleteWallet() {
+    Observable.forkJoin(
+      this.translateService.get('wallet'),
+      this.translateService.get('confirmation')
+    ).subscribe(([walletTranslation, confirmationTranslation]) => {
+      const confirmationData = this.getConfirmationData(walletTranslation, confirmationTranslation);
+      this.showDeleteConfirmation(confirmationData);
+    });
+  }
+
+  private showDeleteConfirmation(confirmationData: ConfirmationData) {
     const dialogRef = this.dialog.open(ConfirmationComponent, {
       width: '500px',
-      data: this.getConfirmationData()
+      data: confirmationData
     });
 
     dialogRef.afterClosed()
@@ -138,14 +128,14 @@ export class WalletDetailComponent implements OnInit {
     this.snackBar.open(error.message, null, config);
   }
 
-  private getConfirmationData(): ConfirmationData {
+  private getConfirmationData(walletTranslation, confirmationTranslation): ConfirmationData {
     return {
-      text: `${this.deleteConfirmation1} "${this.wallet.label}" ${this.deleteConfirmation2}`,
-      headerText: this.headerText,
+      text: `${walletTranslation['delete-confirmation1']} "${this.wallet.label}" ${walletTranslation['delete-confirmation2']}`,
+      headerText: confirmationTranslation['header-text'],
       displayCheckbox: true,
-      checkboxText: this.deleteConfirmationCheck,
-      confirmButtonText: this.confirmButtonText,
-      cancelButtonText: this.cancelButtonText
+      checkboxText: walletTranslation['delete-confirmation-check'],
+      confirmButtonText: confirmationTranslation['confirm-button'],
+      cancelButtonText: confirmationTranslation['cancel-button']
     };
   }
 }

@@ -4,7 +4,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockCoinService, MockDateFromNowPipe, MockBlockchainService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockCoinService, MockDateTimePipe, MockBlockchainService } from '../../../../utils/test-mocks';
 
 describe('BlockchainComponent', () => {
   let component: BlockchainComponent;
@@ -14,7 +14,7 @@ describe('BlockchainComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         BlockchainComponent,
-        MockDateFromNowPipe,
+        MockDateTimePipe,
         MockTranslatePipe
       ],
       schemas: [ NO_ERRORS_SCHEMA ],
