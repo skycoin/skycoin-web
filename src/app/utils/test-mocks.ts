@@ -38,13 +38,6 @@ export class MockDateTimePipe implements PipeTransform {
   }
 }
 
-@Pipe({name: 'dateFromNow'})
-export class MockDateFromNowPipe implements PipeTransform {
-  transform() {
-    return 'transformed value';
-  }
-}
-
 // --- Services
 export class MockFeatureService {
   getFeatureToggleData(): any {
@@ -156,6 +149,8 @@ export class MockMatSnackBar {
 }
 
 export class MockTranslateService {
+  onLangChange = Observable.of({});
+
   get(key: string | Array<string>, interpolateParams?: Object): Observable<string | any> {
     return Observable.of({});
   }
