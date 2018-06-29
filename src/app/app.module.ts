@@ -50,7 +50,6 @@ import { CreateWalletComponent } from './components/pages/wallets/create-wallet/
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { WalletsComponent } from './components/pages/wallets/wallets.component';
 import { ClipboardDirective } from './directives/clipboard.directive';
-import { DateFromNowPipe } from './pipes/date-from-now.pipe';
 import { DateTimePipe } from './pipes/date-time.pipe';
 import { TellerStatusPipe } from './pipes/teller-status.pipe';
 import { ApiService } from './services/api.service';
@@ -88,7 +87,6 @@ import { LanguageService } from './services/language.service';
     ClipboardDirective,
     NumberFieldDirective,
     CreateWalletComponent,
-    DateFromNowPipe,
     DateTimePipe,
     DoubleButtonComponent,
     HeaderComponent,
