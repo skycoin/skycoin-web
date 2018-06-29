@@ -38,13 +38,6 @@ export class MockDateTimePipe implements PipeTransform {
   }
 }
 
-@Pipe({name: 'dateFromNow'})
-export class MockDateFromNowPipe implements PipeTransform {
-  transform() {
-    return 'transformed value';
-  }
-}
-
 // --- Services
 export class MockFeatureService {
   getFeatureToggleData(): any {
