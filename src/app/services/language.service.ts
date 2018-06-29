@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { config } from '../app.config';
 
 @Injectable()
 export class LanguageService {
-  currentLanguage = new BehaviorSubject<string>(config.defaultLanguage);
+  currentLanguage = new ReplaySubject<string>();
 
   private readonly storageKey = 'lang';
 
@@ -39,10 +39,8 @@ export class LanguageService {
   }
 
   private loadCurrentLanguage() {
-    const currentLang = localStorage.getItem(this.storageKey);
-
-    if (currentLang) {
-      this.translate.use(currentLang);
-    }
+    const storedLang = localStorage.getItem(this.storageKey);
+    const currentLang = !!storedLang ? storedLang : config.defaultLanguage;
+    this.translate.use(currentLang);
   }
 }

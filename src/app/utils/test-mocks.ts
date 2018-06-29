@@ -155,6 +155,8 @@ export class MockMatSnackBar {
 }
 
 export class MockTranslateService {
+  onLangChange = Observable.of({});
+
   get(key: string | Array<string>, interpolateParams?: Object): Observable<string | any> {
     return Observable.of({});
   }
