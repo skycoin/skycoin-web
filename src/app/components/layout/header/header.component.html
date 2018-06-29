@@ -20,19 +20,21 @@
     </div>
   </div>
 
-  <div class="large-header">
-    <app-top-bar [headline]="headline"></app-top-bar>
-    <div class="balance-container">
-      <div class="balance">
-        <p *ngIf="!highest && loading" class="loading-header">{{ 'header.loading' | translate }}</p>
-        <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
-        <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>
-        <p *ngIf="!loading" class="dollars">{{ balance }}</p>
+  <div class="large-header" [ngStyle]="{'background-image': 'url(../../../../assets/img/' + currentCoin.imageName + ')'}">
+    <div class="gradient">
+      <app-top-bar [headline]="headline"></app-top-bar>
+      <div class="balance-container">
+        <div class="balance">
+          <p *ngIf="!highest && loading" class="loading-header">{{ 'header.loading' | translate }}</p>
+          <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
+          <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>
+          <p *ngIf="!loading" class="dollars">{{ balance }}</p>
+        </div>
       </div>
-    </div>
-    <div class="hour-balance">
-      <p *ngIf="loading">{{ 'header.syncing-blocks' | translate }} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '..' }}</p>
-      <p *ngIf="!loading">{{ hours }} {{ currentCoin.hoursName }}</p>
+      <div class="hour-balance">
+        <p *ngIf="loading">{{ 'header.syncing-blocks' | translate }} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '..' }}</p>
+        <p *ngIf="!loading">{{ hours }} {{ currentCoin.hoursName }}</p>
+      </div>
     </div>
   </div>
   <app-nav-bar></app-nav-bar>
