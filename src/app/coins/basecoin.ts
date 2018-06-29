@@ -7,6 +7,7 @@ export abstract class BaseCoin {
   hoursName: string;
   cmcTickerId: number;
   coinExplorer: string;
+  imageName: string;
 
   constructor(coinObj) {
     Object.assign(this, coinObj);
