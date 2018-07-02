@@ -113,7 +113,7 @@
     "delete" : "Delete Wallet",
     "add": "TST:Add Wallet",
     "load": "TST:Load Wallet",
-    "encryption": "TST:Encryption",
+    "locked": "TST:Locked",
     "wallet": "TST:Wallet",
     "delete-confirmation1": "TST:WARNING: the wallet",
     "delete-confirmation2": "TST:will be deleted. If you forget your seed, you will not be able to recover this wallet! Do you want to continue?",
