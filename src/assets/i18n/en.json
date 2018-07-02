@@ -113,7 +113,7 @@
     "delete" : "Delete Wallet",
     "add": "Add Wallet",
     "load": "Load Wallet",
-    "encryption": "Encryption",
+    "locked": "Locked",
     "wallet": "Wallet",
     "delete-confirmation1": "WARNING: the wallet",
     "delete-confirmation2": "will be deleted. If you forget your seed, you will not be able to recover this wallet! Do you want to continue?",
@@ -208,7 +208,7 @@
 
   "blockchain": {
     "blocks": "Number of blocks:",
-    "time": "Time since last block:",
+    "time": "Timestamp of last block:",
     "hash": "Hash of last block:",
     "current-supply1": "Current",
     "current-supply2": "supply",
