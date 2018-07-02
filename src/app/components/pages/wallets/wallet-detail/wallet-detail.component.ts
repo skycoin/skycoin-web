@@ -95,8 +95,8 @@ export class WalletDetailComponent {
   }
 
   private showDeleteConfirmation(confirmationData: ConfirmationData) {
-    const dialogRef = this.dialog.open(ConfirmationComponent, {
-      width: '500px',
+    const dialogRef = this.dialog.open(ConfirmationComponent, <MatDialogConfig>{
+      width: '450px',
       data: confirmationData
     });
 
