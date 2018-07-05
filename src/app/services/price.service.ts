@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -15,7 +15,7 @@ export class PriceService {
   private readonly updatePeriod = 10 * 60 * 1000;
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private ngZone: NgZone,
     private coinService: CoinService
   ) {
@@ -36,7 +36,7 @@ export class PriceService {
     }
 
     this.http.get(`https://api.coinmarketcap.com/v2/ticker/${this.cmcTickerId}/`)
-      .map(response => response.json())
-      .subscribe(response => this.price.next(response.data.quotes.USD.price));
+      .map(response => response)
+      .subscribe((response: any) => this.price.next(response.data.quotes.USD.price));
   }
 }
