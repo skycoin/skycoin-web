@@ -71,7 +71,8 @@ export class MockCoinService {
     coinSymbol: 'test',
     hoursName: 'Test Hours',
     coinExplorer: 'testUrl',
-    imageName: 'imageName.png'
+    imageName: 'imageName.png',
+    gradientName: 'imageName.png',
   });
 }
 

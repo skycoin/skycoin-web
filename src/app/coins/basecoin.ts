@@ -8,6 +8,7 @@ export abstract class BaseCoin {
   cmcTickerId: number;
   coinExplorer: string;
   imageName: string;
+  gradientName: string;
 
   constructor(coinObj) {
     Object.assign(this, coinObj);
