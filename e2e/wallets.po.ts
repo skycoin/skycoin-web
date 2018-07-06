@@ -74,7 +74,7 @@ export class WalletsPage {
   }
 
   createWallet() {
-    const btnCreate = element(by.css('.btn-create > button'));
+    const btnCreate = element(by.css('.btn-create > div > button'));
     this.fillWalletForm(
       'Test create wallet',
       'skycoin-web-e2e-test-create-wallet-seed',
