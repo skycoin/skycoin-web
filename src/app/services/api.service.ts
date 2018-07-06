@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { GetOutputsRequest, Output } from '../app.datatypes';
 import { CoinService } from './coin.service';
 import { BaseCoin } from '../coins/basecoin';
+import { parseResponseMessage } from '../utils/errors';
 
 @Injectable()
 export class ApiService {
@@ -90,13 +91,11 @@ export class ApiService {
     return this.get('csrf').map(response => response.csrf_token);
   }
 
-  private getErrorMessage(error: any): Observable<any> {
-    if (error) {
-      if (error.error) {
-        return Observable.throw(new Error(error.error.trim()));
-      } else {
-        return Observable.throw(error);
-      }
+  private getErrorMessage(error: any): Observable<string> {
+    if (error.error) {
+      return Observable.throw(new Error(parseResponseMessage(error.error.trim())));
+    } if (error.message) {
+      return Observable.throw(new Error(parseResponseMessage(error.message.trim())));
     }
 
     this.translate.get('service.api.server-error')
