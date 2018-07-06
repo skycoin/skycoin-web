@@ -65,8 +65,11 @@ export class SendFormComponent implements OnInit, OnDestroy {
     const wallet = this.form.value.wallet;
 
     if (!wallet.seed) {
-      openUnlockWalletModal(wallet, this.unlockDialog).componentInstance.onWalletUnlocked
-        .subscribe(() => this.createTransaction(wallet));
+      setTimeout(() => {
+        openUnlockWalletModal(wallet, this.unlockDialog).componentInstance.onWalletUnlocked
+          .subscribe(() => this.createTransaction(wallet));
+        }, 1
+      );
     } else {
       this.createTransaction(wallet);
     }
