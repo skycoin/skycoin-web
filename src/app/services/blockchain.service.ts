@@ -15,6 +15,7 @@ export class BlockchainService {
   private progressSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private isLoaded = false;
   private intervalSubscription: Subscription;
+  private connectionsSubscription: Subscription;
   private readonly defaultPeriod = 90000;
   private readonly fastPeriod = 5000;
   private intervalPeriod = this.defaultPeriod;
@@ -44,8 +45,14 @@ export class BlockchainService {
       this.intervalSubscription.unsubscribe();
     }
 
+    if (!!this.connectionsSubscription) {
+      this.connectionsSubscription.unsubscribe();
+    }
+
+    this.walletService.cancelPossibleBalanceRefresh();
+
     this.isLoaded = false;
-    this.checkConnectionState()
+    this.connectionsSubscription = this.checkConnectionState()
       .filter(status => !!status)
       .subscribe(
         () => this.startLoadingBlockchain(),
@@ -92,6 +99,7 @@ export class BlockchainService {
 
   private completeLoading() {
     this.isLoaded = true;
+    this.intervalPeriod = this.defaultPeriod;
     this.walletService.loadBalances();
   }
 

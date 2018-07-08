@@ -6,6 +6,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/zip';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { TranslateService } from '@ngx-translate/core';
@@ -33,6 +34,7 @@ export class WalletService {
   private intervalTime: number;
   private updatingBalance: boolean;
   private currentCoin: BaseCoin;
+  private balanceRefreshSubscription: ISubscription;
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHoursRatio = 0.5;
@@ -309,7 +311,7 @@ export class WalletService {
         return;
       }
 
-      this.retrieveAddressesBalance(addresses).subscribe(
+      this.balanceRefreshSubscription = this.retrieveAddressesBalance(addresses).subscribe(
         (balance: Balance) => this.all.first().subscribe(wallets => this.calculateBalance(wallets, balance)),
         () => this.breakUpdatingBalance(null),
         () => this.updatingBalance = false
@@ -317,9 +319,21 @@ export class WalletService {
     });
   }
 
+  cancelPossibleBalanceRefresh() {
+    if (!!this.balanceRefreshSubscription) {
+      this.balanceRefreshSubscription.unsubscribe();
+      this.updatingBalance = false;
+    }
+  }
+
   private breakUpdatingBalance(balance: TotalBalance) {
     this.updatingBalance = false;
     this.totalBalance.next(balance);
+
+    if (balance) {
+      this.lastBalancesUpdateTime = new Date();
+    }
+
     this.resetBalancesUpdateTime(true);
   }
 
