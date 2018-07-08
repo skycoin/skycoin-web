@@ -54,7 +54,11 @@ export class SendFormComponent implements OnInit, OnDestroy {
     this.snackbar.dismiss();
   }
 
-  onVerify() {
+  onVerify(event = null) {
+    if (event) {
+      event.preventDefault();
+    }
+
     if (!this.form.valid || this.button.isLoading()) {
       return;
     }
@@ -65,11 +69,8 @@ export class SendFormComponent implements OnInit, OnDestroy {
     const wallet = this.form.value.wallet;
 
     if (!wallet.seed) {
-      setTimeout(() => {
-        openUnlockWalletModal(wallet, this.unlockDialog).componentInstance.onWalletUnlocked
-          .subscribe(() => this.createTransaction(wallet));
-        }, 1
-      );
+      openUnlockWalletModal(wallet, this.unlockDialog).componentInstance.onWalletUnlocked
+        .subscribe(() => this.createTransaction(wallet));
     } else {
       this.createTransaction(wallet);
     }
