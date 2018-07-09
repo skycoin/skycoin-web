@@ -36,7 +36,6 @@ export class PriceService {
     }
 
     this.http.get(`https://api.coinmarketcap.com/v2/ticker/${this.cmcTickerId}/`)
-      .map(response => response)
       .subscribe((response: any) => this.price.next(response.data.quotes.USD.price));
   }
 }

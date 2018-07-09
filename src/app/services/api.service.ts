@@ -98,7 +98,7 @@ export class ApiService {
       return Observable.throw(new Error(parseResponseMessage(error.message.trim())));
     }
 
-    this.translate.get('service.api.server-error')
+    return this.translate.get('service.api.server-error')
       .flatMap(message => Observable.throw(new Error(message)));
   }
 }
