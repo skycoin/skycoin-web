@@ -1,6 +1,6 @@
 {
   "common": {
-    "loading": "TST:Loading..",
+    "loading": "TST:Loading...",
     "new": "TST:New",
     "load": "TST:Load",
     "address": "TST:Address"
@@ -26,7 +26,7 @@
     "transactions": "TST:Transactions",
     "pending-txs": "TST:Pending Transactions",
     "backup": "TST:Backup Wallet",
-    "explorer": "TST:Explorer",
+    "explorer": "TST:{{ coin }} Explorer",
     "seed": "TST:Wallet Seed",
     "qrcode": "TST:QR Code",
     "disclaimer": "TST:Disclaimer",
@@ -41,10 +41,15 @@
     "pending-txs2": "TST:pending transactions.",
     "pending-txs3": "TST:Data you see may not be updated.",
     "loading": "TST:Loading...",
-    "updated1": "TST:Updated:",
-    "updated2": "TST:min ago",
     "choose-coin": "TST:Choose coin:",
     "select-language": "TST:Language:",
+
+    "top-bar": {
+      "updated1": "TST:Updated:",
+      "updated2": "TST:min ago",
+      "less-than": "TST:less than a",
+      "connection-error-tooltip": "TST:Connection error, retrying"
+    },
 
     "errors": {
       "no-connections": "TST:No connections active, web client is not connected to any other nodes!",
@@ -110,7 +115,7 @@
     "encrypt": "TST:Encrypt Wallet",
     "decrypt": "TST:Decrypt Wallet",
     "edit": "TST:Edit Wallet",
-    "delete" : "Delete Wallet",
+    "delete" : "TST:Delete Wallet",
     "add": "TST:Add Wallet",
     "load": "TST:Load Wallet",
     "locked": "TST:Locked",
@@ -155,7 +160,7 @@
 
     "address": {
       "copy": "TST:Copy",
-      "copy-address": "TST:Copy address",
+      "copy-address": "TST:Copy Address",
       "copied": "TST:Copied!",
       "outputs": "TST:Unspent Outputs"
     }
@@ -210,10 +215,8 @@
     "blocks": "TST:Number of blocks:",
     "time": "TST:Time since last block:",
     "hash": "TST:Hash of last block:",
-    "current-supply1": "TST:Current",
-    "current-supply2": "TST:supply",
-    "total-supply1": "TST:Total",
-    "total-supply2": "TST:supply"
+    "current-supply": "TST:Current {{ coin }} supply",
+    "total-supply": "TST:Total {{ coin }} supply"
   },
 
   "network": {
@@ -261,11 +264,6 @@
       "disclaimer-dismiss": "TST:Don't show this message again",
       "dismiss-tooltip": "TST:Dismiss warning"
     }
-  },
-
-  "top-bar": {
-    "less-than": "TST:less than a",
-    "connection-error-tooltip": "TST:Connection error, retrying"
   },
 
   "qr-code" : {

@@ -1,9 +1,9 @@
 <div class="buttons-left">
   <span class="last-updated-time" *ngIf="isBalanceObtained">
-    {{ 'header.updated1' | translate }} {{ timeSinceLastUpdateBalances === 0 ? ('top-bar.less-than' | translate ) : timeSinceLastUpdateBalances }} {{ 'header.updated2' | translate }}
+    {{ 'header.top-bar.updated1' | translate }} {{ timeSinceLastUpdateBalances === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastUpdateBalances }} {{ 'header.top-bar.updated2' | translate }}
     <i *ngIf="!this.isBalanceUpdated"
        class="material-icons blinking-warning-icon"
-       [matTooltip]="'top-bar.connection-error-tooltip' | translate">
+       [matTooltip]="'header.top-bar.connection-error-tooltip' | translate">
       warning
     </i>
   </span>
@@ -22,7 +22,7 @@
 
   <mat-menu #menuMenu="matMenu" [overlapTrigger]="false">
     <a mat-menu-item [href]="currentCoin.coinExplorer" class="color-primary">
-      {{ currentCoin.coinName }} {{ 'title.explorer' | translate}}
+      {{ 'title.explorer' | translate:{coin: currentCoin.coinName} }}
     </a>
   </mat-menu>
 
