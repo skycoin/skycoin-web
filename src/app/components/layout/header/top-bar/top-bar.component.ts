@@ -44,7 +44,10 @@ export class TopBarComponent implements OnInit, OnDestroy {
       });
 
     this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+      .subscribe((coin: BaseCoin) => {
+        this.currentCoin = coin;
+        this.isBalanceObtained = false;
+      });
   }
 
   ngOnDestroy() {
