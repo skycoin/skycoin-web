@@ -1,0 +1,105 @@
+$soft-grey: #dddddd;
+
+.x-container {
+  width: 0px;
+  height: 0px;
+  float: right;
+  position: relative;
+  left: -42px;
+  img {
+    width: 42px;
+    height: 42px;
+    opacity: 0.5;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.container {
+  text-align: center;
+}
+
+.search-container {
+  max-width: 700px;
+  display: inline-block;
+  width: 100%;
+  font-size: 15px;
+  margin: 25px 0px;
+  text-align: center;
+
+  mat-icon {
+    width: 0px;
+    height: 0px;
+    display: block;
+    position: relative;
+    top: 10px;
+    left: 12px;
+    color: $soft-grey;
+  }
+
+  .input-container {
+    margin-top: 10px;
+  }
+
+  input {
+    border: 0px solid white;
+    background-color: white;
+    border-radius: 6px;
+    box-sizing: border-box;
+    display: block;
+    line-height: 20px;
+    padding: 10px 10px;
+    width: 100%;
+    outline: none;
+    padding: 12px 48px;
+  }
+
+  input::placeholder {
+    color: $soft-grey;
+  }
+
+  input:-ms-input-placeholder {
+    color: $soft-grey;
+  }
+}
+
+.options-container {
+  font-size: 12px;
+
+  .title {
+    margin: 10px 0px;
+  }
+
+  .buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .button {
+      width: 140px;
+      margin: 20px;
+      font-size: 12px;
+      line-height: unset;
+      padding: 0;
+      color: unset;
+
+      img {
+        width: 64px;
+        height: 64px;
+        margin: 10px 0px;
+      }
+
+      .label {
+        background-color: #e8e8e888;
+        padding: 4px 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

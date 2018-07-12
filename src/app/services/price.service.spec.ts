@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { MockBackend } from '@angular/http/testing';
-import { HttpModule, XHRBackend } from '@angular/http';
+import { XHRBackend } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { PriceService } from './price.service';
 import { CoinService } from './coin.service';
@@ -11,7 +12,7 @@ describe('PriceService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpModule ],
+      imports: [ HttpClientModule ],
       providers: [
         PriceService,
         { provide: XHRBackend, useClass: MockBackend },

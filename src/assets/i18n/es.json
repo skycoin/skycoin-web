@@ -16,6 +16,7 @@
   },
 
   "title": {
+    "change-coin": "Cambiar la moneda activa",
     "wallets": "Billeteras",
     "send": "Enviar",
     "history": "Historial",
@@ -106,6 +107,13 @@
       "checkbox": "Está segura, lo aseguro.",
       "button": "Continuar"
     }
+  },
+
+  "change-coin": {
+    "search": "Buscar",
+    "with-wallet": "Monedas para las que ha creado billeteras:",
+    "without-wallet": "Monedas para las que no ha creado billeteras:",
+    "no-results": "No hay monedas que coincidan con el término de búsqueda"
   },
 
   "wallet": {
