@@ -1,7 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { MatInputModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -128,7 +127,6 @@ import { LanguageService } from './services/language.service';
   ],
   imports: [
     BrowserModule,
-    HttpModule,
     HttpClientModule,
     MatButtonModule,
     MatCardModule,

@@ -1,7 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { MockBackend } from '@angular/http/testing';
-import { HttpModule, XHRBackend } from '@angular/http';
+import { XHRBackend } from '@angular/http';
 import { TranslateService } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { ApiService } from './api.service';
 import { MockTranslateService, MockCoinService } from '../utils/test-mocks';
@@ -13,7 +14,7 @@ describe('ApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpModule ],
+      imports: [ HttpClientModule ],
       providers: [
         ApiService,
         { provide: XHRBackend, useClass: MockBackend },
