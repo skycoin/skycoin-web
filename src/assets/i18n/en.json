@@ -1,6 +1,6 @@
 {
   "common": {
-    "loading": "Loading..",
+    "loading": "Loading...",
     "new": "New",
     "load": "Load",
     "address": "Address"
@@ -16,6 +16,7 @@
   },
 
   "title": {
+    "change-coin": "Change active coin",
     "wallets": "Wallets",
     "send": "Send",
     "history": "History",
@@ -26,7 +27,7 @@
     "transactions": "Transactions",
     "pending-txs": "Pending Transactions",
     "backup": "Backup Wallet",
-    "explorer": "Explorer",
+    "explorer": "{{ coin }} Explorer",
     "seed": "Wallet Seed",
     "qrcode": "QR Code",
     "disclaimer": "Disclaimer",
@@ -41,10 +42,15 @@
     "pending-txs2": "pending transactions.",
     "pending-txs3": "Data you see may not be updated.",
     "loading": "Loading...",
-    "updated1": "Updated:",
-    "updated2": "min ago",
     "choose-coin": "Choose coin:",
     "select-language": "Language:",
+
+    "top-bar": {
+      "updated1": "Updated:",
+      "updated2": "min ago",
+      "less-than": "less than a",
+      "connection-error-tooltip": "Connection error, retrying"
+    },
 
     "errors": {
       "no-connections": "No connections active, web client is not connected to any other nodes!",
@@ -103,6 +109,13 @@
     }
   },
 
+  "change-coin": {
+    "search": "Search",
+    "with-wallet": "Coins you have created wallets for:",
+    "without-wallet": "Coins you have not created wallets for:",
+    "no-results": "No coins match the search term"
+  },
+
   "wallet": {
     "new-address": "New Address",
     "show-empty": "Show Empty",
@@ -155,7 +168,7 @@
 
     "address": {
       "copy": "Copy",
-      "copy-address": "Copy address",
+      "copy-address": "Copy Address",
       "copied": "Copied!",
       "outputs": "Unspent Outputs"
     }
@@ -210,10 +223,8 @@
     "blocks": "Number of blocks:",
     "time": "Timestamp of last block:",
     "hash": "Hash of last block:",
-    "current-supply1": "Current",
-    "current-supply2": "supply",
-    "total-supply1": "Total",
-    "total-supply2": "supply"
+    "current-supply": "Current {{ coin }} supply",
+    "total-supply": "Total {{ coin }} supply"
   },
 
   "network": {
@@ -261,11 +272,6 @@
       "disclaimer-dismiss": "Don't show this message again",
       "dismiss-tooltip": "Dismiss warning"
     }
-  },
-
-  "top-bar": {
-    "less-than": "less than a",
-    "connection-error-tooltip": "Connection error, retrying"
   },
 
   "qr-code" : {

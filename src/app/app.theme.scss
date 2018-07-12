@@ -39,3 +39,29 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($candy-app-theme);
+
+$mat-header-sel-primary: (
+  100: white,
+  500: white,
+  contrast: (
+    100: white,
+    500: white,
+  )
+);
+
+$mat-header-sel-accent: (
+  100: #cccccc,
+  500: #cccccc,
+  contrast: (
+    100: #cccccc,
+    500: #cccccc,
+  )
+);
+
+$header-sel-primary: mat-palette($mat-header-sel-primary);
+$header-sel-accent: mat-palette($mat-header-sel-accent);
+$header-sel-theme:   mat-light-theme($header-sel-primary, $header-sel-accent);
+
+.header-sel-theme {
+  @include angular-material-theme($header-sel-theme);
+}
