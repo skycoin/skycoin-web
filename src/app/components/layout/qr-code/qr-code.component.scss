@@ -1,35 +1,25 @@
 @import '../../../../theme/_variables';
-.-code {
-  margin: 50px;
-  ::ng-deep img {
-    margin: 0 auto;
-  }
+#qr {
+  height: 300px;
 }
 
 .-address-footer {
-  mix-blend-mode: normal;
-  opacity: 0.43;
-  display: flex;
+  margin: 30px -30px -20px -30px;
+  padding: 10px 10px 0px 10px;
+  font-size: 13px;
+  border-top: #ddd solid 1px;
   justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  line-height: normal;
-  color: $grey-normal;
-
-  .-address-label {
-    mix-blend-mode: normal;
-    opacity: 0.5;
-  }
-
-  .-address-address {
-    text-align: right;
-  }
+  line-height: 28px;
 }
 .-button-qr{
   border-radius: 100px;
   cursor: pointer;
+  width: 28px;
+  height: 28px;
+  margin-left: 10px;
+  opacity: 0.5;
 }
 .-button-qr:hover{
-  box-shadow: 0px 2px 1px 1px #1e2227;
+  opacity: 1;
 }
 

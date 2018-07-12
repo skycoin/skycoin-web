@@ -14,7 +14,7 @@
   cursor: pointer;
   display: flex;
   min-height: 80px;
-  padding: 0 12px;
+  padding: 20px 12px;
 
   &:first-child {
     border-top-left-radius: 15px;
@@ -53,8 +53,9 @@
     flex: 1;
 
     .-detail {
-      display:flex;
-      margin-bottom: 4px;
+      &:not(:last-child) {
+        margin-bottom: 5px;
+      }
     }
 
     h4 {
