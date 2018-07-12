@@ -1,5 +1,4 @@
-<select [ngModel]="selectedCoin" (ngModelChange)="onChanged($event)">
-  <option *ngFor="let coin of coins" [ngValue]="coin">
-    {{ coin.coinName }} ({{ coin.coinSymbol }})
-  </option>
-</select>
+<div class="icon-container">
+  <img [src]="'../../../../assets/img/' + (selectedCoin ? selectedCoin.bigIconName : '')">
+</div>
+<input readonly #input (click)="onInputClick()" [value]="selectedCoin ? selectedCoin.coinName : ''">
