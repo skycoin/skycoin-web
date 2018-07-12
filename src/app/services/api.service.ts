@@ -43,7 +43,6 @@ export class ApiService {
 
   get(url, params = null, options = {}): Observable<any> {
     return this.http.get(this.getUrl(url), this.getRequestOptions(options, params))
-      .map((res: any) => res)
       .catch((error: any) => this.getErrorMessage(error));
   }
 
@@ -51,7 +50,6 @@ export class ApiService {
     return this.getCsrf().first().flatMap(csrf => {
       options.csrf = csrf;
       return this.http.post(this.getUrl(url), body, this.getRequestOptions(options))
-        .map((res: any) => res)
         .catch((error: any) => this.getErrorMessage(error));
     });
   }
