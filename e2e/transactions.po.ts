@@ -30,6 +30,7 @@ export class TransactionsPage {
   }
 
   hideTransactionModal() {
+    browser.sleep(250);
     return element(by.css('.-header img')).click().then(() => {
       return this.getTransactionDetailIsShow();
     });

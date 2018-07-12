@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="hour-balance">
-        <p *ngIf="loading">{{ 'header.syncing-blocks' | translate }} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '..' }}</p>
+        <p *ngIf="loading">{{ 'header.syncing-blocks' | translate }} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '...' }}</p>
         <p *ngIf="!loading">{{ hours }} {{ currentCoin.hoursName }}</p>
       </div>
     </div>

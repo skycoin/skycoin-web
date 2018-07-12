@@ -14,7 +14,9 @@ export class TestCoin extends BaseCoin {
       cmcTickerId: 1,
       coinExplorer: 'https://explorer.testcoin.net',
       imageName: 'testcoin-header.jpg',
-      gradientName: 'testcoin-gradient.png'
+      gradientName: 'testcoin-gradient.png',
+      iconName: 'testcoin-icon.png',
+      bigIconName: 'testcoin-icon-b.png',
     });
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
@@ -35,11 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private isBlockchainLoading = true;
   private isBalanceLoaded = false;
   private price: number;
-  private priceSubscription: ISubscription;
-  private walletSubscription: ISubscription;
-  private blockchainSubscription: ISubscription;
-  private coinSubscription: ISubscription;
-  private languageSubscription: ISubscription;
+  private subscription: Subscription;
 
   get loading() {
     return this.isBlockchainLoading || !this.balance || !this.isBalanceLoaded;
@@ -56,39 +52,49 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.languages = this.languageService.langs;
 
-    this.languageSubscription = this.languageService.currentLanguage
+    this.subscription = this.languageService.currentLanguage
       .subscribe((language: string) => this.currentLanguage = language);
 
-    this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => {
-        this.reloadBlockchain();
-        this.reloadBalance();
-        this.currentCoin = coin;
-      });
+    this.subscription.add(
+      this.coinService.currentCoin
+        .subscribe((coin: BaseCoin) => {
+          this.resetBalance();
+          this.reloadBlockchain();
+          this.currentCoin = coin;
+        })
+    );
 
-    this.blockchainSubscription = this.blockchainService.progress
-      .filter(response => !!response)
-      .subscribe(response => this.updateBlockchainProgress(response));
+    this.subscription.add(
+      this.blockchainService.progress
+        .filter(response => !!response)
+        .subscribe(response => this.updateBlockchainProgress(response))
+    );
 
-    this.priceSubscription = this.priceService.price
-      .subscribe(price => {
-        this.price = price;
-        this.calculateBalance();
-      });
-
-    this.walletSubscription = this.walletService.totalBalance
-      .subscribe((balance: TotalBalance) => {
-        if (balance) {
-          this.coins = balance.coins;
-          this.hours = balance.hours;
-
+    this.subscription.add(
+      this.priceService.price
+        .subscribe(price => {
+          this.price = price;
           this.calculateBalance();
-          this.isBalanceLoaded = true;
-        }
-      });
+        })
+    );
 
-    this.walletService.hasPendingTransactions
-      .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs);
+    this.subscription.add(
+      this.walletService.totalBalance
+        .subscribe((balance: TotalBalance) => {
+          if (balance) {
+            this.coins = balance.coins;
+            this.hours = balance.hours;
+
+            this.calculateBalance();
+            this.isBalanceLoaded = true;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.walletService.hasPendingTransactions
+        .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs)
+    );
   }
 
   onCoinChanged(coin: BaseCoin) {
@@ -100,20 +106,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.priceSubscription.unsubscribe();
-    this.walletSubscription.unsubscribe();
-    this.blockchainSubscription.unsubscribe();
-    this.coinSubscription.unsubscribe();
-    this.languageSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
-  private reloadBalance() {
+  private resetBalance() {
     this.coins = 0;
     this.price = null;
     this.balance = null;
     this.isBalanceLoaded = false;
-
-    this.walletService.loadBalances();
   }
 
   private reloadBlockchain() {

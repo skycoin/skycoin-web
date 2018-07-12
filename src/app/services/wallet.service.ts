@@ -6,6 +6,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/zip';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,7 +23,6 @@ import { CoinService } from './coin.service';
 @Injectable()
 export class WalletService {
   wallets: BehaviorSubject<Wallet[]> = new BehaviorSubject<Wallet[]>([]);
-  addressesTemp: Address[];
   timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
   hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
@@ -33,6 +33,7 @@ export class WalletService {
   private intervalTime: number;
   private updatingBalance: boolean;
   private currentCoin: BaseCoin;
+  private balanceRefreshSubscription: ISubscription;
 
   private readonly allocationRatio = 0.25;
   private readonly unburnedHoursRatio = 0.5;
@@ -216,31 +217,49 @@ export class WalletService {
           return Observable.of([]);
         }
 
-        this.addressesTemp = addresses;
         return Observable.forkJoin(addresses.map(address => this.retrieveAddressTransactions(address)))
-          .map(transactions => [].concat.apply([], transactions).sort((a, b) =>  b.timestamp - a.timestamp))
-          .map(transactions => transactions.reduce((array, item) => {
-            if (!array.find(trans => trans.txid === item.txid)) {
-              array.push(item);
-            }
-            return array;
-          }, []))
-          .map(transactions => transactions.map(transaction => {
-            const outgoing = !!this.addressesTemp.find(address => transaction.inputs[0].owner === address.address);
-            transaction.outputs.forEach(output => {
-              if (outgoing && !this.addressesTemp.find(address => output.dst === address.address)) {
-                transaction.addresses.push(output.dst);
-                transaction.balance = transaction.balance - parseFloat(output.coins);
-              }
-              if (!outgoing && this.addressesTemp.find(address => output.dst === address.address)) {
-                transaction.addresses.push(output.dst);
-                transaction.balance = transaction.balance + parseFloat(output.coins);
-              }
-              return transaction;
-            });
+          .map(transactions => {
+            return []
+              .concat.apply([], transactions)
+              .reduce((array, item) => {
+                if (!array.find(trans => trans.txid === item.txid)) {
+                  array.push(item);
+                }
 
-            return transaction;
-          }));
+                return array;
+              }, [])
+              .sort((a, b) =>  b.timestamp - a.timestamp)
+              .map(transaction => {
+                const outgoing = addresses.some(address => {
+                  return transaction.inputs.some(input => input.owner === address.address);
+                });
+
+                const relevantOutputs = transaction.outputs.reduce((array, output) => {
+                  const isMyOutput = addresses.some(address => address.address === output.dst);
+
+                  if ((outgoing && !isMyOutput) || (!outgoing && isMyOutput)) {
+                    array.push(output);
+                  }
+
+                  return array;
+                }, []);
+
+                const calculatedOutputs = (outgoing && relevantOutputs.length === 0)
+                || (!outgoing && relevantOutputs.length === transaction.outputs.length)
+                  ? transaction.outputs
+                  : relevantOutputs;
+
+                transaction.addresses.push(
+                  ...calculatedOutputs
+                    .map(output => output.dst)
+                    .filter((dst, i, self) => self.indexOf(dst) === i),
+                );
+
+                transaction.balance += calculatedOutputs.reduce((a, b) => a + parseFloat(b.coins), 0) * (outgoing ? -1 : 1);
+
+                return transaction;
+              });
+          });
       });
   }
 
@@ -309,7 +328,7 @@ export class WalletService {
         return;
       }
 
-      this.retrieveAddressesBalance(addresses).subscribe(
+      this.balanceRefreshSubscription = this.retrieveAddressesBalance(addresses).subscribe(
         (balance: Balance) => this.all.first().subscribe(wallets => this.calculateBalance(wallets, balance)),
         () => this.breakUpdatingBalance(null),
         () => this.updatingBalance = false
@@ -317,9 +336,21 @@ export class WalletService {
     });
   }
 
+  cancelPossibleBalanceRefresh() {
+    if (!!this.balanceRefreshSubscription) {
+      this.balanceRefreshSubscription.unsubscribe();
+      this.updatingBalance = false;
+    }
+  }
+
   private breakUpdatingBalance(balance: TotalBalance) {
     this.updatingBalance = false;
     this.totalBalance.next(balance);
+
+    if (balance) {
+      this.lastBalancesUpdateTime = new Date();
+    }
+
     this.resetBalancesUpdateTime(true);
   }
 

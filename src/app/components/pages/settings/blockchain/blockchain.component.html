@@ -25,13 +25,13 @@
             <div class="col-md-6">
               <div class="-item">
                 <div class="-key">
-                  {{ 'blockchain.current-supply1' | translate }} {{ currentCoin.coinSymbol }} {{ 'blockchain.current-supply2' | translate }}
+                  {{ 'blockchain.current-supply' | translate:{coin: currentCoin.coinSymbol} }}
                 </div>
                 <div class="-value">{{ coinSupply.current_supply | number }}</div>
               </div>
               <div class="-item">
                 <div class="-key">
-                  {{ 'blockchain.total-supply1' | translate }} {{ currentCoin.coinSymbol }} {{ 'blockchain.total-supply2' | translate }}
+                  {{ 'blockchain.total-supply' | translate:{coin: currentCoin.coinSymbol} }}
                 </div>
                 <div class="-value">{{ coinSupply.total_supply | number }}</div>
               </div>
@@ -39,13 +39,13 @@
             <div class="col-md-6">
               <div class="-item">
                 <div class="-key">
-                  {{ 'blockchain.current-supply1' | translate }} {{ currentCoin.hoursName }} {{ 'blockchain.current-supply2' | translate }}
+                  {{ 'blockchain.current-supply' | translate:{coin: currentCoin.hoursName} }}
                 </div>
                 <div class="-value">{{ coinSupply.current_coinhour_supply | number }}</div>
               </div>
               <div class="-item">
                 <div class="-key">
-                  {{ 'blockchain.total-supply1' | translate }} {{ currentCoin.hoursName }} {{ 'blockchain.total-supply2' | translate }}
+                  {{ 'blockchain.total-supply' | translate:{coin: currentCoin.hoursName} }}
                 </div>
                 <div class="-value">{{ coinSupply.total_coinhour_supply | number }}</div>
               </div>

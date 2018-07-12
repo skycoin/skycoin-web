@@ -14,7 +14,9 @@ export class SkycoinCoin extends BaseCoin {
       cmcTickerId: 1619,
       coinExplorer: 'https://explorer.skycoin.net',
       imageName: 'skycoin-header.jpg',
-      gradientName: 'skycoin-gradient.png'
+      gradientName: 'skycoin-gradient.png',
+      iconName: 'skycoin-icon.png',
+      bigIconName: 'skycoin-icon-b.png',
     });
   }
 }
