@@ -62,6 +62,8 @@ export class MockPurchaseService {
 }
 
 export class MockCoinService {
+  coins = [];
+
   currentCoin = new BehaviorSubject<BaseCoin>({
     id: 1,
     cmcTickerId: 1,
@@ -71,7 +73,9 @@ export class MockCoinService {
     coinSymbol: 'test',
     hoursName: 'Test Hours',
     coinExplorer: 'testUrl',
-    imageName: 'imageName.png'
+    imageName: 'imageName.png',
+    iconName: 'icon.png',
+    bigIconName: 'big-icon.png',
   });
 }
 
@@ -90,6 +94,8 @@ export class MockWalletService {
   get addresses(): Observable<any[]> {
     return Observable.of([]);
   }
+
+  wallets = new BehaviorSubject<any[]>([]);
 
   get all(): Observable<Wallet[]> {
     return Observable.of([]);
@@ -183,5 +189,10 @@ export class MockLanguageService {
   currentLanguage = new BehaviorSubject<string>('en');
 
   loadLanguageSettings() {
+  }
+}
+
+export class MockMatDialogRef<T> {
+  close(dialogResult?: any) {
   }
 }

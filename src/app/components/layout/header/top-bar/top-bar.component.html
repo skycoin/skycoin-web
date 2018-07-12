@@ -1,12 +1,16 @@
 <div class="buttons-left">
-  <span class="last-updated-time" *ngIf="isBalanceObtained">
-    {{ 'header.top-bar.updated1' | translate }} {{ timeSinceLastUpdateBalances === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastUpdateBalances }} {{ 'header.top-bar.updated2' | translate }}
-    <i *ngIf="!this.isBalanceUpdated"
-       class="material-icons blinking-warning-icon"
-       [matTooltip]="'header.top-bar.connection-error-tooltip' | translate">
-      warning
-    </i>
-  </span>
+  <app-coin-button (click)="changeCoin()"></app-coin-button>
+  <div class="last-updated-time" *ngIf="isBalanceObtained">
+    <div class="label">{{ 'header.top-bar.updated1' | translate }}</div>
+    <div>
+      {{ timeSinceLastUpdateBalances === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastUpdateBalances }} {{ 'header.top-bar.updated2' | translate }}
+      <i *ngIf="!this.isBalanceUpdated"
+        class="material-icons blinking-warning-icon"
+        [matTooltip]="'header.top-bar.connection-error-tooltip' | translate">
+        warning
+      </i>
+    </div>
+  </div>
 </div>
 
 <div class="title">
