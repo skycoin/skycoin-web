@@ -74,6 +74,8 @@ import { CoinService } from './services/coin.service';
 import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
 import { SelectCoinComponent } from './components/layout/select-coin/select-coin.component';
 import { LanguageService } from './services/language.service';
+import { CoinButtonComponent } from './components/layout/header/coin-button/coin-button.component';
+import { SelectCoinOverlayComponent } from './components/layout/select-coin-overlay/select-coin-overlay.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +114,9 @@ import { LanguageService } from './services/language.service';
     ConfirmationComponent,
     DisclaimerWarningComponent,
     LoadingContentComponent,
-    SelectCoinComponent
+    SelectCoinComponent,
+    CoinButtonComponent,
+    SelectCoinOverlayComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -123,7 +127,8 @@ import { LanguageService } from './services/language.service';
     TransactionDetailComponent,
     OnboardingDisclaimerComponent,
     OnboardingSafeguardComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    SelectCoinOverlayComponent
   ],
   imports: [
     BrowserModule,

@@ -19,8 +19,10 @@ export class CoinService {
   }
 
   changeCoin(coin: BaseCoin) {
-    this.currentCoin.next(coin);
-    this.saveCoin(coin.id);
+    if (coin.id !== this.currentCoin.value.id) {
+      this.currentCoin.next(coin);
+      this.saveCoin(coin.id);
+    }
   }
 
   private loadCurrentCoin() {
