@@ -1,10 +1,13 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
+import { Overlay } from '@angular/cdk/overlay';
+import { MatDialog } from '@angular/material/dialog';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { TotalBalance } from '../../../../app.datatypes';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
+import { openChangeCoinModal } from '../../../../utils';
 
 @Component({
   selector: 'app-top-bar',
@@ -23,7 +26,10 @@ export class TopBarComponent implements OnInit, OnDestroy {
   private coinSubscription: ISubscription;
 
   constructor(private walletService: WalletService,
-              private coinService: CoinService) {
+              private coinService: CoinService,
+              private dialog: MatDialog,
+              private overlay: Overlay,
+              private renderer: Renderer2) {
   }
 
   ngOnInit() {
@@ -53,5 +59,14 @@ export class TopBarComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.updateBalancesSubscription.unsubscribe();
     this.coinSubscription.unsubscribe();
+  }
+
+  changeCoin() {
+    openChangeCoinModal(this.dialog, this.renderer, this.overlay)
+      .subscribe(response => {
+        if (response) {
+          this.coinService.changeCoin(response);
+        }
+      });
   }
 }

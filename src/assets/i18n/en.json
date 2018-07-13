@@ -16,6 +16,7 @@
   },
 
   "title": {
+    "change-coin": "Change active coin",
     "wallets": "Wallets",
     "send": "Send",
     "history": "History",
@@ -106,6 +107,13 @@
       "checkbox": "It’s safe, I swear.",
       "button": "Continue"
     }
+  },
+
+  "change-coin": {
+    "search": "Search",
+    "with-wallet": "Coins you have created wallets for:",
+    "without-wallet": "Coins you have not created wallets for:",
+    "no-results": "No coins match the search term"
   },
 
   "wallet": {

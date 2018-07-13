@@ -98,12 +98,23 @@
       padding-left: 5px;
     }
 
-    span {
+    .-enabled-span {
       color: #CECFD0;
+      cursor: pointer;
+
+      &:hover {
+        color: $grey-dark;
+      }
+    }
+
+    .-disabled-span {
+      color: #CECFD0;
+    }
+
+    span {
       font-size: 12px;
       height: 60px;
       margin: 0 5px;
-      cursor: pointer;
       display: flex;
       align-items: center;
 
@@ -134,7 +145,6 @@
       }
 
       &:hover {
-        color: $grey-dark;
 
         &.-btn-plus::before {
           background-image: url(../../../../../assets/img/plus-green.png);

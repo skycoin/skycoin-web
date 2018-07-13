@@ -95,6 +95,16 @@ mat-dialog-container {
   padding: 0 !important;
 }
 
+.transparent-background-dialog {
+  .mat-dialog-container {
+    background-color: transparent !important;
+  }
+}
+
+.clear-dialog-background {
+  background-color: #f5f5f5f9
+}
+
 .header-container {
   max-width: 848px;
   text-align: center;
@@ -431,4 +441,8 @@ General Helpers
 
 .disabled {
   pointer-events: none;
+}
+
+.no-overflow {
+  overflow: hidden;
 }

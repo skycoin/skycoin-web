@@ -52,6 +52,7 @@ export class OnboardingCreatePage {
   }
 
   closeSafeguard() {
+    browser.sleep(250);
     element(by.css('img.btn-close')).click();
     return this.getSafeguardIsShow();
   }
