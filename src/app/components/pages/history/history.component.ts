@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
@@ -20,8 +20,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
 
   public transactions: any[];
   public price: number;
-  private priceSubscription: ISubscription;
-  private coinSubscription: ISubscription;
+  private subscription: Subscription;
 
   constructor(
     private walletService: WalletService,
@@ -31,21 +30,21 @@ export class HistoryComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.coinSubscription = this.coinService.currentCoin
+    this.subscription = this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => {
         this.transactions = null;
         this.currentCoin = coin;
       });
 
-    this.priceSubscription = this.priceService.price.subscribe(price => this.price = price);
-    this.walletService.transactions().subscribe(transactions => {
-      this.transactions = transactions;
-    });
+    this.subscription.add(this.priceService.price.subscribe(price => this.price = price));
+    this.subscription.add(this.walletService.transactions().subscribe(transactions => {
+        this.transactions = transactions;
+      })
+    );
   }
 
   ngOnDestroy() {
-    this.priceSubscription.unsubscribe();
-    this.coinSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   showTransaction(transaction: any) {
