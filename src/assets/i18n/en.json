@@ -17,6 +17,7 @@
 
   "title": {
     "change-coin": "Change active coin",
+    "language": "Select Language",
     "wallets": "Wallets",
     "send": "Send",
     "history": "History",
@@ -42,8 +43,6 @@
     "pending-txs2": "pending transactions.",
     "pending-txs3": "Data you see may not be updated.",
     "loading": "Loading...",
-    "choose-coin": "Choose coin:",
-    "select-language": "Language:",
 
     "top-bar": {
       "updated1": "Updated:",

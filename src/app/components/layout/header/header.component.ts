@@ -8,7 +8,6 @@ import { ConnectionError } from '../../../enums/connection-error.enum';
 import { TotalBalance } from '../../../app.datatypes';
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
-import { LanguageService } from '../../../services/language.service';
 
 @Component({
   selector: 'app-header',
@@ -29,8 +28,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   current: number;
   highest: number;
   currentCoin: BaseCoin;
-  currentLanguage: string;
-  languages: string[];
 
   private isBlockchainLoading = true;
   private isBalanceLoaded = false;
@@ -45,24 +42,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private priceService: PriceService,
     private walletService: WalletService,
     private blockchainService: BlockchainService,
-    private coinService: CoinService,
-    private languageService: LanguageService
+    private coinService: CoinService
   ) {}
 
   ngOnInit() {
-    this.languages = this.languageService.langs;
 
-    this.subscription = this.languageService.currentLanguage
-      .subscribe((language: string) => this.currentLanguage = language);
-
-    this.subscription.add(
-      this.coinService.currentCoin
-        .subscribe((coin: BaseCoin) => {
-          this.resetBalance();
-          this.reloadBlockchain();
-          this.currentCoin = coin;
-        })
-    );
+    this.subscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => {
+        this.resetBalance();
+        this.reloadBlockchain();
+        this.currentCoin = coin;
+      });
 
     this.subscription.add(
       this.blockchainService.progress
@@ -99,10 +89,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   onCoinChanged(coin: BaseCoin) {
     this.coinService.changeCoin(coin);
-  }
-
-  onLanguageChanged(lang: string) {
-    this.languageService.changeLanguage(lang);
   }
 
   ngOnDestroy() {

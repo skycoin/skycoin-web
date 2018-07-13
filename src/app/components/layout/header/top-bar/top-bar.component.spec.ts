@@ -6,7 +6,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TopBarComponent } from './top-bar.component';
 import { WalletService } from '../../../../services/wallet.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockWalletService, MockCoinService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService } from '../../../../utils/test-mocks';
+import { LanguageService } from '../../../../services/language.service';
 
 describe('TopBarComponent', () => {
   let component: TopBarComponent;
@@ -25,7 +26,8 @@ describe('TopBarComponent', () => {
       ],
       providers: [
         { provide: WalletService, useClass: MockWalletService },
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: LanguageService, useClass: MockLanguageService }
       ]
     })
     .compileComponents();

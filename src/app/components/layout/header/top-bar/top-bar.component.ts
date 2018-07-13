@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, Renderer2 } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
 import { Overlay } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -7,7 +7,8 @@ import { WalletService } from '../../../../services/wallet.service';
 import { TotalBalance } from '../../../../app.datatypes';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
-import { openChangeCoinModal } from '../../../../utils';
+import { openChangeCoinModal, openChangeLanguageModal } from '../../../../utils';
+import { LanguageService, LanguageData } from '../../../../services/language.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -21,15 +22,16 @@ export class TopBarComponent implements OnInit, OnDestroy {
   isBalanceObtained = false;
   isBalanceUpdated: boolean;
   currentCoin: BaseCoin;
+  language: LanguageData;
 
-  private updateBalancesSubscription: ISubscription;
-  private coinSubscription: ISubscription;
+  private subscription: Subscription;
 
   constructor(private walletService: WalletService,
               private coinService: CoinService,
               private dialog: MatDialog,
               private overlay: Overlay,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              private languageService: LanguageService) {
   }
 
   ngOnInit() {
@@ -42,23 +44,29 @@ export class TopBarComponent implements OnInit, OnDestroy {
         this.isBalanceUpdated = !!balance;
       });
 
-    this.updateBalancesSubscription = this.walletService.timeSinceLastBalancesUpdate
-      .subscribe((time: number) => {
-        if (time != null) {
-          this.timeSinceLastUpdateBalances = time;
-        }
-      });
+    this.subscription = this.languageService.currentLanguage
+      .subscribe(lang => this.language = lang);
 
-    this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => {
-        this.currentCoin = coin;
-        this.isBalanceObtained = false;
-      });
+    this.subscription.add(
+      this.walletService.timeSinceLastBalancesUpdate
+        .subscribe((time: number) => {
+          if (time != null) {
+            this.timeSinceLastUpdateBalances = time;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.coinService.currentCoin
+        .subscribe((coin: BaseCoin) => {
+          this.currentCoin = coin;
+          this.isBalanceObtained = false;
+        })
+      );
   }
 
   ngOnDestroy() {
-    this.updateBalancesSubscription.unsubscribe();
-    this.coinSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   changeCoin() {
@@ -66,6 +74,15 @@ export class TopBarComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         if (response) {
           this.coinService.changeCoin(response);
+        }
+      });
+  }
+
+  changelanguage() {
+    openChangeLanguageModal(this.dialog)
+      .subscribe(response => {
+        if (response) {
+          this.languageService.changeLanguage(response);
         }
       });
   }

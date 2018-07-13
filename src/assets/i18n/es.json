@@ -17,6 +17,7 @@
 
   "title": {
     "change-coin": "Cambiar la moneda activa",
+    "language": "Seleccionar Lenguaje",
     "wallets": "Billeteras",
     "send": "Enviar",
     "history": "Historial",
@@ -42,8 +43,6 @@
     "pending-txs2": "transacciones pendientes.",
     "pending-txs3": "Los datos mostrados pueden estar desactualizados.",
     "loading": "Cargando...",
-    "choose-coin": "Seleccionar moneda:",
-    "select-language": "Lenguaje:",
 
     "top-bar": {
       "updated1": "Actualizado hace:",

@@ -25,6 +25,10 @@
   </mat-menu>
 
   <mat-menu #menuMenu="matMenu" [overlapTrigger]="false">
+    <div mat-menu-item *ngIf="language" (click)="changelanguage()">
+      <img [src]="'assets/img/lang/' + language.iconName" class="flag">
+      {{ language.name }}
+    </div>
     <a mat-menu-item [href]="currentCoin.coinExplorer" class="color-primary">
       {{ 'title.explorer' | translate:{coin: currentCoin.coinName} }}
     </a>

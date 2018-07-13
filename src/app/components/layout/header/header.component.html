@@ -1,25 +1,6 @@
 <div class="-container">
   <app-disclaimer-warning></app-disclaimer-warning>
 
-  <div class="-header-row">
-    <div class="-header-column">
-      <span>{{ 'header.choose-coin' | translate }}</span>
-      <div class="-select">
-        <app-select-coin [selectedCoin]="currentCoin" (onCoinChanged)="onCoinChanged($event)"></app-select-coin>
-      </div>
-    </div>
-    <div class="-header-column">
-      <span>{{ 'header.select-language' | translate }}</span>
-      <div class="-select">
-        <select [ngModel]="currentLanguage" (ngModelChange)="onLanguageChanged($event)">
-          <option *ngFor="let language of languages" [ngValue]="language">
-            {{ language }}
-          </option>
-        </select>
-      </div>
-    </div>
-  </div>
-
   <div class="large-header" [ngStyle]="{'background-image': 'url(../../../../assets/img/' + currentCoin.imageName + ')'}">
     <div class="gradient">
       <app-top-bar [headline]="headline"></app-top-bar>
