@@ -1,8 +1,10 @@
-import { Component, OnInit, forwardRef, Output, EventEmitter, Input } from '@angular/core';
+import { Component, forwardRef, Output, EventEmitter, Input, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
 
-import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
+import { openChangeCoinModal } from '../../../utils';
 
 @Component({
   selector: 'app-select-coin',
@@ -14,23 +16,23 @@ import { BaseCoin } from '../../../coins/basecoin';
     multi: true
   }]
 })
-export class SelectCoinComponent implements OnInit, ControlValueAccessor {
+export class SelectCoinComponent implements ControlValueAccessor {
   @Output() onCoinChanged = new EventEmitter<BaseCoin>();
   @Input() selectedCoin: BaseCoin;
-  coins: BaseCoin[];
 
-  constructor(
-    private coinService: CoinService
-  ) {}
+  constructor(private dialog: MatDialog,
+    private overlay: Overlay,
+    private renderer: Renderer2) {}
 
-  ngOnInit() {
-    this.coins = this.coinService.coins;
-  }
-
-  onChanged(coin: BaseCoin) {
-    this.selectedCoin = coin;
-    this.onChangeCallback(this.selectedCoin);
-    this.onCoinChanged.emit(coin);
+  onInputClick() {
+    openChangeCoinModal(this.dialog, this.renderer, this.overlay)
+      .subscribe(response => {
+        if (response) {
+          this.selectedCoin = response;
+          this.onChangeCallback(this.selectedCoin);
+          this.onCoinChanged.emit(this.selectedCoin);
+        }
+      });
   }
 
   writeValue(coin: any) {
