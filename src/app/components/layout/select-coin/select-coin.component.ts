@@ -1,4 +1,4 @@
-import { Component, forwardRef, Output, EventEmitter, Input, ViewChild, Renderer2 } from '@angular/core';
+import { Component, forwardRef, Output, EventEmitter, Input, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Overlay } from '@angular/cdk/overlay';
@@ -17,8 +17,6 @@ import { openChangeCoinModal } from '../../../utils';
   }]
 })
 export class SelectCoinComponent implements ControlValueAccessor {
-  @ViewChild('input') input: any;
-
   @Output() onCoinChanged = new EventEmitter<BaseCoin>();
   @Input() selectedCoin: BaseCoin;
 
