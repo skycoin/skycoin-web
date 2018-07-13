@@ -20,8 +20,8 @@
     </div>
   </div>
 
-  <div class="large-header" [ngStyle]="{'background-image': 'url(../../../../assets/img/' + currentCoin.imageName + ')'}">
-    <div class="gradient">
+  <div class="large-header" [ngStyle]="{'background-image': 'url(../../../../assets/img/coins/' + currentCoin.imageName + ')'}">
+    <div class="gradient" [style.background-image]="currentCoin.gradientName ? 'url(../../../../assets/img/coins/' + currentCoin.gradientName + ')' : 'none'">
       <app-top-bar [headline]="headline"></app-top-bar>
       <div class="balance-container">
         <div class="balance">
