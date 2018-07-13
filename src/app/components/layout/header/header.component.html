@@ -1,8 +1,8 @@
 <div class="-container">
   <app-disclaimer-warning></app-disclaimer-warning>
 
-  <div class="large-header" [ngStyle]="{'background-image': 'url(../../../../assets/img/' + currentCoin.imageName + ')'}">
-    <div class="gradient">
+  <div class="large-header" [ngStyle]="{'background-image': 'url(../../../../assets/img/coins/' + currentCoin.imageName + ')'}">
+    <div class="gradient" [style.background-image]="currentCoin.gradientName ? 'url(../../../../assets/img/coins/' + currentCoin.gradientName + ')' : 'none'">
       <app-top-bar [headline]="headline"></app-top-bar>
       <div class="balance-container">
         <div class="balance">
@@ -14,7 +14,7 @@
       </div>
       <div class="hour-balance">
         <p *ngIf="loading">{{ 'header.syncing-blocks' | translate }} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '...' }}</p>
-        <p *ngIf="!loading">{{ hours }} {{ currentCoin.hoursName }}</p>
+        <p *ngIf="!loading">{{ hours | number }} {{ currentCoin.hoursName }}</p>
       </div>
     </div>
   </div>

@@ -23,9 +23,9 @@
         <textarea formControlName="seed" id="seed" row="2"></textarea>
         <img *ngIf="!data.create" class="-valid" src="../../../../../assets/img/valid.png">
       </div>
-    </div>
-    <div class="-disclaimer-box" *ngIf="data.create">
-      <span class="-disclaimer-text">{{ 'wallet.new.seed-warning' | translate}}</span>
+      <p class="-disclaimer-box" *ngIf="data.create">
+        {{ 'wallet.new.seed-warning' | translate}}
+      </p>
     </div>
     <div *ngIf="data.create"
          class="form-field -valid-seed-container"
