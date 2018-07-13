@@ -9,14 +9,14 @@
 @font-face {
   font-family: 'Skycoin';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 200;
   src: url('assets/fonts/skycoin/Skycoin-Light.woff2') format('woff2'),
   url('assets/fonts/skycoin/Skycoin-Light.woff') format('woff');
 }
 @font-face {
   font-family: 'Skycoin';
   font-style: italic;
-  font-weight: 700;
+  font-weight: 200;
   src: url('assets/fonts/skycoin/Skycoin-LightItalic.woff2') format('woff2'),
   url('assets/fonts/skycoin/Skycoin-LightItalic.woff') format('woff');
 }
@@ -24,14 +24,14 @@
 @font-face {
   font-family: 'Skycoin';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400;
   src: url('assets/fonts/skycoin/Skycoin-Regular.woff2') format('woff2'),
   url('assets/fonts/skycoin/Skycoin-Regular.woff') format('woff');
 }
 @font-face {
   font-family: 'Skycoin';
   font-style: italic;
-  font-weight: 700;
+  font-weight: 400;
   src: url('assets/fonts/skycoin/Skycoin-RegularItalic.woff2') format('woff2'),
   url('assets/fonts/skycoin/Skycoin-RegularItalic.woff') format('woff');
 }
@@ -198,13 +198,9 @@ mat-panel-title {
     color: #1e2227;
     display: block;
     font-size: 13px;
-    line-height: 10px;
-    margin-bottom: 10px;
+    line-height: 20px;
+    margin-bottom: 2px;
   }
-  /*
-      line-height: 20px;
-      margin-bottom: 2px;
-  */
 
   input {
     border: 2px solid rgba(0, 0, 0, 0.05);

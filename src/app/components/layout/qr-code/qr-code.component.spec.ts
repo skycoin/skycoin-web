@@ -3,7 +3,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { QrCodeComponent } from './qr-code.component';
-import { MockTranslatePipe } from '../../../utils/test-mocks';
+import { MockTranslatePipe, MockCoinService } from '../../../utils/test-mocks';
+import { CoinService } from '../../../services/coin.service';
 
 describe('QrCodeComponent', () => {
   let component: QrCodeComponent;
@@ -15,7 +16,9 @@ describe('QrCodeComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} }]
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: CoinService, useClass: MockCoinService },
+      ]
     })
     .compileComponents();
   }));
