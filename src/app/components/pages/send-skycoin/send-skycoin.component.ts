@@ -1,13 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CoinService } from '../../../services/coin.service';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-send-skycoin',
   templateUrl: './send-skycoin.component.html',
   styleUrls: ['./send-skycoin.component.scss'],
 })
-export class SendSkycoinComponent {
+export class SendSkycoinComponent implements OnInit, OnDestroy {
   showForm = true;
+  restarting = false;
   formData: any;
+
+  private coinSubscription: ISubscription;
+
+  constructor(
+    private coinService: CoinService
+  ) {}
+
+  ngOnInit() {
+    this.coinSubscription = this.coinService.currentCoin
+      .subscribe(() => {
+        this.onBack(true);
+      });
+  }
+
+  ngOnDestroy() {
+    this.coinSubscription.unsubscribe();
+  }
 
   onFormSubmitted(data) {
     this.formData = data;
@@ -18,6 +38,9 @@ export class SendSkycoinComponent {
     if (deleteFormData) {
       this.formData = null;
     }
+
+    this.restarting = true;
+    setTimeout(() => this.restarting = false, 0);
 
     this.showForm = true;
   }
