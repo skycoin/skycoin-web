@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material';
+import { Subscription } from 'rxjs/Subscription';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { Wallet } from '../../../../app.datatypes';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
-import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-outputs',
@@ -19,7 +19,7 @@ export class OutputsComponent implements OnInit, OnDestroy {
   wallets: Wallet[];
   currentCoin: BaseCoin;
 
-  private coinSubscription: ISubscription;
+  private subscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,7 +29,7 @@ export class OutputsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.coinSubscription = this.coinService.currentCoin
+    this.subscription = this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => {
         this.wallets = null;
         this.currentCoin = coin;
@@ -39,7 +39,7 @@ export class OutputsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.coinSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   showQr(address) {
@@ -51,16 +51,17 @@ export class OutputsComponent implements OnInit, OnDestroy {
   private getWalletsOutputs(queryParams: Params) {
     const address = queryParams['addr'];
 
-    this.walletService.outputsWithWallets().subscribe(wallets => {
-      if (wallets.length === 0) {
-        this.wallets = [];
-        return;
-      }
+    this.subscription.add(this.walletService.outputsWithWallets().subscribe(wallets => {
+        if (wallets.length === 0) {
+          this.wallets = [];
+          return;
+        }
 
-      this.wallets = !!address
-        ? this.getOutputsForSpecificAddress(wallets, address)
-        : this.getOutputs(wallets);
-    });
+        this.wallets = !!address
+          ? this.getOutputsForSpecificAddress(wallets, address)
+          : this.getOutputs(wallets);
+      })
+    );
   }
 
   private getOutputsForSpecificAddress(wallets, address: string) {
