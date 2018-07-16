@@ -29,7 +29,7 @@ export class OnboardingCreatePage {
     });
   }
 
-  selectLanguaje() {
+  selectLanguage() {
     return element.all(by.css('.header-sel-theme > button')) .first().click().then(() => {
       browser.sleep(250);
       return this.getSelectLanguageModalIsShow();

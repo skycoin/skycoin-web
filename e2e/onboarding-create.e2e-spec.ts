@@ -33,7 +33,7 @@ describe('Onboarding Create', () => {
   });
 
   it('should close the language selection modal by selecting a language', () => {
-    expect<any>(page.selectLanguaje()).toEqual(false);
+    expect<any>(page.selectLanguage()).toEqual(false);
   });
 
   it('should display disclaimer', () => {
