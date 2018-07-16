@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Wallet } from '../../../app.datatypes';
 import { WalletService } from '../../../services/wallet.service';
@@ -7,7 +8,6 @@ import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 import { openUnlockWalletModal } from '../../../utils/index';
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
-import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-wallets',
@@ -19,7 +19,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
   wallets: Wallet[];
   currentCoin: BaseCoin;
 
-  private coinSubscription: ISubscription;
+  private subscription: Subscription;
 
   constructor(
     private walletService: WalletService,
@@ -28,16 +28,17 @@ export class WalletsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.walletService.all.subscribe( (wallets) => {
+    this.subscription = this.walletService.all.subscribe( (wallets) => {
       this.wallets = wallets;
     });
 
-    this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+    this.subscription.add(this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin)
+    );
   }
 
   ngOnDestroy() {
-    this.coinSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   addWallet(create: boolean) {
