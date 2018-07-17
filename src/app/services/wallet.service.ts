@@ -513,8 +513,8 @@ export class WalletService {
   }
 
   private resetBalancesTimerOptions(hasPendingTxs: boolean) {
-    this.intervalTime = (hasPendingTxs ? 20 : 60) * 1000;
-    this.refreshBalancesTimeInSec = hasPendingTxs ? 20 : 300;
+    this.intervalTime = (hasPendingTxs ? 5 : 60) * 1000;
+    this.refreshBalancesTimeInSec = hasPendingTxs ? 5 : 300;
   }
 
   private getCleanSeed(seed: string): string {
