@@ -9,6 +9,33 @@ export class OnboardingCreatePage {
     return element(by.css('.-header span')).getText();
   }
 
+  getSelectLanguageModalIsShow() {
+    browser.sleep(250);
+    return element(by.css('app-select-language')).isPresent();
+  }
+
+  closeOutsideSelectLanguageModal() {
+    this.clickOutsideModal();
+    return this.getSelectLanguageModalIsShow();
+  }
+
+  closeSelectLanguageModal() {
+    const closeImg = element(by.css('img.btn-close'));
+    return closeImg.isPresent().then((isShown) => {
+      if (isShown) {
+        closeImg.click();
+      }
+      return this.getSelectLanguageModalIsShow();
+    });
+  }
+
+  selectLanguage() {
+    return element.all(by.css('.header-sel-theme > button')) .first().click().then(() => {
+      browser.sleep(250);
+      return this.getSelectLanguageModalIsShow();
+    });
+  }
+
   getDisclaimerIsShow() {
     return element(by.css('app-onboarding-disclaimer')).isPresent();
   }

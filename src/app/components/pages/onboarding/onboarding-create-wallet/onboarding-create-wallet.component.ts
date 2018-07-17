@@ -11,6 +11,8 @@ import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboardin
 import { OnboardingSafeguardComponent } from './onboarding-safeguard/onboarding-safeguard.component';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
+import { LanguageService } from '../../../../services/language.service';
+import { openChangeLanguageModal } from '../../../../utils';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -34,7 +36,8 @@ export class OnboardingCreateWalletComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    private coinService: CoinService
+    private coinService: CoinService,
+    private languageService: LanguageService
   ) { }
 
   ngOnInit() {
@@ -48,10 +51,20 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.initForm();
   }
 
-  showDisclaimer() {
+  showLanguageModal() {
     setTimeout(() => {
-      this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
+      openChangeLanguageModal(this.dialog, true)
+        .subscribe(response => {
+          if (response) {
+            this.languageService.changeLanguage(response);
+          }
+          this.showDisclaimer();
+        });
     }, 0);
+  }
+
+  showDisclaimer() {
+    this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
   }
 
   showSafe() {
@@ -71,10 +84,10 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   private existWallets() {
-    this.walletService.haveWallets.subscribe(result => {
+    this.walletService.haveWallets.first().subscribe(result => {
       if (!result) {
         this.haveWallets = false;
-        this.showDisclaimer();
+        this.showLanguageModal();
       } else {
         this.haveWallets = true;
       }

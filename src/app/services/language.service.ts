@@ -4,23 +4,42 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { config } from '../app.config';
 
+export class LanguageData {
+  code: string;
+  name: string;
+  iconName: string;
+
+  constructor(coinObj) {
+    Object.assign(this, coinObj);
+  }
+}
+
 @Injectable()
 export class LanguageService {
-  currentLanguage = new ReplaySubject<string>();
+  currentLanguage = new ReplaySubject<LanguageData>();
 
   private readonly storageKey = 'lang';
+
+  private languagesInternal: LanguageData[] = [];
+  get languages(): LanguageData[] {
+    return this.languagesInternal;
+  }
 
   constructor(
     private translate: TranslateService
   ) {
   }
 
-  get langs() {
-    return this.translate.langs;
-  }
-
   loadLanguageSettings() {
-    this.translate.addLangs(config.languages);
+
+    const langs: string[] = [];
+    config.languages.forEach(lang => {
+      const LangObj = new LanguageData(lang);
+      this.languagesInternal.push(LangObj);
+      langs.push(LangObj.code);
+    });
+
+    this.translate.addLangs(langs);
     this.translate.setDefaultLang(config.defaultLanguage);
 
     this.translate.onLangChange
@@ -29,12 +48,12 @@ export class LanguageService {
     this.loadCurrentLanguage();
   }
 
-  changeLanguage(lang: string) {
-    this.translate.use(lang);
+  changeLanguage(langCode: string) {
+    this.translate.use(langCode);
   }
 
   private onLanguageChanged(event: LangChangeEvent) {
-    this.currentLanguage.next(event.lang);
+    this.currentLanguage.next(this.languages.find(val => val.code === event.lang));
     localStorage.setItem(this.storageKey, event.lang);
   }
 

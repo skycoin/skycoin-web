@@ -20,6 +20,22 @@ describe('Onboarding Create', () => {
     expect<any>(page.getHeaderText()).toEqual('Create Wallet');
   });
 
+  it('should display the language selection modal', () => {
+    expect<any>(page.getSelectLanguageModalIsShow()).toEqual(true);
+  });
+
+  it('should not close the language selection modal by pressing outside the window', () => {
+    expect<any>(page.closeOutsideSelectLanguageModal()).toEqual(true);
+  });
+
+  it('should not close the language selection modal by pressing the X button', () => {
+    expect<any>(page.closeSelectLanguageModal()).toEqual(true);
+  });
+
+  it('should close the language selection modal by selecting a language', () => {
+    expect<any>(page.selectLanguage()).toEqual(false);
+  });
+
   it('should display disclaimer', () => {
     expect<any>(page.getDisclaimerIsShow()).toEqual(true);
   });

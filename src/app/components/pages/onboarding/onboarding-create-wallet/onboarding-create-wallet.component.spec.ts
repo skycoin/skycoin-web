@@ -10,7 +10,8 @@ import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.comp
 import { WalletService } from '../../../../services/wallet.service';
 import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockWalletService, MockCoinService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService } from '../../../../utils/test-mocks';
+import { LanguageService } from '../../../../services/language.service';
 
 describe('OnboardingCreateWalletComponent', () => {
   let component: OnboardingCreateWalletComponent;
@@ -32,7 +33,8 @@ describe('OnboardingCreateWalletComponent', () => {
       providers: [
         FormBuilder,
         { provide: WalletService, useClass: MockWalletService },
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: LanguageService, useClass: MockLanguageService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });
