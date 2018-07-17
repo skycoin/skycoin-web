@@ -11,13 +11,17 @@
   display: inline-block;
   padding: 10px 0px 10px 10px;
   width: 230px;
+
+  app-coin-button {
+    margin-bottom: 10px;
+    display: block;
+  }
 }
 
 .last-updated-time {
   opacity: 0.9;
   font-size: 11px;
   padding-left: 5px;
-  margin-top: 10px;
 
   .label {
     opacity: 0.7;
