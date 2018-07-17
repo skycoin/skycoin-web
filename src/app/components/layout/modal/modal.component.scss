@@ -22,7 +22,11 @@
 
 .-body {
   background-color: #fbfbfb;
-  padding: 30px;
+  padding: 0px 24px;
+}
+
+mat-dialog-content {
+  padding: 24px;
 }
 
 mat-progress-bar {

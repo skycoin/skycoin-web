@@ -409,3 +409,7 @@ General Helpers
 .no-overflow {
   overflow: hidden;
 }
+
+.mat-dialog-content {
+  max-height: 80vh !important;
+}
