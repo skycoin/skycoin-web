@@ -112,7 +112,8 @@
     "search": "Search",
     "with-wallet": "Coins you have created wallets for:",
     "without-wallet": "Coins you have not created wallets for:",
-    "no-results": "No coins match the search term"
+    "no-results": "No coins match the search term",
+    "injecting-tx": "It is not possible to change the coin while a transaction is being sent."
   },
 
   "wallet": {

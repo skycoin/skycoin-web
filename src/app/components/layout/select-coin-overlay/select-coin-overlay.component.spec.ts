@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatIconModule, MatDialogRef } from '@angular/material';
+import { MatIconModule, MatDialogRef, MatSnackBar } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { SelectCoinOverlayComponent } from './select-coin-overlay.component';
-import { MockTranslatePipe, MockMatDialogRef, MockCoinService, MockWalletService } from '../../../utils/test-mocks';
+import { MockTranslatePipe, MockMatDialogRef, MockCoinService, MockWalletService, MockTranslateService, MockMatSnackBar } from '../../../utils/test-mocks';
 import { CoinService } from '../../../services/coin.service';
 import { WalletService } from '../../../services/wallet.service';
 
@@ -21,7 +22,9 @@ describe('SelectCoinOverlayComponent', () => {
       providers: [
         { provide: MatDialogRef, useClass: MockMatDialogRef },
         { provide: CoinService, useClass: MockCoinService },
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: TranslateService, useClass: MockTranslateService },
+        { provide: MatSnackBar, useClass: MockMatSnackBar }
       ]
     })
     .compileComponents();

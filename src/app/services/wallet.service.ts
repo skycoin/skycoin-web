@@ -26,6 +26,7 @@ export class WalletService {
   timeSinceLastBalancesUpdate: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
   hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
+  isInjectingTx = false;
 
   private updateBalancesTimer: any;
   private lastBalancesUpdateTime: Date;
@@ -175,7 +176,15 @@ export class WalletService {
   }
 
   injectTransaction(encodedTransaction: string): Observable<string> {
-    return this.apiService.postTransaction(encodedTransaction);
+    this.isInjectingTx = true;
+    return this.apiService.postTransaction(encodedTransaction)
+      .map(response => {
+        this.isInjectingTx = false;
+        return response;
+      }).catch(err => {
+        this.isInjectingTx = false;
+        return Observable.throw(err);
+      });
   }
 
   updateWallet(wallet: Wallet, shouldSave: boolean = true) {

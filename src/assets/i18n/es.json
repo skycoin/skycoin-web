@@ -112,7 +112,8 @@
     "search": "Buscar",
     "with-wallet": "Monedas para las que ha creado billeteras:",
     "without-wallet": "Monedas para las que no ha creado billeteras:",
-    "no-results": "No hay monedas que coincidan con el término de búsqueda"
+    "no-results": "No hay monedas que coincidan con el término de búsqueda",
+    "injecting-tx": "No es posible cambiar la moneda mientras se está enviado una transacción."
   },
 
   "wallet": {

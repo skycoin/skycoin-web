@@ -1,8 +1,10 @@
 import { Component, Input, HostListener, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
+import { TranslateService } from '@ngx-translate/core';
 
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
@@ -25,7 +27,9 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<SelectCoinOverlayComponent>,
     private coinService: CoinService,
-    private walletService: WalletService
+    private walletService: WalletService,
+    private translate: TranslateService,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -89,6 +93,7 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.searchSuscription.unsubscribe();
+    this.snackbar.dismiss();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -99,6 +104,13 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
   }
 
   close(result: BaseCoin | null) {
+    this.snackbar.dismiss();
+    if (result && this.walletService.isInjectingTx) {
+      const config = new MatSnackBarConfig();
+      config.duration = 10000;
+      this.snackbar.open(this.translate.instant('change-coin.injecting-tx'), null, config);
+      return;
+    }
     this.dialogRef.close(result);
   }
 }
