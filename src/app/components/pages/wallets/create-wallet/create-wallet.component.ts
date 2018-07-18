@@ -20,6 +20,7 @@ export class CreateWalletComponent implements OnInit {
   form: FormGroup;
   seed: string;
   disableDismiss = false;
+  haveManyCoins: boolean;
 
   private currentCoin: BaseCoin;
 
@@ -33,6 +34,7 @@ export class CreateWalletComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.haveManyCoins = this.coinService.coins.length > 1;
     this.currentCoin = this.coinService.currentCoin.getValue();
     this.initForm(this.currentCoin);
   }
