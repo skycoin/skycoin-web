@@ -32,8 +32,9 @@
       </div>
 
       <div class="col-md-3 -tx-price">
-        <div class="-icon" [ngClass]="{ '-incoming': !isPreview && transaction.balance > 0 }">
-          <img src="/assets/img/send-blue.png">
+        <div class="-icon">
+          <img *ngIf="isPreview" src="/assets/img/send-blue.png">
+          <img *ngIf="!isPreview" [src]="'/assets/img/tx-' + (transaction.balance > 0 ? 'received' : 'sent') + '.png'">
         </div>
         <h4>{{ transaction.balance | number:'1.0-6' }} {{ currentCoin.coinSymbol }}</h4>
         <p *ngIf="price" [matTooltip]="!isPreview ? ('history.price-tooltip' | translate) : ''">
