@@ -23,6 +23,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   isBalanceUpdated: boolean;
   currentCoin: BaseCoin;
   language: LanguageData;
+  haveManyCoins: boolean;
 
   private subscription: Subscription;
 
@@ -55,6 +56,8 @@ export class TopBarComponent implements OnInit, OnDestroy {
           }
         })
     );
+
+    this.haveManyCoins = this.coinService.coins.length > 1;
 
     this.subscription.add(
       this.coinService.currentCoin

@@ -1,5 +1,5 @@
 <div class="buttons-left">
-  <app-coin-button (click)="changeCoin()"></app-coin-button>
+  <app-coin-button *ngIf="haveManyCoins" (click)="changeCoin()"></app-coin-button>
   <div class="last-updated-time" *ngIf="isBalanceObtained">
     <div class="label">{{ 'header.top-bar.updated1' | translate }}</div>
     <div>

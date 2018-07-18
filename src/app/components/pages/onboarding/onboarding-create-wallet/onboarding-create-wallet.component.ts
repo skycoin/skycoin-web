@@ -27,6 +27,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
   doubleButtonActive = DoubleButtonActive.LeftButton;
   haveWallets = false;
   isWalletCreating = false;
+  haveManyCoins: boolean;
 
   private currentCoin: BaseCoin;
 
@@ -42,6 +43,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   ngOnInit() {
     this.existWallets();
+    this.haveManyCoins = this.coinService.coins.length > 1;
     this.currentCoin = this.coinService.currentCoin.getValue();
     this.initForm();
   }
