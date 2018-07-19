@@ -42,6 +42,7 @@
   display: inline-block;
   text-align: right;
   width: 230px;
+  padding-right: 10px;
 
   button {
     display: inline-block;
@@ -56,6 +57,13 @@
 button {
   height: 50px;
   width: 50px;
+}
+
+.separator {
+  width: 100%;
+  height: 2px;
+  background-color: #eff0f0;
+  margin: 8px 0px;;
 }
 
 .flag {
