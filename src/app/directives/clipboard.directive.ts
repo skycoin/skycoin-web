@@ -7,21 +7,18 @@ import { ClipboardService } from '../services/clipboard.service';
   selector: '[clipboard]',
 })
 export class ClipboardDirective {
-  @Output() public copyEvent: EventEmitter<string>;
-  @Output() public errorEvent: EventEmitter<Error>;
+  @Output() copyEvent: EventEmitter<string>;
+  @Output() errorEvent: EventEmitter<Error>;
   /* tslint:disable:no-input-rename */
-  @Input('clipboard') public value: string;
+  @Input('clipboard') value: string;
 
-  private clipboardService: ClipboardService;
-
-  constructor(clipboardService: ClipboardService) {
-    this.clipboardService = clipboardService;
+  constructor(private clipboardService: ClipboardService) {
     this.copyEvent = new EventEmitter();
     this.errorEvent = new EventEmitter();
     this.value = '';
   }
 
-  @HostListener('click') public copyToClipboard(): void {
+  @HostListener('click') copyToClipboard(): void {
     this.clipboardService
       .copy(this.value)
       .then(

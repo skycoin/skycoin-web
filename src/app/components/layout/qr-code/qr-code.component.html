@@ -6,7 +6,7 @@
         #btnImg
         class="-button-qr"
         [matTooltip]="'qr-code.copy-address' | translate"
-        [clipboard]=address
+        [clipboard]="address"
         (copyEvent)="onCopySuccess()">
   </div>
 </app-modal>
