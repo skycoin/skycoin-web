@@ -1,13 +1,13 @@
 # Multi-coin compatibility
 
-This wallet is not limited to one icon, but is compatible with most coins based on the Skycoin technology. For a
-coin to be compatible, it must have a public node updated to at least version 0.24 and, ideally, it's REST api
+This wallet is not limited to one coin, but is compatible with most coins based on the Skycoin technology. For a
+coin to be compatible, it must have a public node updated to at least version 0.24 and, ideally, its REST api
 should have not been modified (if the api is modified, the wallet could fail depending on whether any of the
 required endpoints were modified).
 
 ## Adding a coin
 
-To add a coin, you must Add the required data about the coin. Most data must be added in a new class, in a new
+To add a coin, you must provide the required data about the coin. Most data must be added in a new class, in a new
 file in the [src/app/coins](src/app/coins) folder. The class must inherit from
 [BaseCoin](src/app/coins/basecoin.ts), the base class that defines the data a coin must have. The data defined
 in [BaseCoin](src/app/coins/basecoin.ts) that the new class must have are:
@@ -57,8 +57,8 @@ property. If an image is added to that property, the image will be shown in fron
 text) and will be rescaled so that it always occupies the header area, which means that it will always be fully
 visible and that it will not maintain its aspect ratio.
 
-An example of this combination is that when you select Skycoin as the active coin, a image with various gray coins is
-shown as the background image, and above the background there is a blue gradient. The image of the coins is
+An example of this combination is that when you select Skycoin as the active coin, an image with various gray coins is
+shown as the background image with blue gradient above it. The image of the coins is
 [skycoin-header.jpg](src/assets/img/coins/skycoin-header.jpg) and the image with the gradient is 
 [skycoin-gradient.png](src/assets/img/coins/skycoin-gradient.png).
 
