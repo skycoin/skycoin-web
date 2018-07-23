@@ -31,7 +31,12 @@
       {{ language.name }}
     </div>
   </mat-menu>
-  <button mat-icon-button [matMenuTriggerFor]="menuMenu">
-    <mat-icon>menu</mat-icon>
-  </button>
+  <div class="button-container">
+    <div class="trigger-container">
+      <div #menuTrigger [matMenuTriggerFor]="menuMenu"></div>
+    </div>
+    <button mat-icon-button (click)="openMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
 </div>

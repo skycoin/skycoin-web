@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Overlay } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { TotalBalance } from '../../../../app.datatypes';
@@ -16,6 +17,7 @@ import { LanguageService, LanguageData } from '../../../../services/language.ser
   styleUrls: ['./top-bar.component.scss'],
 })
 export class TopBarComponent implements OnInit, OnDestroy {
+  @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
   @Input() headline: string;
 
   timeSinceLastUpdateBalances = 0;
@@ -88,5 +90,9 @@ export class TopBarComponent implements OnInit, OnDestroy {
           this.languageService.changeLanguage(response);
         }
       });
+  }
+
+  openMenu() {
+    this.menuTrigger.openMenu();
   }
 }
