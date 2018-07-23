@@ -129,7 +129,8 @@ export class WalletDetailComponent {
 
     return this.dialog.open(ConfirmationComponent, <MatDialogConfig>{
       width: '450px',
-      data: confirmationData
+      data: confirmationData,
+      autoFocus: false
     });
   }
 }
