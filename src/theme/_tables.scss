@@ -26,10 +26,10 @@
 
     .-row {
       font-size: $font-size-standard;
-      line-height: $row-height;
-      height: $row-height;
+      padding: 15px 0;
       background: $white;
       display: flex;
+      align-items: center;
 
       &:not(:last-child) {
         border-bottom: 1px solid #eff0f0;

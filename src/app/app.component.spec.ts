@@ -2,7 +2,7 @@ import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { MockLanguageService } from './utils/test-mocks';
+import { MockLanguageService, MockTranslatePipe } from './utils/test-mocks';
 import { LanguageService } from './services/language.service';
 
 describe('AppComponent', () => {
@@ -11,7 +11,7 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent],
+      declarations: [ AppComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: LanguageService, useClass: MockLanguageService }
