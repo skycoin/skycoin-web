@@ -105,6 +105,8 @@ export class MockWalletService {
   sum() {
   }
 
+  cancelPossibleBalanceRefresh() {}
+
   transactions(): Observable<any[]> {
     return Observable.of([]);
   }
