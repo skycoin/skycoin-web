@@ -16,12 +16,12 @@
               {{ address.address }}
             </div>
           </div>
-          <div class="-row -small" *ngFor="let output of address.outputs">
+          <div class="-row" *ngFor="let output of address.outputs">
             <div class="flex-fill -hash">{{ output.hash }}</div>
             <div class="-width-150 -text-right">{{ output.coins | number:'1.0-6' }}</div>
             <div class="-width-150 -text-right -grey">{{ output.calculated_hours | number:'1.0-6' }}</div>
           </div>
-          <div class="-row -small" *ngIf="address.outputs.length === 0">
+          <div class="-row" *ngIf="address.outputs.length === 0">
             <div class="flex-fill -hash">{{ 'errors.no-outputs' | translate }}</div>
           </div>
         </ng-container>

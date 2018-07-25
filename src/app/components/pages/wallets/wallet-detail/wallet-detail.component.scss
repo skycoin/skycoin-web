@@ -9,18 +9,24 @@
 .-record {
   display: flex;
   font-size: $font-size-standard;
-  line-height: $row-height;
-  min-height: $row-height;
-  padding: 0 20px;
+  padding: 21px 20px 16px 20px;
+  align-items: center;
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid #eff0f0;
+  }
 
   .id-column {
     width: 50px;
     color: rgba(30, 34, 39, 0.6);
+    flex-shrink: 0;
   }
 
   .address-column {
     color: rgba(30, 34, 39, 0.6);
     flex: 1 1 auto;
+    display: flex;
+    align-items: center;
 
     img {
       display: inline-block;
@@ -28,13 +34,14 @@
       vertical-align: middle;
       width: 17px;
       margin-right: 10px;
+      flex-shrink: 0;
     }
 
     p {
       display: inline-block;
-      line-height: $row-height;
       margin: 0;
       vertical-align: middle;
+      word-break: break-all;
 
       &:hover .copy-label {
         opacity: .999;
@@ -44,22 +51,24 @@
 
   .hours-column {
     color: rgba(30, 34, 39, 0.5);
-    width: 150px;
+    width: 130px;
     text-align: right;
+    flex-shrink: 0;
   }
 
   .coins-column {
     color: black;
-    width: 150px;
+    width: 130px;
     text-align: right;
+    flex-shrink: 0;
   }
 
   .options-column {
     width: 80px;
     text-align: right;
     display: flex;
-    align-items: center;
     justify-content: flex-end;
+    flex-shrink: 0;
 
     mat-icon {
       cursor: pointer;
@@ -73,7 +82,6 @@
 
   > img {
     display: inline-block;
-    margin: ($row-height - $row-detail-size) / 2;
     margin-left: 0;
     height: $row-detail-size;
     width: $row-detail-size;
