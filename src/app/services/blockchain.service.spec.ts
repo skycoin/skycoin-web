@@ -3,7 +3,8 @@ import { TestBed, inject } from '@angular/core/testing';
 import { BlockchainService } from './blockchain.service';
 import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';
-import { MockApiService, MockWalletService } from '../utils/test-mocks';
+import { MockApiService, MockWalletService, MockCoinService } from '../utils/test-mocks';
+import { CoinService } from './coin.service';
 
 describe('BlockchainService', () => {
   let service: BlockchainService;
@@ -15,7 +16,8 @@ describe('BlockchainService', () => {
       providers: [
         BlockchainService,
         { provide: ApiService, useClass: MockApiService },
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     });
   });

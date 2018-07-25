@@ -1,6 +1,5 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/startWith';
@@ -9,26 +8,40 @@ import 'rxjs/add/operator/takeWhile';
 import { ApiService } from './api.service';
 import { WalletService } from './wallet.service';
 import { ConnectionError } from '../enums/connection-error.enum';
+import { CoinService } from './coin.service';
+
+export enum ProgressStates {
+  Progress,
+  Error,
+  Restating,
+}
+
+export class ProgressEvent {
+  state: ProgressStates;
+  error?: ConnectionError;
+  currentBlock?: number;
+  highestBlock?: number;
+}
 
 @Injectable()
 export class BlockchainService {
-  private progressSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  private isLoaded = false;
-  private intervalSubscription: Subscription;
+  private progressSubject: BehaviorSubject<ProgressEvent> = new BehaviorSubject<ProgressEvent>(null);
   private connectionsSubscription: Subscription;
   private readonly defaultPeriod = 90000;
   private readonly fastPeriod = 5000;
-  private intervalPeriod = this.defaultPeriod;
 
-  get progress() {
+  get progress(): Observable<ProgressEvent> {
     return this.progressSubject.asObservable();
   }
 
   constructor (
     private apiService: ApiService,
     private walletService: WalletService,
-    private ngZone: NgZone
+    coinService: CoinService
   ) {
+    coinService.currentCoin.subscribe(() => {
+      this.startCheckingNode();
+    });
   }
 
   lastBlock(): Observable<any> {
@@ -40,38 +53,31 @@ export class BlockchainService {
     return this.apiService.get('coinSupply');
   }
 
-  loadBlockchainBlocks() {
-    if (!!this.intervalSubscription) {
-      this.intervalSubscription.unsubscribe();
-    }
-
-    if (!!this.connectionsSubscription) {
+  private startCheckingNode() {
+    if (!!this.connectionsSubscription && !this.connectionsSubscription.closed) {
       this.connectionsSubscription.unsubscribe();
     }
 
     this.walletService.cancelPossibleBalanceRefresh();
 
-    this.isLoaded = false;
+    this.progressSubject.next({ state: ProgressStates.Restating });
+
     this.connectionsSubscription = this.checkConnectionState()
       .filter(status => !!status)
       .subscribe(
-        () => this.startLoadingBlockchain(),
+        () => this.checkBlockchainProgress(0),
         () => this.onLoadBlockchainError()
       );
   }
 
-  private startLoadingBlockchain() {
-    this.ngZone.runOutsideAngular(() => {
-      this.intervalSubscription = IntervalObservable
-        .create(this.intervalPeriod)
-        .startWith(1)
-        .flatMap(() => this.getBlockchainProgress())
-        .takeWhile((response: any) => !response.current || !this.isLoaded)
-        .subscribe(
-          (response: any) => this.onBlockchainProgress(response),
-          () => this.onLoadBlockchainError()
-        );
-    });
+  private checkBlockchainProgress(delay: number) {
+    this.connectionsSubscription = Observable.of(1)
+      .delay(delay)
+      .flatMap(() => this.getBlockchainProgress())
+      .subscribe(
+        (response: any) => this.onBlockchainProgress(response),
+        () => this.onLoadBlockchainError()
+      );
   }
 
   private getBlockchainProgress() {
@@ -79,34 +85,23 @@ export class BlockchainService {
   }
 
   private onBlockchainProgress(response: any) {
-    this.ngZone.run(() => {
-      this.progressSubject.next(response);
-
-      if ((response.highest - response.current) <= 5 && this.intervalPeriod !== this.fastPeriod) {
-        setTimeout(() => {
-          this.intervalSubscription.unsubscribe();
-          this.intervalPeriod = this.fastPeriod;
-
-          this.startLoadingBlockchain();
-        }, this.fastPeriod);
-      }
-
-      if (response.current === response.highest) {
-        this.completeLoading();
-      }
+    this.progressSubject.next({
+      state: ProgressStates.Progress,
+      currentBlock: response.current,
+      highestBlock: response.highest
     });
-  }
 
-  private completeLoading() {
-    this.isLoaded = true;
-    this.intervalPeriod = this.defaultPeriod;
-    this.walletService.loadBalances();
+    if (response.current !== response.highest) {
+      this.checkBlockchainProgress(
+        response.highest - response.current <= 5 ? this.fastPeriod : this.defaultPeriod
+      );
+    } else {
+      this.walletService.loadBalances();
+    }
   }
 
   private onLoadBlockchainError(error: ConnectionError = ConnectionError.UNAVAILABLE_BACKEND) {
-    this.ngZone.run(() => {
-      this.progressSubject.next({ isError: true, error: error });
-    });
+    this.progressSubject.next({ state: ProgressStates.Error, error: error });
   }
 
   private checkConnectionState(): Observable<any> {
