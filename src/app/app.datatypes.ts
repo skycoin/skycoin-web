@@ -18,6 +18,7 @@ export interface Address {
   balance?: number;
   hours?: number;
   outputs?: GetOutputsRequestOutput[];
+  isCopying?: boolean;
 }
 
 export class Transaction {
@@ -110,8 +111,7 @@ export interface AddressBalance {
 export interface ConfirmationData {
   text: string;
   headerText: string;
-  displayCheckbox: boolean;
-  checkboxText: string;
+  checkboxText?: string;
   confirmButtonText: string;
   cancelButtonText: string;
 }

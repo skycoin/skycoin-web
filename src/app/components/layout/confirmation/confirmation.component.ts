@@ -8,7 +8,7 @@ import { ConfirmationData } from '../../../app.datatypes';
   styleUrls: ['./confirmation.component.scss']
 })
 export class ConfirmationComponent {
-  acceptDeletion = false;
+  accepted = false;
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmationComponent>,
@@ -20,6 +20,6 @@ export class ConfirmationComponent {
   }
 
   setAccept(event) {
-    this.acceptDeletion = event.checked ? true : false;
+    this.accepted = event.checked ? true : false;
   }
 }

@@ -3,12 +3,11 @@
     {{ data.text }}
   </div>
 
-  <div class="-check-container">
-    <mat-checkbox *ngIf="data.displayCheckbox"
-                  type="checkbox"
+  <div class="-check-container" *ngIf="data.checkboxText">
+    <mat-checkbox type="checkbox"
                   class="-disclaimer-check-text -check"
                   id="terms"
-                  [checked]="acceptDeletion"
+                  [checked]="accepted"
                   (change)="setAccept($event)">{{ data.checkboxText }}
     </mat-checkbox>
   </div>
@@ -17,7 +16,7 @@
     <app-button (action)="closeModal(false)">
       {{ data.cancelButtonText }}
     </app-button>
-    <app-button (action)="closeModal(true)" class="primary" [disabled]="data.displayCheckbox && !acceptDeletion">
+    <app-button (action)="closeModal(true)" class="primary" [disabled]="data.checkboxText && !accepted">
       {{ data.confirmButtonText }}
     </app-button>
   </div>

@@ -5,7 +5,7 @@
       {{ 'wallet.new-address' | translate }}
     </span>
   </div>
-  <div class="-button" (click)="toggleEmpty()">
+  <div class="-button" (click)="onToggleEmpty()">
     <ng-container *ngIf="!wallet.hideEmpty">
       <span class="-img -btn-minus -hide-empty -enabled-span">{{ 'wallet.hide-empty' | translate }}</span>
     </ng-container>
@@ -14,10 +14,10 @@
     </ng-container>
   </div>
   <div class="flex-fill"></div>
-  <div class="-button" (click)="editWallet()">
+  <div class="-button" (click)="onEditWallet()">
     <span class="-img -btn-edit -enabled-span">{{ 'wallet.edit' | translate }}</span>
   </div>
-  <div class="-button btn-delete-wallet" (click)="deleteWallet()">
+  <div class="-button btn-delete-wallet" (click)="onDeleteWallet()">
     <span class="-img -btn-delete -enabled-span">{{ 'wallet.delete' | translate }}</span>
   </div>
 </div>
@@ -27,9 +27,9 @@
     <div class="-record" *ngIf="!wallet.hideEmpty || address.balance">
       <div class="id-column">{{ i + 1 }}</div>
       <div class="address-column">
-        <img class="qr-code-button" src="../../../../../assets/img/qr-code-black.png" (click)="showQr(address)" >
+        <img class="qr-code-button" src="../../../../../assets/img/qr-code-black.png" (click)="onShowQr(address)" >
         <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }"
-           (click)="copyAddress($event, address)" (mouseleave)="address.isCopying = false">
+            [clipboard]="address.address" (copyEvent)="onCopySuccess(address)" (mouseleave)="address.isCopying = false">
           {{ address.address }} <span [attr.data-label]="'wallet.address.copied' | translate" class="copy-label">{{ 'wallet.address.copy' | translate }}</span>
         </p>
       </div>
@@ -40,7 +40,8 @@
       </div>
     </div>
     <mat-menu #optionsMenu="matMenu" [overlapTrigger]="false" class="compact">
-      <button mat-menu-item (click)="copyAddress($event, address, 1000)">
+      <button mat-menu-item [clipboard]="address.address"
+        (click)="$event.stopPropagation()" (copyEvent)="onCopySuccess(address, 1000)">
         {{ address.isCopying ? ('wallet.address.copied' | translate) : 'wallet.address.copy-address' | translate}}
       </button>
       <button mat-menu-item routerLink="/settings/outputs" [queryParams]="{ addr: address.address }">
