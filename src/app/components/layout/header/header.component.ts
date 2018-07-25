@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
 import { WalletService } from '../../../services/wallet.service';
-import { BlockchainService } from '../../../services/blockchain.service';
+import { BlockchainService, ProgressEvent, ProgressStates } from '../../../services/blockchain.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
 import { TotalBalance } from '../../../app.datatypes';
 import { CoinService } from '../../../services/coin.service';
@@ -24,18 +24,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   connectionError: ConnectionError = null;
   connectionErrorsList = ConnectionError;
   percentage: number;
-  querying = true;
+  isBlockchainLoading = false;
   current: number;
   highest: number;
   currentCoin: BaseCoin;
 
-  private isBlockchainLoading = true;
   private isBalanceLoaded = false;
   private price: number;
   private subscription: Subscription;
 
   get loading() {
-    return this.isBlockchainLoading || !this.balance || !this.isBalanceLoaded;
+    return this.isBlockchainLoading || !this.isBalanceLoaded;
   }
 
   constructor(
@@ -48,11 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.subscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => {
-        this.resetBalance();
-        this.reloadBlockchain();
-        this.currentCoin = coin;
-      });
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
 
     this.subscription.add(
       this.blockchainService.progress
@@ -95,38 +90,40 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  private resetBalance() {
+  private resetState() {
     this.coins = 0;
     this.price = null;
     this.balance = null;
     this.isBalanceLoaded = false;
-  }
-
-  private reloadBlockchain() {
-    this.isBlockchainLoading = true;
+    this.isBlockchainLoading = false;
     this.percentage = null;
     this.current = null;
     this.highest = null;
-
-    this.blockchainService.loadBlockchainBlocks();
   }
 
-  private updateBlockchainProgress(response) {
-    if (response.isError) {
-      this.setConnectionError(response.error);
-      return;
+  private updateBlockchainProgress(response: ProgressEvent) {
+    switch (response.state) {
+      case ProgressStates.Restating: {
+        this.resetState();
+        break;
+      }
+      case ProgressStates.Error: {
+        this.setConnectionError(response.error);
+        break;
+      }
+      case ProgressStates.Progress: {
+        this.connectionError = null;
+        this.isBlockchainLoading = response.highestBlock !== response.currentBlock;
+
+        if (this.isBlockchainLoading) {
+          this.highest = response.highestBlock;
+          this.current = response.currentBlock;
+        }
+
+        this.percentage = response.currentBlock / response.highestBlock;
+        break;
+      }
     }
-
-    this.connectionError = null;
-    this.isBlockchainLoading = response.highest !== response.current;
-    this.querying = !this.isBlockchainLoading;
-
-    if (this.isBlockchainLoading) {
-      this.highest = response.highest;
-      this.current = response.current;
-    }
-
-    this.percentage = response.current && response.highest ? (response.current / response.highest) : 0;
   }
 
   private calculateBalance() {
