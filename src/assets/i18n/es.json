@@ -149,7 +149,10 @@
       "generate-12-seed": "Generar una semilla de 12 palabras",
       "generate-24-seed": "Generar una semilla de 24 palabras",
       "encrypt-warning": "Le sugerimos que encripte con una contraseña cada una de sus billeteras. Si olvida su contraseña, puede reiniciarla con la semilla. Asegúrese de guardar su semilla en un lugar seguro antes de encriptar la billetera.",
-      "select-coin": "Seleccionar moneda"
+      "select-coin": "Seleccionar moneda",
+      "unconventional-seed-title": "Posible error",
+      "unconventional-seed-text": "Usted introdujo una semilla no convencional. Si lo hizo por alguna razón en especial, puede continuar (sólo recomendable para usuarios avanzados). Sin embargo, si su intención es utilizar una semilla normal del sistema, usted debe borrar los textos y/o caracteres especiales adicionales.",
+      "unconventional-seed-check": "Continuar con la semilla no convencional."
     },
 
     "unlock": {

@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
-import * as Bip39 from 'bip39';
 
 import { WalletService } from '../../../../services/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
@@ -13,6 +11,7 @@ import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { LanguageService } from '../../../../services/language.service';
 import { openChangeLanguageModal } from '../../../../utils';
+import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -20,53 +19,33 @@ import { openChangeLanguageModal } from '../../../../utils';
   styleUrls: ['./onboarding-create-wallet.component.scss'],
 })
 export class OnboardingCreateWalletComponent implements OnInit {
+  @ViewChild('formControl') formControl: CreateWalletFormComponent;
   @ViewChild('create') createButton;
 
   showNewForm = true;
-  form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
-  haveWallets = false;
-  isWalletCreating = false;
+  userHaveWallets = false;
+  creatingWallet = false;
   haveManyCoins: boolean;
-
-  private currentCoin: BaseCoin;
 
   constructor(
     private dialog: MatDialog,
     private walletService: WalletService,
     private router: Router,
-    private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private coinService: CoinService,
     private languageService: LanguageService
   ) { }
 
   ngOnInit() {
-    this.existWallets();
+    this.checkUsertWallets();
     this.haveManyCoins = this.coinService.coins.length > 1;
-    this.currentCoin = this.coinService.currentCoin.getValue();
-    this.initForm();
+    this.formControl.initForm(this.coinService.currentCoin.getValue());
   }
 
-  changeForm(newState) {
+  changeForm(newState: DoubleButtonActive) {
     newState === DoubleButtonActive.RightButton ? this.showNewForm = false : this.showNewForm = true;
-    this.initForm();
-  }
-
-  showLanguageModal() {
-    setTimeout(() => {
-      openChangeLanguageModal(this.dialog, true)
-        .subscribe(response => {
-          if (response) {
-            this.languageService.changeLanguage(response);
-          }
-          this.showDisclaimer();
-        });
-    }, 0);
-  }
-
-  showDisclaimer() {
-    this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
+    this.formControl.initForm(this.coinService.currentCoin.getValue(), this.showNewForm);
   }
 
   showSafe() {
@@ -85,62 +64,51 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.router.navigate(['/wallets']);
   }
 
-  private existWallets() {
+  private showLanguageModal() {
+    setTimeout(() => {
+      openChangeLanguageModal(this.dialog, true)
+        .subscribe(response => {
+          if (response) {
+            this.languageService.changeLanguage(response);
+          }
+          this.showDisclaimer();
+        });
+    }, 0);
+  }
+
+  private showDisclaimer() {
+    this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
+  }
+
+  private checkUsertWallets() {
     this.walletService.haveWallets.first().subscribe(result => {
       if (!result) {
-        this.haveWallets = false;
+        this.userHaveWallets = false;
         this.showLanguageModal();
       } else {
-        this.haveWallets = true;
+        this.userHaveWallets = true;
       }
     });
   }
 
-  private initForm() {
-    this.form = this.formBuilder.group({
-        label: new FormControl('', [ Validators.required ]),
-        coin: new FormControl(this.currentCoin, [ Validators.required ]),
-        seed: new FormControl('', [ Validators.required ]),
-        confirm_seed: new FormControl()
-      },
-      {
-        validator: this.showNewForm ? this.seedMatchValidator.bind(this) : null
-      }
-    );
-
-    if (this.showNewForm) {
-      this.generateSeed(128);
-    }
-  }
-
-  private generateSeed(entropy: number) {
-    this.form.controls.seed.setValue(Bip39.generateMnemonic(entropy));
-  }
-
   private createWallet() {
     this.createButton.setLoading();
-    this.isWalletCreating = true;
-    const coinToCreate: BaseCoin = this.form.value.coin;
+    this.creatingWallet = true;
 
-    this.walletService.create(this.form.value.label, this.form.value.seed, coinToCreate.id)
+    const data = this.formControl.getData();
+
+    this.walletService.create(data.label, data.seed, data.coin.id)
       .subscribe(
-        () => this.onCreateSuccess(coinToCreate),
+        () => this.onCreateSuccess(data.coin),
         (error) => this.onCreateError(error.message)
       );
-  }
-
-  private seedMatchValidator(g: FormGroup) {
-    return g.get('seed').value === g.get('confirm_seed').value ? null : { NotEqual: true };
   }
 
   private onCreateSuccess(coin: BaseCoin) {
     this.createButton.setSuccess();
     this.skip();
-    this.isWalletCreating = false;
-
-    if (coin.id !== this.currentCoin.id) {
-      this.coinService.changeCoin(coin);
-    }
+    this.creatingWallet = false;
+    this.coinService.changeCoin(coin);
   }
 
   private onCreateError(errorMesasge: string) {
@@ -149,10 +117,10 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.snackBar.open(errorMesasge, null, config);
 
     this.createButton.setError(errorMesasge);
-    this.isWalletCreating = false;
+    this.creatingWallet = false;
   }
 
-  private createDialogConfig(disableClose = false) {
+  private createDialogConfig(disableClose = false): MatDialogConfig {
     const config = new MatDialogConfig();
     config.width = '450px';
     config.disableClose = disableClose;

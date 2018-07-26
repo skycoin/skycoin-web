@@ -77,6 +77,7 @@ import { LanguageService } from './services/language.service';
 import { CoinButtonComponent } from './components/layout/header/coin-button/coin-button.component';
 import { SelectCoinOverlayComponent } from './components/layout/select-coin-overlay/select-coin-overlay.component';
 import { SelectLanguageComponent } from './components/layout/select-language/select-language.component';
+import { CreateWalletFormComponent } from './components/pages/wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ import { SelectLanguageComponent } from './components/layout/select-language/sel
     SelectCoinComponent,
     CoinButtonComponent,
     SelectCoinOverlayComponent,
-    SelectLanguageComponent
+    SelectLanguageComponent,
+    CreateWalletFormComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,

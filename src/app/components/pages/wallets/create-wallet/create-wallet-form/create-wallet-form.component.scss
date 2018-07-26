@@ -1,0 +1,132 @@
+@import '../../../../../../theme/_variables.scss';
+
+.red-disclaimer-box {
+  color: #ff004e;
+  font-size: 12px;
+  padding: 0 10px;
+  line-height: 1.5;
+}
+
+.white-disclaimer-box {
+  color: $white;
+  font-size: 12px;
+  padding: 0 10px;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.-valid-box{
+  display: flex;
+
+  .-valid{
+    bottom: -6px;
+    left: -7px;
+    position: relative;
+    align-self: flex-end;
+    display: none;
+  }
+}
+
+.-valid-seed-container.-expand{
+  margin-right: -14px;
+  .-valid{
+    display: block;
+  }
+}
+
+label[for=seed] {
+  display: flex;
+
+  > span:last-child {
+    flex: 1;
+  }
+
+  .generators {
+    text-align: right;
+
+    span {
+      cursor: pointer;
+      color: $gradient-blue-dark-transparent;
+    }
+
+    mat-icon {
+      width: 13px;
+      height: 10px;
+      font-size: 13px;
+      position: relative;
+      top: 2px;
+    }
+
+    .divider {
+      padding: 0 5px;
+      color: $grey-normal;
+    }
+  }
+
+  .-white-text {
+    span {
+      color: white !important;
+    }
+  }
+}
+
+.-alert-box {
+  background-color: #ffdede;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .title {
+    font-size: 20px;
+  }
+
+  mat-icon {
+    margin-right: 10px;
+    animation: blink 1s linear infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  mat-checkbox {
+    font-family: Skycoin;
+    line-height: normal;
+    font-size: 14px;
+    margin-top: 10px;
+    display: inline-block;
+  }
+  
+  .-check ::ng-deep {
+    label {
+      color: #1E2227;
+    }
+
+    .mat-checkbox-checkmark-path {
+      position: absolute;
+      width: 18px;
+      height: 8px;
+      left: 4.59px;
+      top: 9px;
+      stroke: #0072FF !important;
+    }
+  
+    .mat-checkbox-background, .mat-checkbox-frame {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      position: absolute;
+      box-sizing: border-box;
+      pointer-events: none;
+      width: 20px;
+      height: 20px;
+      background: rgba(30, 34, 39, 0.05);
+      border-radius: 6px;
+      border-color: transparent;
+    }
+  }
+}
