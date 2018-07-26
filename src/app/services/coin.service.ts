@@ -39,5 +39,13 @@ export class CoinService {
 
   private loadAvailableCoins() {
     this.coins.push(new SkycoinCoin(), new TestCoin());
+
+    const IDs = new Map<number, boolean>();
+    this.coins.forEach((value: BaseCoin) => {
+      if (IDs[value.id]) {
+        throw new Error('More than one coin with the same ID');
+      }
+      IDs[value.id] = true;
+    });
   }
 }

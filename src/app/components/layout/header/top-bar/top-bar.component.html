@@ -22,7 +22,7 @@
     <button mat-menu-item [routerLink]="['/settings/blockchain']"> {{ 'title.blockchain' | translate}} </button>
     <button mat-menu-item [routerLink]="['/settings/outputs']"> {{ 'title.outputs' | translate}} </button>
     <button mat-menu-item [routerLink]="['/settings/pending-transactions']"> {{ 'title.pending-txs' | translate}} </button>
-    <a mat-menu-item [href]="currentCoin.coinExplorer" class="color-primary">
+    <a *ngIf="currentCoin.coinExplorer" mat-menu-item [href]="currentCoin.coinExplorer" class="color-primary">
       {{ 'title.explorer' | translate:{coin: currentCoin.coinName} }}
     </a>
     <div class="separator"></div>

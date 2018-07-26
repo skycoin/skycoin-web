@@ -1,8 +1,10 @@
 <div class="-container">
   <app-disclaimer-warning></app-disclaimer-warning>
 
-  <div class="large-header" [ngStyle]="{'background-image': 'url(../../../../assets/img/coins/' + currentCoin.imageName + ')'}">
-    <div class="gradient" [style.background-image]="currentCoin.gradientName ? 'url(../../../../assets/img/coins/' + currentCoin.gradientName + ')' : 'none'">
+  <div class="large-header" [ngStyle]="{'background-image': 'url(assets/img/coins/' + currentCoin.imageName + ')'}">
+    <div class="gradient" [style.background-image]="currentCoin.gradientName ?
+      'url(assets/img/coins/' + currentCoin.gradientName + ')' :
+      (!currentCoin.imageName ? 'url(assets/img/coins/generic.jpg)' : 'none')">
       <app-top-bar [headline]="headline"></app-top-bar>
       <div class="balance-container">
         <div class="balance">
@@ -10,7 +12,7 @@
           <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
           <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>
           <p *ngIf="!loading && balance" class="dollars">{{ balance }}</p>
-          <p *ngIf="!loading && !balance" class="dollars">...</p>
+          <p *ngIf="!loading && !balance && currentCoin.cmcTickerId" class="dollars">{{ 'header.loading' | translate }}</p>
         </div>
       </div>
       <div class="hour-balance">

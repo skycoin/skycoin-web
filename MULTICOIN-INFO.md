@@ -9,12 +9,12 @@ required endpoints were modified).
 
 To add a coin, you must provide the required data about the coin. Most data must be added in a new class, in a new
 file in the [src/app/coins](src/app/coins) folder. The class must inherit from
-[BaseCoin](src/app/coins/basecoin.ts), the base class that defines the data a coin must have. The data defined
-in [BaseCoin](src/app/coins/basecoin.ts) that the new class must have are:
+[BaseCoin](src/app/coins/basecoin.ts), the base class that defines the data a coin must have (it is mandatory to
+add data to the abstract properties, the rest are optional). The data defined
+in [BaseCoin](src/app/coins/basecoin.ts) are:
 
-- `id`: a unique identifier for the coin.
+- `id`: a unique identifier for the coin (different from zero).
 - `nodeUrl`: the URL of the public node that will be used as backend for the operations involving the coin.
-- `nodeVersion`: the version of the node in `nodeUrl`.
 - `coinName`: the full name of the coin.
 - `coinSymbol`: the short name of the coin.
 - `hoursName`: the name of the hours produced by the coin.
@@ -61,6 +61,8 @@ An example of this combination is that when you select Skycoin as the active coi
 shown as the background image with blue gradient above it. The image of the coins is
 [skycoin-header.jpg](src/assets/img/coins/skycoin-header.jpg) and the image with the gradient is 
 [skycoin-gradient.png](src/assets/img/coins/skycoin-gradient.png).
+
+If no value is added to `imageName` and `gradientName`, the header shows a generic background.
 
 ## Hiding the multi-coin options
 
