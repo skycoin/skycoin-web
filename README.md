@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/skycoin/skycoin-web.svg?branch=master)](https://travis-ci.org/skycoin/skycoin-web)
 [![Known Vulnerabilities](https://snyk.io/test/github/skycoin/skycoin-web/badge.svg)](https://snyk.io/test/github/skycoin/skycoin-web)
 
-The Skycoin web client provides a lite multi-coin wallet which can be ran from the browser, using a remote full node exposing selected back-end functions.
+The Skycoin web client provides a lite multi-coin wallet which can be run from the browser, using a remote full node exposing selected back-end functions.
 
 ## Prerequisites
 
