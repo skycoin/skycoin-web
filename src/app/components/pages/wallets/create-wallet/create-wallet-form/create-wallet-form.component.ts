@@ -47,7 +47,7 @@ export class CreateWalletFormComponent implements OnInit, OnDestroy {
   }
 
   onCustomSeedAcceptance(event) {
-    this.customSeedAccepted = event.checked ? true : false;
+    this.customSeedAccepted = event.checked;
   }
 
   getData(): FormData {

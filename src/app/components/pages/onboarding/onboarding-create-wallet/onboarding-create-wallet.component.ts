@@ -24,7 +24,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
   showNewForm = true;
   doubleButtonActive = DoubleButtonActive.LeftButton;
-  userHaveWallets = false;
+  userHasWallets = false;
   creatingWallet = false;
   haveManyCoins: boolean;
 
@@ -38,7 +38,7 @@ export class OnboardingCreateWalletComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkUsertWallets();
+    this.checkUserWallets();
     this.haveManyCoins = this.coinService.coins.length > 1;
     this.formControl.initForm(this.coinService.currentCoin.getValue());
   }
@@ -80,13 +80,13 @@ export class OnboardingCreateWalletComponent implements OnInit {
     this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
   }
 
-  private checkUsertWallets() {
+  private checkUserWallets() {
     this.walletService.haveWallets.first().subscribe(result => {
       if (!result) {
-        this.userHaveWallets = false;
+        this.userHasWallets = false;
         this.showLanguageModal();
       } else {
-        this.userHaveWallets = true;
+        this.userHasWallets = true;
       }
     });
   }

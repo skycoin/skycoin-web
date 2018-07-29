@@ -27,7 +27,7 @@
       {{ 'wallet.new.create-button' | translate }}
     </app-button>
     <div></div>
-    <app-button *ngIf="userHaveWallets && !creatingWallet"
+    <app-button *ngIf="userHasWallets && !creatingWallet"
                 [disabled]="creatingWallet"
                 class="ghost -button-min-margin"
                 (action)="skip()">
