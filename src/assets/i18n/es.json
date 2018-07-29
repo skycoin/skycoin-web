@@ -12,7 +12,8 @@
     "api-disabled": "API desabilitada",
     "no-wallet": "La billetera no existe",
     "no-outputs": "No hay salidas no gastadas",
-    "no-wallets": "Actualmente no hay billeteras"
+    "no-wallets": "Actualmente no hay billeteras",
+    "window-size": "La ventana es muy angosta para el contenido"
   },
 
   "title": {
@@ -131,6 +132,7 @@
     "delete-confirmation1": "ADVERTENCIA: la billetera",
     "delete-confirmation2": "será eliminada. ¡Si olvida su semilla, no podrá recuperar esta billetera! ¿Desea continuar?",
     "delete-confirmation-check": "Sí, quiero eliminar la billetera.",
+    "add-confirmation": "Si agrega más direcciones, el proceso de desbloquear la billetera para realizar ciertas operaciones tardará más. ¿Desea continuar?",
 
     "new": {
       "create-title": "Crear Billetera",

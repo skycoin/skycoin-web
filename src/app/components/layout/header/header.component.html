@@ -9,7 +9,8 @@
           <p *ngIf="!highest && loading" class="loading-header">{{ 'header.loading' | translate }}</p>
           <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
           <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>
-          <p *ngIf="!loading" class="dollars">{{ balance }}</p>
+          <p *ngIf="!loading && balance" class="dollars">{{ balance }}</p>
+          <p *ngIf="!loading && !balance" class="dollars">...</p>
         </div>
       </div>
       <div class="hour-balance">
@@ -23,7 +24,7 @@
     [style.visibility]="loading ? 'visible' : 'hidden'"
     class="progress-bar"
     color="primary"
-    [mode]="querying ? 'query' : 'determinate'"
+    [mode]="!isBlockchainLoading ? 'query' : 'determinate'"
     [value]="percentage * 100">
   </mat-progress-bar>
   <mat-toolbar class="notification-bar" *ngIf="connectionError != null">

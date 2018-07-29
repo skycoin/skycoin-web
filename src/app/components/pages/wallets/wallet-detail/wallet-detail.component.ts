@@ -1,15 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ConfirmationData, Wallet } from '../../../../app.datatypes';
+import { ConfirmationData, Wallet, Address } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet.service';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { ChangeNameComponent } from '../change-name/change-name.component';
 import { openUnlockWalletModal } from '../../../../utils/index';
 import { ConfirmationComponent } from '../../../layout/confirmation/confirmation.component';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -28,13 +27,13 @@ export class WalletDetailComponent {
     private translateService: TranslateService
   ) {}
 
-  showQr(address) {
+  onShowQr(address: Address) {
     const config = new MatDialogConfig();
     config.data = address;
     this.dialog.open(QrCodeComponent, config);
   }
 
-  editWallet() {
+  onEditWallet() {
     const config = new MatDialogConfig();
     config.width = '566px';
     config.data = this.wallet;
@@ -42,35 +41,26 @@ export class WalletDetailComponent {
   }
 
   onAddNewAddress() {
-    if (!this.wallet.seed || !this.wallet.addresses[this.wallet.addresses.length - 1].next_seed) {
-      openUnlockWalletModal(this.wallet, this.dialog).componentInstance.onWalletUnlocked
-        .subscribe(() => this.addNewAddress());
+    if (this.wallet.addresses.length < 5) {
+      this.verifyBeforeAddingNewAddress();
     } else {
-      this.addNewAddress();
+      const dialogRef = this.showConfirmationModal(
+        this.translateService.instant('wallet.add-confirmation'),
+        null
+      );
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.verifyBeforeAddingNewAddress();
+        }
+      });
     }
   }
 
-  copyAddress(event, address, interval = 500) {
-    event.stopPropagation();
-
+  onCopySuccess(address: Address, interval = 500) {
     if (address.isCopying) {
       return;
     }
-
-    const selBox = document.createElement('textarea');
-
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = address.address;
-
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
 
     address.isCopying = true;
 
@@ -80,32 +70,32 @@ export class WalletDetailComponent {
     }, interval);
   }
 
-  toggleEmpty() {
+  onToggleEmpty() {
     this.wallet.hideEmpty = !this.wallet.hideEmpty;
   }
 
-  deleteWallet() {
-    Observable.forkJoin(
-      this.translateService.get('wallet'),
-      this.translateService.get('confirmation')
-    ).subscribe(([walletTranslation, confirmationTranslation]) => {
-      const confirmationData = this.getConfirmationData(walletTranslation, confirmationTranslation);
-      this.showDeleteConfirmation(confirmationData);
+  onDeleteWallet() {
+    const dialogRef = this.showConfirmationModal(
+      this.translateService.instant('wallet.delete-confirmation1') + ' \"' +
+      this.wallet.label + '\" ' +
+      this.translateService.instant('wallet.delete-confirmation2'),
+      this.translateService.instant('wallet.delete-confirmation-check'),
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.walletService.delete(this.wallet);
+      }
     });
   }
 
-  private showDeleteConfirmation(confirmationData: ConfirmationData) {
-    const dialogRef = this.dialog.open(ConfirmationComponent, <MatDialogConfig>{
-      width: '450px',
-      data: confirmationData
-    });
-
-    dialogRef.afterClosed()
-      .subscribe(result => {
-        if (result) {
-          this.walletService.delete(this.wallet);
-        }
-      });
+  private verifyBeforeAddingNewAddress() {
+    if (!this.wallet.seed || !this.wallet.addresses[this.wallet.addresses.length - 1].next_seed) {
+      openUnlockWalletModal(this.wallet, this.dialog).componentInstance.onWalletUnlocked
+        .subscribe(() => this.addNewAddress());
+    } else {
+      this.addNewAddress();
+    }
   }
 
   private addNewAddress() {
@@ -128,14 +118,19 @@ export class WalletDetailComponent {
     this.snackBar.open(error.message, null, config);
   }
 
-  private getConfirmationData(walletTranslation, confirmationTranslation): ConfirmationData {
-    return {
-      text: `${walletTranslation['delete-confirmation1']} "${this.wallet.label}" ${walletTranslation['delete-confirmation2']}`,
-      headerText: confirmationTranslation['header-text'],
-      displayCheckbox: true,
-      checkboxText: walletTranslation['delete-confirmation-check'],
-      confirmButtonText: confirmationTranslation['confirm-button'],
-      cancelButtonText: confirmationTranslation['cancel-button']
+  private showConfirmationModal(text: string, checkboxText: string): MatDialogRef<ConfirmationComponent, any> {
+    const confirmationData: ConfirmationData = {
+      text: text,
+      headerText: this.translateService.instant('confirmation.header-text'),
+      checkboxText: checkboxText,
+      confirmButtonText: this.translateService.instant('confirmation.confirm-button'),
+      cancelButtonText: this.translateService.instant('confirmation.cancel-button')
     };
+
+    return this.dialog.open(ConfirmationComponent, <MatDialogConfig>{
+      width: '450px',
+      data: confirmationData,
+      autoFocus: false
+    });
   }
 }

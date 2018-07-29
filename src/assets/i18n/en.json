@@ -12,7 +12,8 @@
     "api-disabled": "API disabled",
     "no-wallet": "Wallet does not exist",
     "no-outputs": "No unspent outputs",
-    "no-wallets": "Currently there are no wallets"
+    "no-wallets": "Currently there are no wallets",
+    "window-size": "The window is too narrow for the content"
   },
 
   "title": {
@@ -131,6 +132,7 @@
     "delete-confirmation1": "WARNING: the wallet",
     "delete-confirmation2": "will be deleted. If you forget your seed, you will not be able to recover this wallet! Do you want to continue?",
     "delete-confirmation-check": "Yeah, I want to delete the wallet.",
+    "add-confirmation": "If you add more addresses, the process of unlocking the wallet to perform certain operations will take more time. Do you want to continue?",
 
     "new": {
       "create-title": "Create Wallet",

@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/skycoin/skycoin-web.svg?branch=master)](https://travis-ci.org/skycoin/skycoin-web)
 [![Known Vulnerabilities](https://snyk.io/test/github/skycoin/skycoin-web/badge.svg)](https://snyk.io/test/github/skycoin/skycoin-web)
 
-The Skycoin web client provides a lite browser wallet, which can be ran from the browser, using a full node exposing selected back-end functions.
+The Skycoin web client provides a lite multi-coin wallet which can be ran from the browser, using a remote full node exposing selected back-end functions.
 
 ## Prerequisites
 
@@ -32,6 +32,12 @@ Run `npm start` for a dev server. Navigate to `http://localhost:4200/`.
 As this is a lite client, it requires a back-end to retrieve the blockchain state and inject new transactions. For this
 purpose a full node has been set up at `http://128.199.57.221`. At the moment this requires a mapping API, but in the
 future any node can do this.
+
+## Multi-coin compatibility
+
+This wallet have options for switching between different coins and is compatible with most coins based on the Skycoin
+technology (as long as they meet some version requirements and do not have modifications in areas necessary for
+compatibility). You can find information about how to add a new coins in [MULTICOIN-INFO.md](MULTICOIN-INFO.md).
 
 ## Cryptography
 
