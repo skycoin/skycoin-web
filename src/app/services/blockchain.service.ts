@@ -65,7 +65,6 @@ export class BlockchainService {
     this.progressSubject.next({ state: ProgressStates.Restating });
 
     this.connectionsSubscription = this.checkConnectionState()
-      .filter(status => !!status)
       .subscribe(
         () => this.checkBlockchainProgress(0),
         error => error && error.reported ? null : this.onLoadBlockchainError()
@@ -113,8 +112,6 @@ export class BlockchainService {
           this.onLoadBlockchainError(ConnectionError.NO_ACTIVE_CONNECTIONS);
           throw { reported: true };
         }
-
-        return status;
       })
       .flatMap(() => this.apiService.get('version'))
       .map ((response: any) => this.nodeVersion = response.version);

@@ -1,7 +1,7 @@
 <div class="-container">
   <app-disclaimer-warning></app-disclaimer-warning>
 
-  <div class="large-header" [ngStyle]="{'background-image': 'url(assets/img/coins/' + currentCoin.imageName + ')'}">
+  <div class="large-header" [ngStyle]="{'background-image': currentCoin.imageName ? 'url(assets/img/coins/' + currentCoin.imageName + ')' : 'none'}">
     <div class="gradient" [style.background-image]="currentCoin.gradientName ?
       'url(assets/img/coins/' + currentCoin.gradientName + ')' :
       (!currentCoin.imageName ? 'url(assets/img/coins/generic.jpg)' : 'none')">
