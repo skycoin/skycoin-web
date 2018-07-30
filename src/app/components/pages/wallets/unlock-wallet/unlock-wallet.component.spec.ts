@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 
 import { UnlockWalletComponent } from './unlock-wallet.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
 import { MockTranslatePipe, MockWalletService } from '../../../../utils/test-mocks';
 
 describe('UnlockWalletComponent', () => {

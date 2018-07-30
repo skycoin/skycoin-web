@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Wallet } from '../../../app.datatypes';
-import { WalletService } from '../../../services/wallet.service';
+import { WalletService } from '../../../services/wallet/wallet.service';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 import { openUnlockWalletModal } from '../../../utils/index';
 import { CoinService } from '../../../services/coin.service';

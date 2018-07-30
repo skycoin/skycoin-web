@@ -3,7 +3,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { HeaderComponent } from './header.component';
 import { PriceService } from '../../../services/price.service';
-import { WalletService } from '../../../services/wallet.service';
+import { BalanceService } from '../../../services/wallet/balance.service';
 import { BlockchainService } from '../../../services/blockchain.service';
 import { CoinService } from '../../../services/coin.service';
 import {
@@ -11,7 +11,7 @@ import {
   MockCoinService,
   MockBlockchainService,
   MockPriceService,
-  MockWalletService
+  MockBalanceService
 } from '../../../utils/test-mocks';
 
 describe('HeaderComponent', () => {
@@ -24,7 +24,7 @@ describe('HeaderComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: PriceService, useClass: MockPriceService },
-        { provide: WalletService, useClass: MockWalletService },
+        { provide: BalanceService, useClass: MockBalanceService },
         { provide: BlockchainService, useClass: MockBlockchainService },
         { provide: CoinService, useClass: MockCoinService }
       ]

@@ -81,16 +81,7 @@ export class MockCoinService {
 }
 
 export class MockWalletService {
-  hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
   haveWallets: Observable<boolean> = Observable.of(true);
-
-  get timeSinceLastBalancesUpdate(): Observable<void> {
-    return Observable.of();
-  }
-
-  get totalBalance(): BehaviorSubject<TotalBalance> {
-    return new BehaviorSubject<TotalBalance>(null);
-  }
 
   get addresses(): Observable<any[]> {
     return Observable.of([]);
@@ -101,21 +92,10 @@ export class MockWalletService {
   get all(): Observable<Wallet[]> {
     return Observable.of([]);
   }
+}
 
-  sum() {
-  }
-
-  cancelPossibleBalanceRefresh() {}
-
+export class MockHistoryService {
   transactions(): Observable<any[]> {
-    return Observable.of([]);
-  }
-
-  generateSeed(entropy) {
-    return Observable.of('');
-  }
-
-  outputsWithWallets() {
     return Observable.of([]);
   }
 
@@ -126,9 +106,25 @@ export class MockWalletService {
   getTransactionDetails() {
     return Observable.of({});
   }
+}
 
-  loadBalances() {
+export class MockSpendingService {
+  outputsWithWallets() {
+    return Observable.of([]);
   }
+}
+
+export class MockBalanceService {
+  hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
+  lastBalancesUpdateTime: Date = new Date();
+
+  get totalBalance(): BehaviorSubject<TotalBalance> {
+    return new BehaviorSubject<TotalBalance>(null);
+  }
+
+  startGettingBalances() { }
+
+  stopGettingBalances() { }
 }
 
 export class MockPriceService {

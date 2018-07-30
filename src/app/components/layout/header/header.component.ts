@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
-import { WalletService } from '../../../services/wallet.service';
+import { BalanceService } from '../../../services/wallet/balance.service';
 import { BlockchainService, ProgressEvent, ProgressStates } from '../../../services/blockchain.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
 import { TotalBalance } from '../../../app.datatypes';
@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private priceService: PriceService,
-    private walletService: WalletService,
+    private balanceService: BalanceService,
     private blockchainService: BlockchainService,
     private coinService: CoinService
   ) {}
@@ -64,7 +64,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      this.walletService.totalBalance
+      this.balanceService.totalBalance
         .subscribe((balance: TotalBalance) => {
           if (balance) {
             this.coins = balance.coins;
@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      this.walletService.hasPendingTransactions
+      this.balanceService.hasPendingTransactions
         .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs)
     );
   }

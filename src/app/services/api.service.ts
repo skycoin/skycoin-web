@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { TranslateService } from '@ngx-translate/core';
 
-import { GetOutputsRequest, Output } from '../app.datatypes';
 import { CoinService } from './coin.service';
 import { BaseCoin } from '../coins/basecoin';
 import { parseResponseMessage } from '../utils/errors';
@@ -22,23 +20,6 @@ export class ApiService {
               private coinService: CoinService) {
     this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => this.url = coin.nodeUrl);
-  }
-
-  getOutputs(addresses): Observable<Output[]> {
-    return addresses ? this.get('outputs', { addrs: addresses }).map((response: GetOutputsRequest) => {
-      const outputs: Output[] = [];
-      response.head_outputs.forEach(output => outputs.push({
-        address: output.address,
-        coins: parseFloat(output.coins),
-        hash: output.hash,
-        calculated_hours: output.calculated_hours
-      }));
-      return outputs;
-    }) : Observable.of([]);
-  }
-
-  postTransaction(rawTransaction: string): Observable<string> {
-    return this.post('injectTransaction', { rawtx: rawTransaction });
   }
 
   get(url, params = null, options = {}): Observable<any> {

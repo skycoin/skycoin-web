@@ -3,7 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 
-import { WalletService } from '../../../../services/wallet.service';
+import { SpendingService } from '../../../../services/wallet/spending.service';
 import { Wallet } from '../../../../app.datatypes';
 import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { BaseCoin } from '../../../../coins/basecoin';
@@ -23,7 +23,7 @@ export class OutputsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private walletService: WalletService,
+    private spendingService: SpendingService,
     private dialog: MatDialog,
     private coinService: CoinService
   ) { }
@@ -51,15 +51,15 @@ export class OutputsComponent implements OnInit, OnDestroy {
   private getWalletsOutputs(queryParams: Params) {
     const address = queryParams['addr'];
 
-    this.subscription.add(this.walletService.outputsWithWallets().subscribe(wallets => {
-        if (wallets.length === 0) {
-          this.wallets = [];
-          return;
-        }
+    this.subscription.add(this.spendingService.outputsWithWallets().subscribe(wallets => {
+      if (wallets.length === 0) {
+        this.wallets = [];
+        return;
+      }
 
-        this.wallets = !!address
-          ? this.getOutputsForSpecificAddress(wallets, address)
-          : this.getOutputs(wallets);
+      this.wallets = !!address
+        ? this.getOutputsForSpecificAddress(wallets, address)
+        : this.getOutputs(wallets);
       })
     );
   }

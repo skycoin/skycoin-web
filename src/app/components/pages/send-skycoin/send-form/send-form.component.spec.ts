@@ -4,9 +4,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
 import { SendFormComponent } from './send-form.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
+import { SpendingService } from '../../../../services/wallet/spending.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockWalletService, MockMatSnackBar, MockCoinService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockSpendingService, MockMatSnackBar, MockCoinService } from '../../../../utils/test-mocks';
 
 describe('SendFormComponent', () => {
   let component: SendFormComponent;
@@ -20,6 +21,7 @@ describe('SendFormComponent', () => {
       providers: [
         FormBuilder,
         { provide: WalletService, useClass: MockWalletService },
+        { provide: SpendingService, useClass: MockSpendingService },
         { provide: MatDialog, useClass: MockMatSnackBar },
         { provide: CoinService, useClass: MockCoinService }
       ]

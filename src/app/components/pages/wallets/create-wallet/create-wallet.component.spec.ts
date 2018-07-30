@@ -4,7 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBarModule } from '@angular/material';
 
 import { CreateWalletComponent } from './create-wallet.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
 import { CoinService } from '../../../../services/coin.service';
 import { MockTranslatePipe, MockWalletService, MockCoinService } from '../../../../utils/test-mocks';
 

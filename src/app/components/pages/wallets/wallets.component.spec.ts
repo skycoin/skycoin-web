@@ -3,7 +3,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { WalletsComponent } from './wallets.component';
-import { WalletService } from '../../../services/wallet.service';
+import { WalletService } from '../../../services/wallet/wallet.service';
 import { CoinService } from '../../../services/coin.service';
 import { MockTranslatePipe, MockCoinService, MockWalletService } from '../../../utils/test-mocks';
 

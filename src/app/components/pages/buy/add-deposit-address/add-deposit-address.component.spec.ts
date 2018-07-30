@@ -5,7 +5,7 @@ import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { AddDepositAddressComponent } from './add-deposit-address.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
 import { PurchaseService } from '../../../../services/purchase.service';
 import { MockTranslatePipe, MockPurchaseService, MockWalletService } from '../../../../utils/test-mocks';
 

@@ -5,7 +5,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { WalletDetailComponent } from './wallet-detail.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
 import { MockTranslatePipe, MockWalletService, MockTranslateService } from '../../../../utils/test-mocks';
 
 describe('WalletDetailComponent', () => {
