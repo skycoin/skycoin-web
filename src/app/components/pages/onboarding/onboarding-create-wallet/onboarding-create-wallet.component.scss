@@ -1,5 +1,11 @@
 @import '../../../../../theme/_variables';
 
+.row-container {
+  max-width: 450px;
+  width: 80%;
+  margin: 0px auto;
+}
+
 .-header {
   color: $white;
   position: relative;
@@ -21,47 +27,14 @@
 }
 
 .-buttons-footer {
-  align-items: center;
-  flex-flow: column;
+  text-align: center;
   margin-bottom: 20px;
 }
 
-.-toggle-container{
-  margin: 10px auto;
+.-toggle-container {
+  margin: 10px auto !important;
 }
 
-:host ::ng-deep .-buttons-footer button{
+:host ::ng-deep .-buttons-footer button {
   margin: 2px 10px !important;
-}
-
-.-text-align-center{
-  text-align: center;
-}
-
-label[for=seed] {
-  display: flex;
-
-  > span:last-child {
-    flex: 1;
-  }
-
-  .generators {
-    text-align: right;
-
-    span {
-      cursor: pointer;
-    }
-
-    mat-icon {
-      width: 13px;
-      height: 10px;
-      font-size: 13px;
-      position: relative;
-      top: 2px;
-    }
-
-    .divider {
-      padding: 0 5px;
-    }
-  }
 }
