@@ -41,7 +41,7 @@ export class PriceService {
   }
 
   private loadPrice() {
-    if (this.cmcTickerId === null) {
+    if (!this.cmcTickerId) {
       return;
     }
 

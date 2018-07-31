@@ -25,6 +25,8 @@ export class ProgressEvent {
 
 @Injectable()
 export class BlockchainService {
+  nodeVersion: string;
+
   private progressSubject: BehaviorSubject<ProgressEvent> = new BehaviorSubject<ProgressEvent>(null);
   private connectionsSubscription: Subscription;
   private readonly defaultPeriod = 90000;
@@ -63,10 +65,9 @@ export class BlockchainService {
     this.progressSubject.next({ state: ProgressStates.Restating });
 
     this.connectionsSubscription = this.checkConnectionState()
-      .filter(status => !!status)
       .subscribe(
         () => this.checkBlockchainProgress(0),
-        () => this.onLoadBlockchainError()
+        error => error && error.reported ? null : this.onLoadBlockchainError()
       );
   }
 
@@ -109,10 +110,10 @@ export class BlockchainService {
       .map((status: any) => {
         if (!status.connections || status.connections.length === 0) {
           this.onLoadBlockchainError(ConnectionError.NO_ACTIVE_CONNECTIONS);
-          return null;
+          throw { reported: true };
         }
-
-        return status;
-      });
+      })
+      .flatMap(() => this.apiService.get('version'))
+      .map ((response: any) => this.nodeVersion = response.version);
   }
 }
