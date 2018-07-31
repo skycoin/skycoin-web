@@ -19,7 +19,7 @@ export class BalanceService {
   private schedulerSubscription: ISubscription;
 
   private readonly coinsMultiplier = 1000000;
-  private readonly shorUpdatePeriod = 5 * 1000;
+  private readonly shortUpdatePeriod = 5 * 1000;
   private readonly longUpdatePeriod = 300 * 1000;
 
   constructor(
@@ -35,25 +35,25 @@ export class BalanceService {
   }
 
   stopGettingBalances() {
-    this.RemoveSubscription();
+    this.removeSubscription();
     this.canGetBalance = false;
   }
 
-  private RemoveSubscription() {
+  private removeSubscription() {
     if (!!this.schedulerSubscription && !this.schedulerSubscription.closed) {
       this.schedulerSubscription.unsubscribe();
     }
   }
 
   private scheduleUpdate(delay: number) {
-    this.RemoveSubscription();
+    this.removeSubscription();
 
     this.schedulerSubscription = Observable.of(1)
       .delay(delay)
       .flatMap(() => this.getBalance())
       .subscribe(
-        hasPendingTxs => this.scheduleUpdate(hasPendingTxs ? this.shorUpdatePeriod : this.longUpdatePeriod),
-        () => { this.scheduleUpdate(this.shorUpdatePeriod); this.totalBalance.next(null); }
+        hasPendingTxs => this.scheduleUpdate(hasPendingTxs ? this.shortUpdatePeriod : this.longUpdatePeriod),
+        () => { this.scheduleUpdate(this.shortUpdatePeriod); this.totalBalance.next(null); }
       );
   }
 
@@ -66,7 +66,7 @@ export class BalanceService {
       }
 
       return this.retrieveAddressesBalance(addresses).flatMap((balance) => {
-        return this.walletService.all.first().map(wallets => this.calculateBalance(wallets, balance));
+        return this.walletService.currentWallets.first().map(wallets => this.calculateBalance(wallets, balance));
       });
     });
   }

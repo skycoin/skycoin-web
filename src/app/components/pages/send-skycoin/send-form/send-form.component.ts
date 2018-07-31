@@ -43,7 +43,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initForm();
 
-    this.walletService.all
+    this.walletService.currentWallets
       .subscribe(wallets => this.wallets = wallets);
 
     this.coinSubscription = this.coinService.currentCoin

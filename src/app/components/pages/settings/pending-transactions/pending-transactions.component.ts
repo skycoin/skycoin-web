@@ -87,7 +87,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
     const allTransactions = this.getUpdatedTransactions(transactions);
 
-    return Observable.zip(allTransactions, this.walletService.all, (trans: any, wallets: Wallet[]) => {
+    return Observable.zip(allTransactions, this.walletService.currentWallets, (trans: any, wallets: Wallet[]) => {
       const walletAddresses = new Set<string>();
       wallets.forEach(wallet => {
         wallet.addresses.forEach(address => walletAddresses.add(address.address));

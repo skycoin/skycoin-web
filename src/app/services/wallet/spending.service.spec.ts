@@ -202,7 +202,7 @@ describe('SpendingService', () => {
       const walletAddress3 = 'address 3';
       const wallet2: Wallet = Object.assign(createWallet(), { addresses: [ createAddress(walletAddress3) ] });
 
-      spyOnProperty(walletService, 'all', 'get').and.returnValue( Observable.of([wallet1, wallet2]) );
+      spyOnProperty(walletService, 'currentWallets', 'get').and.returnValue( Observable.of([wallet1, wallet2]) );
 
       const output1 = createRequestOutput('hash3', walletAddress3, '33', 3 );
       const output2 = createRequestOutput('hash2', walletAddress2, '22', 2 );

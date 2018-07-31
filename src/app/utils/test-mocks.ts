@@ -88,7 +88,7 @@ export class MockWalletService {
 
   wallets = new BehaviorSubject<any[]>([]);
 
-  get all(): Observable<Wallet[]> {
+  get currentWallets(): Observable<Wallet[]> {
     return Observable.of([]);
   }
 }

@@ -104,7 +104,7 @@ export class SpendingService {
 
   outputsWithWallets(): Observable<Wallet[]> {
     return Observable.zip(
-      this.walletService.all,
+      this.walletService.currentWallets,
       this.getAddressesAsString().flatMap(addresses => addresses ? this.getRequestOutputs(addresses) : Observable.of([])),
       (wallets: Wallet[], outputs: GetOutputsRequestOutput[]) => {
         return wallets.map(wallet => {
@@ -119,11 +119,8 @@ export class SpendingService {
   }
 
   private getAddressesAsString(): Observable<string> {
-    return this.walletService.all.map(wallets => wallets.map(wallet => {
-      return wallet.addresses.reduce((a, b) => {
-        a.push(b.address);
-        return a;
-      }, []).join(',');
+    return this.walletService.currentWallets.map(wallets => wallets.map(wallet => {
+      return wallet.addresses.map(address => address.address).join(',');
     }).join(','));
   }
 

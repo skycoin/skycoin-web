@@ -28,7 +28,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscription = this.walletService.all.subscribe( (wallets) => {
+    this.subscription = this.walletService.currentWallets.subscribe( (wallets) => {
       this.wallets = wallets;
     });
 

@@ -30,7 +30,7 @@ export class WalletService {
     return this.wallets.map(wallets => wallets ? wallets.length > 0 : false);
   }
 
-  get all(): Observable<Wallet[]> {
+  get currentWallets(): Observable<Wallet[]> {
     return this.wallets
       .flatMap(wallets => this.coinService.currentCoin
         .map((coin: BaseCoin) => wallets.filter(wallet => wallet.coinId === coin.id))
@@ -38,7 +38,7 @@ export class WalletService {
   }
 
   get addresses(): Observable<Address[]> {
-    return this.all.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
+    return this.currentWallets.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
   }
 
   addAddress(wallet: Wallet): Observable<void> {
