@@ -1,47 +1,10 @@
 <app-modal [headline]="data.create ? ('wallet.new.create-title' | translate) : ('wallet.new.load-title' | translate)" [dialog]="dialogRef" [disableDismiss]="disableDismiss">
-  <div [formGroup]="form">
-    <div class="form-field">
-      <label for="label">{{ 'wallet.new.name-label' | translate}}</label>
-      <input formControlName="label" id="label">
-    </div>
-    <div class="form-field" *ngIf="haveManyCoins">
-      <label for="coin">{{ 'wallet.new.select-coin' | translate}}</label>
-      <div class="-select">
-        <app-select-coin formControlName="coin" id="coin"></app-select-coin>
-      </div>
-    </div>
-    <div class="form-field -valid-seed-container" [ngClass]="{'-expand':form.get('seed').valid && !data.create}">
-      <label for="seed">
-        <span>{{ 'wallet.new.seed-label' | translate }}</span>
-        <span class="generators" *ngIf="data.create">
-          <span (click)="generateSeed(128)" [matTooltip]="'wallet.new.generate-12-seed' | translate">{{ 'wallet.new.12-words' | translate }}</span>
-          <span class="divider">|</span>
-          <span (click)="generateSeed(256)" [matTooltip]="'wallet.new.generate-24-seed' | translate">{{ 'wallet.new.24-words' | translate }}</span>
-        </span>
-      </label>
-      <div class="-valid-box">
-        <textarea formControlName="seed" id="seed" row="2"></textarea>
-        <img *ngIf="!data.create" class="-valid" src="../../../../../assets/img/valid.png">
-      </div>
-      <p class="-disclaimer-box" *ngIf="data.create">
-        {{ 'wallet.new.seed-warning' | translate}}
-      </p>
-    </div>
-    <div *ngIf="data.create"
-         class="form-field -valid-seed-container"
-         [ngClass]="{ '-expand':form.get('confirm_seed').value === form.get('seed').value }">
-      <label for="confirm_seed">{{ 'wallet.new.confirm-seed-label' | translate}}</label>
-      <div class="-valid-box">
-        <textarea formControlName="confirm_seed" id="confirm_seed" row="2"></textarea>
-        <img class="-valid" src="../../../../../assets/img/valid.png">
-      </div>
-    </div>
-  </div>
+  <app-create-wallet-form #formControl [create]="data.create"></app-create-wallet-form>
   <div class="-buttons">
     <app-button (action)="closePopup()" [disabled]="disableDismiss">
       {{ 'wallet.new.cancel-button' | translate}}
     </app-button>
-    <app-button #create (action)="createWallet()" class="primary btn-create" [disabled]="!form.valid">
+    <app-button #create (action)="createWallet()" class="primary btn-create" [disabled]="!formControl.isValid">
       {{ data.create ? ('wallet.new.create-button' | translate) : ('wallet.new.load-button' | translate) }}
     </app-button>
   </div>

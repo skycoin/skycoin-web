@@ -80,6 +80,7 @@ import { WalletService } from './services/wallet/wallet.service';
 import { BalanceService } from './services/wallet/balance.service';
 import { HistoryService } from './services/wallet/history.service';
 import { SpendingService } from './services/wallet/spending.service';
+import { CreateWalletFormComponent } from './components/pages/wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 
 @NgModule({
   declarations: [
@@ -121,7 +122,8 @@ import { SpendingService } from './services/wallet/spending.service';
     SelectCoinComponent,
     CoinButtonComponent,
     SelectCoinOverlayComponent,
-    SelectLanguageComponent
+    SelectLanguageComponent,
+    CreateWalletFormComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,

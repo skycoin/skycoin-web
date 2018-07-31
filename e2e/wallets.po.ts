@@ -291,21 +291,20 @@ export class WalletsPage {
   private fillWalletForm(labelText: string, seedText: string, confirmSeedText = null) {
     const label = element(by.css('[formcontrolname="label"]'));
     const seed = element(by.css('[formcontrolname="seed"]'));
-    const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
 
-    return label.clear().then(() => {
-      return label.sendKeys(labelText).then(() => {
-        return seed.clear().then(() => {
-          return seed.sendKeys(seedText).then(() => {
-            if (confirmSeedText) {
-              return confirm.clear().then(() => {
-                return confirm.sendKeys(confirmSeedText);
-              });
-            }
-          });
-        });
-      });
-    });
+    label.clear();
+    label.sendKeys(labelText);
+    seed.clear();
+    seed.sendKeys(seedText);
+    if (confirmSeedText) {
+      const confirm = element(by.css('[formcontrolname="confirm_seed"]'));
+      confirm.clear();
+      confirm.sendKeys(seedText);
+    }
+    if (labelText !== '' && (seedText === confirmSeedText || !confirmSeedText)) {
+      const seedValidationCheckBox = element(by.css('.mat-checkbox-inner-container'));
+      seedValidationCheckBox.click();
+    }
   }
 
   private getWalletAddress() {

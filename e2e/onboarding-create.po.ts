@@ -6,7 +6,7 @@ export class OnboardingCreatePage {
   }
 
   getHeaderText() {
-    return element(by.css('.-header span')).getText();
+    return element(by.css('.-header')).getText();
   }
 
   getSelectLanguageModalIsShow() {
@@ -66,7 +66,7 @@ export class OnboardingCreatePage {
   }
 
   acceptSafeguard() {
-   return element.all(by.css('.mat-checkbox-label')).first().click().then(() => {
+   return element.all(by.css('app-modal .mat-checkbox-label')).first().click().then(() => {
      return element(by.buttonText('Continue')).click().then(() => {
         return this.getSafeguardIsShow();
       });
@@ -204,6 +204,11 @@ export class OnboardingCreatePage {
     confirm.clear();
     confirm.sendKeys(confirmSeedText);
 
+    if (seedText === confirmSeedText) {
+      const seedValidationCheckBox = element(by.css('.-check'));
+      seedValidationCheckBox.click();
+    }
+
     return element(by.buttonText('Create'));
   }
 
@@ -217,6 +222,11 @@ export class OnboardingCreatePage {
     label.sendKeys(walletLabel);
     seed.clear();
     seed.sendKeys(seedText);
+
+    if (walletLabel && seedText) {
+      const seedValidationCheckBox = element(by.css('.-check'));
+      seedValidationCheckBox.click();
+    }
 
     return element(by.buttonText('Create'));
   }

@@ -1,67 +1,34 @@
 <div class="onboarding-container">
   <app-disclaimer-warning></app-disclaimer-warning>
 
-  <div class="row justify-content-center">
-    <div class="col-sm-4">
-      <div class="-header">
-        <span>{{ 'wallet.new.create-title' | translate }}</span>
-      </div>
-      <div class="-description">
-        <p>
-          {{ 'wizard.wallet-desc' | translate }}
-        </p>
-      </div>
+  <div class="row-container">
+    <div class="-header">
+      {{ 'wallet.new.create-title' | translate }}
+    </div>
+    <div class="-description">
+      {{ 'wizard.wallet-desc' | translate }}
     </div>
   </div>
-  <div class="row justify-content-center">
-    <div class="col-sm-4 -toggle-container" [style.visibility]="isWalletCreating ? 'hidden' : 'visible'">
-      <app-double-button [rightButtonText]="'common.load' | translate"
-                         [leftButtonText]="'common.new' | translate"
-                         [activeButton]="doubleButtonActive"
-                         (onStateChange)="changeForm($event)"></app-double-button>
-    </div>
+  <div class="-toggle-container" [style.visibility]="creatingWallet ? 'hidden' : 'visible'">
+    <app-double-button [rightButtonText]="'common.load' | translate"
+                        [leftButtonText]="'common.new' | translate"
+                        [activeButton]="doubleButtonActive"
+                        (onStateChange)="changeForm($event)"></app-double-button>
   </div>
-  <div class="row justify-content-center">
-    <div class="col-sm-4">
-      <form [formGroup]="form">
-        <div class="form-field">
-          <label for="label">{{ 'wallet.new.name-label' | translate }}</label>
-          <input formControlName="label" id="label">
-        </div>
-        <div class="form-field" *ngIf="haveManyCoins">
-          <label for="coin">{{ 'wallet.new.select-coin' | translate}}</label>
-          <div class="-select">
-            <app-select-coin formControlName="coin" id="coin"></app-select-coin>
-          </div>
-        </div>
-        <div class="form-field">
-          <label for="seed">
-            <span>{{ 'wallet.new.seed-label' | translate }}</span>
-            <span class="generators" *ngIf="showNewForm">
-              <span (click)="generateSeed(128)" [matTooltip]="'wallet.new.generate-12-seed' | translate">{{ 'wallet.new.12-words' | translate }}</span>
-              <span class="divider">|</span>
-              <span (click)="generateSeed(256)" [matTooltip]="'wallet.new.generate-24-seed' | translate">{{ 'wallet.new.24-words' | translate }}</span>
-            </span>
-          </label>
-          <textarea formControlName="seed" class="form-control" id="seed" rows="2"></textarea>
-        </div>
-        <div class="form-field" [style.visibility]="showNewForm ? 'visible' : 'hidden'">
-          <label for="confirm_seed">{{ 'wallet.new.confirm-seed-label' | translate }}</label>
-          <textarea formControlName="confirm_seed" class="form-control" id="confirm_seed" rows="2"></textarea>
-        </div>
-      </form>
-    </div>
+  <div class="row-container">
+    <app-create-wallet-form #formControl [create]="showNewForm" whiteText="true"></app-create-wallet-form>
   </div>
-  <div class="row -buttons-footer">
+  <div class="row-container -buttons-footer">
     <app-button #create
                 class="dark -button-min-margin"
-                [disabled]="!form.valid"
+                [disabled]="!formControl.isValid"
                 [spinnerStyle]="'accent'"
                 (action)="showNewForm ? showSafe() : loadWallet()">
       {{ 'wallet.new.create-button' | translate }}
     </app-button>
-    <app-button *ngIf="haveWallets && !isWalletCreating"
-                [disabled]="isWalletCreating"
+    <div></div>
+    <app-button *ngIf="userHasWallets && !creatingWallet"
+                [disabled]="creatingWallet"
                 class="ghost -button-min-margin"
                 (action)="skip()">
       {{ 'wallet.new.skip-button' | translate }}

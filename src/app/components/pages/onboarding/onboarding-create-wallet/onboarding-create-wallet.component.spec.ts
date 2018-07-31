@@ -12,6 +12,7 @@ import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboardin
 import { CoinService } from '../../../../services/coin.service';
 import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService } from '../../../../utils/test-mocks';
 import { LanguageService } from '../../../../services/language.service';
+import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 
 describe('OnboardingCreateWalletComponent', () => {
   let component: OnboardingCreateWalletComponent;
@@ -22,7 +23,8 @@ describe('OnboardingCreateWalletComponent', () => {
       declarations: [
         OnboardingCreateWalletComponent,
         OnboardingDisclaimerComponent,
-        MockTranslatePipe
+        MockTranslatePipe,
+        CreateWalletFormComponent
       ],
       imports: [
         MatDialogModule,

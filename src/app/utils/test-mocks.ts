@@ -68,7 +68,6 @@ export class MockCoinService {
     id: 1,
     cmcTickerId: 1,
     nodeUrl: 'nodeUrl',
-    nodeVersion: 'v1',
     coinName: 'test coin',
     coinSymbol: 'test',
     hoursName: 'Test Hours',
