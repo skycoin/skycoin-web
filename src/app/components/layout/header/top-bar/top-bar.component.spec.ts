@@ -4,9 +4,9 @@ import { MatMenuModule, MatIconModule, MatTooltipModule, MatDialogModule } from 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { TopBarComponent } from './top-bar.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { BalanceService } from '../../../../services/wallet/balance.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockBalanceService, MockCoinService, MockLanguageService } from '../../../../utils/test-mocks';
 import { LanguageService } from '../../../../services/language.service';
 
 describe('TopBarComponent', () => {
@@ -25,7 +25,7 @@ describe('TopBarComponent', () => {
         MatDialogModule
       ],
       providers: [
-        { provide: WalletService, useClass: MockWalletService },
+        { provide: BalanceService, useClass: MockBalanceService },
         { provide: CoinService, useClass: MockCoinService },
         { provide: LanguageService, useClass: MockLanguageService }
       ]

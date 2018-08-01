@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { Wallet } from '../../../../app.datatypes';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
 
 @Component({
@@ -37,7 +37,7 @@ export class ChangeNameComponent implements OnInit {
 
     this.button.setLoading();
     this.data.label = this.form.value.label;
-    this.walletService.updateWallet(this.data);
+    this.walletService.saveWallets();
     this.dialogRef.close();
   }
 

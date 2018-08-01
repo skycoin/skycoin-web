@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { PendingTransactionsComponent } from './pending-transactions.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
+import { HistoryService } from '../../../../services/wallet/history.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
 import { CoinService } from '../../../../services/coin.service';
 import {
@@ -10,7 +11,8 @@ import {
   MockDateTimePipe,
   MockNavBarService,
   MockCoinService,
-  MockWalletService
+  MockWalletService,
+  MockHistoryService
 } from '../../../../utils/test-mocks';
 
 describe('PendingTransactionsComponent', () => {
@@ -27,6 +29,7 @@ describe('PendingTransactionsComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: WalletService, useClass: MockWalletService },
+        { provide: HistoryService, useClass: MockHistoryService },
         { provide: NavBarService, useClass: MockNavBarService },
         { provide: CoinService, useClass: MockCoinService }
       ]

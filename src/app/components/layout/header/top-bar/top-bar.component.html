@@ -3,7 +3,7 @@
   <div class="last-updated-time" *ngIf="isBalanceObtained">
     <div class="label">{{ 'header.top-bar.updated1' | translate }}</div>
     <div>
-      {{ timeSinceLastUpdateBalances === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastUpdateBalances }} {{ 'header.top-bar.updated2' | translate }}
+      {{ timeSinceLastBalanceUpdate === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastBalanceUpdate }} {{ 'header.top-bar.updated2' | translate }}
       <i *ngIf="!this.isBalanceUpdated"
         class="material-icons blinking-warning-icon"
         [matTooltip]="'header.top-bar.connection-error-tooltip' | translate">

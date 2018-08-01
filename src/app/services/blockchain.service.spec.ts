@@ -2,30 +2,30 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { BlockchainService } from './blockchain.service';
 import { ApiService } from './api.service';
-import { WalletService } from './wallet.service';
-import { MockApiService, MockWalletService, MockCoinService } from '../utils/test-mocks';
+import { BalanceService } from './wallet/balance.service';
+import { MockApiService, MockBalanceService, MockCoinService } from '../utils/test-mocks';
 import { CoinService } from './coin.service';
 
 describe('BlockchainService', () => {
   let service: BlockchainService;
   let apiService: ApiService;
-  let walletService: WalletService;
+  let balanceService: BalanceService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         BlockchainService,
         { provide: ApiService, useClass: MockApiService },
-        { provide: WalletService, useClass: MockWalletService },
+        { provide: BalanceService, useClass: MockBalanceService },
         { provide: CoinService, useClass: MockCoinService }
       ]
     });
   });
 
-  beforeEach(inject([BlockchainService, ApiService, WalletService], (serv, mockApiService, mockWalletService) => {
+  beforeEach(inject([BlockchainService, ApiService, BalanceService], (serv, mockApiService, mockBalanceService) => {
     service = serv;
     apiService = mockApiService;
-    walletService = mockWalletService;
+    balanceService = mockBalanceService;
   }));
 
   it('should be created', () => {

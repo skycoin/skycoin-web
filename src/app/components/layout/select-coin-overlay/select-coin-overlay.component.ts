@@ -9,7 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
 import { ISubscription } from 'rxjs/Subscription';
-import { WalletService } from '../../../services/wallet.service';
+import { WalletService } from '../../../services/wallet/wallet.service';
+import { SpendingService } from '../../../services/wallet/spending.service';
 
 @Component({
   selector: 'app-select-coin-overlay',
@@ -28,21 +29,18 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<SelectCoinOverlayComponent>,
     private coinService: CoinService,
     private walletService: WalletService,
+    private spendingService: SpendingService,
     private translate: TranslateService,
     private snackbar: MatSnackBar
   ) { }
 
   ngOnInit() {
 
-    this.walletService.wallets.first()
-      .subscribe(wallets => {
-        wallets.forEach(value => {
-          if (!this.coinsWithWallets[value.coinId]) {
-            this.coinsWithWallets[value.coinId] = true;
-          }
-        });
+    this.walletService.wallets.value.forEach(value => {
+      if (!this.coinsWithWallets[value.coinId]) {
+        this.coinsWithWallets[value.coinId] = true;
       }
-    );
+    });
 
     this.searchSuscription = Observable.fromEvent(this.searchInput.nativeElement, 'keyup')
       .debounceTime(500)
@@ -105,7 +103,7 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
 
   close(result: BaseCoin | null) {
     this.snackbar.dismiss();
-    if (result && this.walletService.isInjectingTx) {
+    if (result && this.spendingService.isInjectingTx) {
       const config = new MatSnackBarConfig();
       config.duration = 10000;
       this.snackbar.open(this.translate.instant('change-coin.injecting-tx'), null, config);

@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
+import { HistoryService } from '../../../../services/wallet/history.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { Wallet } from '../../../../app.datatypes';
@@ -25,6 +26,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
   constructor(
     private walletService: WalletService,
+    private historyService: HistoryService,
     private navbarService: NavBarService,
     private coinService: CoinService
   ) { }
@@ -54,7 +56,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     this.transactions = [];
 
     const showAllTransactions = value === DoubleButtonActive.RightButton;
-    this.walletService.getAllPendingTransactions()
+    this.historyService.getAllPendingTransactions()
       .delay(32)
       .flatMap((transactions: any) => {
         return showAllTransactions ? Observable.of(transactions) : this.getWalletsTransactions(transactions);
@@ -85,7 +87,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
     const allTransactions = this.getUpdatedTransactions(transactions);
 
-    return Observable.zip(allTransactions, this.walletService.all, (trans: any, wallets: Wallet[]) => {
+    return Observable.zip(allTransactions, this.walletService.currentWallets, (trans: any, wallets: Wallet[]) => {
       const walletAddresses = new Set<string>();
       wallets.forEach(wallet => {
         wallet.addresses.forEach(address => walletAddresses.add(address.address));
@@ -101,7 +103,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
   private getUpdatedTransactions(transactions: any): Observable<any> {
     return Observable.forkJoin(transactions.map((transaction: any) => {
       return Observable.forkJoin(transaction.transaction.inputs
-        .map(input => this.walletService.getTransactionDetails(input)
+        .map(input => this.historyService.getTransactionDetails(input)
           .map(inputDetails => inputDetails.owner_address)))
         .map((addresses) => {
           transaction.owner_addressses = addresses;

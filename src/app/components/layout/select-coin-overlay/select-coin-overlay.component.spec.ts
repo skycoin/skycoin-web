@@ -4,9 +4,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { SelectCoinOverlayComponent } from './select-coin-overlay.component';
-import { MockTranslatePipe, MockMatDialogRef, MockCoinService, MockWalletService, MockTranslateService, MockMatSnackBar } from '../../../utils/test-mocks';
+import { MockTranslatePipe, MockMatDialogRef, MockCoinService, MockWalletService, MockSpendingService, MockTranslateService, MockMatSnackBar } from '../../../utils/test-mocks';
 import { CoinService } from '../../../services/coin.service';
-import { WalletService } from '../../../services/wallet.service';
+import { WalletService } from '../../../services/wallet/wallet.service';
+import { SpendingService } from '../../../services/wallet/spending.service';
 
 describe('SelectCoinOverlayComponent', () => {
   let component: SelectCoinOverlayComponent;
@@ -23,6 +24,7 @@ describe('SelectCoinOverlayComponent', () => {
         { provide: MatDialogRef, useClass: MockMatDialogRef },
         { provide: CoinService, useClass: MockCoinService },
         { provide: WalletService, useClass: MockWalletService },
+        { provide: SpendingService, useClass: MockSpendingService },
         { provide: TranslateService, useClass: MockTranslateService },
         { provide: MatSnackBar, useClass: MockMatSnackBar }
       ]

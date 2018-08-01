@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
-import { WalletService } from '../../../services/wallet.service';
+import { HistoryService } from '../../../services/wallet/history.service';
 import { TransactionDetailComponent } from './transaction-detail/transaction-detail.component';
 import { QrCodeComponent } from '../../layout/qr-code/qr-code.component';
 import { BaseCoin } from '../../../coins/basecoin';
@@ -23,7 +23,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   constructor(
-    private walletService: WalletService,
+    private historyService: HistoryService,
     private priceService: PriceService,
     private dialog: MatDialog,
     private coinService: CoinService
@@ -37,7 +37,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
       });
 
     this.subscription.add(this.priceService.price.subscribe(price => this.price = price));
-    this.subscription.add(this.walletService.transactions().subscribe(transactions => {
+    this.subscription.add(this.historyService.transactions().subscribe(transactions => {
         this.transactions = transactions;
       })
     );

@@ -3,10 +3,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialogModule, MatDialog } from '@angular/material';
 
 import { HistoryComponent } from './history.component';
-import { WalletService } from '../../../services/wallet.service';
+import { HistoryService } from '../../../services/wallet/history.service';
 import { PriceService } from '../../../services/price.service';
 import { CoinService } from '../../../services/coin.service';
-import { MockTranslatePipe, MockPriceService, MockCoinService, MockWalletService } from '../../../utils/test-mocks';
+import { MockTranslatePipe, MockPriceService, MockCoinService, MockHistoryService } from '../../../utils/test-mocks';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
@@ -18,7 +18,7 @@ describe('HistoryComponent', () => {
       imports: [ MatDialogModule ],
       providers: [
         MatDialog,
-        { provide: WalletService, useClass: MockWalletService },
+        { provide: HistoryService, useClass: MockHistoryService },
         { provide: PriceService, useClass: MockPriceService },
         { provide: CoinService, useClass: MockCoinService }
       ],

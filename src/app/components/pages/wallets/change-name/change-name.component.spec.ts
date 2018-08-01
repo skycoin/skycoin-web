@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 
 import { ChangeNameComponent } from './change-name.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
 import { MockTranslatePipe, MockWalletService } from '../../../../utils/test-mocks';
 
 describe('ChangeNameComponent', () => {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { WalletService } from './wallet.service';
+import { WalletService } from './wallet/wallet.service';
 
 @Injectable()
 export class WizardGuardService implements CanActivate {

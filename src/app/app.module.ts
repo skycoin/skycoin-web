@@ -56,7 +56,6 @@ import { BlockchainService } from './services/blockchain.service';
 import { ClipboardService } from './services/clipboard.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
-import { WalletService } from './services/wallet.service';
 import { WizardGuardService } from './services/wizard-guard.service';
 import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
@@ -77,6 +76,10 @@ import { LanguageService } from './services/language.service';
 import { CoinButtonComponent } from './components/layout/header/coin-button/coin-button.component';
 import { SelectCoinOverlayComponent } from './components/layout/select-coin-overlay/select-coin-overlay.component';
 import { SelectLanguageComponent } from './components/layout/select-language/select-language.component';
+import { WalletService } from './services/wallet/wallet.service';
+import { BalanceService } from './services/wallet/balance.service';
+import { HistoryService } from './services/wallet/history.service';
+import { SpendingService } from './services/wallet/spending.service';
 import { CreateWalletFormComponent } from './components/pages/wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 
 @NgModule({
@@ -171,7 +174,6 @@ import { CreateWalletFormComponent } from './components/pages/wallets/create-wal
     ApiService,
     BlockchainService,
     PurchaseService,
-    WalletService,
     PriceService,
     ClipboardService,
     WizardGuardService,
@@ -179,7 +181,11 @@ import { CreateWalletFormComponent } from './components/pages/wallets/create-wal
     FeatureService,
     NavBarService,
     CoinService,
-    LanguageService
+    LanguageService,
+    WalletService,
+    BalanceService,
+    HistoryService,
+    SpendingService
   ],
   bootstrap: [AppComponent],
 })

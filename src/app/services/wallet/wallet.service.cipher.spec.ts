@@ -3,18 +3,20 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { WalletService } from './wallet.service';
-import { ApiService } from './api.service';
-import { CipherProvider } from './cipher.provider';
-import { Wallet, Address, TransactionOutput, TransactionInput, Output, Balance } from '../app.datatypes';
-import { CoinService } from './coin.service';
-import { MockCoinService } from '../utils/test-mocks';
+import { SpendingService } from './spending.service';
+import { ApiService } from '../api.service';
+import { CipherProvider } from '../cipher.provider';
+import { Wallet, Address, TransactionOutput, TransactionInput, Output, Balance } from '../../app.datatypes';
+import { CoinService } from '../coin.service';
+import { MockCoinService } from '../../utils/test-mocks';
+import { createWallet } from './wallet.service.spec';
 
 describe('WalletService with cipher:', () => {
   let store = {};
   let walletService: WalletService;
+  let spendingService: SpendingService;
   let cipherProvider: CipherProvider;
   let spyApiService:  jasmine.SpyObj<ApiService>;
-  let spyTranslateService: jasmine.SpyObj<TranslateService>;
 
   beforeEach(() => {
     spyOn(localStorage, 'setItem').and.callFake((key, value) => store[key] = value);
@@ -24,6 +26,7 @@ describe('WalletService with cipher:', () => {
       providers: [
         WalletService,
         CipherProvider,
+        SpendingService,
         {
           provide: ApiService,
           useValue: jasmine.createSpyObj('ApiService', {
@@ -41,9 +44,9 @@ describe('WalletService with cipher:', () => {
     });
 
     walletService = TestBed.get(WalletService);
+    spendingService = TestBed.get(SpendingService);
     cipherProvider = TestBed.get(CipherProvider);
     spyApiService = TestBed.get(ApiService);
-    spyTranslateService = TestBed.get(TranslateService);
   });
 
   afterEach(() => {
@@ -54,11 +57,15 @@ describe('WalletService with cipher:', () => {
     expect(walletService).toBeTruthy();
   });
 
+  it('spending service should be created', () => {
+    expect(spendingService).toBeTruthy();
+  });
+
   it('cipher service should be created', () => {
     expect(cipherProvider).toBeTruthy();
   });
 
-  describe('cipher should generate address', () => {
+  describe('cipher should generate an address', () => {
     it('on add address to wallet', () => {
       const wallet = createWallet();
       const expectedWallet = createWallet();
@@ -72,15 +79,13 @@ describe('WalletService with cipher:', () => {
 
       expectedWallet.addresses.push(newAddress);
 
-      spyOn(walletService, 'updateWallet');
-
       spyApiService.get.and.callFake(() => {
         return Observable.of(createBalance());
       });
 
       walletService.addAddress(wallet)
         .subscribe(() => {
-          expect(walletService.updateWallet).toHaveBeenCalledWith(expectedWallet);
+          expect(wallet).toEqual(expectedWallet);
         });
     });
   });
@@ -106,16 +111,13 @@ describe('WalletService with cipher:', () => {
         createOutput(addresses[0].address, amount, 1),
       ];
 
-      spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+      spyApiService.get.and.returnValue(Observable.of({ head_outputs: outputs }));
 
-      walletService.createTransaction(wallet, destinationAddress, amount)
+      spendingService.createTransaction(wallet, destinationAddress, amount)
         .subscribe(
           (result: any) => {
             expect(result.inputs).toEqual(expectedTxInputs);
             expect(result.outputs).toEqual(expectedTxOutputs);
-          },
-          () => {
-            fail('should not be rejected');
           });
     }));
 
@@ -132,30 +134,18 @@ describe('WalletService with cipher:', () => {
         createOutput(addresses[0].address, amount, 1),
       ];
 
-      spyApiService.getOutputs.and.returnValue(Observable.of(outputs));
+      spyApiService.get.and.returnValue(Observable.of({ head_outputs: outputs }));
 
-      walletService.createTransaction(wallet, wrongDestinationAddress, amount)
+      spendingService.createTransaction(wallet, wrongDestinationAddress, amount)
         .subscribe(
           () => {
-            fail('should be rejected');
+            fail('should fail');
           },
           (error) => expect(error.message).toEqual('Error: Invalid checksum')
         );
     }));
   });
 });
-
-function createWallet(label: string = 'label', seed: string = 'seed', balance: number = 0): Wallet {
-  return {
-    label: label,
-    seed: seed,
-    balance: balance,
-    hours: 0,
-    addresses: [
-      createAddress()
-    ]
-  };
-}
 
 function createAddress(
   address = '2uATq4pdSb8Ka1YKSAAbp6Npehs3QQqTnb',

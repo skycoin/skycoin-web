@@ -5,7 +5,8 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
+import { SpendingService } from '../../../../services/wallet/spending.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
 import { Wallet } from '../../../../app.datatypes';
 import { openUnlockWalletModal } from '../../../../utils/index';
@@ -33,6 +34,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private walletService: WalletService,
+    private spendingService: SpendingService,
     private snackbar: MatSnackBar,
     private unlockDialog: MatDialog,
     private coinService: CoinService
@@ -41,7 +43,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initForm();
 
-    this.walletService.all
+    this.walletService.currentWallets
       .subscribe(wallets => this.wallets = wallets);
 
     this.coinSubscription = this.coinService.currentCoin
@@ -79,7 +81,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
   private createTransaction(wallet: Wallet) {
     this.button.setLoading();
 
-    this.walletService.createTransaction(wallet, this.form.value.address.replace(/\s/g, ''), this.form.value.amount)
+    this.spendingService.createTransaction(wallet, this.form.value.address.replace(/\s/g, ''), this.form.value.amount)
       .subscribe(
         transaction => this.onTransactionCreated(transaction),
         error => this.onError(error)

@@ -5,9 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialogModule } from '@angular/material';
 
 import { OutputsComponent } from './outputs.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { SpendingService } from '../../../../services/wallet/spending.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockWalletService, MockCoinService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockSpendingService, MockCoinService } from '../../../../utils/test-mocks';
 
 describe('OutputsComponent', () => {
   let component: OutputsComponent;
@@ -20,7 +20,7 @@ describe('OutputsComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { queryParams: Observable.of({}) } },
-        { provide: WalletService, useClass: MockWalletService },
+        { provide: SpendingService, useClass: MockSpendingService },
         { provide: CoinService, useClass: MockCoinService }
       ]
     }).compileComponents();

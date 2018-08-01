@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@a
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 
 import { PreviewTransaction } from '../../../../app.datatypes';
-import { WalletService } from '../../../../services/wallet.service';
+import { BalanceService } from '../../../../services/wallet/balance.service';
+import { SpendingService } from '../../../../services/wallet/spending.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
 import { parseResponseMessage } from './../../../../utils/errors';
 
@@ -18,7 +19,8 @@ export class SendVerifyComponent implements OnDestroy {
   @Output() onBack = new EventEmitter<boolean>();
 
   constructor(
-    private walletService: WalletService,
+    private balanceService: BalanceService,
+    private spendingService: SpendingService,
     private snackbar: MatSnackBar
   ) {}
 
@@ -32,7 +34,7 @@ export class SendVerifyComponent implements OnDestroy {
     this.sendButton.setLoading();
     this.backButton.setDisabled();
 
-    this.walletService.injectTransaction(this.transaction.encoded)
+    this.spendingService.injectTransaction(this.transaction.encoded)
       .subscribe(
         () => this.onSuccess(),
         (error) => this.onError(error)
@@ -47,7 +49,7 @@ export class SendVerifyComponent implements OnDestroy {
     this.sendButton.setSuccess();
     this.sendButton.setDisabled();
 
-    this.walletService.loadBalances();
+    this.balanceService.startGettingBalances();
     setTimeout(() => this.onBack.emit(true), 3000);
   }
 

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeWhile';
 
 import { ApiService } from './api.service';
-import { WalletService } from './wallet.service';
+import { BalanceService } from './wallet/balance.service';
 import { ConnectionError } from '../enums/connection-error.enum';
 import { CoinService } from './coin.service';
 
@@ -38,7 +38,7 @@ export class BlockchainService {
 
   constructor (
     private apiService: ApiService,
-    private walletService: WalletService,
+    private balanceService: BalanceService,
     coinService: CoinService
   ) {
     coinService.currentCoin.subscribe(() => {
@@ -60,7 +60,7 @@ export class BlockchainService {
       this.connectionsSubscription.unsubscribe();
     }
 
-    this.walletService.cancelPossibleBalanceRefresh();
+    this.balanceService.stopGettingBalances();
 
     this.progressSubject.next({ state: ProgressStates.Restating });
 
@@ -97,7 +97,7 @@ export class BlockchainService {
         response.highest - response.current <= 5 ? this.fastPeriod : this.defaultPeriod
       );
     } else {
-      this.walletService.loadBalances();
+      this.balanceService.startGettingBalances();
     }
   }
 

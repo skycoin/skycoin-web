@@ -1,10 +1,12 @@
-import { Component, Input, OnInit, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Renderer2, ViewChild, NgZone } from '@angular/core';
+import 'rxjs/add/observable/interval';
 import { Subscription } from 'rxjs/Subscription';
 import { Overlay } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
 
-import { WalletService } from '../../../../services/wallet.service';
+import { BalanceService } from '../../../../services/wallet/balance.service';
 import { TotalBalance } from '../../../../app.datatypes';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
@@ -20,7 +22,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
   @Input() headline: string;
 
-  timeSinceLastUpdateBalances = 0;
+  timeSinceLastBalanceUpdate = 0;
   isBalanceObtained = false;
   isBalanceUpdated: boolean;
   currentCoin: BaseCoin;
@@ -29,45 +31,44 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
 
-  constructor(private walletService: WalletService,
+  constructor(private balanceService: BalanceService,
               private coinService: CoinService,
               private dialog: MatDialog,
               private overlay: Overlay,
               private renderer: Renderer2,
-              private languageService: LanguageService) {
+              private languageService: LanguageService,
+              private _ngZone: NgZone) {
   }
 
   ngOnInit() {
-    this.walletService.totalBalance
-      .subscribe((balance: TotalBalance) => {
-        if (balance && !this.isBalanceObtained) {
-          this.isBalanceObtained = true;
-        }
-
-        this.isBalanceUpdated = !!balance;
-      });
-
     this.subscription = this.languageService.currentLanguage
       .subscribe(lang => this.language = lang);
-
-    this.subscription.add(
-      this.walletService.timeSinceLastBalancesUpdate
-        .subscribe((time: number) => {
-          if (time != null) {
-            this.timeSinceLastUpdateBalances = time;
-          }
-        })
-    );
 
     this.haveManyCoins = this.coinService.coins.length > 1;
 
     this.subscription.add(
-      this.coinService.currentCoin
-        .subscribe((coin: BaseCoin) => {
-          this.currentCoin = coin;
-          this.isBalanceObtained = false;
-        })
+      this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
+        this.currentCoin = coin;
+        this.isBalanceObtained = false;
+      })
+    );
+
+    this.subscription.add(
+      this.balanceService.totalBalance.subscribe((balance: TotalBalance) => {
+        if (balance && !this.isBalanceObtained) {
+          this.isBalanceObtained = true;
+        }
+
+        this.updateTimeSinceLastBalanceUpdate();
+        this.isBalanceUpdated = !!balance;
+      })
+    );
+
+    this._ngZone.runOutsideAngular(() => {
+      this.subscription.add(
+        Observable.interval(5000).subscribe(() => this._ngZone.run(() => this.updateTimeSinceLastBalanceUpdate()))
       );
+    });
   }
 
   ngOnDestroy() {
@@ -94,5 +95,10 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   openMenu() {
     this.menuTrigger.openMenu();
+  }
+
+  private updateTimeSinceLastBalanceUpdate() {
+    const diffMs: number = new Date().getTime() - this.balanceService.lastBalancesUpdateTime.getTime();
+    this.timeSinceLastBalanceUpdate = Math.floor(diffMs / 60000);
   }
 }
