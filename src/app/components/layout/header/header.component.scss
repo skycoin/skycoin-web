@@ -1,8 +1,8 @@
 @import '../../../../theme/variables';
 
 .-container {
-  background-color: #fbfbfb;
-  border-bottom: 2px solid rgba(30, 34, 39, 0.05);
+  background-color: $white;
+  border-bottom: 2px solid $grey-very-light;
 }
 
 .large-header {
@@ -33,19 +33,17 @@
   justify-content: center;
   text-align: center;
 
-  .balance {
-    .coins {
-      line-height: 1;
-      margin: 0 0 0.5em;
+  .coins {
+    line-height: 1;
+    margin: 0 0 0.5em;
 
-      span {
-        font-size: 4em;
-      }
+    span {
+      font-size: 4em;
     }
+  }
 
-    .loading-header {
-      font-size: 2em;
-    }
+  .loading-header {
+    font-size: 2em;
   }
 
   .dollars {
@@ -73,8 +71,8 @@
 }
 
 .notification-bar {
-  background-color: #F44A4D;
-  color:#FBFBFB;
+  background-color: $red;
+  color:$white;
   div {
     margin:auto;
 

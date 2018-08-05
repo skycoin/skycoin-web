@@ -29,11 +29,11 @@
 }
 
 .title {
-  font-size: $font-size-standard;
+  font-size: 13px;
   font-weight: 700;
   display: inline;
   flex: 1 1 auto;
-  letter-spacing: $letter-spacing-wide;
+  letter-spacing: 1px;
   line-height: 50px;
   text-align: center;
 }
@@ -78,8 +78,8 @@ button {
 .separator {
   width: 100%;
   height: 2px;
-  background-color: #eff0f0;
-  margin: 8px 0px;;
+  background-color: $grey-very-light;
+  margin: 8px 0px;
 }
 
 .flag {
@@ -90,7 +90,7 @@ button {
 }
 
 .color-primary {
-  color: #0072FF;
+  color: $blue;
 }
 
 .blinking-warning-icon {

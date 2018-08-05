@@ -7,11 +7,11 @@
   margin: 24px -24px -24px -24px;
   padding: 10px;
   font-size: 13px;
-  border-top: #ddd solid 1px;
+  border-top: $grey-very-light solid 1px;
   justify-content: space-between;
   line-height: 28px;
 }
-.-button-qr{
+.-button-qr {
   border-radius: 100px;
   cursor: pointer;
   width: 28px;
@@ -19,7 +19,7 @@
   margin-left: 10px;
   opacity: 0.5;
 }
-.-button-qr:hover{
+.-button-qr:hover {
   opacity: 1;
 }
 

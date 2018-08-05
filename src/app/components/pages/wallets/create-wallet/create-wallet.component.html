@@ -1,4 +1,4 @@
-<app-modal [headline]="data.create ? ('wallet.new.create-title' | translate) : ('wallet.new.load-title' | translate)" [dialog]="dialogRef" [disableDismiss]="disableDismiss">
+<app-modal class="modal" [headline]="data.create ? ('wallet.new.create-title' | translate) : ('wallet.new.load-title' | translate)" [dialog]="dialogRef" [disableDismiss]="disableDismiss">
   <app-create-wallet-form #formControl [create]="data.create"></app-create-wallet-form>
   <div class="-buttons">
     <app-button (action)="closePopup()" [disabled]="disableDismiss">

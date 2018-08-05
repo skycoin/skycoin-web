@@ -33,7 +33,7 @@
     </div>
   </div>
   <div class="row -buttons-footer">
-    <app-button class="dark -button-min-margin" [disabled]="!form.valid" (action)="emitCreatedPassword()" #button>
+    <app-button class="dark-button -button-min-margin" [disabled]="!form.valid" (action)="emitCreatedPassword()" #button>
       {{ 'wizard.finish-button' | translate }}
     </app-button>
     <app-button class="ghost -button-min-margin" (action)="emitBack()" [ngClass]="{ '-hidden': isWorking }">

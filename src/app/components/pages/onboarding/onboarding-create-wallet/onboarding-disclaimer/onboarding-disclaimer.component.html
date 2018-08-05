@@ -1,16 +1,19 @@
-<app-modal [headline]="'title.disclaimer' | translate" [dialog]="dialogRef" [disableDismiss]="true">
-  <div>
-    <span class="-disclaimer-description">
-      {{ 'onboarding.disclaimer.disclaimer-description' | translate }}
-    </span>
-    <div class="-check-container">
-      <mat-checkbox class="-disclaimer-check-text -check" [checked]="acceptTerms" (change)="setAccept($event)"
-                    type="checkbox" id="terms">{{ 'onboarding.disclaimer.disclaimer-check' | translate }}
-      </mat-checkbox>
-    </div>
+<app-modal class="modal" [headline]="'title.disclaimer' | translate" [dialog]="dialogRef" [disableDismiss]="true">
+  <div class="-body">
+    {{ 'onboarding.disclaimer.disclaimer-description' | translate }}
   </div>
-  <div class="-text-center">
-    <app-button class="primary -no-bottom-margin" (action)="closePopup()" [disabled]="!acceptTerms">
+
+  <div class="-check-container">
+    <mat-checkbox type="checkbox"
+                  class="-check-text -check"
+                  id="terms"
+                  [checked]="acceptTerms"
+                  (change)="setAccept($event)">{{ 'onboarding.disclaimer.disclaimer-check' | translate }}
+    </mat-checkbox>
+  </div>
+
+  <div class="-buttons">
+    <app-button class="primary" (action)="closePopup()" [disabled]="!acceptTerms">
       {{ 'onboarding.disclaimer.continue-button' | translate }}
     </app-button>
   </div>

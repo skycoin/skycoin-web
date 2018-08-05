@@ -7,7 +7,7 @@
       (!currentCoin.imageName ? 'url(assets/img/coins/generic.jpg)' : 'none')">
       <app-top-bar [headline]="headline"></app-top-bar>
       <div class="balance-container">
-        <div class="balance">
+        <div>
           <p *ngIf="!highest && loading" class="loading-header">{{ 'header.loading' | translate }}</p>
           <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
           <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>

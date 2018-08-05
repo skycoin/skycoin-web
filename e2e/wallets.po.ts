@@ -268,7 +268,7 @@ export class WalletsPage {
     const walletNameToDelete = 'Test create wallet';
 
     return element.all(by.css('.btn-delete-wallet')).first().click().then(() => {
-      return element(by.css('.-disclaimer-check-text')).click().then(() => {
+      return element(by.css('.-check-text')).click().then(() => {
         return element(by.buttonText('Yes')).click().then(() => {
           return element.all(by.css('.-wallet')).then(() => {
             return this.walletExist(walletNameToDelete).then((isWalletExistAfter) => {

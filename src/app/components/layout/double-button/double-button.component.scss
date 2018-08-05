@@ -1,19 +1,17 @@
 @import '../../../../theme/_variables';
 
-.-small-button ::ng-deep button {
+.-toggle ::ng-deep button {
   width: unset;
   height: unset;
   padding: 0 10px 0 10px;
   min-width: 100px;
   margin: unset;
   font-size: 13px;
-}
-
-.-toggle ::ng-deep button {
   box-shadow: unset;
   background-color: $transparent !important;
   line-height: unset !important;
   min-height: 26px;
+
   span {
     color: $black;
     line-height: unset !important;
@@ -22,6 +20,7 @@
 
 .-toggle ::ng-deep button.enabled {
   background-color: $black !important;
+  
   span {
     color: $white;
   }
@@ -38,14 +37,14 @@
 
 .light {
   &.-buttons-container {
-    background: #f7f7f7;
+    background: $grey-lightest;
   }
 
   .-toggle ::ng-deep button.enabled {
     background-color: #fff !important;
 
     span {
-      color: $grey-normal;
+      color: $grey-dark;
     }
   }
 }

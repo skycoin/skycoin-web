@@ -1,11 +1,11 @@
-<app-modal [headline]="data.headerText" [dialog]="dialogRef">
+<app-modal class="modal" [headline]="data.headerText" [dialog]="dialogRef">
   <div class="-body">
     {{ data.text }}
   </div>
 
   <div class="-check-container" *ngIf="data.checkboxText">
     <mat-checkbox type="checkbox"
-                  class="-disclaimer-check-text -check"
+                  class="-check-text -check"
                   id="terms"
                   [checked]="accepted"
                   (change)="setAccept($event)">{{ data.checkboxText }}

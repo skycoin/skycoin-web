@@ -13,7 +13,7 @@
 }
 
 .-headers {
-  color: rgba(30, 34, 39, 0.2);
+  color: $grey-light;
   display: flex;
   font-size: 12px;
   font-weight: 700;
@@ -26,15 +26,13 @@
   margin: 0 30px;
 }
 
-.-body {
+.-paper {
+  margin: 0;
   margin-bottom: 10px;
-  border-radius: 15px;
-  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.01), 1px 1px 2px 2px rgba(0, 0, 0, 0.01);
-  background: #fafafa;
 }
 
 .-wallet {
-  border-bottom: 1px solid #eff0f0;
+  border-bottom: 1px solid $grey-very-light;
   display: flex;
   font-size: $font-size-standard;
   line-height: 60px;
@@ -43,33 +41,33 @@
   cursor: pointer;
 
   &:first-child {
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
   }
 
   &:last-child {
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
   }
 
   .-label {
-    color: black;
+    color: $grey-dark;
     font-weight: 700;
   }
 
   .-hours {
-    color: rgba(30, 34, 39, 0.5);
+    color: $grey;
     text-align: right;
   }
 
   .-coins {
-    color: black;
+    color: $grey-dark;
     text-align: right;
   }
 
   .-encryption img {
     border-radius: 50%;
-    background-color: #f7f7f7;
+    background-color: $grey-lightest;
     display: inline-block;
     height: 38px;
     margin: 11px 0;
@@ -98,7 +96,7 @@
   }
 
   &:hover {
-    background-color: #f7f7f7;
+    background-color: $grey-lightest;
 
     .-expand img {
       opacity: 1;
@@ -111,10 +109,10 @@
   text-align: center;
 
   button {
-    background-color: $grey-light;
+    background-color: $grey-lightest;
     border: none;
     box-shadow: none;
-    color: $grey-dark;
+    color: $grey;
     font-size: 13px;
     margin: 0 5px;
     min-width: 140px;
