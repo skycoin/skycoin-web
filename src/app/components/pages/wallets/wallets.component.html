@@ -11,7 +11,7 @@
       </div>
       <div class="-wallets">
         <ng-container *ngFor="let wallet of wallets">
-          <div class="-body">
+          <div class="-paper">
             <div class="-wallet" (click)="toggleWallet(wallet)">
               <div class="-width-250 -label" [attr.title]="wallet.label">{{ wallet.label }}</div>
               <div class="flex-fill -encryption">

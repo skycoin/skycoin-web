@@ -60,7 +60,7 @@ export class OnboardingCreatePage {
   }
 
   acceptDisclaimer() {
-    element.all(by.css('.-disclaimer-check-text span')).first().click();
+    element.all(by.css('.-check-text span')).first().click();
     element(by.buttonText('Continue')).click();
     return this.getDisclaimerIsShow();
   }
@@ -89,10 +89,10 @@ export class OnboardingCreatePage {
   }
 
   getDisclaimerCheckedButtonState() {
-    element.all(by.css('.-disclaimer-check-text span')).first().click();
+    element.all(by.css('.-check-text span')).first().click();
     const button = element(by.buttonText('Continue'));
     const state = button.getAttribute('disabled') !== null;
-    element.all(by.css('.-disclaimer-check-text span')).first().click();
+    element.all(by.css('.-check-text span')).first().click();
     return state;
   }
 

@@ -1,5 +1,7 @@
+@import '../../../../theme/variables';
+
 .-header {
-  background-color: #f7f7f7;
+  background-color: $grey-lightest;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   line-height: 50px;
@@ -21,7 +23,7 @@
 }
 
 .-body {
-  background-color: #fbfbfb;
+  background-color: $white;
   padding: 0px 24px;
 }
 
@@ -34,6 +36,6 @@ mat-progress-bar {
 }
 
 .progress-bar-panel {
-  background-color: #f7f7f7;
+  background-color: $grey-lightest;
   height: 3px;
 }

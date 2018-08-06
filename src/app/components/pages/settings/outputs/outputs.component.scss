@@ -5,7 +5,7 @@
 }
 
 .-grey {
-  color: $grey-dark;
+  color: $grey;
 }
 
 .-hash {
@@ -14,14 +14,14 @@
 }
 
 .-address {
-  color: $grey-dark;
+  color: $grey;
 
   img {
     width: 17px;
     vertical-align: sub;
     margin-right: 10px;
-    cursor: pointer;
   }
+  
 }
 
 .-label {

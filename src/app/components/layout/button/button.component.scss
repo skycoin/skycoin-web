@@ -13,9 +13,9 @@ button {
 }
 
 button.enabled {
-  background-color: rgba(30, 34, 39, 0.05);
+  background-color: $grey-very-light;
   box-shadow: none;
-  color: #1e2227;
+  color: $grey-dark;
 }
 
 mat-icon {

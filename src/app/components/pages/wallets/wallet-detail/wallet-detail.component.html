@@ -1,5 +1,5 @@
 <div class="-actions">
-  <div class="-button btn-add-address" (click)="onAddNewAddress()" [ngClass]="{ 'disabled': isAddressCreating }">
+  <div class="-button btn-add-address" (click)="onAddNewAddress()" [ngClass]="{ 'mouse-disabled': isAddressCreating }">
     <span [ngClass]="{ '-btn-plus -img': !isAddressCreating, '-disabled-span': isAddressCreating, '-enabled-span': !isAddressCreating }">
       <mat-spinner *ngIf="isAddressCreating" [color]="spinnerStyle" class="in-button small"></mat-spinner>
       {{ 'wallet.new-address' | translate }}

@@ -1,5 +1,6 @@
 @import 'theme/_variables';
 @import 'theme/_tables';
+@import 'theme/_modals';
 @import '~bootstrap/scss/bootstrap-grid.scss';
 
 /* You can add global styles to this file, and also import other style files */
@@ -51,23 +52,9 @@
   url('assets/fonts/skycoin/Skycoin-BoldItalic.woff') format('woff');
 }
 
-@font-face {
-  font-family: 'Skycoin';
-  font-style: italic;
-  font-weight: 700;
-  src: url('assets/fonts/skycoin/Skycoin-BoldItalic.woff2') format('woff2'),
-  url('assets/fonts/skycoin/Skycoin-BoldItalic.woff') format('woff');
-}
-
-$mat-font-family: Skycoin, sans-serif;
-$white: #FBFBFB;
-
-$primary-color: #0072ff;
-$secondary-color: #ffc125;
-
 body, div, h1, h2, h3, h4, h5, h6, p, span, a, button, option, select,
 mat-panel-description, mat-panel-title, mat-option.mat-option {
-  font-family: $mat-font-family;
+  font-family: Skycoin, sans-serif;
 }
 
 html {
@@ -75,23 +62,21 @@ html {
 }
 
 body {
-  background-color: #f7f7f7;
+  background-color: $grey-lightest;
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
-header {
-  background: url("assets/header.png") center center / cover, linear-gradient(-155deg, #686e96 0%, #373b5c 100%);
-  width: 100%;
-  height: 300px;
+.-paper {
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.01), 1px 1px 2px 2px rgba(0, 0, 0, 0.01);
+  margin: 30px;
 }
 
 mat-dialog-container {
   border-radius: 5px !important;
-}
-
-.mat-dialog-container {
   padding: 0 !important;
 }
 
@@ -105,30 +90,9 @@ mat-dialog-container {
   background-color: #f5f5f5f9
 }
 
-.header-container {
-  max-width: 848px;
-  text-align: center;
-  padding-top: 40px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.header-container h1 {
-  font-size: 3em;
-  color: white;
-}
-
 .button-line {
   margin-top: 40px;
   text-align: right;
-}
-
-.datatable-row-group {
-  cursor: pointer;
-}
-
-button.active {
-  background-color: rgba(0, 0, 0, .12);
 }
 
 mat-spinner.in-button {
@@ -183,7 +147,7 @@ mat-panel-title {
   min-height: 100%;
 
   &.sky-container-grey {
-    background-color: $grey-light;
+    background-color: $grey-lightest;
   }
 }
 
@@ -195,7 +159,7 @@ mat-panel-title {
   margin-bottom: 20px;
 
   label {
-    color: #1e2227;
+    color: $grey-dark;
     display: block;
     font-size: 13px;
     line-height: 20px;
@@ -203,7 +167,7 @@ mat-panel-title {
   }
 
   input {
-    border: 2px solid rgba(0, 0, 0, 0.05);
+    border: 2px solid $grey-very-light;
     border-radius: 6px;
     box-sizing: border-box;
     display: block;
@@ -214,7 +178,7 @@ mat-panel-title {
 
   select {
     background-color: white;
-    border: 2px solid rgba(0, 0, 0, 0.05);
+    border: 2px solid $grey-very-light;
     border-radius: 6px;
     box-sizing: border-box;
     display: block;
@@ -225,7 +189,7 @@ mat-panel-title {
   }
 
   textarea {
-    border: 2px solid rgba(0, 0, 0, 0.05);
+    border: 2px solid $grey-very-light;
     border-radius: 6px;
     box-sizing: border-box;
     display: block;
@@ -247,7 +211,7 @@ mat-panel-title {
   }
 }
 
-.dark button.enabled {
+.dark-button button.enabled {
   background-color: $black !important;
   span {
     color: white;
@@ -306,38 +270,6 @@ On-boarding components
   label {
     color: white;
   }
-
-  input {
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-    box-sizing: border-box;
-    display: block;
-    line-height: 20px;
-    padding: 10px 10px;
-    width: 100%;
-  }
-
-  select {
-    background-color: white;
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-    box-sizing: border-box;
-    display: block;
-    line-height: 20px;
-    padding: 10px 10px;
-    width: 100%;
-    -webkit-appearance:none;
-  }
-
-  textarea {
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-    box-sizing: border-box;
-    display: block;
-    line-height: 20px;
-    padding: 10px 10px;
-    width: 100%;
-  }
 }
 
 .primary button.enabled {
@@ -352,9 +284,43 @@ On-boarding components
   }
 }
 
+.-check {
+  label {
+    font-family: Skycoin;
+    line-height: normal;
+    font-size: 14px;
+  
+    color: $grey-dark;
+  }
+
+  .mat-checkbox-checkmark-path {
+    position: absolute;
+    width: 18px;
+    height: 8px;
+    left: 4.59px;
+    top: 9px;
+    stroke: $gradient-blue-dark !important;
+  }
+
+  .mat-checkbox-background, .mat-checkbox-frame {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    box-sizing: border-box;
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+    background: $grey-very-light !important;
+    border-radius: 6px;
+    border-color: transparent;
+  }
+}
+
 .mat-menu-panel {
   border-radius: 5px !important;
-  background-color: #fefefe;
+  background-color: $white;
 
   .mat-menu-item {
     font-family: Skycoin;
@@ -374,22 +340,6 @@ On-boarding components
 General Helpers
  */
 
-.primary-color {
-  color: $primary-color;
-}
-
-.secondary-color {
-  color: $secondary-color;
-}
-
-.no-opacity {
-  opacity: 1 !important;
-}
-
-.light-opacity {
-  opacity: 0.2
-}
-
 .rotate-90 {
   transform: rotate(90deg);
 }
@@ -402,7 +352,7 @@ General Helpers
   transform: rotate(270deg);
 }
 
-.disabled {
+.mouse-disabled {
   pointer-events: none;
 }
 

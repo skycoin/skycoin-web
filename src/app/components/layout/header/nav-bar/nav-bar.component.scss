@@ -1,7 +1,7 @@
 @import '../../../../../theme/variables';
 
 :host {
-  background-color: #fbfbfb;
+  background-color: $white;
   min-height: 66px;
 }
 
@@ -14,7 +14,6 @@
     padding: 0 20px;
 
     img {
-      display: inline-block;
       float: left;
       height: 66px;
       padding: 17px 0;
@@ -38,8 +37,16 @@
     }
   }
 
+  .-full-opacity {
+    opacity: 1 !important;
+  }
+
   .-switch {
     align-self: center;
     padding: 0 20px;
+  }
+  
+  .secondary-color {
+    color: $yellow;
   }
 }

@@ -2,8 +2,8 @@
 
 .-records {
   background-color: darken($white, 2%);
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .-record {
@@ -13,17 +13,17 @@
   align-items: center;
 
   &:not(:last-of-type) {
-    border-bottom: 1px solid #eff0f0;
+    border-bottom: 1px solid $grey-very-light;
   }
 
   .id-column {
     width: 50px;
-    color: rgba(30, 34, 39, 0.6);
+    color: $grey;
     flex-shrink: 0;
   }
 
   .address-column {
-    color: rgba(30, 34, 39, 0.6);
+    color: $grey;
     flex: 1 1 auto;
     display: flex;
     align-items: center;
@@ -50,14 +50,14 @@
   }
 
   .hours-column {
-    color: rgba(30, 34, 39, 0.5);
+    color: $grey;
     width: 130px;
     text-align: right;
     flex-shrink: 0;
   }
 
   .coins-column {
-    color: black;
+    color: $grey-dark;
     width: 130px;
     text-align: right;
     flex-shrink: 0;
@@ -72,10 +72,10 @@
 
     mat-icon {
       cursor: pointer;
-      color: #d2d3d4;
+      color: $grey-light;
 
       &:hover {
-        color: #0072ff;
+        color: $blue;
       }
     }
   }
@@ -89,8 +89,8 @@
 }
 
 .-actions {
-  background-color: #fafafa;
-  border-bottom: 1px solid #eff0f0;
+  background-color: $white;
+  border-bottom: 1px solid $grey-very-light;
   display: flex;
   width: 100%;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03) !important;
@@ -111,7 +111,7 @@
       cursor: pointer;
 
       &:hover {
-        color: $grey-dark;
+        color: $grey;
       }
     }
 
@@ -199,7 +199,7 @@
 }
 
 .copy-label {
-  color: #0072ff;
+  color: $blue;
   display: inline-block;
   font-size: 12px;
   line-height: 100%;
@@ -215,7 +215,7 @@
 
   &::after {
     content: attr(data-label);
-    color: #0072ff;
+    color: $blue;
     display: inline-block;
     position: absolute;
     top: -2px;

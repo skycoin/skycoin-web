@@ -1,7 +1,7 @@
 @import '../../../../../../theme/_variables.scss';
 
 .red-disclaimer-box {
-  color: #ff004e;
+  color: $red;
   font-size: 12px;
   padding: 0 10px;
   line-height: 1.5;
@@ -27,7 +27,7 @@
   }
 }
 
-.-valid-seed-container.-expand{
+.-valid-seed-container.-expand {
   margin-right: -14px;
   .-valid{
     display: block;
@@ -46,7 +46,7 @@ label[for=seed] {
 
     span {
       cursor: pointer;
-      color: $gradient-blue-dark-transparent;
+      color: $blue;
     }
 
     mat-icon {
@@ -59,7 +59,7 @@ label[for=seed] {
 
     .divider {
       padding: 0 5px;
-      color: $grey-normal;
+      color: $grey-dark;
     }
   }
 
@@ -93,40 +93,7 @@ label[for=seed] {
   }
 
   mat-checkbox {
-    font-family: Skycoin;
-    line-height: normal;
-    font-size: 14px;
     margin-top: 10px;
     display: inline-block;
-  }
-  
-  .-check ::ng-deep {
-    label {
-      color: #1E2227;
-    }
-
-    .mat-checkbox-checkmark-path {
-      position: absolute;
-      width: 18px;
-      height: 8px;
-      left: 4.59px;
-      top: 9px;
-      stroke: #0072FF !important;
-    }
-  
-    .mat-checkbox-background, .mat-checkbox-frame {
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      position: absolute;
-      box-sizing: border-box;
-      pointer-events: none;
-      width: 20px;
-      height: 20px;
-      background: rgba(30, 34, 39, 0.05);
-      border-radius: 6px;
-      border-color: transparent;
-    }
   }
 }

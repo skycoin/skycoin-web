@@ -8,7 +8,7 @@
         <div class="-width-150">{{ currentCoin.coinSymbol }}</div>
         <div class="-width-150">{{ 'pending-txs.timestamp' | translate }}</div>
       </div>
-      <div class="-body">
+      <div class="-paper">
         <ng-container *ngIf="transactions.length">
           <div class="-row" *ngFor="let transaction of transactions">
             <div class="flex-fill -txid">{{ transaction.txid }}</div>

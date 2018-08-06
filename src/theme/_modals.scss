@@ -1,0 +1,25 @@
+@import 'variables';
+
+.modal {
+  .-body {
+    line-height: 20px;
+    font-size: 12px;
+    color: $grey-dark;
+    opacity: 0.8;
+  }
+
+  .-check-container{
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .-buttons {
+    text-align: center;
+  }
+  
+  app-button {
+    button {
+      margin-top: 28px;
+    }
+  }
+}

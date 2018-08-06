@@ -1,4 +1,4 @@
-$soft-grey: #dddddd;
+@import '../../../../theme/_variables';
 
 .x-container {
   width: 0px;
@@ -6,6 +6,7 @@ $soft-grey: #dddddd;
   float: right;
   position: relative;
   left: -42px;
+
   img {
     width: 42px;
     height: 42px;
@@ -37,7 +38,7 @@ $soft-grey: #dddddd;
     position: relative;
     top: 10px;
     left: 12px;
-    color: $soft-grey;
+    color: $grey-light;
   }
 
   .input-container {
@@ -58,11 +59,11 @@ $soft-grey: #dddddd;
   }
 
   input::placeholder {
-    color: $soft-grey;
+    color: $grey-light;
   }
 
   input:-ms-input-placeholder {
-    color: $soft-grey;
+    color: $grey-light;
   }
 }
 
@@ -94,7 +95,7 @@ $soft-grey: #dddddd;
       }
 
       .label {
-        background-color: #e8e8e888;
+        background-color: $grey-very-light;
         padding: 4px 10px;
         white-space: nowrap;
         overflow: hidden;

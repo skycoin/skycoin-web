@@ -1,17 +1,19 @@
-<app-modal class="-title" [headline]="'wizard.confirm.title' | translate" [dialog]="dialogRef">
-  <div>
-    <span class="-safe-description">
-     {{ 'wizard.confirm.desc' | translate }}
-    </span>
-    <div class="-check-container">
-      <mat-checkbox class="-safe-check-text -check" [checked]="acceptSafe" (change)="setAccept($event)"
-                    type="checkbox" id="terms">
-        {{ 'wizard.confirm.checkbox' | translate }}
-      </mat-checkbox>
-    </div>
+<app-modal class="modal -title" [headline]="'wizard.confirm.title' | translate" [dialog]="dialogRef">
+  <div class="-body">
+    {{ 'wizard.confirm.desc' | translate }}
   </div>
-  <div class="-text-center">
-    <app-button class="primary -no-bottom-margin" (action)="closePopup()" [disabled]="!acceptSafe">
+
+  <div class="-check-container">
+    <mat-checkbox type="checkbox"
+                  class="-check-text -check"
+                  id="terms"
+                  [checked]="acceptSafe"
+                  (change)="setAccept($event)">{{ 'wizard.confirm.checkbox' | translate }}
+    </mat-checkbox>
+  </div>
+
+  <div class="-buttons">
+    <app-button class="primary" (action)="closePopup()" [disabled]="!acceptSafe">
       {{ 'wizard.confirm.button' | translate }}
     </app-button>
   </div>
