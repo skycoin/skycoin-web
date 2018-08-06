@@ -22,7 +22,7 @@ export class CreateWalletFormComponent implements OnInit, OnDestroy {
   @Input() whiteText: boolean;
 
   form: FormGroup;
-  haveManyCoins: boolean;
+  hasManyCoins: boolean;
   normalSeed = false;
   customSeedAccepted = false;
 
@@ -34,7 +34,7 @@ export class CreateWalletFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.haveManyCoins = this.coinService.coins.length > 1;
+    this.hasManyCoins = this.coinService.coins.length > 1;
     this.initForm(this.coinService.currentCoin.getValue());
   }
 

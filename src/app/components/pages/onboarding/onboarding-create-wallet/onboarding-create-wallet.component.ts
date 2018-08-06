@@ -1,24 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
-import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
-import { OnboardingSafeguardComponent } from './onboarding-safeguard/onboarding-safeguard.component';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { LanguageService } from '../../../../services/language.service';
-import { openChangeLanguageModal } from '../../../../utils';
+import { openChangeLanguageModal, showConfirmationModal } from '../../../../utils';
 import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
+import { ConfirmationData } from '../../../../app.datatypes';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
   templateUrl: './onboarding-create-wallet.component.html',
   styleUrls: ['./onboarding-create-wallet.component.scss'],
 })
-export class OnboardingCreateWalletComponent implements OnInit {
+export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   @ViewChild('formControl') formControl: CreateWalletFormComponent;
   @ViewChild('create') createButton;
 
@@ -26,7 +25,6 @@ export class OnboardingCreateWalletComponent implements OnInit {
   doubleButtonActive = DoubleButtonActive.LeftButton;
   userHasWallets = false;
   creatingWallet = false;
-  haveManyCoins: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -34,13 +32,16 @@ export class OnboardingCreateWalletComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private coinService: CoinService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
   ) { }
 
   ngOnInit() {
     this.checkUserWallets();
-    this.haveManyCoins = this.coinService.coins.length > 1;
     this.formControl.initForm(this.coinService.currentCoin.getValue());
+  }
+
+  ngOnDestroy() {
+    this.snackBar.dismiss();
   }
 
   changeForm(newState: DoubleButtonActive) {
@@ -49,7 +50,15 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   showSafe() {
-    this.dialog.open(OnboardingSafeguardComponent, this.createDialogConfig()).afterClosed().subscribe(result => {
+    const data: ConfirmationData = {
+      text: 'wizard.confirm.desc',
+      headerText: 'wizard.confirm.title',
+      checkboxText: 'wizard.confirm.checkbox',
+      confirmButtonText: 'wizard.confirm.button',
+      redTitle: true
+    };
+
+    showConfirmationModal(this.dialog, data).afterClosed().subscribe(result => {
       if (result) {
         this.createWallet();
       }
@@ -77,7 +86,15 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   private showDisclaimer() {
-    this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
+    const data: ConfirmationData = {
+      text: 'onboarding.disclaimer.disclaimer-description',
+      headerText: 'title.disclaimer',
+      checkboxText: 'onboarding.disclaimer.disclaimer-check',
+      confirmButtonText: 'onboarding.disclaimer.continue-button',
+      disableDismiss: true,
+    };
+
+    showConfirmationModal(this.dialog, data);
   }
 
   private checkUserWallets() {
@@ -118,12 +135,5 @@ export class OnboardingCreateWalletComponent implements OnInit {
 
     this.createButton.setError(errorMesasge);
     this.creatingWallet = false;
-  }
-
-  private createDialogConfig(disableClose = false): MatDialogConfig {
-    const config = new MatDialogConfig();
-    config.width = '450px';
-    config.disableClose = disableClose;
-    return config;
   }
 }

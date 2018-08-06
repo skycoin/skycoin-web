@@ -6,7 +6,7 @@
     type="submit"
     mat-raised-button
     color="primary"
-    [disabled]="disabled && !emit ? true : false"
+    [disabled]="disabled && !forceEmitEvents ? true : false"
     [matTooltip]="error ? error : null"
     (click)="this.state !== 0 ? onClick() : null"
     [ngClass]="{ enabled: !disabled }"

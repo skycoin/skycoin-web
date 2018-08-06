@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { SpendingService } from '../../../../services/wallet/spending.service';
 import { Wallet } from '../../../../app.datatypes';
-import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
+import { openQrModal } from '../../../../utils';
 
 @Component({
   selector: 'app-outputs',
@@ -35,7 +35,7 @@ export class OutputsComponent implements OnInit, OnDestroy {
         this.currentCoin = coin;
       });
 
-    this.route.queryParams.subscribe(params => this.getWalletsOutputs(params));
+    this.route.queryParams.first().subscribe(params => this.getWalletsOutputs(params));
   }
 
   ngOnDestroy() {
@@ -43,9 +43,7 @@ export class OutputsComponent implements OnInit, OnDestroy {
   }
 
   showQr(address) {
-    const config = new MatDialogConfig();
-    config.data = address;
-    this.dialog.open(QrCodeComponent, config);
+    openQrModal(this.dialog, address);
   }
 
   private getWalletsOutputs(queryParams: Params) {

@@ -3,7 +3,7 @@
     <label for="label">{{ 'wallet.new.name-label' | translate}}</label>
     <input formControlName="label" id="label">
   </div>
-  <div class="form-field" *ngIf="haveManyCoins">
+  <div class="form-field" *ngIf="hasManyCoins">
     <label for="coin">{{ 'wallet.new.select-coin' | translate}}</label>
     <div class="-select">
       <app-select-coin formControlName="coin" id="coin"></app-select-coin>

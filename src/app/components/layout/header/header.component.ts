@@ -29,12 +29,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   highest: number;
   currentCoin: BaseCoin;
 
-  private isBalanceLoaded = false;
+  private balanceLoaded = false;
   private price: number;
   private subscription: Subscription;
 
   get loading() {
-    return this.isBlockchainLoading || !this.isBalanceLoaded;
+    return this.isBlockchainLoading || !this.balanceLoaded;
   }
 
   constructor(
@@ -45,7 +45,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-
     this.subscription = this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => this.currentCoin = coin);
 
@@ -71,7 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.hours = balance.hours;
 
             this.calculateBalance();
-            this.isBalanceLoaded = true;
+            this.balanceLoaded = true;
           }
         })
     );
@@ -82,10 +81,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
   }
 
-  onCoinChanged(coin: BaseCoin) {
-    this.coinService.changeCoin(coin);
-  }
-
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
@@ -94,7 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.coins = 0;
     this.price = null;
     this.balance = null;
-    this.isBalanceLoaded = false;
+    this.balanceLoaded = false;
     this.isBlockchainLoading = false;
     this.percentage = null;
     this.current = null;

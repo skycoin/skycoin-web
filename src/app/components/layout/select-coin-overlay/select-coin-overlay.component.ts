@@ -97,7 +97,7 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.keyCode === 27) {
-        this.close(null);
+      this.close(null);
     }
   }
 

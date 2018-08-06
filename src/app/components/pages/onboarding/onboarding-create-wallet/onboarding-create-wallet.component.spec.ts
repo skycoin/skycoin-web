@@ -8,7 +8,6 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 
 import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
-import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
 import { CoinService } from '../../../../services/coin.service';
 import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService } from '../../../../utils/test-mocks';
 import { LanguageService } from '../../../../services/language.service';
@@ -22,7 +21,6 @@ describe('OnboardingCreateWalletComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         OnboardingCreateWalletComponent,
-        OnboardingDisclaimerComponent,
         MockTranslatePipe,
         CreateWalletFormComponent
       ],
@@ -43,12 +41,6 @@ describe('OnboardingCreateWalletComponent', () => {
   }));
 
   beforeEach(() => {
-    TestBed.overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [ OnboardingDisclaimerComponent ],
-      }
-    });
-
     fixture = TestBed.createComponent(OnboardingCreateWalletComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

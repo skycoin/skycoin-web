@@ -1,10 +1,10 @@
 <div class="buttons-left">
-  <app-coin-button *ngIf="haveManyCoins" (click)="changeCoin()"></app-coin-button>
-  <div class="last-updated-time" *ngIf="isBalanceObtained">
+  <app-coin-button *ngIf="hasManyCoins" (click)="changeCoin()"></app-coin-button>
+  <div class="last-updated-time" *ngIf="balanceObtained">
     <div class="label">{{ 'header.top-bar.updated1' | translate }}</div>
     <div>
       {{ timeSinceLastBalanceUpdate === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastBalanceUpdate }} {{ 'header.top-bar.updated2' | translate }}
-      <i *ngIf="!this.isBalanceUpdated"
+      <i *ngIf="!this.problemUpdatingBalance"
         class="material-icons blinking-warning-icon"
         [matTooltip]="'header.top-bar.connection-error-tooltip' | translate">
         warning

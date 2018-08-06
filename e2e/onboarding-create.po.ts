@@ -37,11 +37,11 @@ export class OnboardingCreatePage {
   }
 
   getDisclaimerIsShow() {
-    return element(by.css('app-onboarding-disclaimer')).isPresent();
+    return element(by.css('app-confirmation')).isPresent();
   }
 
   getSafeguardIsShow() {
-    return element(by.css('app-onboarding-safeguard')).isPresent();
+    return element(by.css('app-confirmation')).isPresent();
   }
 
   closeOutsideDisclaimer() {

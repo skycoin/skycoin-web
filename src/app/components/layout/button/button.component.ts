@@ -9,7 +9,7 @@ import { MatTooltip } from '@angular/material';
 
 export class ButtonComponent {
   @Input() disabled: boolean;
-  @Input() emit = false;
+  @Input() forceEmitEvents = false;
   @Input() spinnerStyle = 'primary';
   @Output() action = new EventEmitter();
   @ViewChild('tooltip') tooltip: MatTooltip;
@@ -19,7 +19,7 @@ export class ButtonComponent {
   mouseOver = false;
 
   onClick() {
-    if (!this.disabled || this.emit) {
+    if (!this.disabled || this.forceEmitEvents) {
       this.error = '';
       this.action.emit();
     }
@@ -38,8 +38,8 @@ export class ButtonComponent {
     setTimeout(() => this.state = null, 3000);
   }
 
-  setError(error: any) {
-    this.error = !error || typeof error === 'string' ? error : error['_body'];
+  setError(error: string) {
+    this.error = error;
     this.state = 2;
 
     setTimeout(() => {

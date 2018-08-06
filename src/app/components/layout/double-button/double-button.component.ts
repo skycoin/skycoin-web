@@ -8,39 +8,18 @@ export enum DoubleButtonActive {RightButton, LeftButton}
   styleUrls: ['./double-button.component.scss'],
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class DoubleButtonComponent implements OnInit {
-  @Input() rightButtonText: any;
-  @Input() leftButtonText: any;
+export class DoubleButtonComponent {
+  @Input() rightButtonText: string;
+  @Input() leftButtonText: string;
   @Input() activeButton: DoubleButtonActive;
   @Input() className = '';
   @Output() onStateChange = new EventEmitter();
-  rightActive = false;
+  doubleButtonActive = DoubleButtonActive;
 
-  ngOnInit() {
-    this.initState();
-  }
-
-  initState() {
-    if (this.activeButton) {
-      if (this.activeButton === DoubleButtonActive.LeftButton) {
-        this.rightActive = false;
-      } else {
-        this.rightActive = true;
-      }
-    }
-  }
-
-  onRightClick() {
-    if (!this.rightActive) {
-      this.onStateChange.emit(DoubleButtonActive.RightButton);
-      this.rightActive = true;
-    }
-  }
-
-  onLeftClick() {
-    if (this.rightActive) {
-      this.onStateChange.emit(DoubleButtonActive.LeftButton);
-      this.rightActive = false;
+  onClick(button: DoubleButtonActive) {
+    if (this.activeButton !== button) {
+      this.activeButton = button;
+      this.onStateChange.emit(button);
     }
   }
 }
