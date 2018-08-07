@@ -16,6 +16,7 @@ export class BlockchainComponent implements OnInit, OnDestroy {
   currentCoin: BaseCoin;
 
   private coinSubscription: ISubscription;
+  private dataSubscription: ISubscription;
 
   constructor(
     private blockchainService: BlockchainService,
@@ -29,7 +30,11 @@ export class BlockchainComponent implements OnInit, OnDestroy {
         this.block = null;
         this.coinSupply = null;
 
-        Observable.forkJoin(
+        if (this.dataSubscription && !this.dataSubscription.closed) {
+          this.dataSubscription.unsubscribe();
+        }
+
+        this.dataSubscription = Observable.forkJoin(
           this.blockchainService.lastBlock(),
           this.blockchainService.coinSupply()
         )
@@ -42,5 +47,9 @@ export class BlockchainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.coinSubscription.unsubscribe();
+
+    if (this.dataSubscription && !this.dataSubscription.closed) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 }

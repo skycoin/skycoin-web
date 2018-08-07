@@ -113,5 +113,7 @@ export interface ConfirmationData {
   headerText: string;
   checkboxText?: string;
   confirmButtonText: string;
-  cancelButtonText: string;
+  cancelButtonText?: string;
+  redTitle?: boolean;
+  disableDismiss?: boolean;
 }

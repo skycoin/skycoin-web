@@ -23,11 +23,11 @@ export class TopBarComponent implements OnInit, OnDestroy {
   @Input() headline: string;
 
   timeSinceLastBalanceUpdate = 0;
-  isBalanceObtained = false;
-  isBalanceUpdated: boolean;
+  balanceObtained = false;
+  problemUpdatingBalance: boolean;
   currentCoin: BaseCoin;
   language: LanguageData;
-  haveManyCoins: boolean;
+  hasManyCoins: boolean;
 
   private subscription: Subscription;
 
@@ -44,23 +44,23 @@ export class TopBarComponent implements OnInit, OnDestroy {
     this.subscription = this.languageService.currentLanguage
       .subscribe(lang => this.language = lang);
 
-    this.haveManyCoins = this.coinService.coins.length > 1;
+    this.hasManyCoins = this.coinService.coins.length > 1;
 
     this.subscription.add(
       this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
         this.currentCoin = coin;
-        this.isBalanceObtained = false;
+        this.balanceObtained = false;
       })
     );
 
     this.subscription.add(
       this.balanceService.totalBalance.subscribe((balance: TotalBalance) => {
-        if (balance && !this.isBalanceObtained) {
-          this.isBalanceObtained = true;
+        if (balance && !this.balanceObtained) {
+          this.balanceObtained = true;
         }
 
         this.updateTimeSinceLastBalanceUpdate();
-        this.isBalanceUpdated = !!balance;
+        this.problemUpdatingBalance = !!balance;
       })
     );
 

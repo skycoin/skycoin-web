@@ -5,7 +5,7 @@ import { FormBuilder } from '@angular/forms';
 
 import { UnlockWalletComponent } from './unlock-wallet.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
-import { MockTranslatePipe, MockWalletService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockMatSnackBar } from '../../../../utils/test-mocks';
 
 describe('UnlockWalletComponent', () => {
   let component: UnlockWalletComponent;
@@ -20,7 +20,7 @@ describe('UnlockWalletComponent', () => {
         { provide: WalletService, useClass: MockWalletService },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: MatSnackBar, useValue: {} }
+        { provide: MatSnackBar, useClass: MockMatSnackBar }
       ]
     })
     .compileComponents();

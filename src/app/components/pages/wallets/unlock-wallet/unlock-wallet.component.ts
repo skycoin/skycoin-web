@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { ISubscription } from 'rxjs/Subscription';
 
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
@@ -11,12 +12,14 @@ import { WalletService } from '../../../../services/wallet/wallet.service';
   templateUrl: './unlock-wallet.component.html',
   styleUrls: ['./unlock-wallet.component.scss'],
 })
-export class UnlockWalletComponent implements OnInit {
+export class UnlockWalletComponent implements OnInit, OnDestroy {
   @Output() onWalletUnlocked = new EventEmitter<void>();
   @ViewChild('unlock') unlockButton;
   form: FormGroup;
   disableDismiss = false;
   loadingProgress = 0;
+
+  private progressSubscription: ISubscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: Wallet,
@@ -30,6 +33,10 @@ export class UnlockWalletComponent implements OnInit {
     this.initForm();
   }
 
+  ngOnDestroy() {
+    this.snackbar.dismiss();
+  }
+
   closePopup() {
     this.dialogRef.close();
   }
@@ -37,21 +44,16 @@ export class UnlockWalletComponent implements OnInit {
   unlockWallet() {
     this.unlockButton.setLoading();
     this.disableDismiss = true;
-    this.dialogRef.disableClose = true;
 
     const onProgressChanged = new EventEmitter<number>();
     if (this.data.addresses.length > 1) {
-      onProgressChanged.subscribe((progress) => this.loadingProgress = progress);
+      this.progressSubscription = onProgressChanged.subscribe((progress) => this.loadingProgress = progress);
     }
 
     this.walletService.unlockWallet(this.data, this.form.value.seed, onProgressChanged)
       .subscribe(
         () => this.onUnlockSuccess(),
-        (error: Error) => {
-          this.onUnlockError(error);
-          this.disableDismiss = false;
-          this.dialogRef.disableClose = false;
-        }
+        (error: Error) => this.onUnlockError(error)
       );
   }
 
@@ -62,15 +64,24 @@ export class UnlockWalletComponent implements OnInit {
   }
 
   private onUnlockSuccess() {
+    this.removeProgressSubscription();
     this.unlockButton.setSuccess();
     this.closePopup();
     this.onWalletUnlocked.emit();
   }
 
   private onUnlockError(error: Error) {
+    this.removeProgressSubscription();
+    this.disableDismiss = false;
     const config = new MatSnackBarConfig();
     config.duration = 5000;
     this.snackbar.open(error.message, null, config);
-    this.unlockButton.setError({ _body: error.message });
+    this.unlockButton.setError(error.message);
+  }
+
+  private removeProgressSubscription() {
+    if (this.progressSubscription && !this.progressSubscription.closed) {
+      this.progressSubscription.unsubscribe();
+    }
   }
 }

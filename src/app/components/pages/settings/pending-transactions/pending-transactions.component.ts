@@ -23,6 +23,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
   private navbarSubscription: ISubscription;
   private coinSubscription: ISubscription;
+  private dataSubscription: ISubscription;
 
   constructor(
     private walletService: WalletService,
@@ -48,6 +49,11 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.navbarSubscription.unsubscribe();
     this.coinSubscription.unsubscribe();
+
+    if (this.dataSubscription && !this.dataSubscription.closed) {
+      this.dataSubscription.unsubscribe();
+    }
+
     this.navbarService.hideSwitch();
   }
 
@@ -55,8 +61,12 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.transactions = [];
 
+    if (this.dataSubscription && !this.dataSubscription.closed) {
+      this.dataSubscription.unsubscribe();
+    }
+
     const showAllTransactions = value === DoubleButtonActive.RightButton;
-    this.historyService.getAllPendingTransactions()
+    this.dataSubscription = this.historyService.getAllPendingTransactions()
       .delay(32)
       .flatMap((transactions: any) => {
         return showAllTransactions ? Observable.of(transactions) : this.getWalletsTransactions(transactions);

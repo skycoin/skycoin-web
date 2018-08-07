@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatSnackBar, MatSnackBarConfig } from '@angular/material';
-import { ISubscription } from 'rxjs/Subscription';
+import { ISubscription, Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 
@@ -25,11 +25,10 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   wallets: Wallet[];
-  transactions = [];
   currentCoin: BaseCoin;
 
-  private subscription: ISubscription;
-  private coinSubscription: ISubscription;
+  private unlockSubscription: ISubscription;
+  private subscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,17 +42,22 @@ export class SendFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initForm();
 
-    this.walletService.currentWallets
-      .subscribe(wallets => this.wallets = wallets);
+    this.subscription.add(this.walletService.currentWallets
+      .subscribe(wallets => this.wallets = wallets)
+    );
 
-    this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+    this.subscription.add(this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => this.currentCoin = coin)
+    );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.coinSubscription.unsubscribe();
     this.snackbar.dismiss();
+
+    if (this.unlockSubscription) {
+      this.unlockSubscription.unsubscribe();
+    }
   }
 
   onVerify(event = null) {
@@ -71,8 +75,12 @@ export class SendFormComponent implements OnInit, OnDestroy {
     const wallet = this.form.value.wallet;
 
     if (!wallet.seed) {
-      openUnlockWalletModal(wallet, this.unlockDialog).componentInstance.onWalletUnlocked
-        .subscribe(() => this.createTransaction(wallet));
+      if (this.unlockSubscription) {
+        this.unlockSubscription.unsubscribe();
+      }
+
+      this.unlockSubscription = openUnlockWalletModal(wallet, this.unlockDialog).componentInstance
+        .onWalletUnlocked.subscribe(() => this.createTransaction(wallet));
     } else {
       this.createTransaction(wallet);
     }

@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
 
@@ -13,7 +13,7 @@ import { CreateWalletFormComponent } from './create-wallet-form/create-wallet-fo
   templateUrl: './create-wallet.component.html',
   styleUrls: ['./create-wallet.component.scss'],
 })
-export class CreateWalletComponent {
+export class CreateWalletComponent implements OnDestroy {
   @ViewChild('formControl') formControl: CreateWalletFormComponent;
   @ViewChild('create') createButton: ButtonComponent;
 
@@ -27,6 +27,10 @@ export class CreateWalletComponent {
     private coinService: CoinService
   ) { }
 
+  ngOnDestroy() {
+    this.snackBar.dismiss();
+  }
+
   closePopup() {
     this.dialogRef.close();
   }
@@ -34,7 +38,6 @@ export class CreateWalletComponent {
   createWallet() {
     this.createButton.setLoading();
     this.disableDismiss = true;
-    this.dialogRef.disableClose = true;
 
     const data = this.formControl.getData();
 
@@ -55,9 +58,8 @@ export class CreateWalletComponent {
     const config = new MatSnackBarConfig();
     config.duration = 5000;
     this.snackBar.open(errorMesasge, null, config);
-    this.createButton.setError({ _body: errorMesasge });
+    this.createButton.setError(errorMesasge);
 
     this.disableDismiss = false;
-    this.dialogRef.disableClose = false;
   }
 }

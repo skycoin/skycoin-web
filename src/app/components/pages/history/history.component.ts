@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { PriceService } from '../../../services/price.service';
 import { HistoryService } from '../../../services/wallet/history.service';
 import { TransactionDetailComponent } from './transaction-detail/transaction-detail.component';
-import { QrCodeComponent } from '../../layout/qr-code/qr-code.component';
 import { BaseCoin } from '../../../coins/basecoin';
 import { CoinService } from '../../../services/coin.service';
+import { openQrModal } from '../../../utils';
 
 @Component({
   selector: 'app-history',
@@ -51,14 +51,11 @@ export class HistoryComponent implements OnInit, OnDestroy {
     const config = new MatDialogConfig();
     config.width = '800px';
     config.data = transaction;
-    this.dialog.open(TransactionDetailComponent, config).afterClosed().subscribe();
+    this.dialog.open(TransactionDetailComponent, config);
   }
 
   showQr(event, address) {
     event.stopPropagation();
-
-    const config = new MatDialogConfig();
-    config.data = address;
-    this.dialog.open(QrCodeComponent, config);
+    openQrModal(this.dialog, address);
   }
 }

@@ -1,13 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ConfirmationData, Wallet, Address } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
-import { QrCodeComponent } from '../../../layout/qr-code/qr-code.component';
 import { ChangeNameComponent } from '../change-name/change-name.component';
-import { openUnlockWalletModal } from '../../../../utils/index';
+import { openUnlockWalletModal, openQrModal, showConfirmationModal } from '../../../../utils/index';
 import { ConfirmationComponent } from '../../../layout/confirmation/confirmation.component';
 
 @Component({
@@ -15,10 +14,10 @@ import { ConfirmationComponent } from '../../../layout/confirmation/confirmation
   templateUrl: './wallet-detail.component.html',
   styleUrls: ['./wallet-detail.component.scss'],
 })
-export class WalletDetailComponent {
+export class WalletDetailComponent implements OnDestroy {
   @Input() wallet: Wallet;
 
-  isAddressCreating = false;
+  creatingAddress = false;
 
   constructor(
     private walletService: WalletService,
@@ -27,10 +26,12 @@ export class WalletDetailComponent {
     private translateService: TranslateService
   ) {}
 
+  ngOnDestroy() {
+    this.snackBar.dismiss();
+  }
+
   onShowQr(address: Address) {
-    const config = new MatDialogConfig();
-    config.data = address;
-    this.dialog.open(QrCodeComponent, config);
+    openQrModal(this.dialog, address.address);
   }
 
   onEditWallet() {
@@ -45,7 +46,7 @@ export class WalletDetailComponent {
       this.verifyBeforeAddingNewAddress();
     } else {
       const dialogRef = this.showConfirmationModal(
-        this.translateService.instant('wallet.add-confirmation'),
+        'wallet.add-confirmation',
         null
       );
 
@@ -99,19 +100,19 @@ export class WalletDetailComponent {
   }
 
   private addNewAddress() {
-    this.isAddressCreating = true;
+    this.creatingAddress = true;
 
     setTimeout(() => {
       this.walletService.addAddress(this.wallet)
         .subscribe(
-          () => { this.isAddressCreating = false; },
+          () => { this.creatingAddress = false; },
           (error: Error) => this.onAddAddressError(error)
         );
     }, 0);
   }
 
   private onAddAddressError(error: Error) {
-    this.isAddressCreating = false;
+    this.creatingAddress = false;
 
     const config = new MatSnackBarConfig();
     config.duration = 5000;
@@ -121,16 +122,12 @@ export class WalletDetailComponent {
   private showConfirmationModal(text: string, checkboxText: string): MatDialogRef<ConfirmationComponent, any> {
     const confirmationData: ConfirmationData = {
       text: text,
-      headerText: this.translateService.instant('confirmation.header-text'),
+      headerText: 'confirmation.header-text',
       checkboxText: checkboxText,
-      confirmButtonText: this.translateService.instant('confirmation.confirm-button'),
-      cancelButtonText: this.translateService.instant('confirmation.cancel-button')
+      confirmButtonText: 'confirmation.confirm-button',
+      cancelButtonText: 'confirmation.cancel-button'
     };
 
-    return this.dialog.open(ConfirmationComponent, <MatDialogConfig>{
-      width: '450px',
-      data: confirmationData,
-      autoFocus: false
-    });
+    return showConfirmationModal(this.dialog, confirmationData);
   }
 }

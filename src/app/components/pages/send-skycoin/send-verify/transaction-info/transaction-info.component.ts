@@ -19,7 +19,6 @@ export class TransactionInfoComponent implements OnInit, OnDestroy {
   currentCoin: BaseCoin;
 
   private subscription: ISubscription;
-  private coinSubscription: ISubscription;
 
   constructor(
     private priceService: PriceService,
@@ -30,13 +29,11 @@ export class TransactionInfoComponent implements OnInit, OnDestroy {
     this.subscription = this.priceService.price
       .subscribe(price => this.price = price);
 
-    this.coinSubscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+    this.currentCoin = this.coinService.currentCoin.value;
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.coinSubscription.unsubscribe();
   }
 
   toggleInputsOutputs(event) {
