@@ -13,7 +13,8 @@
     "no-wallet": "La billetera no existe",
     "no-outputs": "No hay salidas no gastadas",
     "no-wallets": "Actualmente no hay billeteras",
-    "window-size": "La ventana es muy angosta para el contenido"
+    "window-size": "La ventana es muy angosta para el contenido",
+    "loading-error": "Error al intentar obtener los datos. Por favor, inténtelo nuevamente más tarde."
   },
 
   "title": {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/observable/zip';
+import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
@@ -103,9 +103,9 @@ export class SpendingService {
   }
 
   outputsWithWallets(): Observable<Wallet[]> {
-    return Observable.zip(
-      this.walletService.currentWallets,
-      this.getAddressesAsString().flatMap(addresses => addresses ? this.getRequestOutputs(addresses) : Observable.of([])),
+    return Observable.forkJoin(
+      this.walletService.currentWallets.first(),
+      this.getAddressesAsString().flatMap(addresses => addresses ? this.getRequestOutputs(addresses) : Observable.of([])).first(),
       (wallets: Wallet[], outputs: GetOutputsRequestOutput[]) => {
         return wallets.map(wallet => {
           wallet.addresses = wallet.addresses.map(address => {

@@ -7,5 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class LoadingContentComponent {
   @Input() isLoading = true;
+  @Input() showError = false;
   @Input() noDataText = 'tx.none';
+  @Input() errorText = 'errors.loading-error';
 }

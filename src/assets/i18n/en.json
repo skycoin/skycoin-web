@@ -13,7 +13,8 @@
     "no-wallet": "Wallet does not exist",
     "no-outputs": "No unspent outputs",
     "no-wallets": "Currently there are no wallets",
-    "window-size": "The window is too narrow for the content"
+    "window-size": "The window is too narrow for the content",
+    "loading-error": "Error trying to get the data. Please try again later."
   },
 
   "title": {
