@@ -71,7 +71,7 @@ export class ApiService {
   }
 
   private getErrorMessage(error: any): Observable<string> {
-    if (error.error) {
+    if (error.error && typeof error.error === 'string') {
       return Observable.throw(new Error(parseResponseMessage(error.error.trim())));
     } if (error.message) {
       return Observable.throw(new Error(parseResponseMessage(error.message.trim())));

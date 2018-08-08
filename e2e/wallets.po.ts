@@ -159,7 +159,7 @@ export class WalletsPage {
         return lastRecord.element(by.css('.address-column')).getText().then((address) => {
           return address === 'bSp3JvfGiHzumCpdaWT7tGRtejwhLDd2zv';
         });
-      }, 5000);
+      }, 10000);
     });
   }
 

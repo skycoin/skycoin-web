@@ -236,6 +236,6 @@ export class OnboardingCreatePage {
   }
 
   private waitUntilWalletIsCreated() {
-    browser.wait(ExpectedConditions.invisibilityOf(element(by.buttonText('Create'))), 20000);
+    browser.wait(ExpectedConditions.invisibilityOf(element(by.buttonText('Create'))), 30000);
   }
 }

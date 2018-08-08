@@ -2,6 +2,7 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
 import { Renderer2 } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
 
 import { Wallet, ConfirmationData } from '../app.datatypes';
 import { UnlockWalletComponent } from '../components/pages/wallets/unlock-wallet/unlock-wallet.component';
@@ -9,6 +10,8 @@ import { SelectCoinOverlayComponent } from '../components/layout/select-coin-ove
 import { SelectLanguageComponent } from '../components/layout/select-language/select-language.component';
 import { QrCodeComponent } from '../components/layout/qr-code/qr-code.component';
 import { ConfirmationComponent } from '../components/layout/confirmation/confirmation.component';
+import { BlockchainService, ProgressStates } from '../services/blockchain.service';
+import { ScanAddressesComponent } from '../components/pages/wallets/scan-addresses/scan-addresses.component';
 
 export function openUnlockWalletModal (wallet: Wallet, unlockDialog: MatDialog): MatDialogRef<UnlockWalletComponent, any> {
   const config = new MatDialogConfig();
@@ -58,4 +61,24 @@ export function showConfirmationModal(dialog: MatDialog, confirmationData: Confi
     data: confirmationData,
     autoFocus: false
   });
+}
+
+export function scanAddresses(dialog: MatDialog, wallet: Wallet, blockchainService: BlockchainService, translate: TranslateService): Observable<any> {
+  return blockchainService.progress
+    .filter(event => event.state === ProgressStates.Progress || event.state === ProgressStates.Error)
+    .first()
+    .flatMap(event => {
+      if (event.state === ProgressStates.Error) {
+        return Observable.throw(new Error(translate.instant('wallet.scan.connection-error')));
+      }
+      if (event.highestBlock - event.currentBlock > 2) {
+        return Observable.throw(new Error(translate.instant('wallet.scan.unsynchronized-node-error')));
+      }
+
+      return dialog.open(ScanAddressesComponent, <MatDialogConfig>{
+        width: '450px',
+        data: wallet,
+        autoFocus: false
+      }).afterClosed();
+    });
 }
