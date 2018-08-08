@@ -10,6 +10,12 @@ import { convertAsciiToHexa } from '../../utils/converters';
 import { defaultCoinId } from '../../constants/coins-id.const';
 import { BaseCoin } from '../../coins/basecoin';
 import { CoinService } from '../coin.service';
+import { ApiService } from '../api.service';
+
+export class ScanProgressData {
+  addressesFound = 1;
+  progress = 0;
+}
 
 @Injectable()
 export class WalletService {
@@ -21,6 +27,7 @@ export class WalletService {
     private cipherProvider: CipherProvider,
     private translate: TranslateService,
     private coinService: CoinService,
+    private apiService: ApiService,
   ) {
     this.loadWallets();
     this.coinService.currentCoin.subscribe((coin) => this.currentCoin = coin);
@@ -41,7 +48,7 @@ export class WalletService {
     return this.currentWallets.map(wallets => wallets.reduce((array, wallet) => array.concat(wallet.addresses), []));
   }
 
-  addAddress(wallet: Wallet): Observable<void> {
+  addAddress(wallet: Wallet, saveWallet = true): Observable<void> {
     if (!wallet.seed || !wallet.addresses[wallet.addresses.length - 1].next_seed) {
       throw new Error(this.translate.instant('service.wallet.address-without-seed'));
     }
@@ -51,11 +58,13 @@ export class WalletService {
     return this.cipherProvider.generateAddress(lastSeed)
       .map((addr: Address) => {
         wallet.addresses.push(addr);
-        this.saveWallets();
+        if (saveWallet) {
+          this.saveWallets();
+        }
       });
   }
 
-  create(label: string, seed: string, coinId: number): Observable<void> {
+  create(label: string, seed: string, coinId: number, save = true): Observable<Wallet> {
     seed = this.getCleanSeed(seed);
 
     return this.cipherProvider.generateAddress(convertAsciiToHexa(seed))
@@ -75,9 +84,17 @@ export class WalletService {
           throw new Error(this.translate.instant('service.wallet.wallet-exists'));
         }
 
-        this.wallets.value.push(wallet);
-        this.saveWallets();
+        if (save) {
+          this.add(wallet);
+        }
+
+        return wallet;
       });
+  }
+
+  add(wallet: Wallet) {
+    this.wallets.value.push(wallet);
+    this.saveWallets();
   }
 
   delete(wallet: Wallet) {
@@ -87,6 +104,27 @@ export class WalletService {
 
       this.saveWallets();
     }
+  }
+
+  scanAddresses(wallet: Wallet, onProgressChanged: EventEmitter<ScanProgressData>): Observable<void> {
+    if (wallet.addresses.length !== 1) {
+      throw new Error(this.translate.instant('service.wallet.invalid-wallet'));
+    }
+
+    return this.checkWalletAddresses(wallet, 0, onProgressChanged)
+      .map(lastIndexWithTxs => {
+        const unnecessaryAddresses = wallet.addresses.length - 1 - lastIndexWithTxs;
+        if (unnecessaryAddresses > 0) {
+          wallet.addresses.splice(lastIndexWithTxs + 1, unnecessaryAddresses);
+        }
+        this.saveWallets();
+      })
+      .catch(error => {
+        if (wallet.addresses.length > 1) {
+          wallet.addresses.splice(1, wallet.addresses.length - 1);
+        }
+        return Observable.throw(error);
+      });
   }
 
   unlockWallet(wallet: Wallet, seed: string, onProgressChanged: EventEmitter<number>): Observable<void> {
@@ -129,6 +167,30 @@ export class WalletService {
 
   private getCleanSeed(seed: string): string {
     return seed.replace(/(\n|\r\n)$/, '');
+  }
+
+  private checkWalletAddresses(wallet: Wallet, lastIndexWithTxs: number, onProgressChanged: EventEmitter<ScanProgressData>): Observable<number> {
+    const minAdrressesToScan = 10;
+    const maxAdrressesToScan = 100;
+
+    return this.addAddress(wallet, false)
+      .flatMap(() => this.apiService.get('explorer/address', { address: wallet.addresses[wallet.addresses.length - 1].address }))
+      .flatMap(transactions => {
+        if (transactions && transactions.length > 0) {
+          lastIndexWithTxs = wallet.addresses.length - 1;
+        }
+
+        onProgressChanged.emit({
+          addressesFound: lastIndexWithTxs + 1,
+          progress: (wallet.addresses.length - 1 - lastIndexWithTxs) / minAdrressesToScan * 100
+        });
+
+        if (lastIndexWithTxs + minAdrressesToScan === wallet.addresses.length - 1 || wallet.addresses.length === maxAdrressesToScan) {
+          return Observable.of(lastIndexWithTxs);
+        } else {
+          return this.checkWalletAddresses(wallet, lastIndexWithTxs, onProgressChanged);
+        }
+      });
   }
 
   private unlockWalletAddresses(currentSeed: string, wallet: Wallet, index: number, onProgressChanged: EventEmitter<number>): Observable<boolean> {

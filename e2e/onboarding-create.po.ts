@@ -159,6 +159,7 @@ export class OnboardingCreatePage {
 
     return btnLoad.click().then(() => {
       this.waitUntilWalletIsCreated();
+      browser.sleep(5000);
 
       return browser.executeScript('return window.localStorage.getItem("wallets");')
         .then((data: string) => {
@@ -236,6 +237,6 @@ export class OnboardingCreatePage {
   }
 
   private waitUntilWalletIsCreated() {
-    browser.wait(ExpectedConditions.invisibilityOf(element(by.buttonText('Create'))), 20000);
+    browser.wait(ExpectedConditions.invisibilityOf(element(by.buttonText('Create'))), 60000);
   }
 }

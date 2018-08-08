@@ -4,14 +4,15 @@ import { MatDialogModule, MatSnackBarModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { TranslateService } from '@ngx-translate/core';
 
 import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService, MockBlockchainService } from '../../../../utils/test-mocks';
 import { LanguageService } from '../../../../services/language.service';
 import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
+import { BlockchainService } from '../../../../services/blockchain.service';
 
 describe('OnboardingCreateWalletComponent', () => {
   let component: OnboardingCreateWalletComponent;
@@ -34,7 +35,12 @@ describe('OnboardingCreateWalletComponent', () => {
         FormBuilder,
         { provide: WalletService, useClass: MockWalletService },
         { provide: CoinService, useClass: MockCoinService },
-        { provide: LanguageService, useClass: MockLanguageService }
+        { provide: LanguageService, useClass: MockLanguageService },
+        { provide: BlockchainService, useClass: MockBlockchainService },
+        {
+          provide: TranslateService,
+          useValue: jasmine.createSpyObj('TranslateService', ['instant'])
+        },
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

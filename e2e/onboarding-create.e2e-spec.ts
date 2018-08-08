@@ -7,6 +7,7 @@ describe('Onboarding Create', () => {
 
   beforeAll(() => {
     browser.get('/');
+    browser.waitForAngularEnabled(false);
 
     page = new OnboardingCreatePage();
     page.navigateTo();
