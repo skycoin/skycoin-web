@@ -9,6 +9,7 @@ import { CipherProvider } from '../cipher.provider';
 import { CoinService } from '../coin.service';
 import { EventEmitter } from '@angular/core';
 import { MockCoinService } from '../../utils/test-mocks';
+import { ApiService } from '../api.service';
 import {
   Wallet,
   Address } from '../../app.datatypes';
@@ -33,6 +34,12 @@ describe('WalletService', () => {
         {
           provide: TranslateService,
           useValue: jasmine.createSpyObj('TranslateService', ['instant'])
+        },
+        {
+          provide: ApiService,
+          useValue: jasmine.createSpyObj('ApiService', {
+            'get': Observable.of([])
+          })
         },
         { provide: CoinService, useClass: MockCoinService }
       ]

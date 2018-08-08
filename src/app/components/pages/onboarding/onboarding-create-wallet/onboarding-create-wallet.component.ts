@@ -2,15 +2,17 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { LanguageService } from '../../../../services/language.service';
-import { openChangeLanguageModal, showConfirmationModal } from '../../../../utils';
+import { openChangeLanguageModal, showConfirmationModal, scanAddresses } from '../../../../utils';
 import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
-import { ConfirmationData } from '../../../../app.datatypes';
+import { ConfirmationData, Wallet } from '../../../../app.datatypes';
+import { BlockchainService } from '../../../../services/blockchain.service';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -33,6 +35,8 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private coinService: CoinService,
     private languageService: LanguageService,
+    private blockchainService: BlockchainService,
+    private translate: TranslateService,
   ) { }
 
   ngOnInit() {
@@ -114,18 +118,41 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
 
     const data = this.formControl.getData();
 
-    this.walletService.create(data.label, data.seed, data.coin.id)
+    this.walletService.create(data.label, data.seed, data.coin.id, this.showNewForm)
       .subscribe(
-        () => this.onCreateSuccess(data.coin),
+        wallet => this.onCreateSuccess(wallet, data.coin),
         (error) => this.onCreateError(error.message)
       );
   }
 
-  private onCreateSuccess(coin: BaseCoin) {
+  private onCreateSuccess(wallet: Wallet, coin: BaseCoin) {
+    const initialCoin = this.coinService.currentCoin.value;
+    this.coinService.changeCoin(coin);
+
+    if (!this.showNewForm) {
+      scanAddresses(this.dialog, wallet, this.blockchainService, this.translate).subscribe(
+        response => this.processScanResponse(initialCoin, wallet, false, response),
+        error => this.processScanResponse(initialCoin, wallet, true, error)
+      );
+    } else {
+      this.finish();
+    }
+  }
+
+  private processScanResponse(initialCoin: BaseCoin, wallet: Wallet, isError: boolean, response) {
+    if (isError || response !== null) {
+      this.coinService.changeCoin(initialCoin);
+      this.onCreateError(response.message ? response.message : response.toString());
+    } else {
+      this.walletService.add(wallet);
+      this.finish();
+    }
+  }
+
+  private finish() {
     this.createButton.setSuccess();
     this.skip();
     this.creatingWallet = false;
-    this.coinService.changeCoin(coin);
   }
 
   private onCreateError(errorMesasge: string) {

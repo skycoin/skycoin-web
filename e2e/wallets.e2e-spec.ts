@@ -7,6 +7,7 @@ describe('Wallets', () => {
 
   beforeAll(() => {
     browser.get('/');
+    browser.waitForAngularEnabled(false);
     browser.executeScript(
       `window.localStorage.setItem(\'wallets\',
       JSON.stringify([{"label":"Test wallet","addresses":

@@ -91,6 +91,10 @@ export class MockWalletService {
   get currentWallets(): Observable<Wallet[]> {
     return Observable.of([]);
   }
+
+  scanAddresses(wallet, onProgressChanged): Observable<void> {
+    return Observable.of();
+  }
 }
 
 export class MockHistoryService {

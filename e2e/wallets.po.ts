@@ -100,7 +100,7 @@ export class WalletsPage {
   }
 
   waitUntilWalletIsCreated() {
-    browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-create-wallet'))), 50000);
+    browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-create-wallet'))), 60000);
   }
 
   loadExistingWallet() {
@@ -159,7 +159,7 @@ export class WalletsPage {
         return lastRecord.element(by.css('.address-column')).getText().then((address) => {
           return address === 'bSp3JvfGiHzumCpdaWT7tGRtejwhLDd2zv';
         });
-      }, 5000);
+      }, 10000);
     });
   }
 
@@ -234,6 +234,7 @@ export class WalletsPage {
 
     return element(by.buttonText('Unlock')).click().then(() => {
       browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-unlock-wallet'))), 20000);
+      browser.sleep(5000);
       return (element(by.css('app-unlock-wallet')).isPresent()).then((result) => {
         return !result;
       });

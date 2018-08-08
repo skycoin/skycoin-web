@@ -157,6 +157,13 @@
       "unconventional-seed-check": "Continue with the unconventional seed."
     },
 
+    "scan": {
+      "connection-error": "It is not possible to connect to the server. Please try again later.",
+      "unsynchronized-node-error": "It is not possible to restore the addresses because the server is not synchronized. Please try again later.",
+      "title": "Restoring addresses",
+      "message": "Restored until now:"
+    },
+
     "unlock": {
       "unlock-title": "Unlock Wallet",
       "seed": "Seed",
@@ -299,7 +306,8 @@
       "wallet-exists": "A wallet already exists with this seed",
       "not-enough-hours1": "Not enough available",
       "not-enough-hours2": "to perform transaction!",
-      "wrong-seed": "Wrong seed"
+      "wrong-seed": "Wrong seed",
+      "invalid-wallet": "Invalid wallet"
     }
   }
 }
