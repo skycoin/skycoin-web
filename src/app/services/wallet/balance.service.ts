@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/first';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -24,7 +24,8 @@ export class BalanceService {
 
   constructor(
     private apiService: ApiService,
-    private walletService: WalletService
+    private walletService: WalletService,
+    private _ngZone: NgZone
   ) {
     walletService.wallets.subscribe(() => this.canGetBalance ? this.scheduleUpdate(0) : null);
   }
@@ -46,15 +47,17 @@ export class BalanceService {
   }
 
   private scheduleUpdate(delay: number) {
-    this.removeSubscription();
+    this._ngZone.runOutsideAngular(() => {
+      this.removeSubscription();
 
-    this.schedulerSubscription = Observable.of(1)
-      .delay(delay)
-      .flatMap(() => this.getBalance())
-      .subscribe(
-        hasPendingTxs => this.scheduleUpdate(hasPendingTxs ? this.shortUpdatePeriod : this.longUpdatePeriod),
-        () => { this.scheduleUpdate(this.shortUpdatePeriod); this.totalBalance.next(null); }
-      );
+      this.schedulerSubscription = Observable.of(1)
+        .delay(delay)
+        .flatMap(() => this._ngZone.run(() => this.getBalance()))
+        .subscribe(
+          hasPendingTxs => this.scheduleUpdate(hasPendingTxs ? this.shortUpdatePeriod : this.longUpdatePeriod),
+          () => { this.scheduleUpdate(this.shortUpdatePeriod); this.totalBalance.next(null); }
+        );
+    });
   }
 
   private getBalance(): Observable<boolean> {

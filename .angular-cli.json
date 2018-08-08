@@ -30,7 +30,7 @@
       "environments": {
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts",
-        "cipher-test": "environments/environment.cipher-test.ts"
+        "e2e": "environments/environment.e2e.ts"
       }
     }
   ],

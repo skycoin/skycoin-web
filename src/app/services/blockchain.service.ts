@@ -9,6 +9,7 @@ import { ApiService } from './api.service';
 import { BalanceService } from './wallet/balance.service';
 import { ConnectionError } from '../enums/connection-error.enum';
 import { CoinService } from './coin.service';
+import { environment } from '../../environments/environment';
 
 export enum ProgressStates {
   Progress,
@@ -108,7 +109,7 @@ export class BlockchainService {
   private checkConnectionState(): Observable<any> {
     return this.apiService.get('network/connections')
       .map((status: any) => {
-        if (!status.connections || status.connections.length === 0) {
+        if ((!status.connections || status.connections.length === 0) && !environment.e2eTest) {
           this.onLoadBlockchainError(ConnectionError.NO_ACTIVE_CONNECTIONS);
           throw { reported: true };
         }

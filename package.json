@@ -7,7 +7,7 @@
     "start": "ng serve --proxy-config proxy.config.js",
     "build": "ng build --prod",
     "lint": "ng lint",
-    "e2e": "ng e2e --proxy-config proxy.config.js",
+    "e2e": "ng e2e --proxy-config proxy.config.js --environment e2e",
     "snyk-protect": "snyk protect",
     "protractor": "protractor protractor.conf.js",
     "test": "ng test -sm=false --watch=false --browsers ChromeHeadlessNoSandbox",
@@ -16,7 +16,7 @@
     "test:watch": "ng test -sm=false --browsers Chrome",
     "prepare": "npm run snyk-protect",
     "start-docker": "ng serve --proxy-config docker-proxy.config.js",
-    "e2e-docker": "ng e2e --proxy-config docker-proxy.config.js"
+    "e2e-docker": "ng e2e --proxy-config docker-proxy.config.js --environment e2e"
   },
   "private": true,
   "dependencies": {

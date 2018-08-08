@@ -104,7 +104,7 @@
     "confirm": {
       "title": "¡Resguarde su semilla!",
       "desc": "Queremos asegurarnos de que ha anotado su semilla y la ha almacenado en un lugar seguro. ¡Si olvida su semilla, NO podrá recuperar su billetera!",
-      "checkbox": "Está segura, lo aseguro.",
+      "checkbox": "Está segura, lo garantizo.",
       "button": "Continuar"
     }
   },
@@ -155,6 +155,13 @@
       "unconventional-seed-title": "Posible error",
       "unconventional-seed-text": "Usted introdujo una semilla no convencional. Si lo hizo por alguna razón en especial, puede continuar (sólo recomendable para usuarios avanzados). Sin embargo, si su intención es utilizar una semilla normal del sistema, usted debe borrar los textos y/o caracteres especiales adicionales.",
       "unconventional-seed-check": "Continuar con la semilla no convencional."
+    },
+
+    "scan": {
+      "connection-error": "No es posible conectar con el servidor. Por favor, vuelva a intentarlo luego.",
+      "unsynchronized-node-error": "No es posible restaurar las direcciones debido a que el servidor no está sincronizado. Por favor, vuelva a intentarlo luego.",
+      "title": "Restaurando las direcciones",
+      "message": "Restauradas hasta ahora:"
     },
 
     "unlock": {
@@ -299,7 +306,8 @@
       "wallet-exists": "Ya hay una billetera con esa semilla",
       "not-enough-hours1": "¡No cuenta con suficientes",
       "not-enough-hours2": "para realizar la operación!",
-      "wrong-seed": "Semilla incorrecta"
+      "wrong-seed": "Semilla incorrecta",
+      "invalid-wallet": "Billetera inválida"
     }
   }
 }
