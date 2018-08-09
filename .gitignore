@@ -3,9 +3,12 @@
 # compiled output
 /tmp
 /out-tsc
+/electron/release
 
 # dependencies
 /node_modules
+/electron/node_modules
+/electron/src/node_modules
 
 # IDEs and editors
 /.idea
