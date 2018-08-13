@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
 
 import { SpendingService } from '../../../../services/wallet/spending.service';
 import { Wallet } from '../../../../app.datatypes';
@@ -15,11 +15,13 @@ import { openQrModal } from '../../../../utils';
   styleUrls: ['./outputs.component.scss']
 })
 export class OutputsComponent implements OnInit, OnDestroy {
-
   wallets: Wallet[];
   currentCoin: BaseCoin;
+  showError = false;
 
   private subscription: Subscription;
+  private dataSubscription: ISubscription;
+  private urlParams: Params;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,27 +31,31 @@ export class OutputsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => {
-        this.wallets = null;
-        this.currentCoin = coin;
-      });
-
-    this.route.queryParams.first().subscribe(params => this.getWalletsOutputs(params));
+    this.subscription = this.route.queryParams.flatMap (params => {
+      this.urlParams = params;
+      return this.coinService.currentCoin;
+    }).subscribe((coin: BaseCoin) => {
+      this.wallets = null;
+      this.currentCoin = coin;
+      this.getWalletsOutputs();
+    });
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.closeDataSubscription();
   }
 
   showQr(address) {
     openQrModal(this.dialog, address);
   }
 
-  private getWalletsOutputs(queryParams: Params) {
-    const address = queryParams['addr'];
+  private getWalletsOutputs() {
+    const address = this.urlParams['addr'];
+    this.showError = false;
 
-    this.subscription.add(this.spendingService.outputsWithWallets().subscribe(wallets => {
+    this.closeDataSubscription();
+    this.dataSubscription = this.spendingService.outputsWithWallets().subscribe(wallets => {
       if (wallets.length === 0) {
         this.wallets = [];
         return;
@@ -58,8 +64,8 @@ export class OutputsComponent implements OnInit, OnDestroy {
       this.wallets = !!address
         ? this.getOutputsForSpecificAddress(wallets, address)
         : this.getOutputs(wallets);
-      })
-    );
+    },
+    () => this.showError = true);
   }
 
   private getOutputsForSpecificAddress(wallets, address: string) {
@@ -84,5 +90,11 @@ export class OutputsComponent implements OnInit, OnDestroy {
       wallet.addresses = wallet.addresses.filter(addr => addr.outputs.length > 0);
       return wallet.addresses.length > 0;
     });
+  }
+
+  private closeDataSubscription() {
+    if (this.dataSubscription && !this.dataSubscription.closed) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 }

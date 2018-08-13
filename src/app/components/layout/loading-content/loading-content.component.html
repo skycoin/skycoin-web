@@ -3,8 +3,12 @@
     <mat-spinner class="in-button big"></mat-spinner>
     <p>{{ 'common.loading' | translate }}</p>
   </div>
-  <div *ngIf="!isLoading">
+  <div *ngIf="!isLoading && !showError">
     <i class="material-icons">announcement</i>
     <p>{{ noDataText | translate }}</p>
+  </div>
+  <div *ngIf="!isLoading && showError">
+    <i class="material-icons">error_outline</i>
+    <p>{{ errorText | translate }}</p>
   </div>
 </div>

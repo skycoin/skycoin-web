@@ -1,7 +1,11 @@
 <div class="sky-container sky-container-grey">
   <app-header [headline]="'title.blockchain' | translate"></app-header>
   <div class="container">
-    <app-loading-content *ngIf="!(block && coinSupply)"></app-loading-content>
+    <app-loading-content
+      [isLoading]="!(block && coinSupply) && !showError"
+      [showError]="showError"
+      [errorText]="'errors.loading-error'"
+      *ngIf="!(block && coinSupply)"></app-loading-content>
     <div *ngIf="block && coinSupply" class="row -wrapper">
       <div class="col-md-6">
         <div class="-paper" *ngIf="block && block.header">
