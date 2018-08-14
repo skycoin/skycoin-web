@@ -55,8 +55,10 @@ export class TopBarComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.balanceService.totalBalance.subscribe(balance => {
         if (balance) {
+          if (balance.state === BalanceStates.Obtained) {
+            this.balanceObtained = true;
+          }
           this.updateTimeSinceLastBalanceUpdate();
-          this.balanceObtained = balance.state === BalanceStates.Obtained;
           this.problemUpdatingBalance = balance.state === BalanceStates.Error;
           this.updatingBalance = balance.state === BalanceStates.Updating;
         }

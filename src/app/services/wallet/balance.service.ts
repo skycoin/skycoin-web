@@ -64,23 +64,27 @@ export class BalanceService {
 
       this.schedulerSubscription = Observable.of(1)
         .delay(delay)
-        .flatMap(() => this._ngZone.run(() => this.getBalance()))
+        .flatMap(() => this.getBalance())
         .subscribe(
           hasPendingTxs => this.scheduleUpdate(hasPendingTxs ? this.shortUpdatePeriod : this.longUpdatePeriod),
           () => {
             this.scheduleUpdate(this.shortUpdatePeriod);
-            this._ngZone.run(() => this.totalBalance.next({state: BalanceStates.Error}));
+            this.sendTotalBalanceEvent({state: BalanceStates.Error});
           }
         );
     });
   }
 
+  private sendTotalBalanceEvent(event: BalanceEvent) {
+    this._ngZone.run(() => this.totalBalance.next(event));
+  }
+
   private getBalance(): Observable<boolean> {
-    this.totalBalance.next({state: BalanceStates.Updating});
+    this.sendTotalBalanceEvent({state: BalanceStates.Updating});
     return this.walletService.addresses.first().flatMap((addresses: Address[]) => {
       if (addresses.length === 0) {
         this.lastBalancesUpdateTime = new Date();
-        this.totalBalance.next({state: BalanceStates.Obtained, balance: { coins: 0, hours: 0 }});
+        this.sendTotalBalanceEvent({state: BalanceStates.Obtained, balance: { coins: 0, hours: 0 }});
         return Observable.of(false);
       }
 
@@ -113,7 +117,7 @@ export class BalanceService {
     }
 
     this.lastBalancesUpdateTime = new Date();
-    this.totalBalance.next({
+    this.sendTotalBalanceEvent({
       state: BalanceStates.Obtained,
       balance: { coins: balance.confirmed.coins / this.coinsMultiplier, hours: balance.confirmed.hours }
     });
