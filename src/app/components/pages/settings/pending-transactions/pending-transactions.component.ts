@@ -20,6 +20,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
   isLoading = false;
   transactions: any[] = [];
   currentCoin: BaseCoin;
+  showError = false;
 
   private navbarSubscription: ISubscription;
   private coinSubscription: ISubscription;
@@ -50,22 +51,17 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     this.navbarSubscription.unsubscribe();
     this.coinSubscription.unsubscribe();
 
-    if (this.dataSubscription && !this.dataSubscription.closed) {
-      this.dataSubscription.unsubscribe();
-    }
-
+    this.closeDataSubscription();
     this.navbarService.hideSwitch();
   }
 
   private loadTransactions(value: number) {
     this.isLoading = true;
     this.transactions = [];
-
-    if (this.dataSubscription && !this.dataSubscription.closed) {
-      this.dataSubscription.unsubscribe();
-    }
+    this.showError = false;
 
     const showAllTransactions = value === DoubleButtonActive.RightButton;
+    this.closeDataSubscription();
     this.dataSubscription = this.historyService.getAllPendingTransactions()
       .delay(32)
       .flatMap((transactions: any) => {
@@ -74,7 +70,8 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
       .subscribe(transactions => {
         this.transactions = this.mapTransactions(transactions);
         this.isLoading = false;
-      });
+      },
+      () => this.showError = true);
   }
 
   private mapTransactions(transactions) {
@@ -97,7 +94,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
 
     const allTransactions = this.getUpdatedTransactions(transactions);
 
-    return Observable.zip(allTransactions, this.walletService.currentWallets, (trans: any, wallets: Wallet[]) => {
+    return Observable.forkJoin(allTransactions, this.walletService.currentWallets.first(), (trans: any, wallets: Wallet[]) => {
       const walletAddresses = new Set<string>();
       wallets.forEach(wallet => {
         wallet.addresses.forEach(address => walletAddresses.add(address.address));
@@ -120,5 +117,11 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
           return transaction;
         });
     }));
+  }
+
+  private closeDataSubscription() {
+    if (this.dataSubscription && !this.dataSubscription.closed) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 }

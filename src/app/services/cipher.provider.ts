@@ -9,14 +9,12 @@ export class CipherProvider {
 
   generateAddress(seed): Observable<Address> {
     return CipherWebWorkerHelper.ExcecuteWorker(CipherWebWorkerOperation.CreateAdress, seed)
-      .map((address) => this.convertToAddress(address))
-      .catch((error: Error) => Observable.throw(new Error(error.message)));
+      .map((address) => this.convertToAddress(address));
   }
 
   prepareTransaction(inputs: TransactionInput[], outputs: TransactionOutput[]): Observable<string> {
     const data = { inputs: JSON.stringify(inputs), outputs: JSON.stringify(outputs) };
-    return CipherWebWorkerHelper.ExcecuteWorker(CipherWebWorkerOperation.PrepareTransaction, data)
-      .catch((error: Error) => Observable.throw(new Error(error.message)));
+    return CipherWebWorkerHelper.ExcecuteWorker(CipherWebWorkerOperation.PrepareTransaction, data);
   }
 
   private convertToAddress(address): Address {

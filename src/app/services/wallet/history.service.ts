@@ -15,7 +15,7 @@ export class HistoryService {
   ) { }
 
   transactions(): Observable<any[]> {
-    return this.walletService.addresses
+    return this.walletService.addresses.first()
       .flatMap(addresses => {
         if (addresses.length === 0) {
           return Observable.of([]);

@@ -4,15 +4,27 @@ import 'rxjs/add/operator/first';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { ApiService } from '../api.service';
 import { Address, Wallet, TotalBalance, Balance } from '../../app.datatypes';
 import { WalletService } from './wallet.service';
 
+export enum BalanceStates {
+  Obtained,
+  Error,
+  Updating,
+}
+
+export class BalanceEvent {
+  state: BalanceStates;
+  balance?: TotalBalance;
+}
+
 @Injectable()
 export class BalanceService {
   lastBalancesUpdateTime: Date = new Date();
-  totalBalance: BehaviorSubject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
+  totalBalance: ReplaySubject<BalanceEvent> = new ReplaySubject<BalanceEvent>();
   hasPendingTransactions: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private canGetBalance = false;
@@ -52,19 +64,27 @@ export class BalanceService {
 
       this.schedulerSubscription = Observable.of(1)
         .delay(delay)
-        .flatMap(() => this._ngZone.run(() => this.getBalance()))
+        .flatMap(() => this.getBalance())
         .subscribe(
           hasPendingTxs => this.scheduleUpdate(hasPendingTxs ? this.shortUpdatePeriod : this.longUpdatePeriod),
-          () => { this.scheduleUpdate(this.shortUpdatePeriod); this.totalBalance.next(null); }
+          () => {
+            this.scheduleUpdate(this.shortUpdatePeriod);
+            this.sendTotalBalanceEvent({state: BalanceStates.Error});
+          }
         );
     });
   }
 
+  private sendTotalBalanceEvent(event: BalanceEvent) {
+    this._ngZone.run(() => this.totalBalance.next(event));
+  }
+
   private getBalance(): Observable<boolean> {
+    this.sendTotalBalanceEvent({state: BalanceStates.Updating});
     return this.walletService.addresses.first().flatMap((addresses: Address[]) => {
       if (addresses.length === 0) {
         this.lastBalancesUpdateTime = new Date();
-        this.totalBalance.next({ coins: 0, hours: 0 });
+        this.sendTotalBalanceEvent({state: BalanceStates.Obtained, balance: { coins: 0, hours: 0 }});
         return Observable.of(false);
       }
 
@@ -97,7 +117,10 @@ export class BalanceService {
     }
 
     this.lastBalancesUpdateTime = new Date();
-    this.totalBalance.next({ coins: balance.confirmed.coins / this.coinsMultiplier, hours: balance.confirmed.hours });
+    this.sendTotalBalanceEvent({
+      state: BalanceStates.Obtained,
+      balance: { coins: balance.confirmed.coins / this.coinsMultiplier, hours: balance.confirmed.hours }
+    });
     return this.refreshPendingTransactions(balance);
   }
 

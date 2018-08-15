@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
 import { HistoryService } from '../../../services/wallet/history.service';
@@ -17,10 +17,12 @@ import { openQrModal } from '../../../utils';
 
 export class HistoryComponent implements OnInit, OnDestroy {
   currentCoin: BaseCoin;
+  showError = false;
 
   public transactions: any[];
   public price: number;
   private subscription: Subscription;
+  private transactionsSubscription: ISubscription;
 
   constructor(
     private historyService: HistoryService,
@@ -34,17 +36,21 @@ export class HistoryComponent implements OnInit, OnDestroy {
       .subscribe((coin: BaseCoin) => {
         this.transactions = null;
         this.currentCoin = coin;
+        this.showError = false;
+
+        this.closeTransactionsSubscription();
+        this.transactionsSubscription = this.historyService.transactions().subscribe(
+          transactions => this.transactions = transactions,
+          () => this.showError = true
+        );
       });
 
     this.subscription.add(this.priceService.price.subscribe(price => this.price = price));
-    this.subscription.add(this.historyService.transactions().subscribe(transactions => {
-        this.transactions = transactions;
-      })
-    );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.closeTransactionsSubscription();
   }
 
   showTransaction(transaction: any) {
@@ -57,5 +63,11 @@ export class HistoryComponent implements OnInit, OnDestroy {
   showQr(event, address) {
     event.stopPropagation();
     openQrModal(this.dialog, address);
+  }
+
+  private closeTransactionsSubscription() {
+    if (this.transactionsSubscription && !this.transactionsSubscription.closed) {
+      this.transactionsSubscription.unsubscribe();
+    }
   }
 }

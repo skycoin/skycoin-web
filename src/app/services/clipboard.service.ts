@@ -13,7 +13,7 @@ export class ClipboardService {
 
   public copy( value: string ): Promise<string> {
     const promise = new Promise<string>(
-      (resolve, reject ): void => {
+      (resolve, reject): void => {
         let textarea = null;
 
         try {
