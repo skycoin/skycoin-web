@@ -38,7 +38,10 @@ export class CoinService {
   }
 
   private loadAvailableCoins() {
-    this.coins.push(new SkycoinCoin(), new TestCoin());
+    this.coins.push(new SkycoinCoin());
+
+    // Uncomment the next line to add the test coin.
+    // this.coins.push(new TestCoin());
 
     const IDs = new Map<number, boolean>();
     this.coins.forEach((value: BaseCoin) => {
