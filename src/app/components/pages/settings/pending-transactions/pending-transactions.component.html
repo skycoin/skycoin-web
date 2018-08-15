@@ -9,15 +9,15 @@
     <div *ngIf="!!transactions && transactions.length > 0" class="-table">
       <div class="-headers">
         <div class="flex-fill">{{ 'pending-txs.txid' | translate }}</div>
-        <div class="-width-150">{{ currentCoin.coinSymbol }}</div>
         <div class="-width-150">{{ 'pending-txs.timestamp' | translate }}</div>
+        <div class="-width-150 -coins">{{ currentCoin.coinSymbol }}</div>
       </div>
       <div class="-paper">
         <ng-container *ngIf="transactions.length">
           <div class="-row" *ngFor="let transaction of transactions">
             <div class="flex-fill -txid">{{ transaction.txid }}</div>
-            <div class="-width-150 -amount">{{ (transaction.amount ? transaction.amount : 0) | number:'1.0-6' }}</div>
-            <div class="-width-150 -timestamp">{{ transaction.timestamp | dateTime }}</div>
+            <div class="-width-150">{{ transaction.timestamp | dateTime }}</div>
+            <div class="-width-150 -coins">{{ (transaction.amount ? transaction.amount : 0) | number:'1.0-6' }}</div>
           </div>
         </ng-container>
       </div>

@@ -2,9 +2,10 @@
   <app-coin-button *ngIf="hasManyCoins" (click)="changeCoin()"></app-coin-button>
   <div class="last-updated-time" *ngIf="balanceObtained">
     <div class="label">{{ 'header.top-bar.updated1' | translate }}</div>
-    <div>
+    <div class="header-sel-theme">
       {{ timeSinceLastBalanceUpdate === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastBalanceUpdate }} {{ 'header.top-bar.updated2' | translate }}
-      <i *ngIf="!this.problemUpdatingBalance"
+      <mat-spinner *ngIf="updatingBalance" color="primary" class="in-button very-small loading"></mat-spinner>
+      <i *ngIf="this.problemUpdatingBalance && !updatingBalance"
         class="material-icons blinking-warning-icon"
         [matTooltip]="'header.top-bar.connection-error-tooltip' | translate">
         warning
@@ -31,12 +32,7 @@
       {{ language.name }}
     </div>
   </mat-menu>
-  <div class="button-container">
-    <div class="trigger-container">
-      <div #menuTrigger [matMenuTriggerFor]="menuMenu"></div>
-    </div>
-    <button mat-icon-button (click)="openMenu()">
-      <mat-icon>menu</mat-icon>
-    </button>
-  </div>
+  <button mat-icon-button [matMenuTriggerFor]="menuMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
 </div>

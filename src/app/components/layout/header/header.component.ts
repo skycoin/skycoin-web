@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
-import { BalanceService } from '../../../services/wallet/balance.service';
+import { BalanceService, BalanceStates } from '../../../services/wallet/balance.service';
 import { BlockchainService, ProgressEvent, ProgressStates } from '../../../services/blockchain.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
 import { TotalBalance } from '../../../app.datatypes';
@@ -64,10 +64,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.subscription.add(
       this.balanceService.totalBalance
-        .subscribe((balance: TotalBalance) => {
-          if (balance) {
-            this.coins = balance.coins;
-            this.hours = balance.hours;
+        .subscribe(balance => {
+          if (balance && balance.state === BalanceStates.Obtained) {
+            this.coins = balance.balance.coins;
+            this.hours = balance.balance.hours;
 
             this.calculateBalance();
             this.balanceLoaded = true;
@@ -98,7 +98,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private updateBlockchainProgress(response: ProgressEvent) {
     switch (response.state) {
-      case ProgressStates.Restating: {
+      case ProgressStates.Restarting: {
         this.resetState();
         break;
       }

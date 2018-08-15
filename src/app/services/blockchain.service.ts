@@ -14,7 +14,7 @@ import { environment } from '../../environments/environment';
 export enum ProgressStates {
   Progress,
   Error,
-  Restating,
+  Restarting,
 }
 
 export class ProgressEvent {
@@ -31,7 +31,7 @@ export class BlockchainService {
   private progressSubject: BehaviorSubject<ProgressEvent> = new BehaviorSubject<ProgressEvent>(null);
   private connectionsSubscription: Subscription;
   private readonly defaultPeriod = 90000;
-  private readonly fastPeriod = 5000;
+  private readonly shortPeriod = 5000;
 
   get progress(): Observable<ProgressEvent> {
     return this.progressSubject.asObservable();
@@ -63,7 +63,7 @@ export class BlockchainService {
 
     this.balanceService.stopGettingBalances();
 
-    this.progressSubject.next({ state: ProgressStates.Restating });
+    this.progressSubject.next({ state: ProgressStates.Restarting });
 
     this.connectionsSubscription = this.checkConnectionState()
       .subscribe(
@@ -95,7 +95,7 @@ export class BlockchainService {
 
     if (response.current !== response.highest) {
       this.checkBlockchainProgress(
-        response.highest - response.current <= 5 ? this.fastPeriod : this.defaultPeriod
+        response.highest - response.current <= 5 ? this.shortPeriod : this.defaultPeriod
       );
     } else {
       this.balanceService.startGettingBalances();

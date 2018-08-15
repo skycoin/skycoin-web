@@ -19,6 +19,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   disableDismiss = false;
   loadingProgress = 0;
 
+  private unlockSubscription: ISubscription;
   private progressSubscription: ISubscription;
 
   constructor(
@@ -35,6 +36,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.snackbar.dismiss();
+    this.removeProgressSubscriptions();
   }
 
   closePopup() {
@@ -42,6 +44,8 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   }
 
   unlockWallet() {
+    this.removeProgressSubscriptions();
+
     this.unlockButton.setLoading();
     this.disableDismiss = true;
 
@@ -50,7 +54,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
       this.progressSubscription = onProgressChanged.subscribe((progress) => this.loadingProgress = progress);
     }
 
-    this.walletService.unlockWallet(this.data, this.form.value.seed, onProgressChanged)
+    this.unlockSubscription = this.walletService.unlockWallet(this.data, this.form.value.seed, onProgressChanged)
       .subscribe(
         () => this.onUnlockSuccess(),
         (error: Error) => this.onUnlockError(error)
@@ -64,14 +68,14 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   }
 
   private onUnlockSuccess() {
-    this.removeProgressSubscription();
+    this.removeProgressSubscriptions();
     this.unlockButton.setSuccess();
     this.closePopup();
     this.onWalletUnlocked.emit();
   }
 
   private onUnlockError(error: Error) {
-    this.removeProgressSubscription();
+    this.removeProgressSubscriptions();
     this.disableDismiss = false;
     const config = new MatSnackBarConfig();
     config.duration = 5000;
@@ -79,9 +83,12 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
     this.unlockButton.setError(error.message);
   }
 
-  private removeProgressSubscription() {
+  private removeProgressSubscriptions() {
     if (this.progressSubscription && !this.progressSubscription.closed) {
       this.progressSubscription.unsubscribe();
+    }
+    if (this.unlockSubscription && !this.unlockSubscription.closed) {
+      this.unlockSubscription.unsubscribe();
     }
   }
 }

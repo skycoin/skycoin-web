@@ -47,7 +47,7 @@
     "loading": "Loading...",
 
     "top-bar": {
-      "updated1": "Updated:",
+      "updated1": "Balance updated:",
       "updated2": "min ago",
       "less-than": "less than a",
       "connection-error-tooltip": "Connection error, retrying"

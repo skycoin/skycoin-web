@@ -3,10 +3,9 @@ import 'rxjs/add/observable/interval';
 import { Subscription } from 'rxjs/Subscription';
 import { Overlay } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
-import { BalanceService } from '../../../../services/wallet/balance.service';
+import { BalanceService, BalanceStates } from '../../../../services/wallet/balance.service';
 import { TotalBalance } from '../../../../app.datatypes';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
@@ -19,12 +18,12 @@ import { LanguageService, LanguageData } from '../../../../services/language.ser
   styleUrls: ['./top-bar.component.scss'],
 })
 export class TopBarComponent implements OnInit, OnDestroy {
-  @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
   @Input() headline: string;
 
   timeSinceLastBalanceUpdate = 0;
   balanceObtained = false;
   problemUpdatingBalance: boolean;
+  updatingBalance = false;
   currentCoin: BaseCoin;
   language: LanguageData;
   hasManyCoins: boolean;
@@ -54,13 +53,15 @@ export class TopBarComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      this.balanceService.totalBalance.subscribe((balance: TotalBalance) => {
-        if (balance && !this.balanceObtained) {
-          this.balanceObtained = true;
+      this.balanceService.totalBalance.subscribe(balance => {
+        if (balance) {
+          if (balance.state === BalanceStates.Obtained) {
+            this.balanceObtained = true;
+          }
+          this.updateTimeSinceLastBalanceUpdate();
+          this.problemUpdatingBalance = balance.state === BalanceStates.Error;
+          this.updatingBalance = balance.state === BalanceStates.Updating;
         }
-
-        this.updateTimeSinceLastBalanceUpdate();
-        this.problemUpdatingBalance = !!balance;
       })
     );
 
@@ -91,10 +92,6 @@ export class TopBarComponent implements OnInit, OnDestroy {
           this.languageService.changeLanguage(response);
         }
       });
-  }
-
-  openMenu() {
-    this.menuTrigger.openMenu();
   }
 
   private updateTimeSinceLastBalanceUpdate() {
