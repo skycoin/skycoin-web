@@ -158,7 +158,7 @@ import { ScanAddressesComponent } from './components/pages/wallets/scan-addresse
     NoopAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule.forRoot(AppRoutes),
+    RouterModule.forRoot(AppRoutes, { useHash: true }),
     FeatureToggleModule,
     TranslateModule.forRoot({
       loader: {
