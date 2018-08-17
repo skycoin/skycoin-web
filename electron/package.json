@@ -17,9 +17,7 @@
             "category": "public.app-category.productivity"
         },
         "win": {
-            "target": "dir",
-            "compression": "store",
-            "asar": false
+            "target": "nsis"
         },
         "linux": {
             "category": "Network",
@@ -32,13 +30,16 @@
         },
         "files": [
             "!**/*",
-            "src/**/*",
+            "src/**/*"
+        ],
+        "extraFiles": [
+            {
+                "from": "./server/${os}_${arch}/",
+                "to": "./"
+            },
             {
                 "from": "../dist/",
-                "to": "./src/dist/",
-                "filter": [
-                    "**/*"
-                ]
+                "to": "./dist/"
             }
         ],
         "directories": {

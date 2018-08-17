@@ -1,9 +1,8 @@
 'use strict'
 
-const { app, Menu, BrowserWindow, shell, session, protocol } = require('electron');
+const { app, Menu, BrowserWindow, shell, session, dialog } = require('electron');
+const childProcess = require('child_process');
 const path = require('path')
-
-const uiDir = path.join(__dirname, './dist/');
 
 // This adds refresh and devtools console keybindings
 // Page can refresh with cmd+r, ctrl+r, F5
@@ -13,8 +12,6 @@ require('electron-context-menu')({});
 
 global.eval = function() { throw new Error('bad!!'); }
 
-// Force everything localhost, in case of a leak
-app.commandLine.appendSwitch('host-rules', 'MAP * 127.0.0.1, EXCLUDE api.coinmarketcap.com, api.github.com');
 app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1.2');
 app.commandLine.appendSwitch('--no-proxy-server');
 app.setAsDefaultProtocolClient('skycoin');
@@ -23,33 +20,53 @@ app.setAsDefaultProtocolClient('skycoin');
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
+var server = null;
+const serverPort= 8412;
+
+function startServer() {
+  console.log('Starting the local server');
+
+  if (server) {
+    console.log('Server already running');
+    return
+  }
+
+  // Start the server
+  server = childProcess.spawn(
+    path.join(path.dirname(app.getPath('exe')), process.platform === 'win32' ? './server.exe' : './server'),
+    ['-port=' + serverPort]
+  );
+
+  createWindow();
+
+  server.on('error', (e) => {
+    console.log('Failed to start the local server');
+    app.quit();
+  });
+
+  server.on('close', (code) => {
+    console.log('Local server closed');
+    app.quit();
+  });
+
+  server.on('exit', (code) => {
+    console.log('Local server exited');
+    app.quit();
+  });
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  // Fix requests made outside the dist folder.
-  protocol.interceptFileProtocol('file', (request, callback) => {
-    var filePath = request.url.substr(7)
-    switch (process.platform) {
-      case 'win32':
-        filePath = filePath.startsWith('/') || filePath.startsWith('\\') ? filePath.substr(1) : filePath;
-    }
-    filePath = path.normalize(filePath);
-
-    const changePos = findFirstChangePos(uiDir, filePath);
-    filePath = changePos == -1 ?
-      filePath :
-      filePath.substr(0, changePos) + uiDir.substr(changePos) +  filePath.substr(changePos);
-
-    callback({path: filePath})
-  }, (error) => {
-    if (error) console.error('Failed to register protocol')
-  });
-
-  createWindow();
+  startServer();
 });
 
 function createWindow() {
+  if (win) {
+    return;
+  }
+
   console.log('Creating window');
 
   // To fix appImage doesn't show icon in dock issue.
@@ -85,7 +102,7 @@ function createWindow() {
   win.eval = global.eval;
   win.webContents.executeJavaScript('window.eval = 0;');
 
-  win.loadURL(`file://${uiDir}index.html`);
+  win.loadURL(`http://127.0.0.1:` + serverPort);
 
   const ses = win.webContents.session
   ses.clearCache(function () {

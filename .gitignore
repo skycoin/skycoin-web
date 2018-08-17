@@ -4,6 +4,7 @@
 /tmp
 /out-tsc
 /electron/release
+/electron/server
 
 # dependencies
 /node_modules

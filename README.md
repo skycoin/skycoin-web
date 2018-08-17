@@ -21,17 +21,17 @@ You will only have to run this again, if any dependencies have been changed in t
 
 ## Compiling new target files
 
-To compile new target files, you will have to run: `npm run build`
+To compile new target files, you will have to run: `npm run build`. To create a dev build, use `npm run build-dev` instead.
 
 ## Development server
 
-Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. 
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`.
 
 ## Back-end
 
-As this is a lite client, it requires a back-end to retrieve the blockchain state and inject new transactions. For this
-purpose a full node has been set up at `http://128.199.57.221`. At the moment this requires a mapping API, but in the
-future any node can do this.
+As this is a lite client, it requires a back-end to retrieve the blockchain state and inject new transactions. While using
+a dev build, the wallet tries to connect to a Skycoin node running locally, which must be started with the `-disable-csrf`
+option. The production builds connects to a public node set up at `https://node.skycoin.net`.
 
 ## Multi-coin compatibility
 
