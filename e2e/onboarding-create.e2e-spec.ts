@@ -118,7 +118,7 @@ describe('Onboarding Create', () => {
   });
 
   it('should load wallet with correct address', done => {
-    browser.get('/wizard');
+    browser.get('#/wizard');
     expect<any>(page.verifyLoadedWalletAddress()).toEqual(true);
     done();
   });
