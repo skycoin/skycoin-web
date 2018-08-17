@@ -4,6 +4,7 @@ import { BaseCoin } from '../coins/basecoin';
 import { SkycoinCoin } from '../coins/skycoin.coin';
 import { TestCoin } from '../coins/test.coin';
 import { defaultCoinId } from '../constants/coins-id.const';
+import { environment } from '../../environments/environment';
 
 export class CoinService {
 
@@ -38,7 +39,11 @@ export class CoinService {
   }
 
   private loadAvailableCoins() {
-    this.coins.push(new SkycoinCoin(), new TestCoin());
+    this.coins.push(new SkycoinCoin());
+
+    if (!environment.production) {
+      this.coins.push(new TestCoin());
+    }
 
     const IDs = new Map<number, boolean>();
     this.coins.forEach((value: BaseCoin) => {
