@@ -43,7 +43,8 @@ export class BlockchainService {
     coinService: CoinService
   ) {
     coinService.currentCoin.subscribe(() => {
-      this.startCheckingNode();
+      // Delay necessary for the URL unblocking performed by Electron to work correctly.
+      setTimeout(() => this.startCheckingNode());
     });
   }
 

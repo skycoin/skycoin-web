@@ -52,5 +52,12 @@ export class CoinService {
       }
       IDs[value.id] = true;
     });
+
+    const nodes: string[] = [];
+    this.coins.forEach((value: BaseCoin) => {
+      nodes.push(value.nodeUrl);
+    });
+    // This list is used by Electron to know which hosts should not be blocked.
+    window['nodeURLs'] = nodes;
   }
 }
