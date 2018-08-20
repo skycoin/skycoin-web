@@ -10,13 +10,16 @@ export class CoinService {
 
   currentCoin: BehaviorSubject<BaseCoin> = new BehaviorSubject<BaseCoin>(null);
   coins: BaseCoin[] = [];
+  customNodeUrls: object;
 
-  private readonly storageKey = 'currentCoin';
+  private readonly correntCoinStorageKey = 'currentCoin';
+  private readonly nodeUrlsStorageKey = 'nodeUrls';
 
   constructor() {
     this.loadAvailableCoins();
+    this.loadNodeUrls();
     this.loadCurrentCoin();
-    sessionStorage.setItem(this.storageKey, this.currentCoin.getValue().id.toString());
+    sessionStorage.setItem(this.correntCoinStorageKey, this.currentCoin.getValue().id.toString());
   }
 
   changeCoin(coin: BaseCoin) {
@@ -26,16 +29,39 @@ export class CoinService {
     }
   }
 
+  changeNodeUrl(coinId: number, url: string) {
+    if (!this.coins.find(coin => coin.id === coinId)) {
+      return;
+    }
+
+    if (url.length > 0) {
+      this.customNodeUrls[coinId.toString()] = url;
+    } else {
+      delete this.customNodeUrls[coinId.toString()];
+    }
+
+    localStorage.setItem(this.nodeUrlsStorageKey, JSON.stringify(this.customNodeUrls));
+
+    if (coinId === this.currentCoin.value.id) {
+      this.currentCoin.next(this.currentCoin.value);
+    }
+  }
+
+  private loadNodeUrls() {
+    const savedUrls: object = JSON.parse(localStorage.getItem(this.nodeUrlsStorageKey));
+    this.customNodeUrls = savedUrls ? savedUrls : {};
+  }
+
   private loadCurrentCoin() {
-    const storedCoinId = sessionStorage.getItem(this.storageKey) || localStorage.getItem(this.storageKey);
+    const storedCoinId = sessionStorage.getItem(this.correntCoinStorageKey) || localStorage.getItem(this.correntCoinStorageKey);
     const coinId = storedCoinId ? +storedCoinId : defaultCoinId;
     const coin = this.coins.find((c: BaseCoin) => c.id === coinId);
     this.currentCoin.next(coin);
   }
 
   private saveCoin(coinId: number) {
-    localStorage.setItem(this.storageKey, coinId.toString());
-    sessionStorage.setItem(this.storageKey, coinId.toString());
+    localStorage.setItem(this.correntCoinStorageKey, coinId.toString());
+    sessionStorage.setItem(this.correntCoinStorageKey, coinId.toString());
   }
 
   private loadAvailableCoins() {

@@ -19,7 +19,10 @@ export class ApiService {
               private translate: TranslateService,
               private coinService: CoinService) {
     this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.url = coin.nodeUrl);
+      .subscribe((coin: BaseCoin) => {
+        const customUrl = coinService.customNodeUrls[coin.id.toString()];
+        this.url = customUrl ? customUrl : coin.nodeUrl;
+      });
   }
 
   get(url, params = null, options = {}): Observable<any> {

@@ -1,0 +1,16 @@
+<app-modal class="modal" [headline]="'nodes.change-url' | translate" [dialog]="dialogRef">
+  <div [formGroup]="form">
+    <div class="form-field">
+      <label for="url">{{ 'nodes.change.url-label' | translate}}</label>
+      <input formControlName="url" id="url" (keydown.enter)="change()">
+    </div>
+  </div>
+  <div class="-buttons">
+    <app-button (action)="closePopup()">
+      {{ 'nodes.change.cancel-button' | translate}}
+    </app-button>
+    <app-button (action)="change()" class="primary">
+      {{ 'nodes.change.change-button' | translate}}
+    </app-button>
+  </div>
+</app-modal>

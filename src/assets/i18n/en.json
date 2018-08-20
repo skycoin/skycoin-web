@@ -29,6 +29,8 @@
     "outputs": "Outputs",
     "transactions": "Transactions",
     "pending-txs": "Pending Transactions",
+    "node": "Node",
+    "nodes": "Nodes",
     "backup": "Backup Wallet",
     "explorer": "{{ coin }} Explorer",
     "seed": "Wallet Seed",
@@ -251,6 +253,19 @@
     "none": "Currently there are no pending transactions",
     "my": "Mine",
     "all": "All"
+  },
+
+  "nodes" : {
+    "coin": "Coin",
+    "url": "Node URL",
+    "custom-label": "Custom URL",
+    "change-url": "Change URL",
+
+    "change" : {
+      "url-label": "Node URL (leave empty to use the default URL)",
+      "cancel-button": "Cancel",
+      "change-button": "Change"
+    }
   },
 
   "history": {

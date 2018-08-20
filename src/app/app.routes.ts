@@ -8,6 +8,7 @@ import { HistoryComponent } from './components/pages/history/history.component';
 import { OnboardingEncryptWalletComponent } from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
 import { BuyComponent } from './components/pages/buy/buy.component';
 import { OnboardingCreateWalletComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
+import { NodesComponent } from './components/pages/settings/nodes/nodes.component';
 
 export const AppRoutes = [
   {
@@ -49,6 +50,10 @@ export const AppRoutes = [
       {
         path: 'pending-transactions',
         component: PendingTransactionsComponent,
+      },
+      {
+        path: 'node',
+        component: NodesComponent,
       },
     ],
     canActivate: [WizardGuardService],

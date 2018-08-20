@@ -63,6 +63,7 @@ export class MockPurchaseService {
 
 export class MockCoinService {
   coins = [];
+  customNodeUrls = {};
 
   currentCoin = new BehaviorSubject<BaseCoin>({
     id: 1,
