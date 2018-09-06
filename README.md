@@ -43,7 +43,7 @@ For create a container you must run:
 docker run -d --name <name> -p 80:80 skycoin/skycoin-web:latest
 ```
 
-Then, you can access to the web wallet by visiting http:you_IP
+Then, you can access to the web wallet by visiting `http://your_IP`
 
 ## Development server
 
