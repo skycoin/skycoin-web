@@ -37,13 +37,13 @@ or you can pull the image from the official repository:
 docker pull skycoin/skycoin-web:<tag>
 ```
 
-For create a container you must run:
+To create a container you must run:
 
 ```sh
-docker run -d --name <name> -p 80:80 skycoin/skycoin-web:latest
+docker run -d --name <name> -p 8001:80 skycoin/skycoin-web:latest
 ```
 
-Then, you can access to the web wallet by visiting `http://your_IP`
+Then, you can access to the web wallet by visiting `http://your_IP:8001`
 
 ## Development server
 
