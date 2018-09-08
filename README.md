@@ -23,6 +23,28 @@ You will only have to run this again, if any dependencies have been changed in t
 
 To compile new target files, you will have to run: `npm run build`
 
+## Docker
+
+To build a production ready Docker image, you have to run:
+
+```sh
+docker build -t image_name:tag -f docker/images/Dockerfile .
+```
+
+or you can pull the image from the official repository:
+
+```sh
+docker pull skycoin/skycoin-web:<tag>
+```
+
+To create a container you must run:
+
+```sh
+docker run -d --name <name> -p 8001:80 skycoin/skycoin-web:latest
+```
+
+Then, you can access to the web wallet by visiting `http://your_IP:8001`
+
 ## Development server
 
 Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. 
