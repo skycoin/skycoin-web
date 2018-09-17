@@ -41,11 +41,36 @@ function startServer() {
     return
   }
 
+  // Resolve server binary location
+  var exePath = path.dirname(app.getPath('exe'));
+  var exe = (() => {
+    switch (process.platform) {
+      case 'darwin':
+        return path.join(exePath, './../server')
+      case 'win32':
+        return path.join(exePath, './server.exe');
+      case 'linux':
+        return path.join(exePath, './server');
+      default:
+        return path.join(exePath, './server.exe');
+    }
+  })()
+
+  var contentsPath = (() => {
+    switch (process.platform) {
+      case 'darwin':
+        return path.join(exePath, './../dist/')
+      case 'win32':
+        return path.join(exePath, './dist/');
+      case 'linux':
+        return path.join(exePath, './dist/');
+      default:
+        return path.join(exePath, './dist/');
+    }
+  })()
+
   // Start the server
-  server = childProcess.spawn(
-    path.join(path.dirname(app.getPath('exe')), process.platform === 'win32' ? './server.exe' : './server'),
-    ['-port=' + serverPort]
-  );
+  server = childProcess.spawn(exe, ['-port=' + serverPort, '-path=' + contentsPath]);
 
   createWindow();
 
@@ -233,6 +258,12 @@ app.on('window-all-closed', () => {
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+});
+
+app.on('quit', () => {
+  if (server) {
+    server.kill();
   }
 });
 

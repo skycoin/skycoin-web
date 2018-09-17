@@ -25,15 +25,17 @@ const (
 )
 
 var (
+	path string
 	port string
 )
 
 func main() {
+	flag.StringVar(&path, "path", "-1", "contents path")
 	flag.StringVar(&port, "port", "-1", "server port")
 	flag.Parse()
 
-	if port != "-1" {
-		handler := http.FileServer(http.Dir("./dist/"))
+	if path != "-1" && port != "-1" {
+		handler := http.FileServer(http.Dir(path))
 		s := &http.Server{
 			Addr:         walletHost + ":" + port,
 			Handler:      handler,
