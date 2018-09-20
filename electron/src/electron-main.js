@@ -31,9 +31,6 @@ allowedHosts.set('api.coinmarketcap.com', true);
 allowedHosts.set('api.github.com', true);
 var allowedNodes = new Map();
 
-// Indicates if the URLs of the nodes were already added to allowedHosts.
-var nodesAllowed = false;
-
 function startServer() {
   console.log('Starting the local server');
 
