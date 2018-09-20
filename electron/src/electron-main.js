@@ -1,6 +1,6 @@
 'use strict'
 
-const { app, Menu, BrowserWindow, shell, session, dialog } = require('electron');
+const { app, Menu, BrowserWindow, shell, session, dialog, ipcMain } = require('electron');
 const childProcess = require('child_process');
 const path = require('path')
 const url = require('url');
@@ -24,11 +24,12 @@ let win;
 var server = null;
 const serverPort= 8412;
 
-// It is only possible to make connections to hosts that are in this list.
+// It is only possible to make connections to hosts that are in this lists.
 var allowedHosts = new Map();
 allowedHosts.set('127.0.0.1:' + serverPort, true);
 allowedHosts.set('api.coinmarketcap.com', true);
 allowedHosts.set('api.github.com', true);
+var allowedNodes = new Map();
 
 // Indicates if the URLs of the nodes were already added to allowedHosts.
 var nodesAllowed = false;
@@ -49,10 +50,8 @@ function startServer() {
         return path.join(exePath, './../server')
       case 'win32':
         return path.join(exePath, './server.exe');
-      case 'linux':
-        return path.join(exePath, './server');
       default:
-        return path.join(exePath, './server.exe');
+        return path.join(exePath, './server');
     }
   })()
 
@@ -61,8 +60,6 @@ function startServer() {
       case 'darwin':
         return path.join(exePath, './../dist/')
       case 'win32':
-        return path.join(exePath, './dist/');
-      case 'linux':
         return path.join(exePath, './dist/');
       default:
         return path.join(exePath, './dist/');
@@ -75,7 +72,7 @@ function startServer() {
   createWindow();
 
   server.on('error', (e) => {
-    console.log('Failed to start the local server');
+    console.log('Failed to start the local server: ' + e);
     app.quit();
   });
 
@@ -123,13 +120,14 @@ function createWindow() {
     webPreferences: {
       webgl: false,
       webaudio: false,
-      contextIsolation: true,
+      contextIsolation: false,
       webviewTag: false,
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
       allowRunningInsecureContent: false,
       webSecurity: true,
       plugins: false,
+      preload: __dirname + '/electron-api.js',
     },
   });
 
@@ -199,40 +197,22 @@ function createWindow() {
 
   // Blocks the connection if the URL is not in allowedHosts.
   session.defaultSession.webRequest.onBeforeRequest(['*://*./*'], function(details, callback) {
-    if (details.url.startsWith('http')) {
-      if (!nodesAllowed) {
-        allowNodes();
-      }
-      if (!allowedHosts.has(url.parse(details.url).host)) {
-        callback({cancel: true})
-        return;
-      }
+    let requestHost = url.parse(details.url).host;
+    if (!allowedHosts.has(requestHost) && !allowedNodes.has(requestHost)) {
+      callback({cancel: true})
+      return;
     }
     callback({cancel: false})
   });
 }
 
-// Check the URLs of the nodes of all the coins and adds the hosts to allowedHosts, so that it is
-// possible to connect with them. This works because the Angular code (in
-// CoinService.loadAvailableCoins) puts a list with the URLs in window.nodeURLs.
-function allowNodes() {
-  win.webContents.executeJavaScript('window.nodeURLs').then(list => {
-    if (list && !nodesAllowed) {
-      list.forEach(value => allowedHosts.set(url.parse(value).host, true));
-    }
-  });
-}
-
-// Get the index of the first character from which two string are no longer equal
-function findFirstChangePos(stringA, stringB) {
-  var limit = Math.min(stringA.length, stringB.length);
-  for (var i = 0; i < limit; i++) {
-    if (stringA[i] !== stringB[i]) {
-      return i;
-    }
-  }
-  return -1;
-}
+// Gets the URLs of the nodes of all the coins and adds the hosts to allowedNodes, so that it is
+// possible to connect with them.
+ipcMain.on('setNodesUrls', (event, list) => {
+  allowedNodes = new Map();
+  list.forEach(value => allowedNodes.set(url.parse(value).host, true));
+  event.returnValue = null;
+});
 
 // Enforce single instance
 const alreadyRunning = app.makeSingleInstance((commandLine, workingDirectory) => {

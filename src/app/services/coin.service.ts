@@ -42,6 +42,8 @@ export class CoinService {
 
     localStorage.setItem(this.nodeUrlsStorageKey, JSON.stringify(this.customNodeUrls));
 
+    this.updateNodesUrls();
+
     if (coinId === this.currentCoin.value.id) {
       this.currentCoin.next(this.currentCoin.value);
     }
@@ -50,6 +52,8 @@ export class CoinService {
   private loadNodeUrls() {
     const savedUrls: object = JSON.parse(localStorage.getItem(this.nodeUrlsStorageKey));
     this.customNodeUrls = savedUrls ? savedUrls : {};
+
+    this.updateNodesUrls();
   }
 
   private loadCurrentCoin() {
@@ -79,11 +83,22 @@ export class CoinService {
       IDs[value.id] = true;
     });
 
-    const nodes: string[] = [];
-    this.coins.forEach((value: BaseCoin) => {
-      nodes.push(value.nodeUrl);
-    });
-    // This list is used by Electron to know which hosts should not be blocked.
-    window['nodeURLs'] = nodes;
+    this.updateNodesUrls();
+  }
+
+  private updateNodesUrls() {
+    if (window['isElectron']) {
+      const nodes: string[] = [];
+      this.coins.forEach((value: BaseCoin) => {
+        nodes.push(value.nodeUrl);
+      });
+
+      if (this.customNodeUrls) {
+        Object.keys(this.customNodeUrls).forEach(val => nodes.push(this.customNodeUrls[val]));
+      }
+
+      // The list is used by Electron to know which hosts should not be blocked.
+      window['ipcRenderer'].sendSync('setNodesUrls', nodes);
+    }
   }
 }
