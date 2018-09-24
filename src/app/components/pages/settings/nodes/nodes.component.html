@@ -1,0 +1,28 @@
+<div class="sky-container sky-container-grey">
+  <app-header [headline]="(coins.length > 1 ? 'title.nodes' : 'title.node') | translate"></app-header>
+
+  <div class="container">
+    <div class="-table">
+      <div class="-headers">
+        <div *ngIf="coins.length > 1" class="-width-250">{{ 'nodes.coin' | translate }}</div>
+        <div class="flex-fill">{{ 'nodes.url' | translate }}</div>
+        <div class="-width-150"></div>
+      </div>
+      <div class="-paper">
+        <div class="-row" *ngFor="let coin of coins">
+          <div *ngIf="coins.length > 1" class="-width-250 -label" [attr.title]="coin.coinName">{{ coin.coinName }}</div>
+          <div *ngIf="!customNodeUrls[coin.id.toString()]" class="flex-fill -label">
+            <span [attr.title]="coin.nodeUrl">{{ coin.nodeUrl }}</span>
+          </div>
+          <div *ngIf="customNodeUrls[coin.id.toString()]" class="flex-fill -label">
+            <i class="material-icons -custom-url-icon" [matTooltip]="'nodes.custom-label' | translate">announcement</i>
+            <span [attr.title]="customNodeUrls[coin.id.toString()]">{{ customNodeUrls[coin.id.toString()] }}</span>
+          </div>
+          <div class="-width-150 -text-right">
+            <span class="-link" (click)="changeNodeURL(coin)">{{ 'nodes.change-url' | translate }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

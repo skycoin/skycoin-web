@@ -4,10 +4,12 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy.config.js",
+    "start": "ng serve --proxy-config proxy.config.js --delete-output-path false",
     "build": "ng build --prod",
+    "build-dev": "ng build",
+    "build-for-electron": "ng build --prod --base-href ./",
     "lint": "ng lint",
-    "e2e": "ng e2e --proxy-config proxy.config.js --environment e2e",
+    "e2e": "ng e2e --proxy-config proxy.config.js --environment e2e --delete-output-path false",
     "snyk-protect": "snyk protect",
     "protractor": "protractor protractor.conf.js",
     "test": "ng test -sm=false --watch=false --browsers ChromeHeadlessNoSandbox",
@@ -15,8 +17,8 @@
     "cipher-test-extensive": "ng test -sm=false --watch=false --browsers ChromeHeadlessNoSandbox --browserNoActivityTimeout=180000 --cipher extensive",
     "test:watch": "ng test -sm=false --browsers Chrome",
     "prepare": "npm run snyk-protect",
-    "start-docker": "ng serve --proxy-config docker-proxy.config.js",
-    "e2e-docker": "ng e2e --proxy-config docker-proxy.config.js --environment e2e"
+    "start-docker": "ng serve --proxy-config docker-proxy.config.js --delete-output-path false",
+    "e2e-docker": "ng e2e --proxy-config docker-proxy.config.js --environment e2e --delete-output-path false"
   },
   "private": true,
   "dependencies": {

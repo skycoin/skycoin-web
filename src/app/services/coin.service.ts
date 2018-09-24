@@ -10,13 +10,16 @@ export class CoinService {
 
   currentCoin: BehaviorSubject<BaseCoin> = new BehaviorSubject<BaseCoin>(null);
   coins: BaseCoin[] = [];
+  customNodeUrls: object;
 
-  private readonly storageKey = 'currentCoin';
+  private readonly correntCoinStorageKey = 'currentCoin';
+  private readonly nodeUrlsStorageKey = 'nodeUrls';
 
   constructor() {
     this.loadAvailableCoins();
+    this.loadNodeUrls();
     this.loadCurrentCoin();
-    sessionStorage.setItem(this.storageKey, this.currentCoin.getValue().id.toString());
+    sessionStorage.setItem(this.correntCoinStorageKey, this.currentCoin.getValue().id.toString());
   }
 
   changeCoin(coin: BaseCoin) {
@@ -26,16 +29,43 @@ export class CoinService {
     }
   }
 
+  changeNodeUrl(coinId: number, url: string) {
+    if (!this.coins.find(coin => coin.id === coinId)) {
+      return;
+    }
+
+    if (url.length > 0) {
+      this.customNodeUrls[coinId.toString()] = url;
+    } else {
+      delete this.customNodeUrls[coinId.toString()];
+    }
+
+    localStorage.setItem(this.nodeUrlsStorageKey, JSON.stringify(this.customNodeUrls));
+
+    this.updateNodesUrls();
+
+    if (coinId === this.currentCoin.value.id) {
+      this.currentCoin.next(this.currentCoin.value);
+    }
+  }
+
+  private loadNodeUrls() {
+    const savedUrls: object = JSON.parse(localStorage.getItem(this.nodeUrlsStorageKey));
+    this.customNodeUrls = savedUrls ? savedUrls : {};
+
+    this.updateNodesUrls();
+  }
+
   private loadCurrentCoin() {
-    const storedCoinId = sessionStorage.getItem(this.storageKey) || localStorage.getItem(this.storageKey);
+    const storedCoinId = sessionStorage.getItem(this.correntCoinStorageKey) || localStorage.getItem(this.correntCoinStorageKey);
     const coinId = storedCoinId ? +storedCoinId : defaultCoinId;
     const coin = this.coins.find((c: BaseCoin) => c.id === coinId);
     this.currentCoin.next(coin);
   }
 
   private saveCoin(coinId: number) {
-    localStorage.setItem(this.storageKey, coinId.toString());
-    sessionStorage.setItem(this.storageKey, coinId.toString());
+    localStorage.setItem(this.correntCoinStorageKey, coinId.toString());
+    sessionStorage.setItem(this.correntCoinStorageKey, coinId.toString());
   }
 
   private loadAvailableCoins() {
@@ -52,5 +82,23 @@ export class CoinService {
       }
       IDs[value.id] = true;
     });
+
+    this.updateNodesUrls();
+  }
+
+  private updateNodesUrls() {
+    if (window['isElectron']) {
+      const nodes: string[] = [];
+      this.coins.forEach((value: BaseCoin) => {
+        nodes.push(value.nodeUrl);
+      });
+
+      if (this.customNodeUrls) {
+        Object.keys(this.customNodeUrls).forEach(val => nodes.push(this.customNodeUrls[val]));
+      }
+
+      // The list is used by Electron to know which hosts should not be blocked.
+      window['ipcRenderer'].sendSync('setNodesUrls', nodes);
+    }
   }
 }

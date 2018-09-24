@@ -29,6 +29,8 @@
     "outputs": "Salidas",
     "transactions": "Transacciones",
     "pending-txs": "Transacciones Pendientes",
+    "node": "Nodo",
+    "nodes": "Nodos",
     "backup": "Respaldar Billetera",
     "explorer": "Explorador de {{ coin }}",
     "seed": "Semilla de la Billetera",
@@ -251,6 +253,19 @@
     "none": "Actualmente no hay transacciones pendientes",
     "my": "Mías",
     "all": "Todas"
+  },
+
+  "nodes" : {
+    "coin": "Moneda",
+    "url": "URL del nodo",
+    "custom-label": "URL personalizada",
+    "change-url": "Cambiar la URL",
+
+    "change" : {
+      "url-label": "URL del nodo (dejar vacío para usar la URL por defecto)",
+      "cancel-button": "Cancelar",
+      "change-button": "Cambiar"
+    }
   },
 
   "history": {
