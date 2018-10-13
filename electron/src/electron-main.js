@@ -13,6 +13,13 @@ require('electron-context-menu')({});
 
 global.eval = function() { throw new Error('bad!!'); }
 
+// Detect if the code is running with the "dev" arg. The "dev" arg is added when running npm
+// start. If this is true, a local test server will not be started, but one is expected to be running,
+// the contents served in http://localhost:4200 will be displayed and it will be allowed to
+// reload the URLs using the Electron window, so that it is easier to test the changes made to
+// the UI using npm start.
+let dev = process.argv.find(arg => arg === 'dev') ? true : false;
+
 app.commandLine.appendSwitch('ssl-version-fallback-min', 'tls1.2');
 app.commandLine.appendSwitch('--no-proxy-server');
 app.setAsDefaultProtocolClient('skycoin');
@@ -29,59 +36,68 @@ var allowedHosts = new Map();
 allowedHosts.set('127.0.0.1:' + serverPort, true);
 allowedHosts.set('api.coinmarketcap.com', true);
 allowedHosts.set('api.github.com', true);
+if (dev) {
+  allowedHosts.set('localhost:4200', true);
+}
 var allowedNodes = new Map();
 
 function startServer() {
-  console.log('Starting the local server');
+  if (!dev) {
+    console.log('Starting the local server');
 
-  if (server) {
-    console.log('Server already running');
-    return
+    if (server) {
+      console.log('Server already running');
+      return
+    }
+
+    // Resolve server binary location
+    var exePath = path.dirname(app.getPath('exe'));
+    var exe = (() => {
+      switch (process.platform) {
+        case 'darwin':
+          return path.join(exePath, './../server')
+        case 'win32':
+          return path.join(exePath, './server.exe');
+        default:
+          return path.join(exePath, './server');
+      }
+    })()
+
+    var contentsPath = (() => {
+      switch (process.platform) {
+        case 'darwin':
+          return path.join(exePath, './../dist/')
+        case 'win32':
+          return path.join(exePath, './dist/');
+        default:
+          return path.join(exePath, './dist/');
+      }
+    })()
+
+    // Start the server
+    server = childProcess.spawn(exe, ['-port=' + serverPort, '-path=' + contentsPath]);
+
+    createWindow();
+
+    server.on('error', (e) => {
+      console.log('Failed to start the local server: ' + e);
+      app.quit();
+    });
+
+    server.on('close', (code) => {
+      console.log('Local server closed');
+      app.quit();
+    });
+
+    server.on('exit', (code) => {
+      console.log('Local server exited');
+      app.quit();
+    });
+  } else {
+    // If in dev mode, simply open the dev server URL.
+    console.log('Omitting the start of the test server. The contents of http://localhost:4200/ will be shown');
+    createWindow();
   }
-
-  // Resolve server binary location
-  var exePath = path.dirname(app.getPath('exe'));
-  var exe = (() => {
-    switch (process.platform) {
-      case 'darwin':
-        return path.join(exePath, './../server')
-      case 'win32':
-        return path.join(exePath, './server.exe');
-      default:
-        return path.join(exePath, './server');
-    }
-  })()
-
-  var contentsPath = (() => {
-    switch (process.platform) {
-      case 'darwin':
-        return path.join(exePath, './../dist/')
-      case 'win32':
-        return path.join(exePath, './dist/');
-      default:
-        return path.join(exePath, './dist/');
-    }
-  })()
-
-  // Start the server
-  server = childProcess.spawn(exe, ['-port=' + serverPort, '-path=' + contentsPath]);
-
-  createWindow();
-
-  server.on('error', (e) => {
-    console.log('Failed to start the local server: ' + e);
-    app.quit();
-  });
-
-  server.on('close', (code) => {
-    console.log('Local server closed');
-    app.quit();
-  });
-
-  server.on('exit', (code) => {
-    console.log('Local server exited');
-    app.quit();
-  });
 }
 
 // This method will be called when Electron has finished
@@ -132,7 +148,11 @@ function createWindow() {
   win.eval = global.eval;
   win.webContents.executeJavaScript('window.eval = 0;');
 
-  win.loadURL(`http://127.0.0.1:` + serverPort);
+  if (!dev) {
+    win.loadURL(`http://127.0.0.1:` + serverPort);
+  } else {
+    win.loadURL(`http://localhost:4200/`);
+  }
 
   const ses = win.webContents.session
   ses.clearCache(function () {
@@ -147,10 +167,13 @@ function createWindow() {
     win = null;
   });
 
-  win.webContents.on('will-navigate', function(e, url) {
-    e.preventDefault();
-    require('electron').shell.openExternal(url);
-  });
+  // If in dev mode, allow to open URLs.
+  if (!dev) {
+    win.webContents.on('will-navigate', function(e, url) {
+      e.preventDefault();
+      require('electron').shell.openExternal(url);
+    });
+  }
 
   // create application's main menu
   var template = [{
