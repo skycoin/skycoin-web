@@ -71,8 +71,8 @@ describe('HistoryService', () => {
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
       const expectedTransaction: NormalTransaction = createTransaction([destinationAddress], ownerAddress.address, destinationAddress, 13, -13);
-      expectedTransaction["hoursSent"] = NaN;
-      expectedTransaction["hoursBurned"] = NaN;
+      expectedTransaction['hoursSent'] = NaN;
+      expectedTransaction['hoursBurned'] = NaN;
 
       historyService.transactions()
         .subscribe((transactions: any[]) => {
@@ -89,8 +89,8 @@ describe('HistoryService', () => {
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
       const expectedTransaction: NormalTransaction = createTransaction([destinationAddress.address], ownerAddress, destinationAddress.address, 13, 13);
-      expectedTransaction["hoursSent"] = NaN;
-      expectedTransaction["hoursBurned"] = NaN;
+      expectedTransaction['hoursSent'] = NaN;
+      expectedTransaction['hoursBurned'] = NaN;
 
       historyService.transactions()
         .subscribe((transactions: any[]) => {
