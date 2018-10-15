@@ -39,11 +39,6 @@ export class MockDateTimePipe implements PipeTransform {
 }
 
 // --- Services
-export class MockFeatureService {
-  getFeatureToggleData(): any {
-    return {};
-  }
-}
 
 export class MockNavBarService {
   activeComponent = new BehaviorSubject({});

@@ -57,8 +57,6 @@ import { PurchaseService } from './services/purchase.service';
 import { WizardGuardService } from './services/wizard-guard.service';
 import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
-import { FeatureToggleModule } from 'ngx-feature-toggle';
-import { FeatureService } from './services/feature.service';
 import { NumberFieldDirective } from './directives/number-field.directive';
 import { AppTranslateLoader } from './app.translate-loader';
 import { SendFormComponent } from './components/pages/send-skycoin/send-form/send-form.component';
@@ -164,7 +162,6 @@ import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change
     ReactiveFormsModule,
     FormsModule,
     RouterModule.forRoot(AppRoutes, { useHash: true }),
-    FeatureToggleModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -180,7 +177,6 @@ import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change
     ClipboardService,
     WizardGuardService,
     CipherProvider,
-    FeatureService,
     NavBarService,
     CoinService,
     LanguageService,
