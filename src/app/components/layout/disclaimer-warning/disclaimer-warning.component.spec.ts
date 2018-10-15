@@ -2,8 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { DisclaimerWarningComponent } from './disclaimer-warning.component';
-import { FeatureService } from '../../../services/feature.service';
-import { MockTranslatePipe, MockFeatureService } from '../../../utils/test-mocks';
+import { MockTranslatePipe } from '../../../utils/test-mocks';
 
 describe('DisclaimerWarningComponent', () => {
   let component: DisclaimerWarningComponent;
@@ -16,9 +15,7 @@ describe('DisclaimerWarningComponent', () => {
         MockTranslatePipe
       ],
       schemas: [ NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: FeatureService, useClass: MockFeatureService }
-      ]
+      providers: []
     })
       .compileComponents();
   }));
