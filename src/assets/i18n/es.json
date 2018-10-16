@@ -214,6 +214,7 @@
     "id": "Tx ID",
     "show-more": "Mostrar más",
     "hours-sent": "enviada(s)",
+    "hours-received": "recibida(s)",
     "hours-burned": "quemada(s)",
     "inputs": "Entradas",
     "outputs": "Salidas",
