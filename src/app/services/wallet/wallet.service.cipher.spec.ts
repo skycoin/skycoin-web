@@ -1,6 +1,7 @@
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
+import { BigNumber } from 'bignumber.js';
 
 import { WalletService } from './wallet.service';
 import { SpendingService } from './spending.service';
@@ -92,7 +93,7 @@ describe('WalletService with cipher:', () => {
 
   describe('cipher createTransaction', () => {
     it('should return the correct transaction inputs and outputs', fakeAsync(() => {
-      const amount = 10000;
+      const amount = new BigNumber(10000);
       const destinationAddress = '2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNy';
       const addresses = [
         createAddress()
@@ -108,7 +109,7 @@ describe('WalletService with cipher:', () => {
       ];
 
       const outputs: Output[] = [
-        createOutput(addresses[0].address, amount, 1),
+        createOutput(addresses[0].address, amount, new BigNumber(1)),
       ];
 
       spyApiService.get.and.returnValue(Observable.of({ head_outputs: outputs }));
@@ -122,7 +123,7 @@ describe('WalletService with cipher:', () => {
     }));
 
     it('should rejected transaction for an invalid destination address\'', fakeAsync(() => {
-      const amount = 10000;
+      const amount = new BigNumber(10000);
       const wrongDestinationAddress = '2e1erPpaxNVC37PkEv3n8PESNw2DNr5aJNz';
       const addresses = [
         createAddress()
@@ -131,7 +132,7 @@ describe('WalletService with cipher:', () => {
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput(addresses[0].address, amount, 1),
+        createOutput(addresses[0].address, amount, new BigNumber(1)),
       ];
 
       spyApiService.get.and.returnValue(Observable.of({ head_outputs: outputs }));
@@ -161,7 +162,7 @@ function createAddress(
   };
 }
 
-function createOutput(address: string, coins = 10, calculated_hours = 100): Output {
+function createOutput(address: string, coins: BigNumber = new BigNumber(10), calculated_hours: BigNumber = new BigNumber(100)): Output {
   return {
     address: address,
     coins: coins,

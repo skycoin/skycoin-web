@@ -1,6 +1,7 @@
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
+import { BigNumber } from 'bignumber.js';
 
 import { HistoryService } from './history.service';
 import { WalletService } from './wallet.service';
@@ -70,9 +71,9 @@ describe('HistoryService', () => {
       const apiResponse = createAddressTransactions(ownerAddress.address, destinationAddress, 13);
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
-      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress], ownerAddress.address, destinationAddress, 13, -13);
-      expectedTransaction['hoursSent'] = NaN;
-      expectedTransaction['hoursBurned'] = NaN;
+      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress], ownerAddress.address, destinationAddress, 13, new BigNumber(-13));
+      expectedTransaction['hoursSent'] = new BigNumber(NaN);
+      expectedTransaction['hoursBurned'] = new BigNumber(NaN);
 
       historyService.transactions()
         .subscribe((transactions: any[]) => {
@@ -88,9 +89,9 @@ describe('HistoryService', () => {
       const apiResponse = createAddressTransactions(ownerAddress, destinationAddress.address, 13);
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
-      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress.address], ownerAddress, destinationAddress.address, 13, 13);
-      expectedTransaction['hoursSent'] = NaN;
-      expectedTransaction['hoursBurned'] = NaN;
+      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress.address], ownerAddress, destinationAddress.address, 13, new BigNumber(13));
+      expectedTransaction['hoursSent'] = new BigNumber(NaN);
+      expectedTransaction['hoursBurned'] = new BigNumber(NaN);
 
       historyService.transactions()
         .subscribe((transactions: any[]) => {
@@ -125,7 +126,7 @@ function createAddressTransactions(ownerAddress: string, destinationAddress: str
   };
 }
 
-function createTransaction(addresses: string[], ownerAddress: string, destinationAddress: string, coins: number = 0, balance: number = 0): NormalTransaction {
+function createTransaction(addresses: string[], ownerAddress: string, destinationAddress: string, coins: number = 0, balance: BigNumber = new BigNumber(0)): NormalTransaction {
   return {
     addresses: addresses,
     balance: balance,

@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { BigNumber } from 'bignumber.js';
 
 import { ApiService } from '../api.service';
 import { Address, Wallet, TotalBalance, Balance } from '../../app.datatypes';
@@ -84,7 +85,7 @@ export class BalanceService {
     return this.walletService.addresses.first().flatMap((addresses: Address[]) => {
       if (addresses.length === 0) {
         this.lastBalancesUpdateTime = new Date();
-        this.sendTotalBalanceEvent({state: BalanceStates.Obtained, balance: { coins: 0, hours: 0 }});
+        this.sendTotalBalanceEvent({state: BalanceStates.Obtained, balance: { coins: new BigNumber('0'), hours: new BigNumber('0') }});
         return Observable.of(false);
       }
 
@@ -102,15 +103,15 @@ export class BalanceService {
   private calculateBalance(wallets: Wallet[], balance: Balance): boolean {
     if (balance.addresses) {
       wallets.map((wallet: Wallet) => {
-        wallet.balance = 0;
-        wallet.hours = 0;
+        wallet.balance = new BigNumber('0');
+        wallet.hours = new BigNumber('0');
 
         wallet.addresses.map((address: Address) => {
           if (balance.addresses[address.address]) {
-            address.balance = balance.addresses[address.address].confirmed.coins / this.coinsMultiplier;
-            address.hours = balance.addresses[address.address].confirmed.hours;
-            wallet.balance += address.balance;
-            wallet.hours += address.hours;
+            address.balance = new BigNumber(balance.addresses[address.address].confirmed.coins).dividedBy(this.coinsMultiplier);
+            address.hours = new BigNumber(balance.addresses[address.address].confirmed.hours);
+            wallet.balance = wallet.balance.plus(address.balance);
+            wallet.hours = wallet.hours.plus(address.hours);
           }
         });
       });
@@ -119,7 +120,7 @@ export class BalanceService {
     this.lastBalancesUpdateTime = new Date();
     this.sendTotalBalanceEvent({
       state: BalanceStates.Obtained,
-      balance: { coins: balance.confirmed.coins / this.coinsMultiplier, hours: balance.confirmed.hours }
+      balance: { coins: new BigNumber(balance.confirmed.coins).dividedBy(this.coinsMultiplier), hours: new BigNumber(balance.confirmed.hours) }
     });
     return this.refreshPendingTransactions(balance);
   }
