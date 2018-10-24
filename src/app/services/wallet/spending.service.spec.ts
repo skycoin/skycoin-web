@@ -2,6 +2,7 @@ import { TestBed, fakeAsync } from '@angular/core/testing';
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
+import BigNumber from 'bignumber.js';
 
 import { SpendingService } from './spending.service';
 import { WalletService } from './wallet.service';
@@ -69,7 +70,7 @@ describe('SpendingService', () => {
   describe('createTransaction', () => {
     it('should return a correct observable for two outputs', fakeAsync(() => {
       const address = 'address';
-      const amount = 21;
+      const amount = new BigNumber(21);
 
       const addresses = [
         createAddress('address1', 'secretKey1'),
@@ -79,10 +80,10 @@ describe('SpendingService', () => {
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput('address1', 'hash1', 5, 10),
-        createOutput('address2', 'hash2', 10, 20),
-        createOutput('address1', 'hash1', 20, 50),
-        createOutput('address2', 'hash2', 50, 0)
+        createOutput('address1', 'hash1', new BigNumber(5), new BigNumber(10)),
+        createOutput('address2', 'hash2', new BigNumber(10), new BigNumber(20)),
+        createOutput('address1', 'hash1', new BigNumber(20), new BigNumber(50)),
+        createOutput('address2', 'hash2', new BigNumber(50), new BigNumber(0))
       ];
 
       const expectedTxInputs: TransactionInput[] = [
@@ -111,8 +112,8 @@ describe('SpendingService', () => {
           expect(result).toEqual({
             inputs: expectedTxInputs,
             outputs: expectedTxOutputs,
-            hoursSent: 17,
-            hoursBurned: 35,
+            hoursSent: new BigNumber(17),
+            hoursBurned: new BigNumber(35),
             encoded: 'preparedTransaction'
           });
         });
@@ -120,7 +121,7 @@ describe('SpendingService', () => {
 
     it('should be return a correct observable for one output', fakeAsync(() => {
       const address = 'address';
-      const amount = 1;
+      const amount = new BigNumber(1);
 
       const addresses = [
         createAddress('address1', 'secretKey1')
@@ -129,7 +130,7 @@ describe('SpendingService', () => {
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput('address1', 'hash1', 1, 10)
+        createOutput('address1', 'hash1', new BigNumber(1), new BigNumber(10))
       ];
 
       const expectedTxInputs: TransactionInput[] = [
@@ -152,8 +153,8 @@ describe('SpendingService', () => {
           expect(result).toEqual({
             inputs: expectedTxInputs,
             outputs: expectedTxOutputs,
-            hoursSent: 5,
-            hoursBurned: 5,
+            hoursSent: new BigNumber(5),
+            hoursBurned: new BigNumber(5),
             encoded: 'preparedTransaction'
           });
         });
@@ -161,7 +162,7 @@ describe('SpendingService', () => {
 
     it('should reject if there are not enough hours', () => {
       const address = 'address';
-      const amount = 2;
+      const amount = new BigNumber(2);
 
       const addresses = [
         createAddress('address1', 'secretKey1'),
@@ -171,8 +172,8 @@ describe('SpendingService', () => {
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput('address1', 'hash1', 1, 24),
-        createOutput('address2', 'hash2', 1, 0)
+        createOutput('address1', 'hash1', new BigNumber(1), new BigNumber(24)),
+        createOutput('address2', 'hash2', new BigNumber(1), new BigNumber(0))
       ];
 
       spyApiService.get.and.returnValue(Observable.of({ head_outputs: outputs }));
@@ -227,7 +228,7 @@ describe('SpendingService', () => {
   });
 });
 
-function createOutput(address: string, hash: string, coins = 10, calculated_hours = 100): Output {
+function createOutput(address: string, hash: string, coins: BigNumber = new BigNumber(10), calculated_hours: BigNumber = new BigNumber(100)): Output {
   return {
     address: address,
     coins: coins,

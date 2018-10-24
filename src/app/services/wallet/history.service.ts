@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/observable/forkJoin';
 import { Observable } from 'rxjs/Observable';
+import { BigNumber } from 'bignumber.js';
 
 import { ApiService } from '../api.service';
 import { Address, NormalTransaction } from '../../app.datatypes';
@@ -59,12 +60,17 @@ export class HistoryService {
                     .filter((dst, i, self) => self.indexOf(dst) === i),
                 );
 
-                transaction.balance += calculatedOutputs.reduce((a, b) => a + parseFloat(b.coins), 0) * (outgoing ? -1 : 1);
-                transaction.hoursSent = calculatedOutputs.reduce((a, b) => a + b.hours, 0);
+                calculatedOutputs.map (output => transaction.balance = transaction.balance.plus(new BigNumber(output.coins)));
+                transaction.balance = (outgoing ? transaction.balance.negated() : transaction.balance);
 
-                const inputsHours = transaction.inputs.reduce((a, b) => a + b.calculated_hours, 0);
-                const outputsHours = transaction.outputs.reduce((a, b) => a + b.hours, 0);
-                transaction.hoursBurned = inputsHours - outputsHours;
+                transaction.hoursSent = new BigNumber('0');
+                calculatedOutputs.map(output => transaction.hoursSent = transaction.hoursSent.plus(new BigNumber(output.hours)));
+
+                let inputsHours = new BigNumber('0');
+                transaction.inputs.map(input => inputsHours = inputsHours.plus(new BigNumber(input.calculated_hours)));
+                let outputsHours = new BigNumber('0');
+                transaction.outputs.map(output => outputsHours = outputsHours.plus(new BigNumber(output.hours)));
+                transaction.hoursBurned = inputsHours.minus(outputsHours);
 
                 return transaction;
               });
@@ -76,7 +82,7 @@ export class HistoryService {
     return this.apiService.get('explorer/address', { address: address.address })
       .map(transactions => transactions.map(transaction => ({
         addresses: [],
-        balance: 0,
+        balance: new BigNumber('0'),
         block: transaction.status.block_seq,
         confirmed: transaction.status.confirmed,
         timestamp: transaction.timestamp,

@@ -10,14 +10,14 @@
         <div>
           <p *ngIf="!highest && loading" class="loading-header">{{ 'header.loading' | translate }}</p>
           <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
-          <p *ngIf="!loading" class="coins"><span>{{ coins | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>
+          <p *ngIf="!loading" class="coins"><span>{{ coins.decimalPlaces(6).toString() | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>
           <p *ngIf="!loading && balance" class="dollars">{{ balance }}</p>
           <p *ngIf="!loading && !balance && currentCoin.cmcTickerId" class="dollars">{{ 'header.loading' | translate }}</p>
         </div>
       </div>
       <div class="hour-balance">
         <p *ngIf="loading">{{ 'header.syncing-blocks' | translate }} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '...' }}</p>
-        <p *ngIf="!loading">{{ hours | number }} {{ currentCoin.hoursName }}</p>
+        <p *ngIf="!loading">{{ hours.decimalPlaces(0).toString() | number:'1.0-0' }} {{ currentCoin.hoursName }}</p>
       </div>
     </div>
   </div>
