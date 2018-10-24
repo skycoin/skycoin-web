@@ -39,7 +39,7 @@
     "moment": "^2.21.0",
     "ngx-feature-toggle": "^5.2.2",
     "rxjs": "^5.5.7",
-    "snyk": "^1.73.0",
+    "snyk": "^1.104.2",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
