@@ -3,6 +3,7 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
+import { BigNumber } from 'bignumber.js';
 
 import { ApiService } from '../api.service';
 import { CipherProvider } from '../cipher.provider';
@@ -32,48 +33,50 @@ export class SpendingService {
     coinService.currentCoin.subscribe((coin) => this.currentCoin = coin);
   }
 
-  createTransaction(wallet: Wallet, address: string, amount: number): Observable<Transaction> {
+  createTransaction(wallet: Wallet, address: string, amount: BigNumber): Observable<Transaction> {
     const addresses = wallet.addresses.map(a => a.address).join(',');
 
     return this.getOutputs(addresses)
       .flatMap((outputs: Output[]) => {
         const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
-        const totalCoins = Number(minRequiredOutputs.reduce((count, output) => count + output.coins, 0).toFixed(6));
+        let totalCoins = new BigNumber('0');
+        minRequiredOutputs.map(output => totalCoins = totalCoins.plus(output.coins));
 
-        if (totalCoins < amount) {
+        if (totalCoins.isLessThan(amount)) {
           throw new Error(
             `${this.translate.instant('service.wallet.not-enough-hours1')} ${ this.currentCoin.hoursName } ${ this.translate.instant('service.wallet.not-enough-hours2') }`
           );
         }
 
-        const totalHours = parseInt((minRequiredOutputs.reduce((count, output) => count + output.calculated_hours, 0)) + '', 10);
-        let hoursToSend = parseInt((totalHours * this.allocationRatio) + '', 10);
+        let totalHours = new BigNumber('0');
+        minRequiredOutputs.map(output => totalHours = totalHours.plus(output.calculated_hours));
+        let hoursToSend = totalHours.multipliedBy(this.allocationRatio).decimalPlaces(0, BigNumber.ROUND_FLOOR);
 
         const txOutputs: TransactionOutput[] = [];
         const txInputs: TransactionInput[] = [];
-        const calculatedHours = parseInt((totalHours * this.unburnedHoursRatio) + '', 10);
+        const calculatedHours = totalHours.multipliedBy(this.unburnedHoursRatio).decimalPlaces(0, BigNumber.ROUND_FLOOR);
 
-        const changeCoins = Number((totalCoins - amount).toFixed(6));
+        const changeCoins = totalCoins.minus(amount).decimalPlaces(6);
 
-        if (changeCoins > 0) {
+        if (changeCoins.isGreaterThan(0)) {
           txOutputs.push({
             address: wallet.addresses[0].address,
-            coins: changeCoins,
-            hours: calculatedHours - hoursToSend
+            coins: changeCoins.toNumber(),
+            hours: calculatedHours.minus(hoursToSend).toNumber()
           });
         } else {
           hoursToSend = calculatedHours;
         }
 
-        txOutputs.push({ address: address, coins: amount, hours: hoursToSend });
+        txOutputs.push({ address: address, coins: amount.toNumber(), hours: hoursToSend.toNumber() });
 
         minRequiredOutputs.forEach(input => {
           txInputs.push({
             hash: input.hash,
             secret: wallet.addresses.find(a => a.address === input.address).secret_key,
             address: input.address,
-            calculated_hours: input.calculated_hours,
-            coins: input.coins
+            calculated_hours: input.calculated_hours.toNumber(),
+            coins: input.coins.toNumber()
           });
         });
 
@@ -83,7 +86,7 @@ export class SpendingService {
               inputs: txInputs,
               outputs: txOutputs,
               hoursSent: hoursToSend,
-              hoursBurned: totalHours - calculatedHours,
+              hoursBurned: totalHours.minus(calculatedHours),
               encoded: rawTransaction
             });
           });
@@ -129,9 +132,9 @@ export class SpendingService {
       const outputs: Output[] = [];
       response.head_outputs.forEach(output => outputs.push({
         address: output.address,
-        coins: parseFloat(output.coins),
+        coins: new BigNumber(output.coins),
         hash: output.hash,
-        calculated_hours: output.calculated_hours
+        calculated_hours: new BigNumber(output.calculated_hours)
       }));
       return outputs;
     }) : Observable.of([]);
@@ -158,18 +161,18 @@ export class SpendingService {
     return this.cipherProvider.prepareTransaction(txInputs, convertedOutputs);
   }
 
-  private getMinRequiredOutputs(transactionAmount: number, outputs: Output[]): Output[] {
+  private getMinRequiredOutputs(transactionAmount: BigNumber, outputs: Output[]): Output[] {
     outputs.sort( function(a, b) {
-      return b.coins - a.coins;
+      return b.coins.minus(a.coins).toNumber();
     });
 
     const minRequiredOutputs: Output[] = [];
-    let sumCoins = 0;
+    let sumCoins: BigNumber = new BigNumber('0');
 
     outputs.forEach(output => {
-      if (transactionAmount > sumCoins && output.calculated_hours > 0) {
+      if (sumCoins.isLessThan(transactionAmount) && output.calculated_hours.isGreaterThan(0)) {
         minRequiredOutputs.push(output);
-        sumCoins = sumCoins + output.coins;
+        sumCoins = sumCoins.plus(output.coins);
       }
     });
 

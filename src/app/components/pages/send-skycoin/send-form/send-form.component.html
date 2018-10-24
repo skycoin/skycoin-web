@@ -5,9 +5,9 @@
       <select formControlName="wallet" id="wallet">
         <option value="" selected>{{ 'send.select-wallet' | translate }}</option>
         <option *ngFor="let wallet of wallets"
-                [disabled]="!wallet.balance || wallet.balance <= 0"
+                [disabled]="!wallet.balance || wallet.balance.isLessThanOrEqualTo(0)"
                 [ngValue]="wallet">
-          {{ wallet.label }} — {{ wallet.balance | number:'1.0-6' }} {{ currentCoin.coinSymbol }}
+          {{ wallet.label }} — {{ (wallet.balance ? wallet.balance.decimalPlaces(6).toString() : 0) | number:'1.0-6' }} {{ currentCoin.coinSymbol }}
         </option>
       </select>
     </div>

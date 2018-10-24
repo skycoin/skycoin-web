@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="-balance">
-            <h4>{{ transaction.balance | number:'1.0-6' }} {{ currentCoin.coinSymbol }}</h4>
+            <h4>{{ transaction.balance.decimalPlaces(6).toString() | number:'1.0-6' }} {{ currentCoin.coinSymbol }}</h4>
             <p *ngIf="price" [matTooltip]="'history.price-tooltip' | translate">
              {{ transaction.balance * price | currency:'USD':'symbol':'1.2-2' }}<span>*</span>
             </p>

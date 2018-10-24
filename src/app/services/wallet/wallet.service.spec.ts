@@ -3,6 +3,7 @@ import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TranslateService } from '@ngx-translate/core';
+import { BigNumber } from 'bignumber.js';
 
 import { WalletService } from './wallet.service';
 import { CipherProvider } from '../cipher.provider';
@@ -93,8 +94,8 @@ describe('WalletService', () => {
       const expectedWallet = {
         label: walletLabel,
         seed: walletSeed,
-        balance: 0,
-        hours: 0,
+        balance: new BigNumber(0),
+        hours: new BigNumber(0),
         addresses: [walletAddress],
         coinId: walletCoinId
       };
@@ -142,12 +143,12 @@ describe('WalletService', () => {
   });
 });
 
-export function createWallet(label: string = 'label', seed: string = 'seed', balance: number = 0): Wallet {
+export function createWallet(label: string = 'label', seed: string = 'seed', balance: BigNumber = new BigNumber(0)): Wallet {
   return {
     label: label,
     seed: seed,
     balance: balance,
-    hours: 0,
+    hours: new BigNumber(0),
     addresses: [
       createAddress()
     ],
@@ -161,8 +162,8 @@ export function createAddress(address: string = 'address', secretKey: string = '
     secret_key: secretKey,
     public_key: publicKey,
     next_seed: nextSeed,
-    balance: 0,
-    hours: 0,
+    balance: new BigNumber(0),
+    hours: new BigNumber(0),
     outputs: []
   };
 }

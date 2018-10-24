@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { BigNumber } from 'bignumber.js';
 
 import { PriceService } from '../../../services/price.service';
 import { BalanceService, BalanceStates } from '../../../services/wallet/balance.service';
@@ -17,8 +18,8 @@ import { BaseCoin } from '../../../coins/basecoin';
 export class HeaderComponent implements OnInit, OnDestroy {
   @Input() headline: string;
 
-  coins = 0;
-  hours: number;
+  coins: BigNumber = new BigNumber('0');
+  hours: BigNumber;
   balance: string;
   hasPendingTxs: boolean;
   connectionError: ConnectionError = null;
@@ -86,7 +87,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private resetState() {
-    this.coins = 0;
+    this.coins = new BigNumber('0');
     this.price = null;
     this.balance = null;
     this.balanceLoaded = false;
@@ -123,7 +124,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private calculateBalance() {
     if (this.price) {
-      const balance = Math.round(this.coins * this.price * 100) / 100;
+      const balance = this.coins.multipliedBy(this.price).toNumber();
       this.balance = '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100) + ')';
     }
   }

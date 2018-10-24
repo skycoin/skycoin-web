@@ -1,9 +1,11 @@
+import { BigNumber } from 'bignumber.js';
+
 export interface Wallet {
   label: string;
   addresses: Address[];
   seed?: string;
-  balance?: number;
-  hours?: number;
+  balance?: BigNumber;
+  hours?: BigNumber;
   hidden?: boolean;
   opened?: boolean;
   hideEmpty?: boolean;
@@ -15,18 +17,18 @@ export interface Address {
   next_seed?: string;
   secret_key?: string;
   public_key?: string;
-  balance?: number;
-  hours?: number;
+  balance?: BigNumber;
+  hours?: BigNumber;
   outputs?: GetOutputsRequestOutput[];
   isCopying?: boolean;
 }
 
 export class Transaction {
-  balance?: number;
+  balance?: BigNumber;
   inputs: any[];
   outputs: any[];
-  hoursSent?: number;
-  hoursBurned?: number;
+  hoursSent?: BigNumber;
+  hoursBurned?: BigNumber;
 }
 
 export class NormalTransaction extends Transaction {
@@ -45,9 +47,9 @@ export class PreviewTransaction extends Transaction {
 
 export interface Output {
   address: string;
-  coins: number;
+  coins: BigNumber;
   hash: string;
-  calculated_hours: number;
+  calculated_hours: BigNumber;
 }
 
 export interface GetOutputsRequest {
@@ -78,9 +80,9 @@ export class TransactionOutput {
   hours: number;
 }
 
-export interface TotalBalance {
-  coins: number;
-  hours: number;
+export class TotalBalance {
+  coins: BigNumber = new BigNumber('0');
+  hours: BigNumber = new BigNumber('0');
 }
 
 export interface Balance {

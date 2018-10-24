@@ -3,6 +3,7 @@ import 'rxjs/add/operator/mergeMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
+import { BigNumber } from 'bignumber.js';
 
 import { CipherProvider } from '../cipher.provider';
 import { Address, Wallet } from '../../app.datatypes';
@@ -73,8 +74,8 @@ export class WalletService {
         const wallet = {
           label: label,
           seed: seed,
-          balance: 0,
-          hours: 0,
+          balance: new BigNumber('0'),
+          hours: new BigNumber('0'),
           addresses: [fullAddress],
           coinId: coinId
         };
