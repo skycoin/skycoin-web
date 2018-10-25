@@ -70,6 +70,10 @@ export class SpendingService {
 
         txOutputs.push({ address: address, coins: amount.toNumber(), hours: hoursToSend.toNumber() });
 
+        if (address === wallet.addresses[0].address) {
+          hoursToSend = calculatedHours;
+        }
+
         minRequiredOutputs.forEach(input => {
           txInputs.push({
             hash: input.hash,
