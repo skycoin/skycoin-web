@@ -5,7 +5,7 @@ COPY . /usr/src/skycoin-web
 WORKDIR /usr/src/skycoin-web
 
 RUN npm install -g @angular/cli \
-    && yarn \
+    && npm install \
     && npm run build
 
 FROM nginx:alpine
