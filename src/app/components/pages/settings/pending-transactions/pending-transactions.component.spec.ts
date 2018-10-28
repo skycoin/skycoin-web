@@ -6,13 +6,15 @@ import { WalletService } from '../../../../services/wallet/wallet.service';
 import { HistoryService } from '../../../../services/wallet/history.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
 import { CoinService } from '../../../../services/coin.service';
+import { GlobalsService } from '../../../../services/globals.service';
 import {
   MockTranslatePipe,
   MockDateTimePipe,
   MockNavBarService,
   MockCoinService,
   MockWalletService,
-  MockHistoryService
+  MockHistoryService,
+  MockGlobalsService
 } from '../../../../utils/test-mocks';
 
 describe('PendingTransactionsComponent', () => {
@@ -31,7 +33,8 @@ describe('PendingTransactionsComponent', () => {
         { provide: WalletService, useClass: MockWalletService },
         { provide: HistoryService, useClass: MockHistoryService },
         { provide: NavBarService, useClass: MockNavBarService },
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: GlobalsService, useClass: MockGlobalsService }
       ]
     }).compileComponents();
   }));

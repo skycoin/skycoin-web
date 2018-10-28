@@ -50,6 +50,10 @@ export class MockNavBarService {
   setActiveComponent() {}
 }
 
+export class MockGlobalsService {
+  nodeVersion = new BehaviorSubject<string>('0.24.0');
+}
+
 export class MockPurchaseService {
   all(): Observable<any[]> {
     return Observable.of([]);

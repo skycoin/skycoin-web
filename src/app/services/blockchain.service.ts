@@ -10,6 +10,7 @@ import { BalanceService } from './wallet/balance.service';
 import { ConnectionError } from '../enums/connection-error.enum';
 import { CoinService } from './coin.service';
 import { environment } from '../../environments/environment';
+import { GlobalsService } from './globals.service';
 
 export enum ProgressStates {
   Progress,
@@ -26,8 +27,6 @@ export class ProgressEvent {
 
 @Injectable()
 export class BlockchainService {
-  nodeVersion: string;
-
   private progressSubject: BehaviorSubject<ProgressEvent> = new BehaviorSubject<ProgressEvent>(null);
   private connectionsSubscription: Subscription;
   private readonly defaultPeriod = 90000;
@@ -40,6 +39,7 @@ export class BlockchainService {
   constructor (
     private apiService: ApiService,
     private balanceService: BalanceService,
+    private globalsService: GlobalsService,
     coinService: CoinService
   ) {
     coinService.currentCoin.subscribe(() => {
@@ -63,6 +63,7 @@ export class BlockchainService {
 
     this.balanceService.stopGettingBalances();
 
+    this.globalsService.nodeVersion.next(null);
     this.progressSubject.next({ state: ProgressStates.Restarting });
 
     this.connectionsSubscription = this.checkConnectionState()
@@ -115,6 +116,6 @@ export class BlockchainService {
         }
       })
       .flatMap(() => this.apiService.get('version'))
-      .map ((response: any) => this.nodeVersion = response.version);
+      .map ((response: any) => this.globalsService.nodeVersion.next(response.version));
   }
 }

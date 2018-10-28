@@ -80,6 +80,7 @@ import { CreateWalletFormComponent } from './components/pages/wallets/create-wal
 import { ScanAddressesComponent } from './components/pages/wallets/scan-addresses/scan-addresses.component';
 import { NodesComponent } from './components/pages/settings/nodes/nodes.component';
 import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change-url/change-node-url.component';
+import { GlobalsService } from './services/globals.service';
 
 @NgModule({
   declarations: [
@@ -183,7 +184,8 @@ import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change
     WalletService,
     BalanceService,
     HistoryService,
-    SpendingService
+    SpendingService,
+    GlobalsService
   ],
   bootstrap: [AppComponent],
 })
