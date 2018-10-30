@@ -95,7 +95,7 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
       return Observable.of([]);
     }
 
-    return this.globalsService.nodeVersion.filter(version => version !== null).first().flatMap (version => {
+    return this.globalsService.getValidNodeVersion().flatMap (version => {
       let allTransactions: Observable<any>;
       if (isEqualOrSuperiorVersion(version, '0.25.0')) {
         allTransactions = Observable.of(transactions);

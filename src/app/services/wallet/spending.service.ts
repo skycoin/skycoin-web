@@ -138,7 +138,7 @@ export class SpendingService {
     if (!addresses) {
       return Observable.of([]);
     } else {
-      return this.globalsService.nodeVersion.filter(version => version !== null).first().flatMap (version => {
+      return this.globalsService.getValidNodeVersion().flatMap (version => {
         let outputsRequest: Observable<any>;
         if (isEqualOrSuperiorVersion(version, '0.25.0')) {
           outputsRequest = this.apiService.post('outputs', { addrs: addresses });
@@ -164,7 +164,7 @@ export class SpendingService {
     if (!addresses) {
       return Observable.of([]);
     } else {
-      return this.globalsService.nodeVersion.filter(version => version !== null).first().flatMap (version => {
+      return this.globalsService.getValidNodeVersion().flatMap (version => {
         let outputsRequest: Observable<any>;
         if (isEqualOrSuperiorVersion(version, '0.25.0')) {
           outputsRequest = this.apiService.post('outputs', { addrs: addresses });

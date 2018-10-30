@@ -101,7 +101,7 @@ export class BalanceService {
   private retrieveAddressesBalance(addresses: Address[]): Observable<Balance> {
     const formattedAddresses = addresses.map(a => a.address).join(',');
 
-    return this.globalsService.nodeVersion.filter(version => version !== null).first().flatMap (version => {
+    return this.globalsService.getValidNodeVersion().flatMap (version => {
       if (isEqualOrSuperiorVersion(version, '0.25.0')) {
         return this.apiService.post('balance', { addrs: formattedAddresses });
       } else {

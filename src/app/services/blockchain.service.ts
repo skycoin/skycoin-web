@@ -63,7 +63,7 @@ export class BlockchainService {
 
     this.balanceService.stopGettingBalances();
 
-    this.globalsService.nodeVersion.next(null);
+    this.globalsService.setNodeVersion(null);
     this.progressSubject.next({ state: ProgressStates.Restarting });
 
     this.connectionsSubscription = this.checkConnectionState()
@@ -116,6 +116,6 @@ export class BlockchainService {
         }
       })
       .flatMap(() => this.apiService.get('version'))
-      .map ((response: any) => this.globalsService.nodeVersion.next(response.version));
+      .map ((response: any) => this.globalsService.setNodeVersion(response.version));
   }
 }

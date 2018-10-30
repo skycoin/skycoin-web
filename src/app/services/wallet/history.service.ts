@@ -25,7 +25,7 @@ export class HistoryService {
           return Observable.of([]);
         }
 
-        return this.globalsService.nodeVersion.filter(version => version !== null).first().flatMap (version => {
+        return this.globalsService.getValidNodeVersion().flatMap (version => {
           let TxObsv: Observable<any>;
           if (isEqualOrSuperiorVersion(version, '0.25.0')) {
             TxObsv = this.retrieveAddressesTransactions(addresses).map(transactions => {
@@ -124,7 +124,7 @@ export class HistoryService {
   }
 
   getAllPendingTransactions(): Observable<any> {
-    return this.globalsService.nodeVersion.filter(version => version !== null).first().flatMap (version => {
+    return this.globalsService.getValidNodeVersion().flatMap (version => {
       if (isEqualOrSuperiorVersion(version, '0.25.0')) {
         return this.apiService.get('pendingTxs', { verbose: true });
       } else {

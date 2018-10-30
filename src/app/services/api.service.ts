@@ -30,23 +30,12 @@ export class ApiService {
       .catch((error: any) => this.getErrorMessage(error));
   }
 
-  post(url, body = {}, options: any = {}, requestCsrf: boolean = false): Observable<any> {
-    if (requestCsrf) {
-      return this.getCsrf().first().flatMap(csrf => {
-        options.csrf = csrf;
-        return this.http.post(
-          this.getUrl(url),
-          options.json ? JSON.stringify(body) : this.getQueryString(body),
-          this.getRequestOptions(options)
-        ).catch((error: any) => this.getErrorMessage(error));
-      });
-    } else {
-      return this.http.post(
-        this.getUrl(url),
-        options.json ? JSON.stringify(body) : this.getQueryString(body),
-        this.getRequestOptions(options)
-      ).catch((error: any) => this.getErrorMessage(error));
-    }
+  post(url, body = {}, options: any = {}): Observable<any> {
+    return this.http.post(
+      this.getUrl(url),
+      options.json ? JSON.stringify(body) : this.getQueryString(body),
+      this.getRequestOptions(options)
+    ).catch((error: any) => this.getErrorMessage(error));
   }
 
   private getQueryString(parameters = null) {
