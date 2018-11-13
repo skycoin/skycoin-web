@@ -10,6 +10,8 @@ import { Wallet } from '../../../../app.datatypes';
 import { Observable } from 'rxjs/Observable';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
+import { GlobalsService } from '../../../../services/globals.service';
+import { isEqualOrSuperiorVersion } from '../../../../utils/semver';
 
 @Component({
   selector: 'app-pending-transactions',
@@ -30,7 +32,8 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     private walletService: WalletService,
     private historyService: HistoryService,
     private navbarService: NavBarService,
-    private coinService: CoinService
+    private coinService: CoinService,
+    private globalsService: GlobalsService
   ) { }
 
   ngOnInit() {
@@ -92,18 +95,30 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
       return Observable.of([]);
     }
 
-    const allTransactions = this.getUpdatedTransactions(transactions);
+    return this.globalsService.getValidNodeVersion().flatMap (version => {
+      let allTransactions: Observable<any>;
+      if (isEqualOrSuperiorVersion(version, '0.25.0')) {
+        allTransactions = Observable.of(transactions);
+      } else {
+        allTransactions = this.getUpdatedTransactions(transactions);
+      }
 
-    return Observable.forkJoin(allTransactions, this.walletService.currentWallets.first(), (trans: any, wallets: Wallet[]) => {
-      const walletAddresses = new Set<string>();
-      wallets.forEach(wallet => {
-        wallet.addresses.forEach(address => walletAddresses.add(address.address));
+      return Observable.forkJoin(allTransactions, this.walletService.currentWallets.first(), (trans: any, wallets: Wallet[]) => {
+        const walletAddresses = new Set<string>();
+        wallets.forEach(wallet => {
+          wallet.addresses.forEach(address => walletAddresses.add(address.address));
+        });
+
+        return trans.filter(tran => {
+          if (isEqualOrSuperiorVersion(version, '0.25.0')) {
+            return tran.transaction.inputs.some(input => walletAddresses.has(input.owner)) ||
+            tran.transaction.outputs.some(output => walletAddresses.has(output.dst));
+          } else {
+            return tran.owner_addressses.some(address => walletAddresses.has(address)) ||
+            tran.transaction.outputs.some(output => walletAddresses.has(output.dst));
+          }
+        });
       });
-
-      return trans.filter(tran =>
-        tran.owner_addressses.some(address => walletAddresses.has(address)) ||
-        tran.transaction.outputs.some(output => walletAddresses.has(output.dst))
-      );
     });
   }
 

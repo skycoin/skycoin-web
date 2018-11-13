@@ -176,7 +176,7 @@ export class WalletService {
     const maxAdrressesToScan = environment.e2eTest ? 2 : 100;
 
     return this.addAddress(wallet, false)
-      .flatMap(() => this.apiService.get('explorer/address', { address: wallet.addresses[wallet.addresses.length - 1].address }))
+      .flatMap(() => this.apiService.get('transactions', { addrs: wallet.addresses[wallet.addresses.length - 1].address }))
       .flatMap(transactions => {
         if (transactions && transactions.length > 0) {
           lastIndexWithTxs = wallet.addresses.length - 1;

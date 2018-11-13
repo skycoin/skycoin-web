@@ -6,8 +6,9 @@ import { BigNumber } from 'bignumber.js';
 import { HistoryService } from './history.service';
 import { WalletService } from './wallet.service';
 import { ApiService } from '../api.service';
-import { MockWalletService } from '../../utils/test-mocks';
+import { MockWalletService, MockGlobalsService } from '../../utils/test-mocks';
 import { createAddress } from './wallet.service.spec';
+import { GlobalsService } from '../globals.service';
 import {
   Address,
   NormalTransaction } from '../../app.datatypes';
@@ -26,6 +27,7 @@ describe('HistoryService', () => {
       providers: [
         HistoryService,
         { provide: WalletService, useClass: MockWalletService },
+        { provide: GlobalsService, useClass: MockGlobalsService },
         {
           provide: ApiService,
           useValue: jasmine.createSpyObj('ApiService', {
@@ -102,7 +104,7 @@ describe('HistoryService', () => {
 
   describe('getAllPendingTransactions', () => {
     it('should get the transactions', fakeAsync(() => {
-      historyService.getAllPendingTransactions();
+      historyService.getAllPendingTransactions().subscribe();
       expect(spyApiService.get).toHaveBeenCalledWith('pendingTxs');
     }));
   });

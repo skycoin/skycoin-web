@@ -9,8 +9,9 @@ import { WalletService } from './wallet.service';
 import { CipherProvider } from '../cipher.provider';
 import { CoinService } from '../coin.service';
 import { EventEmitter } from '@angular/core';
-import { MockCoinService } from '../../utils/test-mocks';
+import { MockCoinService, MockGlobalsService } from '../../utils/test-mocks';
 import { ApiService } from '../api.service';
+import { GlobalsService } from '../globals.service';
 import {
   Wallet,
   Address } from '../../app.datatypes';
@@ -42,7 +43,8 @@ describe('WalletService', () => {
             'get': Observable.of([])
           })
         },
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: GlobalsService, useClass: MockGlobalsService }
       ]
     });
 

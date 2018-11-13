@@ -9,8 +9,9 @@ import { WalletService } from './wallet.service';
 import { ApiService } from '../api.service';
 import { CipherProvider } from '../cipher.provider';
 import { CoinService } from '../coin.service';
-import { MockCoinService, MockWalletService } from '../../utils/test-mocks';
+import { MockCoinService, MockWalletService, MockGlobalsService } from '../../utils/test-mocks';
 import { createWallet, createAddress } from './wallet.service.spec';
+import { GlobalsService } from '../globals.service';
 import {
   Wallet,
   TransactionOutput,
@@ -48,7 +49,8 @@ describe('SpendingService', () => {
           provide: TranslateService,
           useValue: jasmine.createSpyObj('TranslateService', ['instant'])
         },
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: GlobalsService, useClass: MockGlobalsService }
       ]
     });
 

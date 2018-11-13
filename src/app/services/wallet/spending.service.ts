@@ -12,6 +12,8 @@ import { Output, TransactionInput, TransactionOutput,
 import { BaseCoin } from '../../coins/basecoin';
 import { CoinService } from '../coin.service';
 import { WalletService } from './wallet.service';
+import { GlobalsService } from '../globals.service';
+import { isEqualOrSuperiorVersion } from '../../utils/semver';
 
 @Injectable()
 export class SpendingService {
@@ -28,6 +30,7 @@ export class SpendingService {
     private cipherProvider: CipherProvider,
     private translate: TranslateService,
     private walletService: WalletService,
+    private globalsService: GlobalsService,
     coinService: CoinService,
   ) {
     coinService.currentCoin.subscribe((coin) => this.currentCoin = coin);
@@ -132,26 +135,50 @@ export class SpendingService {
   }
 
   private getOutputs(addresses): Observable<Output[]> {
-    return addresses ? this.apiService.get('outputs', { addrs: addresses }).map((response: GetOutputsRequest) => {
-      const outputs: Output[] = [];
-      response.head_outputs.forEach(output => outputs.push({
-        address: output.address,
-        coins: new BigNumber(output.coins),
-        hash: output.hash,
-        calculated_hours: new BigNumber(output.calculated_hours)
-      }));
-      return outputs;
-    }) : Observable.of([]);
+    if (!addresses) {
+      return Observable.of([]);
+    } else {
+      return this.globalsService.getValidNodeVersion().flatMap (version => {
+        let outputsRequest: Observable<any>;
+        if (isEqualOrSuperiorVersion(version, '0.25.0')) {
+          outputsRequest = this.apiService.post('outputs', { addrs: addresses });
+        } else {
+          outputsRequest = this.apiService.get('outputs', { addrs: addresses });
+        }
+
+        return outputsRequest.map((response: GetOutputsRequest) => {
+          const outputs: Output[] = [];
+          response.head_outputs.forEach(output => outputs.push({
+            address: output.address,
+            coins: new BigNumber(output.coins),
+            hash: output.hash,
+            calculated_hours: new BigNumber(output.calculated_hours)
+          }));
+          return outputs;
+        });
+      });
+    }
   }
 
   private getRequestOutputs(addresses): Observable<GetOutputsRequestOutput[]> {
-    return addresses
-      ? this.apiService.get('outputs', { addrs: addresses }).map(response => response.head_outputs)
-      : Observable.of([]);
+    if (!addresses) {
+      return Observable.of([]);
+    } else {
+      return this.globalsService.getValidNodeVersion().flatMap (version => {
+        let outputsRequest: Observable<any>;
+        if (isEqualOrSuperiorVersion(version, '0.25.0')) {
+          outputsRequest = this.apiService.post('outputs', { addrs: addresses });
+        } else {
+          outputsRequest = this.apiService.get('outputs', { addrs: addresses });
+        }
+
+        return outputsRequest.map(response => response.head_outputs as GetOutputsRequestOutput[]);
+      });
+    }
   }
 
   private postTransaction(rawTransaction: string): Observable<string> {
-    return this.apiService.post('injectTransaction', { rawtx: rawTransaction });
+    return this.apiService.post('injectTransaction', { rawtx: rawTransaction }, { json: true });
   }
 
   private generateRawTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[]): Observable<string> {

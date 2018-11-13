@@ -10,6 +10,8 @@ import { BigNumber } from 'bignumber.js';
 import { ApiService } from '../api.service';
 import { Address, Wallet, TotalBalance, Balance } from '../../app.datatypes';
 import { WalletService } from './wallet.service';
+import { isEqualOrSuperiorVersion } from '../../utils/semver';
+import { GlobalsService } from '../globals.service';
 
 export enum BalanceStates {
   Obtained,
@@ -38,6 +40,7 @@ export class BalanceService {
   constructor(
     private apiService: ApiService,
     private walletService: WalletService,
+    private globalsService: GlobalsService,
     private _ngZone: NgZone
   ) {
     walletService.wallets.subscribe(() => this.canGetBalance ? this.scheduleUpdate(0) : null);
@@ -97,7 +100,14 @@ export class BalanceService {
 
   private retrieveAddressesBalance(addresses: Address[]): Observable<Balance> {
     const formattedAddresses = addresses.map(a => a.address).join(',');
-    return this.apiService.get('balance', { addrs: formattedAddresses });
+
+    return this.globalsService.getValidNodeVersion().flatMap (version => {
+      if (isEqualOrSuperiorVersion(version, '0.25.0')) {
+        return this.apiService.post('balance', { addrs: formattedAddresses });
+      } else {
+        return this.apiService.get('balance', { addrs: formattedAddresses });
+      }
+    });
   }
 
   private calculateBalance(wallets: Wallet[], balance: Balance): boolean {
