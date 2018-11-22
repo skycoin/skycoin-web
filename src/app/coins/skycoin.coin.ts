@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 
 export class SkycoinCoin extends BaseCoin {
   id = coinsId.sky;
-  nodeUrl = environment.production ? 'https://node.skycoin.net/api/v1/' : '/api/v1/';
+  nodeUrl = environment.production ? 'https://node.skycoin.net' : '';
   coinName = 'Skycoin';
   coinSymbol = 'SKY';
   hoursName = 'Coin Hours';
