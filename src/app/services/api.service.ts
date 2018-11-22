@@ -22,6 +22,10 @@ export class ApiService {
       .subscribe((coin: BaseCoin) => {
         const customUrl = coinService.customNodeUrls[coin.id.toString()];
         this.url = customUrl ? customUrl : coin.nodeUrl;
+        if (this.url.endsWith('/')) {
+          this.url = this.url.substring(0, this.url.length - 1);
+        }
+        this.url += '/api/v1/';
       });
   }
 
