@@ -17,6 +17,16 @@ $white: #FBFBFB;
   > div {
     margin: 0px 40px;
     max-width: 400px;
+
+    .mobile-buttons-container {
+      margin-top: 10px;
+    }
+
+    .attribution-container {
+      margin-top: 10px;
+      opacity: 0.4;
+      font-size: 10px;
+    }
   }
 }
 

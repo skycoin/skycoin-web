@@ -13,7 +13,7 @@
     "no-wallet": "Wallet does not exist",
     "no-outputs": "No unspent outputs",
     "no-wallets": "Currently there are no wallets",
-    "window-size": "The window is too narrow for the content",
+    "window-size": "The window is too narrow for the content.",
     "loading-error": "Error trying to get the data. Please try again later."
   },
 
@@ -326,5 +326,11 @@
       "wrong-seed": "Wrong seed",
       "invalid-wallet": "Invalid wallet"
     }
+  },
+
+  "mobile": {
+    "try-the-app": "You can try our mobile app:",
+    "app-store-attribution": "Apple, the Apple logo, iPhone, and iPad are trademarks of Apple Inc., registered in the U.S. and other countries and regions. App Store is a service mark of Apple Inc.",
+    "google-play-attribution": "Google Play and the Google Play logo are trademarks of Google LLC."
   }
 }
