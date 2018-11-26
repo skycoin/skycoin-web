@@ -20,9 +20,6 @@ export class SpendingService {
   isInjectingTx = false;
 
   private currentCoin: BaseCoin;
-
-  private readonly allocationRatio = 0.25;
-  private readonly unburnedHoursRatio = 0.5;
   private readonly coinsMultiplier = 1000000;
 
   constructor(
@@ -39,8 +36,20 @@ export class SpendingService {
   createTransaction(wallet: Wallet, address: string, amount: BigNumber): Observable<Transaction> {
     const addresses = wallet.addresses.map(a => a.address).join(',');
 
-    return this.getOutputs(addresses)
-      .flatMap((outputs: Output[]) => {
+    let unburnedHoursRatio: BigNumber;
+
+    return this.globalsService.getValidNodeVersion()
+      .flatMap (version => {
+        if (isEqualOrSuperiorVersion(version, '0.25.0')) {
+          return this.apiService.get('health').flatMap(response => {
+            unburnedHoursRatio = new BigNumber(1).minus(new BigNumber(1).dividedBy(response.user_verify_transaction.burn_factor));
+            return this.getOutputs(addresses);
+          });
+        } else {
+          unburnedHoursRatio = new BigNumber(0.5);
+          return this.getOutputs(addresses);
+        }
+      }).flatMap((outputs: Output[]) => {
         const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
         let totalCoins = new BigNumber('0');
         minRequiredOutputs.map(output => totalCoins = totalCoins.plus(output.coins));
@@ -53,11 +62,11 @@ export class SpendingService {
 
         let totalHours = new BigNumber('0');
         minRequiredOutputs.map(output => totalHours = totalHours.plus(output.calculated_hours));
-        let hoursToSend = totalHours.multipliedBy(this.allocationRatio).decimalPlaces(0, BigNumber.ROUND_FLOOR);
+        let hoursToSend = totalHours.multipliedBy(unburnedHoursRatio).dividedBy(2).decimalPlaces(0, BigNumber.ROUND_FLOOR);
 
         const txOutputs: TransactionOutput[] = [];
         const txInputs: TransactionInput[] = [];
-        const calculatedHours = totalHours.multipliedBy(this.unburnedHoursRatio).decimalPlaces(0, BigNumber.ROUND_FLOOR);
+        const calculatedHours = totalHours.multipliedBy(unburnedHoursRatio).decimalPlaces(0, BigNumber.ROUND_FLOOR);
 
         const changeCoins = totalCoins.minus(amount).decimalPlaces(6);
 
