@@ -5,15 +5,16 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Wallet, ConfirmationData } from '../app.datatypes';
-import { UnlockWalletComponent } from '../components/pages/wallets/unlock-wallet/unlock-wallet.component';
+import { UnlockWalletComponent, ComfirmSeedParams } from '../components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { SelectCoinOverlayComponent } from '../components/layout/select-coin-overlay/select-coin-overlay.component';
 import { SelectLanguageComponent } from '../components/layout/select-language/select-language.component';
 import { QrCodeComponent } from '../components/layout/qr-code/qr-code.component';
 import { ConfirmationComponent } from '../components/layout/confirmation/confirmation.component';
 import { BlockchainService, ProgressStates } from '../services/blockchain.service';
 import { ScanAddressesComponent } from '../components/pages/wallets/scan-addresses/scan-addresses.component';
+import { WalletService } from '../services/wallet/wallet.service';
 
-export function openUnlockWalletModal (wallet: Wallet, unlockDialog: MatDialog): MatDialogRef<UnlockWalletComponent, any> {
+export function openUnlockWalletModal (wallet: Wallet | ComfirmSeedParams, unlockDialog: MatDialog): MatDialogRef<UnlockWalletComponent, any> {
   const config = new MatDialogConfig();
   config.width = '500px';
   config.data = wallet;
@@ -60,6 +61,26 @@ export function showConfirmationModal(dialog: MatDialog, confirmationData: Confi
     width: '450px',
     data: confirmationData,
     autoFocus: false
+  });
+}
+
+export function openDeleteWalletModal (dialog: MatDialog, wallet: Wallet, translateService: TranslateService, walletService: WalletService) {
+  const mainText = translateService.instant('wallet.delete-confirmation1') + ' \"' +
+    wallet.label + '\" ' +
+    translateService.instant('wallet.delete-confirmation2');
+
+  const confirmationData: ConfirmationData = {
+    text: mainText,
+    headerText: 'confirmation.header-text',
+    checkboxText: 'wallet.delete-confirmation-check',
+    confirmButtonText: 'confirmation.confirm-button',
+    cancelButtonText: 'confirmation.cancel-button'
+  };
+
+  showConfirmationModal(dialog, confirmationData).afterClosed().subscribe(result => {
+    if (result) {
+      walletService.delete(wallet);
+    }
   });
 }
 

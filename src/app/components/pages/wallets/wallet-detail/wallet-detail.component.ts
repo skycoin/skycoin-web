@@ -6,8 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationData, Wallet, Address } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { ChangeNameComponent } from '../change-name/change-name.component';
-import { openUnlockWalletModal, openQrModal, showConfirmationModal } from '../../../../utils/index';
-import { ConfirmationComponent } from '../../../layout/confirmation/confirmation.component';
+import { openUnlockWalletModal, openQrModal, showConfirmationModal, openDeleteWalletModal } from '../../../../utils/index';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -19,6 +19,8 @@ export class WalletDetailComponent implements OnDestroy {
 
   creatingAddress = false;
 
+  private unlockSubscription: Subscription;
+
   constructor(
     private walletService: WalletService,
     private dialog: MatDialog,
@@ -28,6 +30,7 @@ export class WalletDetailComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.snackBar.dismiss();
+    this.removeUnlockSubscription();
   }
 
   onShowQr(address: Address) {
@@ -45,12 +48,14 @@ export class WalletDetailComponent implements OnDestroy {
     if (this.wallet.addresses.length < 5) {
       this.verifyBeforeAddingNewAddress();
     } else {
-      const dialogRef = this.showConfirmationModal(
-        'wallet.add-confirmation',
-        null
-      );
+      const confirmationData: ConfirmationData = {
+        text: 'wallet.add-confirmation',
+        headerText: 'confirmation.header-text',
+        confirmButtonText: 'confirmation.confirm-button',
+        cancelButtonText: 'confirmation.cancel-button'
+      };
 
-      dialogRef.afterClosed().subscribe(result => {
+      showConfirmationModal(this.dialog, confirmationData).afterClosed().subscribe(result => {
         if (result) {
           this.verifyBeforeAddingNewAddress();
         }
@@ -76,23 +81,14 @@ export class WalletDetailComponent implements OnDestroy {
   }
 
   onDeleteWallet() {
-    const dialogRef = this.showConfirmationModal(
-      this.translateService.instant('wallet.delete-confirmation1') + ' \"' +
-      this.wallet.label + '\" ' +
-      this.translateService.instant('wallet.delete-confirmation2'),
-      this.translateService.instant('wallet.delete-confirmation-check'),
-    );
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.walletService.delete(this.wallet);
-      }
-    });
+    openDeleteWalletModal(this.dialog, this.wallet, this.translateService, this.walletService);
   }
 
   private verifyBeforeAddingNewAddress() {
     if (!this.wallet.seed || !this.wallet.addresses[this.wallet.addresses.length - 1].next_seed) {
-      openUnlockWalletModal(this.wallet, this.dialog).componentInstance.onWalletUnlocked
+      this.removeUnlockSubscription();
+
+      this.unlockSubscription = openUnlockWalletModal(this.wallet, this.dialog).componentInstance.onWalletUnlocked.first()
         .subscribe(() => this.addNewAddress());
     } else {
       this.addNewAddress();
@@ -119,15 +115,9 @@ export class WalletDetailComponent implements OnDestroy {
     this.snackBar.open(error.message, null, config);
   }
 
-  private showConfirmationModal(text: string, checkboxText: string): MatDialogRef<ConfirmationComponent, any> {
-    const confirmationData: ConfirmationData = {
-      text: text,
-      headerText: 'confirmation.header-text',
-      checkboxText: checkboxText,
-      confirmButtonText: 'confirmation.confirm-button',
-      cancelButtonText: 'confirmation.cancel-button'
-    };
-
-    return showConfirmationModal(this.dialog, confirmationData);
+  private removeUnlockSubscription() {
+    if (this.unlockSubscription) {
+      this.unlockSubscription.unsubscribe();
+    }
   }
 }

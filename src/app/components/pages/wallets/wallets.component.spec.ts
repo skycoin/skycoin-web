@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 
 import { WalletsComponent } from './wallets.component';
 import { WalletService } from '../../../services/wallet/wallet.service';
 import { CoinService } from '../../../services/coin.service';
-import { MockTranslatePipe, MockCoinService, MockWalletService } from '../../../utils/test-mocks';
+import { MockTranslatePipe, MockCoinService, MockWalletService, MockTranslateService } from '../../../utils/test-mocks';
 
 describe('WalletsComponent', () => {
   let component: WalletsComponent;
@@ -18,7 +19,8 @@ describe('WalletsComponent', () => {
       providers: [
         { provide: WalletService, useClass: MockWalletService },
         { provide: MatDialog, useValue: {} },
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: TranslateService, useClass: MockTranslateService }
       ]
     })
     .compileComponents();

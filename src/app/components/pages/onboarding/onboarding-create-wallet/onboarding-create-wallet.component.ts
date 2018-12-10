@@ -144,6 +144,7 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
       this.coinService.changeCoin(initialCoin);
       this.onCreateError(response.message ? response.message : response.toString());
     } else {
+      wallet.needSeedConfirmation = false;
       this.walletService.add(wallet);
       this.finish();
     }

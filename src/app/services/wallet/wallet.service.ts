@@ -74,6 +74,7 @@ export class WalletService {
         const wallet = {
           label: label,
           seed: seed,
+          needSeedConfirmation: true,
           balance: new BigNumber('0'),
           hours: new BigNumber('0'),
           addresses: [fullAddress],
@@ -148,7 +149,7 @@ export class WalletService {
     this.wallets.value.forEach(wallet => {
       const strippedAddresses: Address[] = [];
       wallet.addresses.forEach(address => strippedAddresses.push({ address: address.address }));
-      strippedWallets.push({ coinId: wallet.coinId, label: wallet.label, addresses: strippedAddresses });
+      strippedWallets.push({ coinId: wallet.coinId, needSeedConfirmation: wallet.needSeedConfirmation, label: wallet.label, addresses: strippedAddresses });
     });
     localStorage.setItem('wallets', JSON.stringify(strippedWallets));
     this.wallets.next(this.wallets.value);
