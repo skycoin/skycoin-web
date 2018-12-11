@@ -34,7 +34,7 @@ export class BalanceService {
   private schedulerSubscription: ISubscription;
 
   private readonly coinsMultiplier = 1000000;
-  private readonly shortUpdatePeriod = 5 * 1000;
+  private readonly shortUpdatePeriod = 10 * 1000;
   private readonly longUpdatePeriod = 300 * 1000;
 
   constructor(

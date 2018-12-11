@@ -116,21 +116,6 @@ mat-spinner.in-button {
     }
   }
 
-  &.very-small {
-    margin-left: 5px !important;
-    height: 10px !important;
-    width: 10px !important;
-  
-    svg {
-      height: 10px !important;
-      width: 10px !important;
-    }
-
-    circle {
-      opacity: 1 !important;
-    }
-  }
-
   circle {
     stroke: #000;
     opacity: 0.3;

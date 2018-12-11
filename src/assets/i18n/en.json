@@ -52,7 +52,8 @@
       "updated1": "Balance updated:",
       "updated2": "min ago",
       "less-than": "less than a",
-      "connection-error-tooltip": "Connection error, retrying"
+      "connection-error-tooltip": "Connection error, press to retry",
+      "refresh-help": "Press this button if you need to update the balance manually"
     },
 
     "errors": {

@@ -27,6 +27,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   currentCoin: BaseCoin;
   language: LanguageData;
   hasManyCoins: boolean;
+  showRefreshHelp: boolean;
 
   private subscription: Subscription;
 
@@ -37,6 +38,8 @@ export class TopBarComponent implements OnInit, OnDestroy {
               private renderer: Renderer2,
               private languageService: LanguageService,
               private _ngZone: NgZone) {
+    const showRefreshHelp = localStorage.getItem('showRefreshHelp');
+    this.showRefreshHelp = showRefreshHelp ? false : true;
   }
 
   ngOnInit() {
@@ -74,6 +77,15 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  closeRefreshHelp() {
+    localStorage.setItem('showRefreshHelp', 'false');
+    this.showRefreshHelp = false;
+  }
+
+  refresBalance() {
+    this.balanceService.startGettingBalances();
   }
 
   changeCoin() {
