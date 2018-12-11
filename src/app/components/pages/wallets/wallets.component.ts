@@ -64,15 +64,15 @@ export class WalletsComponent implements OnInit, OnDestroy {
     if (wallet.needSeedConfirmation) {
       this.removeConfirmationSuscriptions();
 
-      const unlogDialog = openUnlockWalletModal({wallet: wallet}, this.dialog).componentInstance;
+      const unlockDialog = openUnlockWalletModal({wallet: wallet}, this.dialog).componentInstance;
 
-      this.confirmSeedSubscription = unlogDialog.onWalletUnlocked.first().subscribe(() => {
+      this.confirmSeedSubscription = unlockDialog.onWalletUnlocked.first().subscribe(() => {
         wallet.needSeedConfirmation = false;
         this.walletService.saveWallets();
         wallet.opened ? wallet.opened = false : wallet.opened = true;
       });
 
-      this.confirmSeedSubscription = unlogDialog.onDeleteClicked.first().subscribe(() => {
+      this.deleteWalletSubscription = unlockDialog.onDeleteClicked.first().subscribe(() => {
         openDeleteWalletModal(this.dialog, wallet, this.translateService, this.walletService);
       });
     } else {

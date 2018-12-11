@@ -7,7 +7,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 
-export class ComfirmSeedParams {
+export class ConfirmSeedParams {
   wallet: Wallet;
 }
 
@@ -23,7 +23,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   form: FormGroup;
   disableDismiss = false;
   loadingProgress = 0;
-  showComfirmSeedWarning;
+  showConfirmSeedWarning;
 
   private wallet: Wallet;
   private unlockSubscription: ISubscription;
@@ -37,10 +37,10 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar
   ) {
     if (data.wallet) {
-      this.showComfirmSeedWarning = true;
+      this.showConfirmSeedWarning = true;
       this.wallet = data.wallet;
     } else {
-      this.showComfirmSeedWarning = false;
+      this.showConfirmSeedWarning = false;
       this.wallet = data;
     }
   }
@@ -69,7 +69,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
       this.progressSubscription = onProgressChanged.subscribe((progress) => this.loadingProgress = progress);
     }
 
-    const seed = !this.showComfirmSeedWarning ?
+    const seed = !this.showConfirmSeedWarning ?
       this.form.value.seed :
       (this.form.value.seed as string).substr(0, (this.form.value.seed as string).length - 1);
 
@@ -90,7 +90,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
       seed: ['', Validators.required],
     });
 
-    if (this.showComfirmSeedWarning) {
+    if (this.showConfirmSeedWarning) {
       this.form.controls.seed.setValidators([
         Validators.required,
         this.validateSeedConfirmation,

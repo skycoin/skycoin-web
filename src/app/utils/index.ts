@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Wallet, ConfirmationData } from '../app.datatypes';
-import { UnlockWalletComponent, ComfirmSeedParams } from '../components/pages/wallets/unlock-wallet/unlock-wallet.component';
+import { UnlockWalletComponent, ConfirmSeedParams } from '../components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { SelectCoinOverlayComponent } from '../components/layout/select-coin-overlay/select-coin-overlay.component';
 import { SelectLanguageComponent } from '../components/layout/select-language/select-language.component';
 import { QrCodeComponent } from '../components/layout/qr-code/qr-code.component';
@@ -14,7 +14,7 @@ import { BlockchainService, ProgressStates } from '../services/blockchain.servic
 import { ScanAddressesComponent } from '../components/pages/wallets/scan-addresses/scan-addresses.component';
 import { WalletService } from '../services/wallet/wallet.service';
 
-export function openUnlockWalletModal (wallet: Wallet | ComfirmSeedParams, unlockDialog: MatDialog): MatDialogRef<UnlockWalletComponent, any> {
+export function openUnlockWalletModal (wallet: Wallet | ConfirmSeedParams, unlockDialog: MatDialog): MatDialogRef<UnlockWalletComponent, any> {
   const config = new MatDialogConfig();
   config.width = '500px';
   config.data = wallet;
