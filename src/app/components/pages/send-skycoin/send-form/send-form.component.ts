@@ -52,8 +52,6 @@ export class SendFormComponent implements OnInit, OnDestroy {
     this.subscription.add(this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => this.currentCoin = coin)
     );
-
-    window['blockchainService'] = this.blockchainService;
   }
 
   ngOnDestroy() {
@@ -63,8 +61,6 @@ export class SendFormComponent implements OnInit, OnDestroy {
     if (this.unlockSubscription) {
       this.unlockSubscription.unsubscribe();
     }
-
-    delete window['blockchainService'];
   }
 
   onVerify(event = null) {
@@ -133,7 +129,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.min(0.000001),
         Validators.max(balance),
-        this.validateAmount,
+        this.validateAmount.bind(this),
       ]);
 
       this.form.controls.amount.updateValueAndValidity();
@@ -153,7 +149,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
     const parts = amountControl.value.toString().split('.');
 
-    if (parts.length === 2 && parts[1].length > window['blockchainService'].currentMaxDecimals) {
+    if (parts.length === 2 && parts[1].length > this.blockchainService.currentMaxDecimals) {
       return { Invalid: true };
     }
 
