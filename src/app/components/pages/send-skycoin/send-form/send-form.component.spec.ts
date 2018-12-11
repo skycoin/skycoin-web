@@ -7,7 +7,8 @@ import { SendFormComponent } from './send-form.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { SpendingService } from '../../../../services/wallet/spending.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockWalletService, MockSpendingService, MockMatSnackBar, MockCoinService } from '../../../../utils/test-mocks';
+import { BlockchainService } from '../../../../services/blockchain.service';
+import { MockTranslatePipe, MockWalletService, MockSpendingService, MockMatSnackBar, MockCoinService, MockBlockchainService } from '../../../../utils/test-mocks';
 
 describe('SendFormComponent', () => {
   let component: SendFormComponent;
@@ -23,7 +24,8 @@ describe('SendFormComponent', () => {
         { provide: WalletService, useClass: MockWalletService },
         { provide: SpendingService, useClass: MockSpendingService },
         { provide: MatDialog, useClass: MockMatSnackBar },
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: BlockchainService, useClass: MockBlockchainService }
       ]
     }).compileComponents();
   }));
