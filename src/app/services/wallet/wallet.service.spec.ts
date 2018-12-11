@@ -96,6 +96,7 @@ describe('WalletService', () => {
       const expectedWallet = {
         label: walletLabel,
         seed: walletSeed,
+        needSeedConfirmation: true,
         balance: new BigNumber(0),
         hours: new BigNumber(0),
         addresses: [walletAddress],
@@ -149,6 +150,7 @@ export function createWallet(label: string = 'label', seed: string = 'seed', bal
   return {
     label: label,
     seed: seed,
+    needSeedConfirmation: true,
     balance: balance,
     hours: new BigNumber(0),
     addresses: [

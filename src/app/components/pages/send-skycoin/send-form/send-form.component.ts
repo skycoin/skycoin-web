@@ -83,7 +83,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
       }
 
       this.unlockSubscription = openUnlockWalletModal(wallet, this.unlockDialog).componentInstance
-        .onWalletUnlocked.subscribe(() => this.createTransaction(wallet));
+        .onWalletUnlocked.first().subscribe(() => this.createTransaction(wallet));
     } else {
       this.createTransaction(wallet);
     }

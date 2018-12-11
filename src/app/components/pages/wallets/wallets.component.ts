@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
 import { Wallet } from '../../../app.datatypes';
 import { WalletService } from '../../../services/wallet/wallet.service';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
-import { openUnlockWalletModal } from '../../../utils/index';
+import { openUnlockWalletModal, openDeleteWalletModal } from '../../../utils/index';
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
 
@@ -20,11 +21,14 @@ export class WalletsComponent implements OnInit, OnDestroy {
   currentCoin: BaseCoin;
 
   private subscription: Subscription;
+  private confirmSeedSubscription: Subscription;
+  private deleteWalletSubscription: Subscription;
 
   constructor(
     private walletService: WalletService,
     private dialog: MatDialog,
-    private coinService: CoinService
+    private coinService: CoinService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -39,6 +43,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.removeConfirmationSuscriptions();
   }
 
   addWallet(create: boolean) {
@@ -49,12 +54,38 @@ export class WalletsComponent implements OnInit, OnDestroy {
   }
 
   unlockWallet(event, wallet: Wallet) {
-    event.stopPropagation();
-
-    openUnlockWalletModal(wallet, this.dialog);
+    if (!wallet.needSeedConfirmation) {
+      event.stopPropagation();
+      openUnlockWalletModal(wallet, this.dialog);
+    }
   }
 
   toggleWallet(wallet: Wallet) {
-    wallet.opened ? wallet.opened = false : wallet.opened = true;
+    if (wallet.needSeedConfirmation) {
+      this.removeConfirmationSuscriptions();
+
+      const unlockDialog = openUnlockWalletModal({wallet: wallet}, this.dialog).componentInstance;
+
+      this.confirmSeedSubscription = unlockDialog.onWalletUnlocked.first().subscribe(() => {
+        wallet.needSeedConfirmation = false;
+        this.walletService.saveWallets();
+        wallet.opened ? wallet.opened = false : wallet.opened = true;
+      });
+
+      this.deleteWalletSubscription = unlockDialog.onDeleteClicked.first().subscribe(() => {
+        openDeleteWalletModal(this.dialog, wallet, this.translateService, this.walletService);
+      });
+    } else {
+      wallet.opened ? wallet.opened = false : wallet.opened = true;
+    }
+  }
+
+  private removeConfirmationSuscriptions() {
+    if (this.confirmSeedSubscription) {
+      this.confirmSeedSubscription.unsubscribe();
+    }
+    if (this.deleteWalletSubscription) {
+      this.deleteWalletSubscription.unsubscribe();
+    }
   }
 }
