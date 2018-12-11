@@ -228,7 +228,7 @@ export class OnboardingCreatePage {
       seedValidationCheckBox.click();
     }
 
-    return element(by.buttonText('Create'));
+    return element(by.css('.main-action-button'));
   }
 
   private clickOutsideModal() {
@@ -236,6 +236,6 @@ export class OnboardingCreatePage {
   }
 
   private waitUntilWalletIsCreated() {
-    browser.wait(ExpectedConditions.invisibilityOf(element(by.buttonText('Create'))), 30000);
+    browser.wait(ExpectedConditions.invisibilityOf(element(by.css('.main-action-button'))), 30000);
   }
 }
