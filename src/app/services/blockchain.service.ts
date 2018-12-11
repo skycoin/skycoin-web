@@ -29,11 +29,16 @@ export class ProgressEvent {
 export class BlockchainService {
   private progressSubject: BehaviorSubject<ProgressEvent> = new BehaviorSubject<ProgressEvent>(null);
   private connectionsSubscription: Subscription;
+  private maxDecimals = 6;
   private readonly defaultPeriod = 90000;
   private readonly shortPeriod = 5000;
 
   get progress(): Observable<ProgressEvent> {
     return this.progressSubject.asObservable();
+  }
+
+  get currentMaxDecimals(): number {
+    return this.maxDecimals;
   }
 
   constructor (
@@ -115,7 +120,10 @@ export class BlockchainService {
           throw { reported: true };
         }
       })
-      .flatMap(() => this.apiService.get('version'))
-      .map ((response: any) => this.globalsService.setNodeVersion(response.version));
+      .flatMap(() => this.apiService.get('health'))
+      .map ((response: any) => {
+        this.globalsService.setNodeVersion(response.version.version);
+        this.maxDecimals = response.user_verify_transaction.max_decimals;
+      });
   }
 }

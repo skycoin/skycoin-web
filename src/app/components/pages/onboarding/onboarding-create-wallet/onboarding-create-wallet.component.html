@@ -3,7 +3,7 @@
 
   <div class="row-container">
     <div class="-header">
-      {{ 'wallet.new.create-title' | translate }}
+      {{ (showNewForm ? 'wallet.new.create-title' : 'wallet.new.load-title') | translate }}
     </div>
     <div class="-description">
       {{ 'wizard.wallet-desc' | translate }}
@@ -20,11 +20,11 @@
   </div>
   <div class="row-container -buttons-footer">
     <app-button #create
-                class="dark-button -button-min-margin"
+                class="dark-button -button-min-margin main-action-button"
                 [disabled]="!formControl.isValid"
                 [spinnerStyle]="'accent'"
                 (action)="showNewForm ? showSafe() : loadWallet()">
-      {{ 'wallet.new.create-button' | translate }}
+      {{ (showNewForm ? 'wallet.new.create-button' : 'wallet.new.load-button') | translate }}
     </app-button>
     <div></div>
     <app-button *ngIf="userHasWallets && !creatingWallet"

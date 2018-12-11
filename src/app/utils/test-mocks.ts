@@ -147,6 +147,10 @@ export class MockBlockchainService {
     return Observable.of();
   }
 
+  get currentMaxDecimals() {
+    return 3;
+  }
+
   lastBlock(): Observable<any> {
     return Observable.of({});
   }
