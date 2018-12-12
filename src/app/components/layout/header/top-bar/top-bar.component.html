@@ -18,23 +18,6 @@
         </div>
       </div>
     </button>
-    <div class="refresh-help-container" *ngIf="showRefreshHelp">
-      <div class="inner-container">
-        <div class="arrow-container">
-          <svg height="20" width="10">
-            <polygon points="0,10 10,20 10,0" class="arrow" />
-          </svg>
-        </div>
-        <div class="text-container">
-          <div class="text">
-            {{ 'header.top-bar.refresh-help' | translate }}
-          </div>
-          <div>
-            <span class="x" (click)="closeRefreshHelp()">X</span>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   <app-coin-button *ngIf="hasManyCoins" (click)="changeCoin()"></app-coin-button>
 </div>

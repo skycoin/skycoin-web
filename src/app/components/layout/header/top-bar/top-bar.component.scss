@@ -70,49 +70,6 @@
       }
     }
   }
-
-  .refresh-help-container {
-    width: 0px;
-    height: 0px;
-    overflow: visible;
-    position: relative;
-    left: 8px;
-    top: 8px;
-
-    .inner-container {
-      display: flex;
-
-      .arrow-container {
-        width: 10px;
-        height: 20px;
-
-        .arrow {
-          fill:rgba(0, 0, 0, 0.6);
-        }
-      }
-
-      .text-container {
-        background-color: rgba(0, 0, 0, 0.6);
-        display: flex;
-        padding: 12px;
-        font-size: 12px;
-
-        .text { 
-          width: 150px;
-          margin-right: 15px;
-        }
-
-        .x {
-          opacity: 0.5;
-          cursor: pointer;
-
-          &:hover {
-            opacity: 1;
-          }
-        }
-      }
-    }
-  }
 }
 
 .title {
