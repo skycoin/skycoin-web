@@ -76,6 +76,10 @@ export class TopBarComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  refresBalance() {
+    this.balanceService.startGettingBalances();
+  }
+
   changeCoin() {
     openChangeCoinModal(this.dialog, this.renderer, this.overlay)
       .subscribe(response => {

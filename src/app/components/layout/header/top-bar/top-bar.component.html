@@ -1,17 +1,25 @@
 <div class="buttons-left">
-  <app-coin-button *ngIf="hasManyCoins" (click)="changeCoin()"></app-coin-button>
-  <div class="last-updated-time" *ngIf="balanceObtained">
-    <div class="label">{{ 'header.top-bar.updated1' | translate }}</div>
-    <div class="header-sel-theme">
-      {{ timeSinceLastBalanceUpdate === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastBalanceUpdate }} {{ 'header.top-bar.updated2' | translate }}
-      <mat-spinner *ngIf="updatingBalance" color="primary" class="in-button very-small loading"></mat-spinner>
-      <i *ngIf="this.problemUpdatingBalance && !updatingBalance"
-        class="material-icons blinking-warning-icon"
-        [matTooltip]="'header.top-bar.connection-error-tooltip' | translate">
-        warning
-      </i>
-    </div>
+  <div class="header-sel-theme" style="display: flex;" *ngIf="balanceObtained">
+    <button
+      class="time-button"
+      mat-button
+      color="primary"
+      [matTooltip]="this.problemUpdatingBalance ? ('header.top-bar.connection-error-tooltip' | translate) : null"
+      (click)="refresBalance()">
+      <div class="main-container">
+        <div class="spinner-container" *ngIf="updatingBalance"><mat-spinner></mat-spinner></div>
+        <mat-icon *ngIf="!this.problemUpdatingBalance && !updatingBalance">refresh</mat-icon>
+        <mat-icon *ngIf="this.problemUpdatingBalance && !updatingBalance" class="blinking-warning-icon">warning</mat-icon>
+        <div class="text-container">
+          <div class="first-label">{{ 'header.top-bar.updated1' | translate }}</div>
+          <div class="second-label">
+            {{ timeSinceLastBalanceUpdate === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastBalanceUpdate }} {{ 'header.top-bar.updated2' | translate }}
+          </div>
+        </div>
+      </div>
+    </button>
   </div>
+  <app-coin-button *ngIf="hasManyCoins" (click)="changeCoin()"></app-coin-button>
 </div>
 
 <div class="title">

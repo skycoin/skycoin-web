@@ -52,7 +52,7 @@
       "updated1": "Actualizado hace:",
       "updated2": "min",
       "less-than": "menos de 1",
-      "connection-error-tooltip": "Error de conexión, reintentando"
+      "connection-error-tooltip": "Error de conexión, pulse para reintentar"
     },
 
     "errors": {

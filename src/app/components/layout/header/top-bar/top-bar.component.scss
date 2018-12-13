@@ -12,19 +12,63 @@
   padding: 10px 0px 10px 10px;
   width: 230px;
 
-  app-coin-button {
+  .time-button {
+    border-radius: 25px;
+    border: rgba(255, 255, 255, 0.733) 1px solid;
+    font-size: 12px;
+    line-height: 20px;
+    height: 36px;
+    overflow: hidden;
     margin-bottom: 10px;
-    display: block;
-  }
-}
 
-.last-updated-time {
-  opacity: 0.9;
-  font-size: 11px;
-  padding-left: 5px;
+    .main-container {
+      display: flex;
+      align-items: center;
 
-  .label {
-    opacity: 0.7;
+      mat-icon {
+        margin-left: 3px;
+        width: 22px;
+        height: 22px;
+        font-size: 22px;
+      }
+
+      .spinner-container {
+        width: 22px;
+        height: 22px;
+        margin-left: 3px;
+
+        mat-spinner {
+          height: 18px !important;
+          width: 18px !important;
+          opacity: 0.5;
+          margin: 0 !important;
+          position: relative;
+          top: 2px;
+
+          ::ng-deep svg {
+            height: 18px !important;
+            width: 18px !important;
+          }
+        }
+      }
+    
+      .text-container {
+        height: 36px;
+        margin-left: 8px;
+        margin-right: 10px;
+        font-size: 11px;
+        text-align: left;
+  
+        .first-label {
+          opacity: 0.7;
+        }
+  
+        .second-label {
+          position: relative;
+          top: -7px;
+        }
+      }
+    }
   }
 }
 
@@ -71,11 +115,6 @@
 
 .color-primary {
   color: $blue;
-}
-
-.loading {
-  position: relative;
-  top: 2px;
 }
 
 .blinking-warning-icon {
