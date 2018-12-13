@@ -4,6 +4,7 @@ export interface Wallet {
   label: string;
   addresses: Address[];
   seed?: string;
+  needSeedConfirmation?: boolean;
   balance?: BigNumber;
   hours?: BigNumber;
   hidden?: boolean;

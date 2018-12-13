@@ -13,6 +13,7 @@ import { Wallet } from '../../../../app.datatypes';
 import { openUnlockWalletModal } from '../../../../utils/index';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
+import { BlockchainService } from '../../../../services/blockchain.service';
 
 @Component({
   selector: 'app-send-form',
@@ -37,7 +38,8 @@ export class SendFormComponent implements OnInit, OnDestroy {
     private spendingService: SpendingService,
     private snackbar: MatSnackBar,
     private unlockDialog: MatDialog,
-    private coinService: CoinService
+    private coinService: CoinService,
+    private blockchainService: BlockchainService
   ) {}
 
   ngOnInit() {
@@ -81,7 +83,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
       }
 
       this.unlockSubscription = openUnlockWalletModal(wallet, this.unlockDialog).componentInstance
-        .onWalletUnlocked.subscribe(() => this.createTransaction(wallet));
+        .onWalletUnlocked.first().subscribe(() => this.createTransaction(wallet));
     } else {
       this.createTransaction(wallet);
     }
@@ -127,7 +129,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.min(0.000001),
         Validators.max(balance),
-        this.validateAmount,
+        this.validateAmount.bind(this),
       ]);
 
       this.form.controls.amount.updateValueAndValidity();
@@ -147,7 +149,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
     const parts = amountControl.value.toString().split('.');
 
-    if (parts.length === 2 && parts[1].length > 6) {
+    if (parts.length === 2 && parts[1].length > this.blockchainService.currentMaxDecimals) {
       return { Invalid: true };
     }
 
