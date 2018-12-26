@@ -69,11 +69,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
       this.progressSubscription = onProgressChanged.subscribe((progress) => this.loadingProgress = progress);
     }
 
-    const seed = !this.showConfirmSeedWarning ?
-      this.form.value.seed :
-      (this.form.value.seed as string).substr(0, (this.form.value.seed as string).length - 1);
-
-    this.unlockSubscription = this.walletService.unlockWallet(this.wallet, seed, onProgressChanged)
+    this.unlockSubscription = this.walletService.unlockWallet(this.wallet, this.form.value.seed, onProgressChanged)
       .subscribe(
         () => this.onUnlockSuccess(),
         (error: Error) => this.onUnlockError(error)
@@ -89,13 +85,6 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       seed: ['', Validators.required],
     });
-
-    if (this.showConfirmSeedWarning) {
-      this.form.controls.seed.setValidators([
-        Validators.required,
-        this.validateSeedConfirmation,
-      ]);
-    }
   }
 
   private onUnlockSuccess() {
@@ -121,13 +110,5 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
     if (this.unlockSubscription && !this.unlockSubscription.closed) {
       this.unlockSubscription.unsubscribe();
     }
-  }
-
-  private validateSeedConfirmation(seedControl: FormControl) {
-    if (!(seedControl.value as string).endsWith('?')) {
-      return { Invalid: true };
-    }
-
-    return null;
   }
 }
