@@ -145,26 +145,32 @@ export class WalletService {
   }
 
   saveWallets() {
-    const strippedWallets: Wallet[] = [];
-    this.wallets.value.forEach(wallet => {
-      const strippedAddresses: Address[] = [];
-      wallet.addresses.forEach(address => strippedAddresses.push({ address: address.address }));
-      strippedWallets.push({ coinId: wallet.coinId, needSeedConfirmation: wallet.needSeedConfirmation, label: wallet.label, addresses: strippedAddresses });
-    });
-    localStorage.setItem('wallets', JSON.stringify(strippedWallets));
-    this.wallets.next(this.wallets.value);
+    if (environment.seveWallets) {
+      const strippedWallets: Wallet[] = [];
+      this.wallets.value.forEach(wallet => {
+        const strippedAddresses: Address[] = [];
+        wallet.addresses.forEach(address => strippedAddresses.push({ address: address.address }));
+        strippedWallets.push({ coinId: wallet.coinId, needSeedConfirmation: wallet.needSeedConfirmation, label: wallet.label, addresses: strippedAddresses });
+      });
+      localStorage.setItem('wallets', JSON.stringify(strippedWallets));
+      this.wallets.next(this.wallets.value);
+    }
   }
 
   private loadWallets() {
-    const storedWallets: string = localStorage.getItem('wallets');
-    if (storedWallets) {
-      const wallets: Wallet[] = JSON.parse(storedWallets);
+    if (environment.seveWallets) {
+      const storedWallets: string = localStorage.getItem('wallets');
+      if (storedWallets) {
+        const wallets: Wallet[] = JSON.parse(storedWallets);
 
-      wallets.filter(wallet => !wallet.coinId).forEach((wallet) => {
-        wallet.coinId = defaultCoinId;
-      });
+        wallets.filter(wallet => !wallet.coinId).forEach((wallet) => {
+          wallet.coinId = defaultCoinId;
+        });
 
-      this.wallets.next(wallets);
+        this.wallets.next(wallets);
+      }
+    } else {
+      this.wallets.next([]);
     }
   }
 

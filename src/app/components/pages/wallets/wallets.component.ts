@@ -9,6 +9,7 @@ import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 import { openUnlockWalletModal, openDeleteWalletModal } from '../../../utils/index';
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-wallets',
@@ -19,6 +20,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
 
   wallets: Wallet[];
   currentCoin: BaseCoin;
+  showLockIcons: boolean;
 
   private subscription: Subscription;
   private confirmSeedSubscription: Subscription;
@@ -29,7 +31,9 @@ export class WalletsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private coinService: CoinService,
     private translateService: TranslateService
-  ) {}
+  ) {
+    this.showLockIcons = environment.seveWallets;
+  }
 
   ngOnInit() {
     this.subscription = this.walletService.currentWallets.subscribe( (wallets) => {
