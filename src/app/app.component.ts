@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LanguageService } from './services/language.service';
 
 import { config } from './app.config';
+import { CipherWebWorkerHelper } from './utils/cipher-web-worker-helper';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,9 @@ export class AppComponent implements OnInit {
 
   constructor(
     private languageService: LanguageService
-  ) {}
+  ) {
+    CipherWebWorkerHelper.Load();
+  }
 
   ngOnInit() {
     this.otcEnabled = config.otcEnabled;

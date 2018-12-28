@@ -1,13 +1,15 @@
-importScripts('main.js');
-
 onmessage = function(e) {
   try {
     switch(e.data.operation) {
       case 0: {
-        postMessage({result: Cipher.GenerateAddresses(e.data.data), workID: e.data.workID});
+        importScripts('main.js');
         break;
       }
       case 1: {
+        postMessage({result: Cipher.GenerateAddresses(e.data.data), workID: e.data.workID});
+        break;
+      }
+      case 2: {
         postMessage({result: Cipher.PrepareTransaction(e.data.data.inputs, e.data.data.outputs), workID: e.data.workID});
         break;
       }
