@@ -57,22 +57,24 @@ export class CipherWebWorkerHelper {
   private static readonly activeWorks: Map<number, Subject<any>> = new Map<number, Subject<any>>();
   private static initialized = false;
 
-  static Load() {
-    let currentLocation = location.origin + location.pathname;
-    if (currentLocation.includes('/index.html')) {
-      currentLocation = currentLocation.substr(0, currentLocation.lastIndexOf('/index.html'));
-    }
+  static initialize() {
+    if (!CipherWebWorkerHelper.initialized) {
+      CipherWebWorkerHelper.initialized = true;
 
-    CipherWebWorkerHelper.worker.postMessage({operation: CipherWebWorkerOperation.Load, url: currentLocation});
+      let currentLocation = location.origin + location.pathname;
+      if (currentLocation.includes('/index.html')) {
+        currentLocation = currentLocation.substr(0, currentLocation.lastIndexOf('/index.html'));
+      } else if (currentLocation.includes('/context.html')) {
+        currentLocation = currentLocation.substr(0, currentLocation.lastIndexOf('/context.html'));
+      }
+
+      CipherWebWorkerHelper.worker.postMessage({operation: CipherWebWorkerOperation.Load, url: currentLocation});
+
+      CipherWebWorkerHelper.worker.addEventListener('message', CipherWebWorkerHelper.eventListener);
+    }
   }
 
   static ExcecuteWorker(operation: CipherWebWorkerOperation, data: any): Observable<any> {
-
-    if (!CipherWebWorkerHelper.initialized) {
-      CipherWebWorkerHelper.initialized = true;
-      CipherWebWorkerHelper.worker.addEventListener('message', CipherWebWorkerHelper.eventListener);
-    }
-
     const workID = Math.floor(Math.random() * 100000000000000);
     const workSubject = new Subject<any>();
     CipherWebWorkerHelper.activeWorks[workID] = workSubject;
