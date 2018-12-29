@@ -31,6 +31,13 @@ export class SaveDataPage {
     return element(by.css('.title')).isPresent();
   }
 
+  verifyLocalStorage() {
+    return browser.executeScript('return window.localStorage.getItem("wallets");')
+      .then((data: string) => {
+        return data;
+      });
+  }
+
   private fillLoadWalletForm(walletLabel: string = 'Test wallet', seedText: string = 'skycoin-web-e2e-test-seed-load'): ElementFinder {
     const btnOption = element(by.buttonText('Load'));
     btnOption.click();

@@ -17,6 +17,7 @@ describe('Save data', () => {
       expect<any>(page.verifyIfShowingWalletsPage()).toEqual(true);
 
       browser.get('#/wallets');
+      expect<any>(page.verifyLocalStorage()).toEqual(null);
       expect<any>(page.verifyIfShowingWalletsPage()).toEqual(false);
       done();
     });
