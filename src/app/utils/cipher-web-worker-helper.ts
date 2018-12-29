@@ -2,6 +2,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { isString } from 'util';
 
+import { environment } from '../../environments/environment';
+
 export enum CipherWebWorkerOperation {
   Load = 0,
   CreateAdress = 1,
@@ -10,49 +12,9 @@ export enum CipherWebWorkerOperation {
 
 export class CipherWebWorkerHelper {
 
-  // To be able to test changes more easily it is possible to modify assets/scripts/cipher-web-worker.js
-  // and uncomment the worker constant below. However, for the wallet to work properly from the local file
-  // system, it is necessary to placed the changes in this string after finishing and return the worker
-  // constant to its initial state. When doing this, the URL on case 0 should not be modified, since a
-  // different URL is used in assets/scripts/cipher-web-worker.js.
-  private static readonly workerCode = `
-    onmessage = function(e) {
-      if (e) {
-        try {
-          switch(e.data.operation) {
-            case 0: {
-              importScripts(e.data.url + '/assets/scripts/main.js');
-              break;
-            }
-            case 1: {
-              postMessage({result: Cipher.GenerateAddresses(e.data.data), workID: e.data.workID});
-              break;
-            }
-            case 2: {
-              postMessage({result: Cipher.PrepareTransaction(e.data.data.inputs, e.data.data.outputs), workID: e.data.workID});
-              break;
-            }
-            default: {
-              postMessage({result: 0, workID: e.data.workID});
-              break;
-            }
-          }
-        } catch(err) {
-          // The error message must be prefixed with "Error:" to be recognized as an error
-          // message and not as a valid response. The prefix is defined in WebWorkersHelper.errPrefix.
-          postMessage({result: "Error:" + err.message, workID: e.data.workID});
-        }
-      }
-    }
-  `;
-
   private static readonly errPrefix = 'Error:';
 
-  // If you want to perform tests with assets/scripts/cipher-web-worker.js, uncomment the first worker
-  // constant and comment the second one:
-
-  // private static readonly worker: Worker = new Worker('./assets/scripts/cipher-web-worker.js');
-  private static readonly worker: Worker = new Worker(URL.createObjectURL(new Blob(['(' + CipherWebWorkerHelper.workerCode.toString() + ')()'], { type: 'text/javascript' })));
+  private static worker: Worker;
 
   private static readonly activeWorks: Map<number, Subject<any>> = new Map<number, Subject<any>>();
   private static initialized = false;
@@ -61,27 +23,46 @@ export class CipherWebWorkerHelper {
     if (!CipherWebWorkerHelper.initialized) {
       CipherWebWorkerHelper.initialized = true;
 
-      let currentLocation = location.origin + location.pathname;
-      if (currentLocation.includes('/index.html')) {
-        currentLocation = currentLocation.substr(0, currentLocation.lastIndexOf('/index.html'));
-      } else if (currentLocation.includes('/context.html')) {
-        currentLocation = currentLocation.substr(0, currentLocation.lastIndexOf('/context.html'));
+      if (!environment.e2eTest) {
+        System.import(`../../assets/scripts/cipher-web-worker.js`).then((content) => {
+          // The worker is loaded as a blob so that it works correctly if the wallet
+          // is loaded from the local file system
+          CipherWebWorkerHelper.worker = new Worker(URL.createObjectURL(new Blob(['(onmessage = ' + content.onmessage.toString() + ')()'], { type: 'text/javascript' })));
+          CipherWebWorkerHelper.configureWorker();
+        });
+      } else {
+        // Chrome headless has problems with blobs, so the file is loaded from the URL.
+        CipherWebWorkerHelper.worker = new Worker('./assets/scripts/cipher-web-worker.js');
+        CipherWebWorkerHelper.configureWorker();
       }
-
-      CipherWebWorkerHelper.worker.postMessage({operation: CipherWebWorkerOperation.Load, url: currentLocation});
-
-      CipherWebWorkerHelper.worker.addEventListener('message', CipherWebWorkerHelper.eventListener);
     }
   }
 
   static ExcecuteWorker(operation: CipherWebWorkerOperation, data: any): Observable<any> {
-    const workID = Math.floor(Math.random() * 100000000000000);
-    const workSubject = new Subject<any>();
-    CipherWebWorkerHelper.activeWorks[workID] = workSubject;
+    if (CipherWebWorkerHelper.worker) {
+      const workID = Math.floor(Math.random() * 100000000000000);
+      const workSubject = new Subject<any>();
+      CipherWebWorkerHelper.activeWorks[workID] = workSubject;
 
-    CipherWebWorkerHelper.worker.postMessage({operation: operation, data: data, workID: workID});
+      CipherWebWorkerHelper.worker.postMessage({operation: operation, data: data, workID: workID});
 
-    return workSubject.asObservable();
+      return workSubject.asObservable();
+    } else {
+      return Observable.of(1).delay(1000).flatMap(() => CipherWebWorkerHelper.ExcecuteWorker(operation, data));
+    }
+  }
+
+  private static configureWorker() {
+    let currentLocation = location.origin + location.pathname;
+    if (currentLocation.includes('/index.html')) {
+      currentLocation = currentLocation.substr(0, currentLocation.lastIndexOf('/index.html'));
+    } else if (currentLocation.includes('/context.html')) {
+      currentLocation = currentLocation.substr(0, currentLocation.lastIndexOf('/context.html'));
+    }
+
+    CipherWebWorkerHelper.worker.postMessage({operation: CipherWebWorkerOperation.Load, url: currentLocation});
+
+    CipherWebWorkerHelper.worker.addEventListener('message', CipherWebWorkerHelper.eventListener);
   }
 
   private static eventListener(e: MessageEvent) {
