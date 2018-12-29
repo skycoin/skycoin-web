@@ -145,7 +145,7 @@ export class WalletService {
   }
 
   saveWallets() {
-    if (environment.seveWallets) {
+    if (!environment.production) {
       const strippedWallets: Wallet[] = [];
       this.wallets.value.forEach(wallet => {
         const strippedAddresses: Address[] = [];
@@ -158,7 +158,7 @@ export class WalletService {
   }
 
   private loadWallets() {
-    if (environment.seveWallets) {
+    if (!environment.production) {
       const storedWallets: string = localStorage.getItem('wallets');
       if (storedWallets) {
         const wallets: Wallet[] = JSON.parse(storedWallets);

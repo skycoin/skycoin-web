@@ -32,7 +32,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
     private coinService: CoinService,
     private translateService: TranslateService
   ) {
-    this.showLockIcons = environment.seveWallets;
+    this.showLockIcons = !environment.production;
   }
 
   ngOnInit() {
