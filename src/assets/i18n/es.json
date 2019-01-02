@@ -13,7 +13,6 @@
     "no-wallet": "La billetera no existe",
     "no-outputs": "No hay salidas no gastadas",
     "no-wallets": "Actualmente no hay billeteras",
-    "window-size": "La ventana es muy angosta para el contenido.",
     "loading-error": "Error al intentar obtener los datos. Por favor, inténtelo nuevamente más tarde."
   },
 
@@ -47,6 +46,7 @@
     "pending-txs2": "transacciones pendientes.",
     "pending-txs3": "Los datos mostrados pueden estar desactualizados.",
     "loading": "Cargando...",
+    "connection-error-tooltip": "Hubo un error al intentar refrescar el saldo",
 
     "top-bar": {
       "updated1": "Actualizado hace:",
@@ -333,9 +333,5 @@
       "wrong-seed": "Semilla incorrecta",
       "invalid-wallet": "Billetera inválida"
     }
-  },
-
-  "mobile": {
-    "try-the-app": "Puede probar nuestra app móvil:"
   }
 }

@@ -69,7 +69,6 @@ import { CoinService } from './services/coin.service';
 import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
 import { SelectCoinComponent } from './components/layout/select-coin/select-coin.component';
 import { LanguageService } from './services/language.service';
-import { CoinButtonComponent } from './components/layout/header/coin-button/coin-button.component';
 import { SelectCoinOverlayComponent } from './components/layout/select-coin-overlay/select-coin-overlay.component';
 import { SelectLanguageComponent } from './components/layout/select-language/select-language.component';
 import { WalletService } from './services/wallet/wallet.service';
@@ -118,7 +117,6 @@ import { GlobalsService } from './services/globals.service';
     DisclaimerWarningComponent,
     LoadingContentComponent,
     SelectCoinComponent,
-    CoinButtonComponent,
     SelectCoinOverlayComponent,
     SelectLanguageComponent,
     CreateWalletFormComponent,

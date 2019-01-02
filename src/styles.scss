@@ -68,6 +68,10 @@ body {
   height: 100%;
 }
 
+.mat-tooltip {
+  font-size: 11px;
+}
+
 .-paper {
   background-color: $white;
   border-radius: 10px;
@@ -145,6 +149,12 @@ mat-panel-title {
 .sky-container {
   min-width: 100%;
   min-height: 100%;
+
+  @media (max-width: $max-small-width) {
+    & {
+      padding-bottom: $mobile-nav-bar-height;
+    }
+  }
 
   &.sky-container-grey {
     background-color: $grey-lightest;
@@ -367,4 +377,35 @@ General Helpers
 .link {
   color: $blue;
   cursor: pointer;
+}
+
+@keyframes blinker {
+  80% {
+    opacity: 0;
+  }
+}
+
+/**
+Responsive design
+ */
+
+@media (min-width: ($max-small-width+1)) {
+  .-on-small-and-below-only {
+    display: none !important;
+  }
+}
+@media (max-width: $max-small-width) {
+  .-not-on-small-and-below {
+    display: none !important;
+  }
+}
+@media (min-width: ($max-very-small-width+1)) {
+  .-on-very-small-only {
+    display: none !important;
+  }
+}
+@media (max-width: $max-very-small-width) {
+  .-not-on-very-small {
+    display: none !important;
+  }
 }

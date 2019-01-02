@@ -13,7 +13,6 @@
     "no-wallet": "Wallet does not exist",
     "no-outputs": "No unspent outputs",
     "no-wallets": "Currently there are no wallets",
-    "window-size": "The window is too narrow for the content.",
     "loading-error": "Error trying to get the data. Please try again later."
   },
 
@@ -47,6 +46,7 @@
     "pending-txs2": "pending transactions.",
     "pending-txs3": "Data you see may not be updated.",
     "loading": "Loading...",
+    "connection-error-tooltip": "There was an error while trying to refresh the balance",
 
     "top-bar": {
       "updated1": "Balance updated:",
@@ -333,11 +333,5 @@
       "wrong-seed": "Wrong seed",
       "invalid-wallet": "Invalid wallet"
     }
-  },
-
-  "mobile": {
-    "try-the-app": "You can try our mobile app:",
-    "app-store-attribution": "Apple, the Apple logo, iPhone, and iPad are trademarks of Apple Inc., registered in the U.S. and other countries and regions. App Store is a service mark of Apple Inc.",
-    "google-play-attribution": "Google Play and the Google Play logo are trademarks of Google LLC."
   }
 }

@@ -1,41 +1,5 @@
 $white: #FBFBFB;
 
-.size-alert {
-  background-color: rgba(0, 0, 0, 0.85);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10000;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-
-  > div {
-    margin: 0px 40px;
-    max-width: 400px;
-
-    .mobile-buttons-container {
-      margin-top: 10px;
-    }
-
-    .attribution-container {
-      margin-top: 10px;
-      opacity: 0.4;
-      font-size: 10px;
-    }
-  }
-}
-
-@media (min-width: 768px) {
-  .size-alert {
-    display: none;
-  }
-}
-
 mat-card {
   max-width: 1000px;
   margin-top: 80px;

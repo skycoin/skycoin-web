@@ -48,3 +48,17 @@
     }
   }
 }
+
+.grey {
+  &.-buttons-container {
+    background: rgba(30, 34, 39, 0.03);
+  }
+
+  .-toggle ::ng-deep button.enabled {
+    background-color: rgba(30, 34, 39, 0.07) !important;
+
+    span {
+      color: $grey-dark;
+    }
+  }
+}

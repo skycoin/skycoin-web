@@ -18,10 +18,27 @@
       <div class="hour-balance">
         <p *ngIf="loading">{{ 'header.syncing-blocks' | translate }} {{ current && highest ?  '(' + current + '/'  + highest + ')' : '...' }}</p>
         <p *ngIf="!loading">{{ hours.decimalPlaces(0).toString() | number:'1.0-0' }} {{ currentCoin.hoursName }}</p>
+        <div class="-on-small-and-below-only">
+          <span class="blinking-warning-icon-container" *ngIf="this.problemUpdatingBalance">
+            <mat-icon
+              [matTooltip]="'header.connection-error-tooltip' | translate"
+              matTooltipPosition="right"
+              matTooltipClass="tooltip"
+              class="blinking-warning-icon">
+              warning
+            </mat-icon>
+          </span>
+          <span *ngIf="balanceObtained">
+            {{ 'header.top-bar.updated1' | translate }}
+            {{ timeSinceLastBalanceUpdate === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastBalanceUpdate }}
+            {{ 'header.top-bar.updated2' | translate }}
+          </span>
+          <span *ngIf="!balanceObtained">-</span>
+        </div>
       </div>
     </div>
   </div>
-  <app-nav-bar></app-nav-bar>
+  <app-nav-bar class="-not-on-small-and-below"></app-nav-bar>
   <mat-progress-bar
     [style.visibility]="loading ? 'visible' : 'hidden'"
     class="progress-bar"
@@ -29,6 +46,7 @@
     [mode]="!isBlockchainLoading ? 'query' : 'determinate'"
     [value]="percentage * 100">
   </mat-progress-bar>
+  <app-nav-bar class="-on-small-and-below-only"></app-nav-bar>
   <mat-toolbar class="notification-bar" *ngIf="connectionError != null">
     <div *ngIf="connectionError === connectionErrorsList.NO_ACTIVE_CONNECTIONS">
       {{ 'header.errors.no-connections' | translate }}

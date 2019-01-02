@@ -13,9 +13,6 @@ export class AppComponent implements OnInit {
   highest: number;
   otcEnabled: boolean;
   version: string;
-  appStoreUrl: string;
-  googlePlayUrl: string;
-  isElectron: boolean;
 
   constructor(
     private languageService: LanguageService
@@ -23,9 +20,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.otcEnabled = config.otcEnabled;
-    this.appStoreUrl = config.appStoreUrl;
-    this.googlePlayUrl = config.googlePlayUrl;
-    this.isElectron = window['isElectron'];
     this.languageService.loadLanguageSettings();
   }
 

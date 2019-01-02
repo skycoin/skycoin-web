@@ -13,6 +13,7 @@ import { ConfirmationComponent } from '../components/layout/confirmation/confirm
 import { BlockchainService, ProgressStates } from '../services/blockchain.service';
 import { ScanAddressesComponent } from '../components/pages/wallets/scan-addresses/scan-addresses.component';
 import { WalletService } from '../services/wallet/wallet.service';
+import { BalanceService } from '../services/wallet/balance.service';
 
 export function openUnlockWalletModal (wallet: Wallet | ConfirmSeedParams, unlockDialog: MatDialog): MatDialogRef<UnlockWalletComponent, any> {
   const config = new MatDialogConfig();
@@ -102,4 +103,9 @@ export function scanAddresses(dialog: MatDialog, wallet: Wallet, blockchainServi
         autoFocus: false
       }).afterClosed();
     });
+}
+
+export function getTimeSinceLastBalanceUpdate(balanceService: BalanceService): number {
+  const diffMs: number = new Date().getTime() - balanceService.lastBalancesUpdateTime.getTime();
+  return Math.floor(diffMs / 60000);
 }
