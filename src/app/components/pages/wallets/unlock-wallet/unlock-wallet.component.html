@@ -19,9 +19,6 @@
       <textarea formControlName="seed" id="seed" row="2"></textarea>
     </div>
   </div>
-  <div *ngIf="showConfirmSeedWarning">
-    <div>{{ 'wallet.unlock.confirmation-warning-text3' | translate }}</div>
-  </div>
   <div class="-buttons">
     <app-button (action)="closePopup()" [disabled]="disableDismiss">
       {{ 'wallet.unlock.cancel-button' | translate }}

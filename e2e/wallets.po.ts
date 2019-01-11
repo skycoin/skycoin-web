@@ -315,7 +315,7 @@ export class WalletsPage {
       return seedField.isPresent().then((status) => {
         if (status) {
           seedField.clear();
-          seedField.sendKeys(seed + '?');
+          seedField.sendKeys(seed);
 
           const btnUnlock = element(by.buttonText('Unlock'));
           btnUnlock.click();
