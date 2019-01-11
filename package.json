@@ -7,7 +7,7 @@
     "start": "ng serve --proxy-config proxy.config.js --delete-output-path false",
     "build": "ng build --prod",
     "build-dev": "ng build",
-    "build-for-electron": "ng build --prod --base-href ./",
+    "build-for-local-fs": "ng build --prod --base-href ./index.html",
     "lint": "ng lint",
     "e2e": "ng e2e --proxy-config proxy.config.js --environment e2e --delete-output-path false",
     "snyk-protect": "snyk protect",

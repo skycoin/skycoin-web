@@ -194,7 +194,7 @@ export class SpendingService {
     const convertedOutputs: TransactionOutput[] = txOutputs.map(output => {
       return {
         ...output,
-        coins: parseInt((output.coins * this.coinsMultiplier) + '', 10)
+        coins: parseInt(new BigNumber(output.coins).multipliedBy(this.coinsMultiplier).toFixed(0), 10)
       };
     });
 

@@ -172,10 +172,9 @@
     "unlock": {
       "unlock-title": "Unlock Wallet",
       "confirmation-warning-title": "Important: without the seed you will lose access to your funds",
-      "confirmation-warning-text1": "For security reasons, the seed of this wallet will not be saved and it will frequently be requested before sending transactions. If you did not safeguard it, you will lose access to the funds. To confirm that you have safeguarded the seed and to be able to see the addresses of this wallet, please re-enter the seed in the box below and add a question mark (?) at the end of it.",
+      "confirmation-warning-text1": "For security reasons, this wallet will not be saved and you will need the seed to access it again after closing/refreshing the current browser tab. If you did not safeguard it, you will lose access to the funds. To confirm that you have safeguarded the seed and to be able to see the addresses of this wallet, please re-enter the seed in the box below.",
       "confirmation-warning-text2-1": "If you do not have the seed, you can delete the wallet by clicking",
       "confirmation-warning-text2-2": "here.",
-      "confirmation-warning-text3": "Enter the seed with the requested format to activate the \"Unlock\" button.",
       "seed": "Seed",
       "cancel-button": "Cancel",
       "unlock-button": "Unlock"

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { ISubscription } from 'rxjs/Subscription';
+import { BigNumber } from 'bignumber.js';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { HistoryService } from '../../../../services/wallet/history.service';
@@ -83,9 +84,8 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
       return transaction.transaction;
     })
       .map(transaction => {
-        transaction.amount = transaction.outputs
-          .map(output => output.coins >= 0 ? output.coins : 0)
-          .reduce((a, b) => a + parseFloat(b), 0);
+        transaction.amount = new BigNumber('0');
+        transaction.outputs.map(output => transaction.amount = transaction.amount.plus(output.coins));
         return transaction;
       });
   }
