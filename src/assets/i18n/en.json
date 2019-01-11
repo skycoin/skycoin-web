@@ -271,7 +271,17 @@
     "change" : {
       "url-label": "Node URL (leave empty to use the default URL)",
       "cancel-button": "Cancel",
-      "change-button": "Change"
+      "change-button": "Change",
+      "return-button": "Return",
+      "verify-button": "Verify",
+      "connection-error": "It was not possible to connect to the node. Please check the URL and your internet connection and try again.",
+      "csrf-error": "It is not possible to connect to the specified node since it is configured to use CSRF tokens.",
+      "invalid-version-error": "The specified node is not compatible with this wallet. The node must be updated to at least version 0.24.0.",
+      "node-properties": "Node properties",
+      "coin-name": "Coin",
+      "node-version": "Node version",
+      "last-block": "Last block",
+      "hours-burn-rate": "Hours burn rate"
     }
   },
 

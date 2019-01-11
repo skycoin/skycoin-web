@@ -271,7 +271,17 @@
     "change" : {
       "url-label": "URL del nodo (dejar vacío para usar la URL por defecto)",
       "cancel-button": "Cancelar",
-      "change-button": "Cambiar"
+      "change-button": "Cambiar",
+      "return-button": "Regresar",
+      "verify-button": "Verificar",
+      "connection-error": "No fue posible conectarse con el nodo. Por favor, revise la URL y su conexión a Internet y vuelva a intentarlo.",
+      "csrf-error": "No es posible conectarse al nodo especificado debido a que está configurado para usar tokens CSRF.",
+      "invalid-version-error": "El nodo especificado no es compatible con esta billetera. El nodo debe estar actualizado al menos a la versión 0.24.0.",
+      "node-properties": "Propiedades del nodo",
+      "coin-name": "Moneda",
+      "node-version": "Versión del nodo",
+      "last-block": "Último bloque",
+      "hours-burn-rate": "Tasa de quema de horas"
     }
   },
 
