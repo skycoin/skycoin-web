@@ -1,5 +1,5 @@
 <div class="x-container">
-  <img src="../../../../assets/img/close-grey.png" (click)="close(null)">
+  <img src="assets/img/close-grey.png" (click)="close(null)">
 </div>
 <div class="container">
   <div class="row">
@@ -16,7 +16,7 @@
         <div class="title">{{ section.name | translate }}</div>
         <div class="buttons-container">
           <button mat-button color="accent" class="button" *ngFor="let coin of section.coins" (click)="close(coin)">
-            <img [src]="'../../../../assets/img/coins/' + coin.bigIconName">
+            <img [src]="'assets/img/coins/' + coin.bigIconName">
             <div class="label">{{ coin.coinName }}</div>
           </button>
         </div>
