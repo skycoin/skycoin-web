@@ -4,6 +4,9 @@
 build:
 	npm run build
 
+build-for-local-fs: ## compiles a version to be used from the local file system
+	npm run build-for-local-fs
+
 lint: ## runs lint
 	npm run lint
 

@@ -16,12 +16,12 @@
               <div class="-width-250 -label" [attr.title]="wallet.label">{{ wallet.label }}</div>
               <div class="flex-fill -encryption">
                 <ng-container *ngIf="showLockIcons">
-                  <img src="../../../../assets/img/lock-gold.png"
+                  <img src="assets/img/lock-gold.png"
                     class="-lock"
                     (click)="unlockWallet($event, wallet)"
                     *ngIf="!wallet.seed || wallet.needSeedConfirmation"
                     [matTooltip]="'wallet.locked-tooltip' | translate">
-                  <img src="../../../../assets/img/unlock-grey.png"
+                  <img src="assets/img/unlock-grey.png"
                     *ngIf="wallet.seed && !wallet.needSeedConfirmation"
                     [matTooltip]="'wallet.unlocked-tooltip' | translate">
                 </ng-container>
@@ -29,7 +29,7 @@
               <div class="-width-130 -coins">{{ (wallet.balance ? wallet.balance.decimalPlaces(6).toString() : 0) | number:'1.0-6' }}</div>
               <div class="-width-130 -hours">{{ (wallet.hours ? wallet.hours.decimalPlaces(0).toString() : 0) | number:'1.0-0' }}</div>
               <div class="-expand">
-                <img src="../../../../assets/img/chevron-right-grey.png"
+                <img src="assets/img/chevron-right-grey.png"
                      [ngClass]="{'rotate-270': wallet.opened, 'rotate-90': !wallet.opened}">
               </div>
             </div>
@@ -40,10 +40,10 @@
     </div>
     <div class="action-buttons">
       <button mat-button (click)="addWallet(true)">
-        <img src="../../../../assets/img/plus-gold.png"> {{ 'wallet.add' | translate }}
+        <img src="assets/img/plus-gold.png"> {{ 'wallet.add' | translate }}
       </button>
       <button mat-button (click)="addWallet(false)">
-        <img src="../../../../assets/img/load-gold.png"> {{ 'wallet.load' | translate }}
+        <img src="assets/img/load-gold.png"> {{ 'wallet.load' | translate }}
       </button>
     </div>
   </div>

@@ -9,7 +9,7 @@
       <ng-container *ngFor="let transaction of transactions">
         <div class="-transaction" *ngIf="transaction.balance !== 0" (click)="showTransaction(transaction)">
           <div class="-icon" [ngClass]="{ '-incoming': transaction.balance > 0, '-pending': !transaction.confirmed }">
-            <img src="/assets/img/send-blue.png">
+            <img src="assets/img/send-blue.png">
           </div>
           <div class="-address">
             <h4 *ngIf="transaction.balance < 0 && transaction.confirmed">
@@ -29,7 +29,7 @@
               <span class="-pending">{{ 'history.pending' | translate }}</span>
             </h4>
             <div class="-detail" *ngFor="let address of transaction.addresses">
-              <img class="qr-code-button" src="../../../../assets/img/qr-code-black.png" (click)="showQr($event, address)">
+              <img class="qr-code-button" src="assets/img/qr-code-black.png" (click)="showQr($event, address)">
               <p>{{ address }}</p>
             </div>
           </div>

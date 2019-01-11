@@ -7,6 +7,10 @@ import { CipherWebWorkerHelper, CipherWebWorkerOperation } from '../utils/cipher
 @Injectable()
 export class CipherProvider {
 
+  constructor() {
+    CipherWebWorkerHelper.initialize();
+  }
+
   generateAddress(seed): Observable<Address> {
     return CipherWebWorkerHelper.ExcecuteWorker(CipherWebWorkerOperation.CreateAdress, seed)
       .map((address) => this.convertToAddress(address));

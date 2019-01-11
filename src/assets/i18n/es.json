@@ -172,10 +172,9 @@
     "unlock": {
       "unlock-title": "Desbloquear Billetera",
       "confirmation-warning-title": "Importante: sin la semilla usted perderá el acceso a sus fondos",
-      "confirmation-warning-text1": "Por medidas de seguridad, la semilla de esta billetera no será guardada y frecuentemente se le solicitará antes de enviar transacciones. Si no la resguardó, perderá acceso a los fondos. Para confirmar que ha resguardado la semilla y poder ver las direcciones de esta billetera, por favor vuelva a introducir la semilla en el recuadro de abajo y añádale un signo de interrogación (?) al final.",
+      "confirmation-warning-text1": "Por medidas de seguridad, esta billetera no será guardada y necesitará la semilla para acceder a ella nuevamente después de cerrar/refrescar la pestaña actual del explorador. Si no la resguardó, perderá acceso a los fondos. Para confirmar que ha resguardado la semilla y poder ver las direcciones de esta billetera, por favor vuelva a introducir la semilla en el recuadro de abajo.",
       "confirmation-warning-text2-1": "Si no tiene la semilla, puede borrar la billetera presionando",
       "confirmation-warning-text2-2": "aquí.",
-      "confirmation-warning-text3": "Introduzca la semilla con el formato solicitado para activar el botón \"Desbloquear\".",
       "seed": "Semilla",
       "cancel-button": "Cancelar",
       "unlock-button": "Desbloquear"
@@ -272,7 +271,17 @@
     "change" : {
       "url-label": "URL del nodo (dejar vacío para usar la URL por defecto)",
       "cancel-button": "Cancelar",
-      "change-button": "Cambiar"
+      "change-button": "Cambiar",
+      "return-button": "Regresar",
+      "verify-button": "Verificar",
+      "connection-error": "No fue posible conectarse con el nodo. Por favor, revise la URL y su conexión a Internet y vuelva a intentarlo.",
+      "csrf-error": "No es posible conectarse al nodo especificado debido a que está configurado para usar tokens CSRF.",
+      "invalid-version-error": "El nodo especificado no es compatible con esta billetera. El nodo debe estar actualizado al menos a la versión 0.24.0.",
+      "node-properties": "Propiedades del nodo",
+      "coin-name": "Moneda",
+      "node-version": "Versión del nodo",
+      "last-block": "Último bloque",
+      "hours-burn-rate": "Tasa de quema de horas"
     }
   },
 
