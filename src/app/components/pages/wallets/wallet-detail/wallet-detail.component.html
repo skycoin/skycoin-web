@@ -27,7 +27,7 @@
     <div class="-record" *ngIf="!wallet.hideEmpty || address.balance.isGreaterThan(0)">
       <div class="id-column">{{ i + 1 }}</div>
       <div class="address-column">
-        <img class="qr-code-button" src="../../../../../assets/img/qr-code-black.png" (click)="onShowQr(address)" >
+        <img class="qr-code-button" src="assets/img/qr-code-black.png" (click)="onShowQr(address)" >
         <p class="click-to-copy" [ngClass]="{ copying: address.isCopying }"
             [clipboard]="address.address" (copyEvent)="onCopySuccess(address)" (mouseleave)="address.isCopying = false">
           {{ address.address }} <span [attr.data-label]="'wallet.address.copied' | translate" class="copy-label">{{ 'wallet.address.copy' | translate }}</span>
