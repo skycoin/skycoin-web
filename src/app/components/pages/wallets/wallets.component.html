@@ -5,7 +5,7 @@
     <div *ngIf="!!wallets && wallets.length > 0">
       <div class="-headers">
         <div class="-width-250">{{ 'wallet.wallet' | translate }}</div>
-        <div class="flex-fill">{{ 'wallet.locked' | translate }}</div>
+        <div class="flex-fill"><span *ngIf="showLockIcons">{{ 'wallet.locked' | translate }}</span></div>
         <div class="-width-130 -align-right">{{ currentCoin.coinSymbol }}</div>
         <div class="-width-130 -align-right">{{ currentCoin.hoursName }}</div>
       </div>
