@@ -5,7 +5,7 @@
     <div *ngIf="!!wallets && wallets.length > 0">
       <div class="-headers">
         <div class="-width-250">{{ 'wallet.wallet' | translate }}</div>
-        <div class="flex-fill">{{ 'wallet.locked' | translate }}</div>
+        <div class="flex-fill"><span *ngIf="showLockIcons">{{ 'wallet.locked' | translate }}</span></div>
         <div class="-width-130 -align-right">{{ currentCoin.coinSymbol }}</div>
         <div class="-width-130 -align-right">{{ currentCoin.hoursName }}</div>
       </div>
@@ -15,14 +15,16 @@
             <div class="-wallet" (click)="toggleWallet(wallet)">
               <div class="-width-250 -label" [attr.title]="wallet.label">{{ wallet.label }}</div>
               <div class="flex-fill -encryption">
-                <img src="assets/img/lock-gold.png"
-                  class="-lock"
-                  (click)="unlockWallet($event, wallet)"
-                  *ngIf="!wallet.seed || wallet.needSeedConfirmation"
-                  [matTooltip]="'wallet.locked-tooltip' | translate">
-                <img src="assets/img/unlock-grey.png"
-                  *ngIf="wallet.seed && !wallet.needSeedConfirmation"
-                  [matTooltip]="'wallet.unlocked-tooltip' | translate">
+                <ng-container *ngIf="showLockIcons">
+                  <img src="assets/img/lock-gold.png"
+                    class="-lock"
+                    (click)="unlockWallet($event, wallet)"
+                    *ngIf="!wallet.seed || wallet.needSeedConfirmation"
+                    [matTooltip]="'wallet.locked-tooltip' | translate">
+                  <img src="assets/img/unlock-grey.png"
+                    *ngIf="wallet.seed && !wallet.needSeedConfirmation"
+                    [matTooltip]="'wallet.unlocked-tooltip' | translate">
+                </ng-container>
               </div>
               <div class="-width-130 -coins">{{ (wallet.balance ? wallet.balance.decimalPlaces(6).toString() : 0) | number:'1.0-6' }}</div>
               <div class="-width-130 -hours">{{ (wallet.hours ? wallet.hours.decimalPlaces(0).toString() : 0) | number:'1.0-0' }}</div>
