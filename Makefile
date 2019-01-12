@@ -4,6 +4,9 @@
 build:
 	npm run build
 
+build-for-local-fs: ## compiles a version to be used from the local file system
+	npm run build-for-local-fs
+
 lint: ## runs lint
 	npm run lint
 
@@ -37,10 +40,13 @@ run-docker: ## runs docker container
 stop-docker: ## stops docker container
 	docker stop skycoin-backend
 
-e2e-test: ## runs e2e tests
+e2e-test: ## runs e2e tests using a node running in Docker
 	npm run e2e-docker
 
-check: run-docker lint unit-test e2e-test stop-docker ## runs linter, unit tests, e2e tests
+e2e-prod-test: ## runs e2e prod tests using a node running in Docker
+	npm run e2e-docker-prod
+
+check: run-docker lint unit-test e2e-test e2e-prod-test stop-docker ## runs linter, unit tests, e2e tests
 
 prepare-electron-requirements: ## Creates the necessary files to be able to package the wallet with Electron
 	cd electron; ./build-server.sh
