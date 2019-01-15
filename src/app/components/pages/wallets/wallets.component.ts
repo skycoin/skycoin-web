@@ -10,6 +10,7 @@ import { openUnlockWalletModal, openDeleteWalletModal } from '../../../utils/ind
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
 import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-wallets',
@@ -20,6 +21,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
 
   wallets: Wallet[];
   currentCoin: BaseCoin;
+  showLockIcons: boolean;
 
   private subscription: Subscription;
   private confirmSeedSubscription: Subscription;
@@ -30,7 +32,9 @@ export class WalletsComponent implements OnInit, OnDestroy {
     private dialog: CustomMatDialogService,
     private coinService: CoinService,
     private translateService: TranslateService
-  ) {}
+  ) {
+    this.showLockIcons = !environment.production;
+  }
 
   ngOnInit() {
     this.subscription = this.walletService.currentWallets.subscribe( (wallets) => {

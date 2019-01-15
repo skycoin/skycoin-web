@@ -38,11 +38,11 @@ export class QrCodeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.btnImg.nativeElement.src = '../../../../assets/img/copy-qr.png';
+    this.btnImg.nativeElement.src = 'assets/img/copy-qr.png';
   }
 
   onCopySuccess() {
-    this.btnImg.nativeElement.src = '../../../../assets/img/copy-qr-success.png';
+    this.btnImg.nativeElement.src = 'assets/img/copy-qr-success.png';
 
     this.isCopying = true;
 

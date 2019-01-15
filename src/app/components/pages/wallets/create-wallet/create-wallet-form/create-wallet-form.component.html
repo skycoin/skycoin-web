@@ -20,7 +20,7 @@
     </label>
     <div class="-valid-box">
       <textarea formControlName="seed" id="seed" row="2"></textarea>
-      <img *ngIf="!create" class="-valid" src="../../../../../assets/img/valid.png">
+      <img *ngIf="!create" class="-valid" src="assets/img/valid.png">
     </div>
     <p [ngClass]="{'red-disclaimer-box': !whiteText, 'white-disclaimer-box': whiteText}" *ngIf="create">
       {{ 'wallet.new.seed-warning' | translate}}
@@ -32,7 +32,7 @@
     <label for="confirm_seed">{{ 'wallet.new.confirm-seed-label' | translate}}</label>
     <div class="-valid-box">
       <textarea formControlName="confirm_seed" id="confirm_seed" row="2"></textarea>
-      <img class="-valid" src="../../../../../assets/img/valid.png">
+      <img class="-valid" src="assets/img/valid.png">
     </div>
   </div>
 </div>

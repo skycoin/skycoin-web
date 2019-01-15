@@ -18,7 +18,7 @@
           <div class="-row -not-on-small-and-below" *ngFor="let transaction of transactions">
             <div class="flex-fill -txid">{{ transaction.txid }}</div>
             <div class="-width-150">{{ transaction.timestamp | dateTime }}</div>
-            <div class="-width-150 -coins">{{ (transaction.amount ? transaction.amount : 0) | number:'1.0-6' }}</div>
+            <div class="-width-150 -coins">{{ (transaction.amount ? transaction.amount.decimalPlaces(6).toString() : 0) | number:'1.0-6' }}</div>
           </div>
           <div class="-row -on-small-and-below-only" *ngFor="let transaction of transactions">
             <div class="small-screen-list-container">
