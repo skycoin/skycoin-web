@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     this.languageService.loadLanguageSettings();
 
     window.onbeforeunload = (e) => {
-      if (environment.production) {
+      if (environment.production && !environment.e2eTest) {
         e.preventDefault();
         e.returnValue = '';
       }
