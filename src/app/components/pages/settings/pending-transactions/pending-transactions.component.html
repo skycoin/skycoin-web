@@ -31,8 +31,8 @@
                 <div class="-one-line-ellipsis">{{ transaction.timestamp | dateTime }}</div>
               </div>
               <div class="list-row">
-                <div class="element-label">{{ currentCoin.hoursName }}:</div>
-                <div class="-one-line-ellipsis">{{ (transaction.amount ? transaction.amount : 0) | number:'1.0-6' }}</div>
+                <div class="element-label">{{ currentCoin.coinSymbol }}:</div>
+                <div class="-one-line-ellipsis">{{ (transaction.amount ? transaction.amount.decimalPlaces(6).toString() : 0) | number:'1.0-6' }}</div>
               </div>
             </div>
           </div>
