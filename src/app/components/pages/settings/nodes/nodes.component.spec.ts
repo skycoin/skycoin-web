@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { NodesComponent } from './nodes.component';
-import { MockTranslatePipe, MockCoinService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockCoinService, MockCustomMatDialogService } from '../../../../utils/test-mocks';
 import { CoinService } from '../../../../services/coin.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 describe('NodesComponent', () => {
   let component: NodesComponent;
@@ -15,8 +15,8 @@ describe('NodesComponent', () => {
       declarations: [ NodesComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: MatDialog, useValue: {} },
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ]
     })
     .compileComponents();

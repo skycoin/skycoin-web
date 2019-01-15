@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatSnackBarModule, MatDialog } from '@angular/material';
+import { MatSnackBarModule } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
@@ -8,7 +8,8 @@ import { WalletService } from '../../../../services/wallet/wallet.service';
 import { SpendingService } from '../../../../services/wallet/spending.service';
 import { CoinService } from '../../../../services/coin.service';
 import { BlockchainService } from '../../../../services/blockchain.service';
-import { MockTranslatePipe, MockWalletService, MockSpendingService, MockMatSnackBar, MockCoinService, MockBlockchainService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockSpendingService, MockCoinService, MockBlockchainService, MockCustomMatDialogService } from '../../../../utils/test-mocks';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 describe('SendFormComponent', () => {
   let component: SendFormComponent;
@@ -23,9 +24,9 @@ describe('SendFormComponent', () => {
         FormBuilder,
         { provide: WalletService, useClass: MockWalletService },
         { provide: SpendingService, useClass: MockSpendingService },
-        { provide: MatDialog, useClass: MockMatSnackBar },
         { provide: CoinService, useClass: MockCoinService },
-        { provide: BlockchainService, useClass: MockBlockchainService }
+        { provide: BlockchainService, useClass: MockBlockchainService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService },
       ]
     }).compileComponents();
   }));

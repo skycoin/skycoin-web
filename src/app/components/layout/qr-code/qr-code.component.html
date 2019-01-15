@@ -1,12 +1,38 @@
 <app-modal [headline]="'title.qr-code' | translate" [dialog]="dialogRef">
   <div #qr id="qr"></div>
-  <div class="row -address-footer">
-    <span>{{ address }}</span>
+  <div class="row header-sel-theme -address-footer">
+    <span class="-not-on-small-and-below">{{ address }}</span>
     <img
-        #btnImg
-        class="-button-qr"
-        [matTooltip]="'qr-code.copy-address' | translate"
-        [clipboard]="address"
-        (copyEvent)="onCopySuccess()">
+      #btnImg
+      class="-button-qr -not-on-small-and-below"
+      [matTooltip]="'qr-code.copy-address' | translate"
+      [clipboard]="address"
+      (copyEvent)="onCopySuccess()">
+    <button
+      mat-button
+      color="accent"
+      class="mobile-button -on-small-and-below-only"
+      [clipboard]="address"
+      (copyEvent)="onCopySuccess()"
+      (mouseleave)="isCopying = false">
+      <div>
+        <div class="label">{{ address }}</div>
+        <div class="copy-label link">
+          {{ 'wallet.address.copy' | translate }}
+        </div>
+        <div class="copying-label link" [ngClass]="{ copying: isCopying }">{{'wallet.address.copied' | translate}}</div>
+      </div>
+    </button>
+    <div class="mobile-buttons-separator -on-small-and-below-only" *ngIf="showOutputsOption"></div>
+    <button
+      mat-button
+      color="accent"
+      class="mobile-button -on-small-and-below-only"
+      *ngIf="showOutputsOption"
+      routerLink="/settings/outputs"
+      [queryParams]="{ addr: address }"
+      (click)="closePopup()">
+      <div class="label link">{{ 'wallet.address.outputs' | translate }}</div>
+    </button>
   </div>
 </app-modal>

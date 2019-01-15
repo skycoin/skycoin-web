@@ -2,7 +2,6 @@ import { Component, Input, OnInit, OnDestroy, Renderer2, ViewChild, NgZone } fro
 import 'rxjs/add/observable/interval';
 import { Subscription } from 'rxjs/Subscription';
 import { Overlay } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs/Observable';
 
 import { BalanceService, BalanceStates } from '../../../../services/wallet/balance.service';
@@ -10,6 +9,7 @@ import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { openChangeCoinModal, openChangeLanguageModal, getTimeSinceLastBalanceUpdate } from '../../../../utils';
 import { LanguageService, LanguageData } from '../../../../services/language.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -31,7 +31,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   constructor(private balanceService: BalanceService,
               private coinService: CoinService,
-              private dialog: MatDialog,
+              private dialog: CustomMatDialogService,
               private overlay: Overlay,
               private renderer: Renderer2,
               private languageService: LanguageService,

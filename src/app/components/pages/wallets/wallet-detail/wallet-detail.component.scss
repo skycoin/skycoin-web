@@ -12,14 +12,39 @@
   padding: 21px 20px 16px 20px;
   align-items: center;
 
+  @media (max-width: $max-small-width) {
+    & {
+      padding: 21px 35px 16px 20px;
+      cursor: pointer;
+    }
+
+    &:hover {
+      background-color: darken($white, 3%);
+    }
+  }
+
   &:not(:last-of-type) {
     border-bottom: 1px solid $grey-very-light;
+  }
+
+  .mobile-label-container {
+    display: flex;
   }
 
   .id-column {
     width: 50px;
     color: $grey;
     flex-shrink: 0;
+
+    @media (max-width: $max-small-width) {
+      & {
+        width: 25px;
+      }
+    }
+  }
+
+  .address {
+    color: $grey;
   }
 
   .address-column {
@@ -49,18 +74,36 @@
     }
   }
 
-  .hours-column {
-    color: $grey;
+  .data-column {
     width: 130px;
     text-align: right;
     flex-shrink: 0;
+
+    @media (max-width: $max-small-width) {
+      & {
+        width: 115px;
+        margin-left: 10px;
+        overflow: hidden;
+        word-break: break-word;
+        line-height: 1.2;
+        max-height: 60px;
+        align-self: center;
+      }
+    }
+  
+    @media (max-width: $max-very-small-width) {
+      & {
+        width: 70px;
+      }
+    }
   }
 
-  .coins-column {
+  .-hours-column {
+    color: $grey;
+  }
+
+  .-coins-column {
     color: $grey-dark;
-    width: 130px;
-    text-align: right;
-    flex-shrink: 0;
   }
 
   .options-column {
@@ -83,8 +126,8 @@
   > img {
     display: inline-block;
     margin-left: 0;
-    height: $row-detail-size;
-    width: $row-detail-size;
+    height: $normal-row-detail-size;
+    width: $normal-row-detail-size;
   }
 }
 
@@ -104,6 +147,10 @@
 
     &:first-child {
       padding-left: 5px;
+    }
+
+    &:last-child {
+      padding-right: 10px;
     }
 
     .-enabled-span {
@@ -152,6 +199,10 @@
         background-image: url(../../../../../assets/img/delete-grey.png);
       }
 
+      &.-btn-options::before {
+        background-image: url(../../../../../assets/img/options-grey.png);
+      }
+
       &:hover {
 
         &.-btn-plus::before {
@@ -168,6 +219,10 @@
 
         &.-btn-delete::before {
           background-image: url(../../../../../assets/img/delete-red.png);
+        }
+
+        &.-btn-options::before {
+          background-image: url(../../../../../assets/img/options-blue.png);
         }
       }
     }

@@ -3,7 +3,8 @@
     "loading": "Loading...",
     "new": "New",
     "load": "Load",
-    "address": "Address"
+    "address": "Address",
+    "close": "Close"
   },
 
   "errors": {
@@ -35,7 +36,7 @@
     "seed": "Wallet Seed",
     "qrcode": "QR Code",
     "disclaimer": "Disclaimer",
-    "qr-code": "View QR Code"
+    "qr-code": "Address"
   },
 
   "header": {
@@ -128,6 +129,7 @@
     "decrypt": "Decrypt Wallet",
     "edit": "Edit Wallet",
     "delete" : "Delete Wallet",
+    "options" : "Options",
     "add": "Add Wallet",
     "load": "Load Wallet",
     "locked": "Locked",
@@ -138,6 +140,7 @@
     "delete-confirmation2": "will be deleted. If you forget your seed, you will not be able to recover this wallet! Do you want to continue?",
     "delete-confirmation-check": "Yeah, I want to delete the wallet.",
     "add-confirmation": "If you add more addresses, the process of unlocking the wallet to perform certain operations will take more time. Do you want to continue?",
+    "already-adding-address-error": "An address is already being added. Please wait.",
 
     "new": {
       "create-title": "Create Wallet",
@@ -250,6 +253,10 @@
     "total-supply": "Total {{ coin }} supply"
   },
 
+  "outputs": {
+    "hash": "Hash"
+  },
+
   "network": {
     "automatic-peers": "Automatic peers",
     "default-peers": "Default peers"
@@ -258,9 +265,11 @@
   "pending-txs": {
     "timestamp": "Timestamp",
     "txid": "Transaction ID",
+    "id": "ID",
     "none": "Currently there are no pending transactions",
     "my": "Mine",
-    "all": "All"
+    "all": "All",
+    "transactions": "Transactions"
   },
 
   "nodes" : {
@@ -268,6 +277,7 @@
     "url": "Node URL",
     "custom-label": "Custom URL",
     "change-url": "Change URL",
+    "nodes": "Nodes",
 
     "change" : {
       "url-label": "Node URL (leave empty to use the default URL)",

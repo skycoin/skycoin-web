@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,6 +12,7 @@ import { openChangeLanguageModal, showConfirmationModal, scanAddresses } from '.
 import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 import { ConfirmationData, Wallet } from '../../../../app.datatypes';
 import { BlockchainService } from '../../../../services/blockchain.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -29,7 +29,7 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   creatingWallet = false;
 
   constructor(
-    private dialog: MatDialog,
+    private dialog: CustomMatDialogService,
     private walletService: WalletService,
     private router: Router,
     private snackBar: MatSnackBar,

@@ -32,6 +32,8 @@ export class SendSkycoinComponent implements OnInit, OnDestroy {
   onFormSubmitted(data) {
     this.formData = data;
     this.showForm = false;
+
+    this.goUp();
   }
 
   onBack(deleteFormData) {
@@ -43,6 +45,8 @@ export class SendSkycoinComponent implements OnInit, OnDestroy {
     setTimeout(() => this.restarting = false, 0);
 
     this.showForm = true;
+
+    this.goUp();
   }
 
   get transaction() {
@@ -53,5 +57,9 @@ export class SendSkycoinComponent implements OnInit, OnDestroy {
     transaction.balance = this.formData.amount;
 
     return transaction;
+  }
+
+  private goUp() {
+    window.scrollTo(0, 0);
   }
 }

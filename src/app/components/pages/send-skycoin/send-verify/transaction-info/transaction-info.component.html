@@ -3,6 +3,11 @@
     <h4 *ngIf="isPreview">{{ 'tx.confirm-transaction' | translate }}</h4>
     <h4 *ngIf="!isPreview">{{ 'tx.transaction' | translate }}</h4>
     <div class="row">
+
+      <div class="-tx-price -on-small-and-below-only">
+        <ng-container *ngTemplateOutlet="priceContents"></ng-container>
+      </div>
+
       <div class="col-md-9 -tx-meta">
         <ng-container *ngIf="isPreview">
           <div class="-data">
@@ -33,15 +38,19 @@
         </div>
       </div>
 
-      <div class="col-md-3 -tx-price">
+      <div class="col-md-3 -tx-price -not-on-small-and-below">
+        <ng-container *ngTemplateOutlet="priceContents"></ng-container>
+      </div>
+
+      <ng-template #priceContents>
         <div class="-icon" [ngClass]="{ '-incoming': !isPreview && transaction.balance && transaction.balance.isGreaterThan(0) }">
-          <img src="/assets/img/send-blue.png">
+          <img src="assets/img/send-blue.png">
         </div>
         <h4 *ngIf="transaction.balance">{{ transaction.balance.decimalPlaces(6).toString() | number:'1.0-6' }} {{ currentCoin.coinSymbol }}</h4>
         <p *ngIf="price" [matTooltip]="!isPreview ? ('history.price-tooltip' | translate) : ''">
           {{ transaction.balance * price | currency:'USD':'symbol':'1.2-2' }}<span *ngIf="!isPreview">*</span>
         </p>
-      </div>
+      </ng-template>
     </div>
     <div class="-data -more" *ngIf="!showInputsOutputs">
       <span (click)="toggleInputsOutputs($event)">

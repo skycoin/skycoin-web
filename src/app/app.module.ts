@@ -80,6 +80,8 @@ import { ScanAddressesComponent } from './components/pages/wallets/scan-addresse
 import { NodesComponent } from './components/pages/settings/nodes/nodes.component';
 import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change-url/change-node-url.component';
 import { GlobalsService } from './services/globals.service';
+import { WalletOptionsComponent } from './components/pages/wallets/wallet-detail/wallet-options/wallet-options.component';
+import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 
 @NgModule({
   declarations: [
@@ -122,7 +124,8 @@ import { GlobalsService } from './services/globals.service';
     CreateWalletFormComponent,
     ScanAddressesComponent,
     NodesComponent,
-    ChangeNodeURLComponent
+    ChangeNodeURLComponent,
+    WalletOptionsComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -135,7 +138,8 @@ import { GlobalsService } from './services/globals.service';
     SelectCoinOverlayComponent,
     SelectLanguageComponent,
     ScanAddressesComponent,
-    ChangeNodeURLComponent
+    ChangeNodeURLComponent,
+    WalletOptionsComponent
   ],
   imports: [
     BrowserModule,
@@ -183,7 +187,8 @@ import { GlobalsService } from './services/globals.service';
     BalanceService,
     HistoryService,
     SpendingService,
-    GlobalsService
+    GlobalsService,
+    CustomMatDialogService
   ],
   bootstrap: [AppComponent],
 })

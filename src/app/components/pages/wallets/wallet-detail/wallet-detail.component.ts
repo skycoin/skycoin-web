@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -8,6 +8,8 @@ import { WalletService } from '../../../../services/wallet/wallet.service';
 import { ChangeNameComponent } from '../change-name/change-name.component';
 import { openUnlockWalletModal, openQrModal, showConfirmationModal, openDeleteWalletModal } from '../../../../utils/index';
 import { Subscription } from 'rxjs/Subscription';
+import { WalletOptionsComponent, WalletOptionsResponses } from './wallet-options/wallet-options.component';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -23,7 +25,7 @@ export class WalletDetailComponent implements OnDestroy {
 
   constructor(
     private walletService: WalletService,
-    private dialog: MatDialog,
+    private dialog: CustomMatDialogService,
     private snackBar: MatSnackBar,
     private translateService: TranslateService
   ) {}
@@ -34,7 +36,13 @@ export class WalletDetailComponent implements OnDestroy {
   }
 
   onShowQr(address: Address) {
-    openQrModal(this.dialog, address.address);
+    openQrModal(this.dialog, address.address, true);
+  }
+
+  onShowQrIfPointer(component: HTMLDivElement, address: Address) {
+    if (getComputedStyle(component).cursor === 'pointer') {
+      this.onShowQr(address);
+    }
   }
 
   onEditWallet() {
@@ -42,6 +50,23 @@ export class WalletDetailComponent implements OnDestroy {
     config.width = '566px';
     config.data = this.wallet;
     this.dialog.open(ChangeNameComponent, config);
+  }
+
+  onShowOptions() {
+    const config = new MatDialogConfig();
+    config.width = '566px';
+    config.autoFocus = false;
+    this.dialog.open(WalletOptionsComponent, config).afterClosed().subscribe((response: WalletOptionsResponses | null) => {
+      if (response != null && response !== undefined) {
+        if (response === WalletOptionsResponses.AddNewAddress) {
+          this.onAddNewAddress();
+        } else if (response === WalletOptionsResponses.EditWallet) {
+          this.onEditWallet();
+        } else if (response === WalletOptionsResponses.DeleteWallet) {
+          this.onDeleteWallet();
+        }
+      }
+    });
   }
 
   onAddNewAddress() {
@@ -96,6 +121,14 @@ export class WalletDetailComponent implements OnDestroy {
   }
 
   private addNewAddress() {
+    if (this.creatingAddress === true) {
+      const config = new MatSnackBarConfig();
+      config.duration = 5000;
+      this.snackBar.open(this.translateService.instant('wallet.already-adding-address-error'), null, config);
+
+      return;
+    }
+
     this.creatingAddress = true;
 
     setTimeout(() => {

@@ -1,5 +1,5 @@
 import { Component, Inject, ViewChild, OnDestroy } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -11,6 +11,7 @@ import { CreateWalletFormComponent } from './create-wallet-form/create-wallet-fo
 import { Wallet } from '../../../../app.datatypes';
 import { scanAddresses } from '../../../../utils';
 import { BlockchainService } from '../../../../services/blockchain.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-create-wallet',
@@ -31,7 +32,7 @@ export class CreateWalletComponent implements OnDestroy {
     private coinService: CoinService,
     private blockchainService: BlockchainService,
     private translate: TranslateService,
-    private dialog: MatDialog
+    private dialog: CustomMatDialogService
   ) { }
 
   ngOnDestroy() {

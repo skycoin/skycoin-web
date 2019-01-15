@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { ISubscription, Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
@@ -14,6 +14,7 @@ import { openUnlockWalletModal } from '../../../../utils/index';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
 import { BlockchainService } from '../../../../services/blockchain.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-send-form',
@@ -37,7 +38,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
     private walletService: WalletService,
     private spendingService: SpendingService,
     private snackbar: MatSnackBar,
-    private unlockDialog: MatDialog,
+    private unlockDialog: CustomMatDialogService,
     private coinService: CoinService,
     private blockchainService: BlockchainService
   ) {}

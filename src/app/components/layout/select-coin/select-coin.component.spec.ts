@@ -4,8 +4,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { SelectCoinComponent } from './select-coin.component';
+import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
+import { MockCustomMatDialogService } from '../../../utils/test-mocks';
 
-describe('ChooseCoinComponent', () => {
+describe('SelectCoinComponent', () => {
   let component: SelectCoinComponent;
   let fixture: ComponentFixture<SelectCoinComponent>;
 
@@ -15,6 +17,9 @@ describe('ChooseCoinComponent', () => {
       imports: [
         FormsModule,
         MatDialogModule
+      ],
+      providers: [
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ],
     })

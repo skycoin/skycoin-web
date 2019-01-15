@@ -3,7 +3,8 @@
     "loading": "Cargando...",
     "new": "Nueva",
     "load": "Cargar",
-    "address": "Dirección"
+    "address": "Dirección",
+    "close": "Cerrar"
   },
 
   "errors": {
@@ -35,7 +36,7 @@
     "seed": "Semilla de la Billetera",
     "qrcode": "Código QR",
     "disclaimer": "Nota Legal",
-    "qr-code": "Ver Código QR"
+    "qr-code": "Dirección"
   },
 
   "header": {
@@ -128,6 +129,7 @@
     "decrypt": "Desencriptar Billetera",
     "edit": "Editar Billetera",
     "delete" : "Borrar Billetera",
+    "options" : "Opciones",
     "add": "Agregar Billetera",
     "load": "Cargar Billetera",
     "locked": "Bloqueada",
@@ -138,6 +140,7 @@
     "delete-confirmation2": "será eliminada. ¡Si olvida su semilla, no podrá recuperar esta billetera! ¿Desea continuar?",
     "delete-confirmation-check": "Sí, quiero eliminar la billetera.",
     "add-confirmation": "Si agrega más direcciones, el proceso de desbloquear la billetera para realizar ciertas operaciones tardará más. ¿Desea continuar?",
+    "already-adding-address-error": "Ya se está agregando una dirección. Por favor, espere.",
 
     "new": {
       "create-title": "Crear Billetera",
@@ -250,6 +253,10 @@
     "total-supply": "Suministro de {{ coin }} total"
   },
 
+  "outputs": {
+    "hash": "Hash"
+  },
+
   "network": {
     "automatic-peers": "Pares automáticos",
     "default-peers": "Pares por defecto"
@@ -258,9 +265,11 @@
   "pending-txs": {
     "timestamp": "Fecha",
     "txid": "ID de la transacción",
+    "id": "ID",
     "none": "Actualmente no hay transacciones pendientes",
     "my": "Mías",
-    "all": "Todas"
+    "all": "Todas",
+    "transactions": "Transacciones"
   },
 
   "nodes" : {
@@ -268,6 +277,7 @@
     "url": "URL del nodo",
     "custom-label": "URL personalizada",
     "change-url": "Cambiar la URL",
+    "nodes": "Nodos",
 
     "change" : {
       "url-label": "URL del nodo (dejar vacío para usar la URL por defecto)",

@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogConfig } from '@angular/material/dialog';
 
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { ChangeNodeURLComponent } from './change-url/change-node-url.component';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-nodes',
@@ -17,7 +18,7 @@ export class NodesComponent implements OnInit {
 
   constructor(
     private coinService: CoinService,
-    private dialog: MatDialog,
+    private dialog: CustomMatDialogService,
   ) {}
 
   ngOnInit() {
