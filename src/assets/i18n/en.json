@@ -4,7 +4,8 @@
     "new": "New",
     "load": "Load",
     "address": "Address",
-    "close": "Close"
+    "close": "Close",
+    "slow-on-mobile": "Please wait. This process may take a minute or more on some mobile devices and slow PCs."
   },
 
   "errors": {

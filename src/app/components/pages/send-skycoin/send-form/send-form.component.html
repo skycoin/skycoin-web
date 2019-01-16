@@ -22,6 +22,10 @@
     <input formControlName="amount" id="amount" [placeholder]="currentCoin.coinSymbol" (keydown.enter)="onVerify($event)">
   </div>
 
+  <div class="form-field -on-small-and-below-only" *ngIf="showSlowMobileInfo">
+    <label class="slow-mobile-info">{{ 'common.slow-on-mobile' | translate}}</label>
+  </div>
+
   <div class="-buttons">
     <app-button #button (action)="onVerify()" class="primary" [disabled]="!form.valid">{{ 'send.verify-button' | translate }}</app-button>
   </div>

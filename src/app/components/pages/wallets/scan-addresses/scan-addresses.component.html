@@ -6,5 +6,9 @@
   <div class="-body">
     {{ 'wallet.scan.message' | translate }} {{ progress.addressesFound }}
   </div>
+
+  <div class="form-field -margin-top -on-small-and-below-only" *ngIf="showSlowMobileInfo">
+    <label class="slow-mobile-info">{{ 'common.slow-on-mobile' | translate}}</label>
+  </div>
   
 </app-modal>

@@ -4,7 +4,8 @@
     "new": "Nueva",
     "load": "Cargar",
     "address": "Dirección",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "slow-on-mobile": "Por favor, espere. Este proceso puede tardar un minuto o más en algunos dispositivos móviles y Pcs lentos."
   },
 
   "errors": {

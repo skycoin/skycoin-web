@@ -1,5 +1,6 @@
 export const config = {
   otcEnabled: false,
+  timeBeforeSlowMobileInfo: 7000,
 
   languages: [{
       code: 'en',

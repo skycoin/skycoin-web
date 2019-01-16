@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService, ScanProgressData } from '../../../../services/wallet/wallet.service';
+import { config } from '../../../../app.config';
 
 @Component({
   selector: 'app-scan-addresses',
@@ -14,8 +14,10 @@ import { WalletService, ScanProgressData } from '../../../../services/wallet/wal
 })
 export class ScanAddressesComponent implements OnInit, OnDestroy {
   progress = new ScanProgressData();
+  showSlowMobileInfo = false;
 
   private subscription: Subscription;
+  private slowInfoSubscription: ISubscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: Wallet,
@@ -29,6 +31,7 @@ export class ScanAddressesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.removeSlowInfoSubscription();
   }
 
   closePopup(result = null) {
@@ -36,8 +39,13 @@ export class ScanAddressesComponent implements OnInit, OnDestroy {
   }
 
   scan() {
+    this.createSlowInfoSubscription();
+
     const onProgressChanged = new EventEmitter<ScanProgressData>();
-    this.subscription = onProgressChanged.subscribe((progress: ScanProgressData) => this.progress = progress);
+    this.subscription = onProgressChanged.subscribe((progress: ScanProgressData) => {
+      this.createSlowInfoSubscription();
+      this.progress = progress;
+    });
 
     this.subscription.add(this.walletService.scanAddresses(this.data, onProgressChanged)
       .subscribe(
@@ -45,5 +53,18 @@ export class ScanAddressesComponent implements OnInit, OnDestroy {
         (error: Error) => this.closePopup(error)
       )
     );
+  }
+
+  private createSlowInfoSubscription() {
+    this.removeSlowInfoSubscription();
+
+    this.slowInfoSubscription = Observable.of(1).delay(config.timeBeforeSlowMobileInfo)
+      .subscribe(() => this.showSlowMobileInfo = true);
+  }
+
+  private removeSlowInfoSubscription() {
+    if (this.slowInfoSubscription) {
+      this.slowInfoSubscription.unsubscribe();
+    }
   }
 }

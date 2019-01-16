@@ -1,7 +1,8 @@
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
-import { TemplateRef } from '@angular/core';
+import { TemplateRef, Injectable } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 
+@Injectable()
 export class CustomMatDialogService extends MatDialog {
   open<T, D>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: MatDialogConfig<D>, ignoreAppStyle?: boolean): MatDialogRef<T, any> {
     if (!ignoreAppStyle) {
