@@ -142,6 +142,7 @@
     "delete-confirmation-check": "Sí, quiero eliminar la billetera.",
     "add-confirmation": "Si agrega más direcciones, el proceso de desbloquear la billetera para realizar ciertas operaciones tardará más. ¿Desea continuar?",
     "already-adding-address-error": "Ya se está agregando una dirección. Por favor, espere.",
+    "adding-address": "Agregando dirección.",
 
     "new": {
       "create-title": "Crear Billetera",

@@ -142,6 +142,7 @@
     "delete-confirmation-check": "Yeah, I want to delete the wallet.",
     "add-confirmation": "If you add more addresses, the process of unlocking the wallet to perform certain operations will take more time. Do you want to continue?",
     "already-adding-address-error": "An address is already being added. Please wait.",
+    "adding-address": "Adding address.",
 
     "new": {
       "create-title": "Create Wallet",

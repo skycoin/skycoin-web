@@ -293,3 +293,14 @@ mat-spinner {
   margin-left: 7px;
   margin-right: 12px;
 }
+
+.-small-adding-addess-msg-container {
+  place-content: center;
+  cursor: unset !important;
+
+  @media (max-width: $max-small-width) {
+    &:hover {
+      background-color: darken($white, 2%) !important;
+    }
+  }
+}

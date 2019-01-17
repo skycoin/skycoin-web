@@ -2,14 +2,16 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
 
 import { ConfirmationData, Wallet, Address } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { ChangeNameComponent } from '../change-name/change-name.component';
 import { openUnlockWalletModal, openQrModal, showConfirmationModal, openDeleteWalletModal } from '../../../../utils/index';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
 import { WalletOptionsComponent, WalletOptionsResponses } from './wallet-options/wallet-options.component';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
+import { config } from '../../../../app.config';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -20,8 +22,10 @@ export class WalletDetailComponent implements OnDestroy {
   @Input() wallet: Wallet;
 
   creatingAddress = false;
+  showSlowMobileInfo = false;
 
   private unlockSubscription: Subscription;
+  private slowInfoSubscription: ISubscription;
 
   constructor(
     private walletService: WalletService,
@@ -33,6 +37,7 @@ export class WalletDetailComponent implements OnDestroy {
   ngOnDestroy() {
     this.snackBar.dismiss();
     this.removeUnlockSubscription();
+    this.removeSlowInfoSubscription();
   }
 
   onShowQr(address: Address) {
@@ -46,17 +51,17 @@ export class WalletDetailComponent implements OnDestroy {
   }
 
   onEditWallet() {
-    const config = new MatDialogConfig();
-    config.width = '566px';
-    config.data = this.wallet;
-    this.dialog.open(ChangeNameComponent, config);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '566px';
+    dialogConfig.data = this.wallet;
+    this.dialog.open(ChangeNameComponent, dialogConfig);
   }
 
   onShowOptions() {
-    const config = new MatDialogConfig();
-    config.width = '566px';
-    config.autoFocus = false;
-    this.dialog.open(WalletOptionsComponent, config).afterClosed().subscribe((response: WalletOptionsResponses | null) => {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '566px';
+    dialogConfig.autoFocus = false;
+    this.dialog.open(WalletOptionsComponent, dialogConfig).afterClosed().subscribe((response: WalletOptionsResponses | null) => {
       if (response != null && response !== undefined) {
         if (response === WalletOptionsResponses.AddNewAddress) {
           this.onAddNewAddress();
@@ -122,35 +127,50 @@ export class WalletDetailComponent implements OnDestroy {
 
   private addNewAddress() {
     if (this.creatingAddress === true) {
-      const config = new MatSnackBarConfig();
-      config.duration = 5000;
-      this.snackBar.open(this.translateService.instant('wallet.already-adding-address-error'), null, config);
+      const snackBarConfig = new MatSnackBarConfig();
+      snackBarConfig.duration = 5000;
+      this.snackBar.open(this.translateService.instant('wallet.already-adding-address-error'), null, snackBarConfig);
 
       return;
     }
 
     this.creatingAddress = true;
 
+    this.slowInfoSubscription = Observable.of(1).delay(config.timeBeforeSlowMobileInfo)
+      .subscribe(() => this.showSlowMobileInfo = true);
+
     setTimeout(() => {
       this.walletService.addAddress(this.wallet)
         .subscribe(
-          () => { this.creatingAddress = false; },
+          () => {
+            this.showSlowMobileInfo = false;
+            this.removeSlowInfoSubscription();
+            this.creatingAddress = false;
+          },
           (error: Error) => this.onAddAddressError(error)
         );
     }, 0);
   }
 
   private onAddAddressError(error: Error) {
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
     this.creatingAddress = false;
 
-    const config = new MatSnackBarConfig();
-    config.duration = 5000;
-    this.snackBar.open(error.message, null, config);
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 5000;
+    this.snackBar.open(error.message, null, snackBarConfig);
   }
 
   private removeUnlockSubscription() {
     if (this.unlockSubscription) {
       this.unlockSubscription.unsubscribe();
+    }
+  }
+
+  private removeSlowInfoSubscription() {
+    if (this.slowInfoSubscription) {
+      this.slowInfoSubscription.unsubscribe();
     }
   }
 }

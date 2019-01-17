@@ -59,4 +59,10 @@
       </button>
     </mat-menu>
   </ng-container>
+  <div class="-record -small-adding-addess-msg-container -on-small-and-below-only" *ngIf="creatingAddress">
+    <div>
+      <mat-spinner [color]="spinnerStyle" class="in-button small"></mat-spinner>
+      {{ 'wallet.adding-address' | translate }} <span *ngIf="showSlowMobileInfo">{{ 'common.slow-on-mobile' | translate}}</span>
+    </div>
+  </div>
 </div>
