@@ -15,7 +15,8 @@
     "no-wallet": "La billetera no existe",
     "no-outputs": "No hay salidas no gastadas",
     "no-wallets": "Actualmente no hay billeteras",
-    "loading-error": "Error al intentar obtener los datos. Por favor, inténtelo nuevamente más tarde."
+    "loading-error": "Error al intentar obtener los datos. Por favor, inténtelo nuevamente más tarde.",
+    "crypto-no-available": "El explorador web que usted está usando no es compatible con esta billetera (la librería crypto no está disponible). Por favor, actualice su navegador o intente con otro."
   },
 
   "title": {

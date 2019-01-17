@@ -1,1 +1,7 @@
+<div class="crypto-alert" *ngIf="!browserHasCryptoInsideWorkers">
+  <div>
+    <mat-icon>error</mat-icon>
+    <div>{{ 'errors.crypto-no-available' | translate }}</div>
+  </div>
+</div>
 <router-outlet></router-outlet>

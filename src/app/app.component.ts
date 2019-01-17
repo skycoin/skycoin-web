@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { config } from './app.config';
 import { environment } from '../environments/environment';
+import { CipherProvider } from './services/cipher.provider';
 
 @Component({
   selector: 'app-root',
@@ -16,15 +17,21 @@ export class AppComponent implements OnInit {
   highest: number;
   otcEnabled: boolean;
   version: string;
+  browserHasCryptoInsideWorkers: boolean;
 
   constructor(
     private languageService: LanguageService,
+    cipherProvider: CipherProvider,
     router: Router
   ) {
     router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
         window.scrollTo(0, 0);
       }
+    });
+
+    cipherProvider.browserHasCryptoInsideWorkers.subscribe(value => {
+      this.browserHasCryptoInsideWorkers = value;
     });
   }
 
