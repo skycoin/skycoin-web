@@ -1,4 +1,10 @@
-<div class="size-alert">
+<div class="crypto-alert" *ngIf="!browserHasCryptoInsideWorkers">
+  <div>
+    <mat-icon>error</mat-icon>
+    <div>{{ 'errors.crypto-no-available' | translate }}</div>
+  </div>
+</div>
+<div class="size-alert" *ngIf="browserHasCryptoInsideWorkers">
   <div>
     <img src="assets/img/size-alert.png">
     <div>{{ 'errors.window-size' | translate }}</div>

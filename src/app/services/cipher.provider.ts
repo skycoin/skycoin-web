@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
 import { CipherWebWorkerHelper, CipherWebWorkerOperation } from '../utils/cipher-web-worker-helper';
@@ -7,8 +8,10 @@ import { CipherWebWorkerHelper, CipherWebWorkerOperation } from '../utils/cipher
 @Injectable()
 export class CipherProvider {
 
+  browserHasCryptoInsideWorkers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
   constructor() {
-    CipherWebWorkerHelper.initialize();
+    CipherWebWorkerHelper.initialize(this);
   }
 
   generateAddress(seed): Observable<Address> {
