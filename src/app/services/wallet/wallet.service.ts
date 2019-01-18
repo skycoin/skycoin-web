@@ -153,8 +153,9 @@ export class WalletService {
         strippedWallets.push({ coinId: wallet.coinId, needSeedConfirmation: wallet.needSeedConfirmation, label: wallet.label, addresses: strippedAddresses });
       });
       localStorage.setItem('wallets', JSON.stringify(strippedWallets));
-      this.wallets.next(this.wallets.value);
     }
+
+    this.wallets.next(this.wallets.value);
   }
 
   private loadWallets() {
