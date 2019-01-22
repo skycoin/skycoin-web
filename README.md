@@ -19,7 +19,8 @@ You will only have to run this again, if any dependencies have been changed in t
 
 ## Compiling new target files
 
-To compile new target files, you will have to run: `npm run build`. To create a dev build, use `npm run build-dev` instead.
+To compile new target files, you will have to run: `npm run build`. To create a dev build, use `npm run build-dev`
+instead. To compile a build capable of being run from the local file system, use `npm run build-for-local-fs`.
 
 ## Docker
 
