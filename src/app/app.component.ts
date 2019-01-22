@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LanguageService } from './services/language.service';
 
 import { config } from './app.config';
+import { CipherProvider } from './services/cipher.provider';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +17,16 @@ export class AppComponent implements OnInit {
   appStoreUrl: string;
   googlePlayUrl: string;
   isElectron: boolean;
+  browserHasCryptoInsideWorkers: boolean;
 
   constructor(
-    private languageService: LanguageService
-  ) {}
+    private languageService: LanguageService,
+    cipherProvider: CipherProvider
+  ) {
+    cipherProvider.browserHasCryptoInsideWorkers.subscribe(value => {
+      this.browserHasCryptoInsideWorkers = value;
+    });
+  }
 
   ngOnInit() {
     this.otcEnabled = config.otcEnabled;

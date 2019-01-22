@@ -3,8 +3,17 @@ var onmessage = function(e) {
     try {
       switch(e.data.operation) {
         case 0: {
-          importScripts(e.data.url + '/assets/scripts/main.js');
-          break;
+          try {
+            var hasCrypto = crypto;
+          } catch (e) {}
+
+          if (hasCrypto) {
+            importScripts(e.data.url + '/assets/scripts/main.js');
+            break;
+          } else {
+            postMessage({result: 'No crypto', workID: 0});
+            break;
+          }
         }
         case 1: {
           postMessage({result: Cipher.GenerateAddresses(e.data.data), workID: e.data.workID});

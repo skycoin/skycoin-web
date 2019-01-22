@@ -13,15 +13,19 @@ export enum CipherWebWorkerOperation {
 export class CipherWebWorkerHelper {
 
   private static readonly errPrefix = 'Error:';
+  private static readonly browserWithputCryptoErrorMsg = 'No crypto';
 
   private static worker: Worker;
 
   private static readonly activeWorks: Map<number, Subject<any>> = new Map<number, Subject<any>>();
   private static initialized = false;
+  private static mainService: any;
 
-  static initialize() {
+  static initialize(mainService: any) {
     if (!CipherWebWorkerHelper.initialized) {
       CipherWebWorkerHelper.initialized = true;
+
+      CipherWebWorkerHelper.mainService = mainService;
 
       if (!environment.e2eTest) {
         System.import(`../../assets/scripts/cipher-web-worker.js`).then((content) => {
@@ -73,6 +77,8 @@ export class CipherWebWorkerHelper {
           CipherWebWorkerHelper.errPrefix.length,
           (e.data.result as string).length - CipherWebWorkerHelper.errPrefix.length)
       ));
+    } else if (isString(e.data.result) && (e.data.result as string).startsWith(CipherWebWorkerHelper.browserWithputCryptoErrorMsg)) {
+      CipherWebWorkerHelper.mainService.browserHasCryptoInsideWorkers.next(false);
     } else {
       // Return the result.
       CipherWebWorkerHelper.activeWorks[e.data.workID].next(e.data.result);
