@@ -72,7 +72,7 @@ describe('SpendingService', () => {
   describe('createTransaction', () => {
     it('should return a correct observable for two outputs', fakeAsync(() => {
       const address = 'address';
-      const amount = new BigNumber(21);
+      const amount = new BigNumber(26);
 
       const addresses = [
         createAddress('address1', 'secretKey1'),
@@ -85,24 +85,25 @@ describe('SpendingService', () => {
         createOutput('address1', 'hash1', new BigNumber(5), new BigNumber(10)),
         createOutput('address2', 'hash2', new BigNumber(10), new BigNumber(20)),
         createOutput('address1', 'hash1', new BigNumber(20), new BigNumber(50)),
-        createOutput('address2', 'hash2', new BigNumber(50), new BigNumber(0))
+        createOutput('address2', 'hash2', new BigNumber(5), new BigNumber(0))
       ];
 
       const expectedTxInputs: TransactionInput[] = [
         { hash: 'hash1', secret: 'secretKey1', address: 'address1', calculated_hours: 50, coins: 20 },
-        { hash: 'hash2', secret: 'secretKey2', address: 'address2', calculated_hours: 20, coins: 10 }
+        { hash: 'hash2', secret: 'secretKey2', address: 'address2', calculated_hours: 0, coins: 5 },
+        { hash: 'hash1', secret: 'secretKey1', address: 'address1', calculated_hours: 10, coins: 5 }
       ];
 
       const expectedTxOutputs: TransactionOutput[] = [
         {
           address: wallet.addresses[0].address,
-          coins: 9,
-          hours: 18
+          coins: 4,
+          hours: 15
         },
         {
           address: address,
-          coins: 21,
-          hours: 17
+          coins: 26,
+          hours: 15
         }
       ];
 
@@ -114,8 +115,8 @@ describe('SpendingService', () => {
           expect(result).toEqual({
             inputs: expectedTxInputs,
             outputs: expectedTxOutputs,
-            hoursSent: new BigNumber(17),
-            hoursBurned: new BigNumber(35),
+            hoursSent: new BigNumber(15),
+            hoursBurned: new BigNumber(30),
             encoded: 'preparedTransaction'
           });
         });
@@ -174,11 +175,12 @@ describe('SpendingService', () => {
       const wallet: Wallet = Object.assign(createWallet(), { addresses: addresses });
 
       const outputs: Output[] = [
-        createOutput('address1', 'hash1', new BigNumber(1), new BigNumber(24)),
+        createOutput('address1', 'hash1', new BigNumber(1), new BigNumber(0)),
         createOutput('address2', 'hash2', new BigNumber(1), new BigNumber(0))
       ];
 
       spyApiService.get.and.returnValue(Observable.of({ head_outputs: outputs }));
+      spyCipherProvider.prepareTransaction.and.returnValue(Observable.of('preparedTransaction'));
       spyTranslateService.instant.and.callFake((param) => {
         if (param === 'service.wallet.not-enough-hours1') {
           return 'Not enough available';
