@@ -206,7 +206,7 @@ export class SpendingService {
       if (b.coins.isGreaterThan(a.coins)) {
         return highestToLowest ? 1 : -1;
       } else if (b.coins.isLessThan(a.coins)) {
-        return highestToLowest ? -1: 1;
+        return highestToLowest ? -1 : 1;
       } else {
         if (b.calculated_hours.isGreaterThan(a.calculated_hours)) {
           return -1;
