@@ -55,6 +55,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
     const config = new MatDialogConfig();
     config.width = '566px';
     config.data = { create };
+    config.autoFocus = false;
     this.dialog.open(CreateWalletComponent, config);
   }
 

@@ -16,7 +16,7 @@ import { WalletService } from '../services/wallet/wallet.service';
 import { BalanceService } from '../services/wallet/balance.service';
 import { CustomMatDialogService } from '../services/custom-mat-dialog.service';
 
-export function openUnlockWalletModal (wallet: Wallet | ConfirmSeedParams, unlockDialog: CustomMatDialogService, autoFocus: boolean = true): MatDialogRef<UnlockWalletComponent, any> {
+export function openUnlockWalletModal (wallet: Wallet | ConfirmSeedParams, unlockDialog: CustomMatDialogService, autoFocus: boolean = false): MatDialogRef<UnlockWalletComponent, any> {
   const config = new MatDialogConfig();
   config.width = '500px';
   config.data = wallet;

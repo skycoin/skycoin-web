@@ -81,7 +81,7 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   }
 
   skip() {
-    this.router.navigate(['/wallets']);
+    this.router.navigate(['/wallets'], { replaceUrl: true });
   }
 
   private showLanguageModal() {

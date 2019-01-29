@@ -54,6 +54,7 @@ export class WalletDetailComponent implements OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '566px';
     dialogConfig.data = this.wallet;
+    dialogConfig.autoFocus = false;
     this.dialog.open(ChangeNameComponent, dialogConfig);
   }
 

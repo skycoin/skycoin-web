@@ -113,8 +113,29 @@
 .notification-bar {
   background-color: $red;
   color:$white;
+  font-size: 20px;
+  line-height: 32px;
+  height: auto;
+
+  @media (max-width: $max-small-width) {
+    & {
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
+
+  @media (max-width: $max-very-small-width) {
+    & {
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+
   div {
     margin:auto;
+    white-space: normal;
+    padding: 16px;
+    text-align: center;
 
     a {
       text-decoration:none;
