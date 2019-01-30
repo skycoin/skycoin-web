@@ -466,3 +466,11 @@ Responsive design
     display: none !important;
   }
 }
+
+.fixErrorPosition {
+  @media (max-width: $max-small-width) {
+    .mat-snack-bar-handset {
+      margin-bottom: $mobile-nav-bar-height !important;
+    }
+  }
+}

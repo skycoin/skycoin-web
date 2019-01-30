@@ -131,6 +131,7 @@
     "decrypt": "Decrypt Wallet",
     "edit": "Edit Wallet",
     "delete" : "Delete Wallet",
+    "unlock-wallet": "Unlock Wallet",
     "options" : "Options",
     "add": "Add Wallet",
     "load": "Load Wallet",

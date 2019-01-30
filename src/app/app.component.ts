@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { LanguageService } from './services/language.service';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { config } from './app.config';
 import { environment } from '../environments/environment';
 import { CipherProvider } from './services/cipher.provider';
+import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,9 @@ export class AppComponent implements OnInit {
   constructor(
     private languageService: LanguageService,
     cipherProvider: CipherProvider,
-    router: Router
+    router: Router,
+    dialog: CustomMatDialogService,
+    renderer: Renderer2
   ) {
     router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
@@ -32,6 +35,14 @@ export class AppComponent implements OnInit {
 
     cipherProvider.browserHasCryptoInsideWorkers.subscribe(value => {
       this.browserHasCryptoInsideWorkers = value;
+    });
+
+    dialog.showingDialog.subscribe(value => {
+      if (!value) {
+        renderer.addClass(document.body, 'fixErrorPosition');
+      } else {
+        renderer.removeClass(document.body, 'fixErrorPosition');
+      }
     });
   }
 

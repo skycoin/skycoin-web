@@ -30,6 +30,10 @@
         background-size: 32px 32px;
       }
 
+      .-btn-unlock {
+        background-image: url(../../../../../../assets/img/unlock-grey.png);
+      }
+
       .-btn-plus {
         background-image: url(../../../../../../assets/img/plus-grey.png);
       }
@@ -45,6 +49,11 @@
 
     &:hover {
       .label {
+
+        .-btn-unlock {
+          background-image: url(../../../../../../assets/img/unlock-gold.png);
+        }
+
         .-btn-plus {
           background-image: url(../../../../../../assets/img/plus-green.png);
         }

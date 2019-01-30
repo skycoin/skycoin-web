@@ -62,9 +62,12 @@ export class WalletDetailComponent implements OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '566px';
     dialogConfig.autoFocus = false;
+    dialogConfig.data = this.wallet;
     this.dialog.open(WalletOptionsComponent, dialogConfig).afterClosed().subscribe((response: WalletOptionsResponses | null) => {
       if (response != null && response !== undefined) {
-        if (response === WalletOptionsResponses.AddNewAddress) {
+        if (response === WalletOptionsResponses.UnlockWallet) {
+          openUnlockWalletModal(this.wallet, this.dialog);
+        } else if (response === WalletOptionsResponses.AddNewAddress) {
           this.onAddNewAddress();
         } else if (response === WalletOptionsResponses.EditWallet) {
           this.onEditWallet();

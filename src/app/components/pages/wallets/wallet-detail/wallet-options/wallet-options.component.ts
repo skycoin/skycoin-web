@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { environment } from '../../../../../../environments/environment';
+import { Wallet } from '../../../../../app.datatypes';
 
 export enum WalletOptionsResponses {
+  UnlockWallet,
   AddNewAddress,
   EditWallet,
   DeleteWallet,
@@ -14,9 +18,18 @@ export enum WalletOptionsResponses {
 })
 export class WalletOptionsComponent {
 
+
+  showUnlockOption: boolean;
   constructor(
+    @Inject(MAT_DIALOG_DATA) data: Wallet,
     public dialogRef: MatDialogRef<WalletOptionsComponent>
-  ) { }
+  ) {
+    this.showUnlockOption = !environment.production && !data.seed;
+  }
+
+  onUnlockWallet() {
+    this.closePopup(WalletOptionsResponses.UnlockWallet);
+  }
 
   onAddNewAddress() {
     this.closePopup(WalletOptionsResponses.AddNewAddress);
