@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { WalletOptionsComponent } from './wallet-options.component';
 import { MockTranslatePipe } from '../../../../../utils/test-mocks';
@@ -14,7 +14,8 @@ describe('WalletOptionsComponent', () => {
       declarations: [ WalletOptionsComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: MatDialogRef, useValue: {} }
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
     .compileComponents();

@@ -210,6 +210,9 @@ export class MockLanguageService {
 }
 
 export class MockCustomMatDialogService {
+  get showingDialog() {
+    return Observable.of(false);
+  }
 }
 
 export class MockMatDialogRef<T> {
