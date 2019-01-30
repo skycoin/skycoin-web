@@ -52,7 +52,14 @@ Run `npm start` for a dev server. Navigate to `http://localhost:4200/`.
 
 As this is a lite client, it requires a back-end to retrieve the blockchain state and inject new transactions. While using
 a dev build, the wallet tries to connect to a Skycoin node running locally, which must be started with the `-disable-csrf`
-option. The production builds connects to a public node set up at `https://node.skycoin.net`.
+option. The production builds connects to a public node set up at `https://node.skycoin.net`. The user can connect the wallet
+to another backend by entering its URL.
+
+### Minimum back-end version
+
+The wallet is currently compatible with nodes running v0.24.0 and above. As it is not possible to recover the number of active
+decimals in version 0.24.0, the wallet assumes that it is 6. The same happens with burn rate, so it is assumed to be 50%.
+Because of this, it is advisable to connect to a node running v0.25.0 or higher.
 
 ## Multi-coin compatibility
 

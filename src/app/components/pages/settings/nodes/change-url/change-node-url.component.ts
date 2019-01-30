@@ -72,8 +72,6 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
       this.verificationSubscription = this.http.get(this.newUrl + '/api/v1/health').subscribe((response: any) => {
         this.nodeVersion = response.version.version;
         this.lastBlock = response.blockchain.head.seq;
-        this.hoursBurnRate = new BigNumber(100).dividedBy(response.user_verify_transaction.burn_factor).decimalPlaces(3, BigNumber.ROUND_FLOOR).toString() + '%';
-        this.coinName = response.coin;
 
         if (!isEqualOrSuperiorVersion(this.nodeVersion, '0.24.0')) {
           this.cancelChange(true, false);
@@ -81,6 +79,14 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
         } else if (response.csrf_enabled) {
           this.cancelChange(false, true);
           return;
+        }
+
+        if (isEqualOrSuperiorVersion(this.nodeVersion, '0.25.0')) {
+          this.hoursBurnRate = new BigNumber(100).dividedBy(response.user_verify_transaction.burn_factor).decimalPlaces(3, BigNumber.ROUND_FLOOR).toString() + '%';
+          this.coinName = response.coin;
+        } else {
+          this.hoursBurnRate = '50%';
+          this.coinName = null;
         }
 
         this.actionButton.resetState();
