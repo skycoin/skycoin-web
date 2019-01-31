@@ -39,9 +39,9 @@ export class AppComponent implements OnInit {
 
     dialog.showingDialog.subscribe(value => {
       if (!value) {
-        renderer.addClass(document.body, 'fixErrorPosition');
+        renderer.addClass(document.body, 'fix-error-position');
       } else {
-        renderer.removeClass(document.body, 'fixErrorPosition');
+        renderer.removeClass(document.body, 'fix-error-position');
       }
     });
   }
