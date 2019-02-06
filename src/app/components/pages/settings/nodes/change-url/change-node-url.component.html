@@ -7,7 +7,7 @@
   </div>
   <div class="property-container" *ngIf="!showingUrlForm">
     <h4>{{ 'nodes.change.node-properties' | translate}}</h4>
-    <div class="data">
+    <div class="data" *ngIf="coinName">
       <span>{{ 'nodes.change.coin-name' | translate }}:</span> <span>{{ coinName }}</span>
     </div>
     <div class="data">

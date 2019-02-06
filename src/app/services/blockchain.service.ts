@@ -11,6 +11,7 @@ import { ConnectionError } from '../enums/connection-error.enum';
 import { CoinService } from './coin.service';
 import { environment } from '../../environments/environment';
 import { GlobalsService } from './globals.service';
+import { isEqualOrSuperiorVersion } from '../utils/semver';
 
 export enum ProgressStates {
   Progress,
@@ -123,7 +124,11 @@ export class BlockchainService {
       .flatMap(() => this.apiService.get('health'))
       .map ((response: any) => {
         this.globalsService.setNodeVersion(response.version.version);
-        this.maxDecimals = response.user_verify_transaction.max_decimals;
+        if (isEqualOrSuperiorVersion(response.version.version, '0.25.0')) {
+          this.maxDecimals = response.user_verify_transaction.max_decimals;
+        } else {
+          this.maxDecimals = 6;
+        }
       });
   }
 }
