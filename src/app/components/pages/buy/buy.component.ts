@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialogConfig } from '@angular/material/dialog';
 
 import { config } from '../../../app.config';
 import { PurchaseService } from '../../../services/purchase.service';
 import { AddDepositAddressComponent } from './add-deposit-address/add-deposit-address.component';
+import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-buy',
@@ -18,7 +19,7 @@ export class BuyComponent implements OnInit {
 
   constructor(
     public purchaseService: PurchaseService,
-    private dialog: MatDialog,
+    private dialog: CustomMatDialogService,
   ) {
     this.otcEnabled = config.otcEnabled;
   }

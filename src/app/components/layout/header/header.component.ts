@@ -1,14 +1,15 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { BigNumber } from 'bignumber.js';
+import { Observable } from 'rxjs/Observable';
 
 import { PriceService } from '../../../services/price.service';
 import { BalanceService, BalanceStates } from '../../../services/wallet/balance.service';
 import { BlockchainService, ProgressEvent, ProgressStates } from '../../../services/blockchain.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
-import { TotalBalance } from '../../../app.datatypes';
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
+import { getTimeSinceLastBalanceUpdate } from '../../../utils';
 
 @Component({
   selector: 'app-header',
@@ -29,20 +30,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   current: number;
   highest: number;
   currentCoin: BaseCoin;
+  balanceObtained = false;
+  timeSinceLastBalanceUpdate = 0;
+  problemUpdatingBalance: boolean;
 
-  private balanceLoaded = false;
   private price: number;
   private subscription: Subscription;
 
   get loading() {
-    return this.isBlockchainLoading || !this.balanceLoaded;
+    return this.isBlockchainLoading || !this.balanceObtained;
   }
 
   constructor(
     private priceService: PriceService,
     private balanceService: BalanceService,
     private blockchainService: BlockchainService,
-    private coinService: CoinService
+    private coinService: CoinService,
+    private _ngZone: NgZone
   ) {}
 
   ngOnInit() {
@@ -69,12 +73,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
           if (balance && balance.state === BalanceStates.Obtained) {
             this.coins = balance.balance.coins;
             this.hours = balance.balance.hours;
+            this.balanceObtained = true;
 
             this.calculateBalance();
-            this.balanceLoaded = true;
           }
+
+          this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService);
+          this.problemUpdatingBalance = balance.state === BalanceStates.Error;
         })
     );
+
+    this._ngZone.runOutsideAngular(() => {
+      this.subscription.add(
+        Observable.interval(5000).subscribe(() => this._ngZone.run(() => this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService)))
+      );
+    });
 
     this.subscription.add(
       this.balanceService.hasPendingTransactions
@@ -90,7 +103,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.coins = new BigNumber('0');
     this.price = null;
     this.balance = null;
-    this.balanceLoaded = false;
+    this.balanceObtained = false;
     this.isBlockchainLoading = false;
     this.percentage = null;
     this.current = null;

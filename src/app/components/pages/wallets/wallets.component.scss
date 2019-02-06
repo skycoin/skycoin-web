@@ -3,27 +3,75 @@
 .-width-130 {
   width: 130px;
   flex-shrink: 0;
+
+  @media (max-width: $max-small-width) {
+    & {
+      width: 115px;
+      margin-left: 10px;
+      overflow: hidden;
+      word-break: break-word;
+      line-height: normal;
+      max-height: 60px;
+      align-self: center;
+    }
+  }
+
+  @media (max-width: $max-very-small-width) {
+    & {
+      width: 70px;
+    }
+  }
 }
 
 .-width-250 {
   width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .-headers {
   color: $grey-light;
-  display: flex;
   font-size: 12px;
   font-weight: 700;
   height: 50px;
   line-height: 50px;
-  padding: 0 130px 0 50px;
+  padding: 0 $normal-content-lateral-margin;
+
+  .internal-container {
+    padding: 0 100px 0 20px;
+    width: 100%;
+    display: flex;
+  }
+
+  @media (max-width: $max-small-width) {
+    & {
+      padding: 0px $small-content-lateral-margin;
+
+      .internal-container {
+        padding: 0 35px 0 20px;
+      }
+    }
+  }
+
+  @media (max-width: $max-very-small-width) {
+    & {
+      padding: 0px $very-small-content-lateral-margin;
+    }
+  }
 }
 
 .-wallets {
-  margin: 0 30px;
+  margin: 0 $normal-content-lateral-margin;
+
+  @media (max-width: $max-small-width) {
+    & {
+      margin: 0px $small-content-lateral-margin;
+    }
+  }
+
+  @media (max-width: $max-very-small-width) {
+    & {
+      margin: 0px $very-small-content-lateral-margin;
+    }
+  }
 }
 
 .-paper {
@@ -39,6 +87,7 @@
   height: 60px;
   padding-left: 20px;
   cursor: pointer;
+  overflow: hidden;
 
   &:first-child {
     border-top-left-radius: 10px;
@@ -50,9 +99,22 @@
     border-bottom-right-radius: 10px;
   }
 
+  .mobile-label-container {
+    display: flex;
+  }
+
   .-label {
     color: $grey-dark;
     font-weight: 700;
+
+    @media (max-width: $max-small-width) {
+      & {
+        align-self: center;
+        word-break: break-word;
+        line-height: normal;
+        max-height: 60px;
+      }
+    }
   }
 
   .-hours {
@@ -88,10 +150,25 @@
     margin-right: 15px;
     flex-shrink: 0;
 
+    @media (max-width: $max-small-width) {
+      & {
+        /*width: 45px;*/
+        width: 30px;
+        margin-right: 5px;
+      }
+    }
+
     img {
-      width: $row-detail-size;
-      height: $row-detail-size;
+      width: $normal-row-detail-size;
+      height: $normal-row-detail-size;
       opacity: 0.3;
+
+      @media (max-width: $max-small-width) {
+        & {
+          width: $small-row-detail-size;
+          height: $small-row-detail-size;
+        }
+      }
     }
   }
 
@@ -105,8 +182,14 @@
 }
 
 .action-buttons {
-  padding: 40px 0 40px;
+  padding: $content-vertical-margin 0px;
   text-align: center;
+
+  @media (max-width: $max-small-width) {
+    & {
+      padding-top: $content-vertical-margin - 10px;
+    }
+  }
 
   button {
     background-color: $grey-lightest;
@@ -116,6 +199,12 @@
     font-size: 13px;
     margin: 0 5px;
     min-width: 140px;
+
+    @media (max-width: $max-small-width) {
+      & {
+        margin-top: 10px;
+      }
+    }
 
     img {
       height: 28px;

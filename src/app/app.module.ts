@@ -69,7 +69,6 @@ import { CoinService } from './services/coin.service';
 import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
 import { SelectCoinComponent } from './components/layout/select-coin/select-coin.component';
 import { LanguageService } from './services/language.service';
-import { CoinButtonComponent } from './components/layout/header/coin-button/coin-button.component';
 import { SelectCoinOverlayComponent } from './components/layout/select-coin-overlay/select-coin-overlay.component';
 import { SelectLanguageComponent } from './components/layout/select-language/select-language.component';
 import { WalletService } from './services/wallet/wallet.service';
@@ -81,6 +80,8 @@ import { ScanAddressesComponent } from './components/pages/wallets/scan-addresse
 import { NodesComponent } from './components/pages/settings/nodes/nodes.component';
 import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change-url/change-node-url.component';
 import { GlobalsService } from './services/globals.service';
+import { WalletOptionsComponent } from './components/pages/wallets/wallet-detail/wallet-options/wallet-options.component';
+import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 
 @NgModule({
   declarations: [
@@ -118,13 +119,13 @@ import { GlobalsService } from './services/globals.service';
     DisclaimerWarningComponent,
     LoadingContentComponent,
     SelectCoinComponent,
-    CoinButtonComponent,
     SelectCoinOverlayComponent,
     SelectLanguageComponent,
     CreateWalletFormComponent,
     ScanAddressesComponent,
     NodesComponent,
-    ChangeNodeURLComponent
+    ChangeNodeURLComponent,
+    WalletOptionsComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -137,7 +138,8 @@ import { GlobalsService } from './services/globals.service';
     SelectCoinOverlayComponent,
     SelectLanguageComponent,
     ScanAddressesComponent,
-    ChangeNodeURLComponent
+    ChangeNodeURLComponent,
+    WalletOptionsComponent
   ],
   imports: [
     BrowserModule,
@@ -185,7 +187,8 @@ import { GlobalsService } from './services/globals.service';
     BalanceService,
     HistoryService,
     SpendingService,
-    GlobalsService
+    GlobalsService,
+    CustomMatDialogService
   ],
   bootstrap: [AppComponent],
 })

@@ -1,11 +1,15 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Renderer2 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { AppComponent } from './app.component';
-import { MockLanguageService, MockTranslatePipe } from './utils/test-mocks';
+import { MockLanguageService, MockTranslatePipe, MockTranslateService, MockCustomMatDialogService } from './utils/test-mocks';
 import { LanguageService } from './services/language.service';
 import { CipherProvider } from './services/cipher.provider';
+import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -17,7 +21,11 @@ describe('AppComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: LanguageService, useClass: MockLanguageService },
-        { provide: CipherProvider, useValue: { browserHasCryptoInsideWorkers: new BehaviorSubject<boolean>(true) } }
+        { provide: TranslateService, useClass: MockTranslateService },
+        { provide: Router, useValue: { events: Observable.of({}) } },
+        { provide: CipherProvider, useValue: { browserHasCryptoInsideWorkers: new BehaviorSubject<boolean>(true) } },
+        { provide: Renderer2, useValue: { addClass: null, removeClass: null } },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ]
     }).compileComponents();
   }));

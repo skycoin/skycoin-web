@@ -1,16 +1,29 @@
 <div class="buttons-left">
-  <div class="header-sel-theme" style="display: flex;" *ngIf="balanceObtained">
+  <div class="header-sel-theme" *ngIf="hasManyCoins">
     <button
-      class="time-button"
+      mat-button
+      color="primary"
+      class="round-button"
+      (click)="changeCoin()">
+      <img class="coin-icon" [src]="'assets/img/coins/' + currentCoin.iconName" />
+      <span class="coin-name -not-on-very-small">{{ currentCoin.coinSymbol }}</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+  </div>
+  <div class="header-sel-theme" *ngIf="balanceObtained">
+    <button
+      class="round-button"
       mat-button
       color="primary"
       [matTooltip]="this.problemUpdatingBalance ? ('header.top-bar.connection-error-tooltip' | translate) : null"
+      matTooltipClass="refresh-button-tooltip"
       (click)="refresBalance()">
       <div class="main-container">
         <div class="spinner-container" *ngIf="updatingBalance"><mat-spinner></mat-spinner></div>
         <mat-icon *ngIf="!this.problemUpdatingBalance && !updatingBalance">refresh</mat-icon>
-        <mat-icon *ngIf="this.problemUpdatingBalance && !updatingBalance" class="blinking-warning-icon">warning</mat-icon>
-        <div class="text-container">
+        <mat-icon *ngIf="this.problemUpdatingBalance && !updatingBalance" class="blinking-warning-icon -not-on-small-and-below">warning</mat-icon>
+        <mat-icon *ngIf="this.problemUpdatingBalance && !updatingBalance" class="-on-small-and-below-only">refresh</mat-icon>
+        <div class="text-container -not-on-small-and-below">
           <div class="first-label">{{ 'header.top-bar.updated1' | translate }}</div>
           <div class="second-label">
             {{ timeSinceLastBalanceUpdate === 0 ? ('header.top-bar.less-than' | translate ) : timeSinceLastBalanceUpdate }} {{ 'header.top-bar.updated2' | translate }}
@@ -19,11 +32,10 @@
       </div>
     </button>
   </div>
-  <app-coin-button *ngIf="hasManyCoins" (click)="changeCoin()"></app-coin-button>
 </div>
 
 <div class="title">
-  {{ headline }}
+  <span>{{ headline }}</span>
 </div>
 
 <div class="buttons-right">
@@ -47,7 +59,16 @@
       {{ language.name }}
     </div>
   </mat-menu>
-  <button mat-icon-button [matMenuTriggerFor]="menuMenu">
+  <button class="menu-button -not-on-small-and-below" mat-icon-button [matMenuTriggerFor]="menuMenu">
     <mat-icon>menu</mat-icon>
   </button>
+  <div class="header-sel-theme">
+    <button
+      mat-button
+      color="primary"
+      class="round-button -mobile-menu-button -on-small-and-below-only"
+      [matMenuTriggerFor]="menuMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
 </div>

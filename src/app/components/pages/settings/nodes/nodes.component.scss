@@ -27,3 +27,20 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+.small-screen-button{
+  cursor: pointer;
+
+  .internal-link {
+    color: $blue;
+    opacity: 0.7;
+  }
+}
+
+.small-screen-button:hover{
+  background-color: $grey-lightest;
+
+  .internal-link {
+    opacity: 1;
+  }
+}

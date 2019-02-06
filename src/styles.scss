@@ -66,28 +66,72 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mat-tooltip {
+  font-size: 11px;
 }
 
 .-paper {
   background-color: $white;
   border-radius: 10px;
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.01), 1px 1px 2px 2px rgba(0, 0, 0, 0.01);
-  margin: 30px;
+  margin: $content-vertical-margin $normal-content-lateral-margin;
+
+  @media (max-width: $max-small-width) {
+    & {
+      margin: $content-vertical-margin $small-content-lateral-margin;
+    }
+  }
+
+  @media (max-width: $max-very-small-width) {
+    & {
+      margin: $content-vertical-margin $very-small-content-lateral-margin;
+    }
+  }
 }
 
-mat-dialog-container {
-  border-radius: 5px !important;
-  padding: 0 !important;
+.default-dialog-style {
+  height: 100%;
+  padding: 20px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 90vw !important;
+
+  mat-dialog-container {
+    border-radius: 5px !important;
+    padding: 0 !important;
+    display: flex !important;
+    height: auto !important;
+    max-height: 100% !important;
+
+    > :first-child {
+      width: 100%;
+    }
+  }
 }
 
 .transparent-background-dialog {
+  max-width: unset !important;
+  padding: 0;
+
   .mat-dialog-container {
     background-color: transparent !important;
+    box-shadow: unset;
+    overflow: hidden;
+    padding: 0;
   }
 }
 
 .clear-dialog-background {
-  background-color: rgba(245, 245, 245, 0.976)
+  background-color: rgba(245, 245, 245, 0.976);
+  margin: -100%;
+}
+
+.cdk-overlay-dark-backdrop {
+  margin: -100%;
 }
 
 .button-line {
@@ -146,6 +190,12 @@ mat-panel-title {
   min-width: 100%;
   min-height: 100%;
 
+  @media (max-width: $max-small-width) {
+    & {
+      padding-bottom: $mobile-nav-bar-height;
+    }
+  }
+
   &.sky-container-grey {
     background-color: $grey-lightest;
   }
@@ -164,6 +214,12 @@ mat-panel-title {
     font-size: 13px;
     line-height: 20px;
     margin-bottom: 2px;
+
+    &.slow-mobile-info {
+      opacity: 0.75;
+      text-align: center;
+      animation: blinker 2s linear infinite;
+    }
   }
 
   input {
@@ -289,8 +345,13 @@ On-boarding components
     font-family: Skycoin;
     line-height: normal;
     font-size: 14px;
-  
+    white-space: normal;
     color: $grey-dark;
+    text-align: left;
+  }
+
+  .mat-checkbox-label {
+    line-height: 20px;
   }
 
   .mat-checkbox-checkmark-path {
@@ -360,11 +421,56 @@ General Helpers
   overflow: hidden;
 }
 
-.mat-dialog-content {
-  max-height: 80vh !important;
+.link {
+  color: $blue !important;
+  cursor: pointer;
 }
 
-.link {
-  color: $blue;
-  cursor: pointer;
+.-one-line-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.-break-all {
+  word-break: break-all;
+}
+
+@keyframes blinker {
+  80% {
+    opacity: 0;
+  }
+}
+
+/**
+Responsive design
+ */
+
+@media (min-width: ($max-small-width+1)) {
+  .-on-small-and-below-only {
+    display: none !important;
+  }
+}
+@media (max-width: $max-small-width) {
+  .-not-on-small-and-below {
+    display: none !important;
+  }
+}
+@media (min-width: ($max-very-small-width+1)) {
+  .-on-very-small-only {
+    display: none !important;
+  }
+}
+@media (max-width: $max-very-small-width) {
+  .-not-on-very-small {
+    display: none !important;
+  }
+}
+
+.fix-error-position {
+  @media (max-width: $max-small-width) {
+    .cdk-global-overlay-wrapper[style*="align-items: flex-end;"] > div {
+      margin-bottom: $mobile-nav-bar-height !important;
+    }
+  }
 }

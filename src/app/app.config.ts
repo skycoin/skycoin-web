@@ -1,7 +1,6 @@
 export const config = {
   otcEnabled: false,
-  appStoreUrl: 'https://itunes.apple.com/gb/app/skycoin/id1439949089?mt=8',
-  googlePlayUrl: 'https://play.google.com/store/apps/details?id=com.skycoin.wallet',
+  timeBeforeSlowMobileInfo: 7000,
 
   languages: [{
       code: 'en',

@@ -19,6 +19,11 @@
       <textarea formControlName="seed" id="seed" row="2"></textarea>
     </div>
   </div>
+
+  <div class="form-field -on-small-and-below-only" *ngIf="showSlowMobileInfo">
+    <label class="slow-mobile-info">{{ 'common.slow-on-mobile' | translate}}</label>
+  </div>
+  
   <div class="-buttons">
     <app-button (action)="closePopup()" [disabled]="disableDismiss">
       {{ 'wallet.unlock.cancel-button' | translate }}

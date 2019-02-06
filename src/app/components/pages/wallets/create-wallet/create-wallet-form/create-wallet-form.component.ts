@@ -20,6 +20,7 @@ export class FormData {
 export class CreateWalletFormComponent implements OnInit, OnDestroy {
   @Input() create: boolean;
   @Input() whiteText: boolean;
+  @Input() showSlowMobileInfo: boolean;
 
   form: FormGroup;
   hasManyCoins: boolean;

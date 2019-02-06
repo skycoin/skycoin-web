@@ -36,10 +36,10 @@
     </div>
   </div>
 </div>
-<div class="red-disclaimer-box -alert-box" *ngIf="form.valid && !normalSeed">
-  <mat-icon>error</mat-icon>
+<div class="red-disclaimer-box -alert-box" [ngClass]="{'-very-small-screen-alert-box': !whiteText}" *ngIf="form.valid && !normalSeed">
+  <mat-icon class="-not-on-very-small">error</mat-icon>
   <div>
-    <div class="title">{{ 'wallet.new.unconventional-seed-title' | translate}}</div>
+    <div class="title"><mat-icon class="-on-very-small-only">error</mat-icon><span>{{ 'wallet.new.unconventional-seed-title' | translate}}</span></div>
     <div>{{ 'wallet.new.unconventional-seed-text' | translate}}</div>
     <mat-checkbox #seedCheck
       type="checkbox" class="-check"
@@ -47,4 +47,7 @@
       {{ 'wallet.new.unconventional-seed-check' | translate}}
     </mat-checkbox>
   </div>
+</div>
+<div class="form-field -on-small-and-below-only" *ngIf="showSlowMobileInfo">
+  <label class="slow-mobile-info">{{ 'common.slow-on-mobile' | translate}}</label>
 </div>

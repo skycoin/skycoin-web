@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialogConfig } from '@angular/material/dialog';
 import { Subscription, ISubscription } from 'rxjs/Subscription';
 
 import { PriceService } from '../../../services/price.service';
@@ -8,6 +8,7 @@ import { TransactionDetailComponent } from './transaction-detail/transaction-det
 import { BaseCoin } from '../../../coins/basecoin';
 import { CoinService } from '../../../services/coin.service';
 import { openQrModal } from '../../../utils';
+import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-history',
@@ -27,7 +28,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
   constructor(
     private historyService: HistoryService,
     private priceService: PriceService,
-    private dialog: MatDialog,
+    private dialog: CustomMatDialogService,
     private coinService: CoinService
   ) { }
 

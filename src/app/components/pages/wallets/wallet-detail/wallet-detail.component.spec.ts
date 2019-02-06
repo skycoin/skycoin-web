@@ -1,12 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MatSnackBar, MatMenuModule } from '@angular/material';
+import { MatSnackBar, MatMenuModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { WalletDetailComponent } from './wallet-detail.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
-import { MockTranslatePipe, MockWalletService, MockTranslateService, MockMatSnackBar } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockTranslateService, MockMatSnackBar, MockCustomMatDialogService } from '../../../../utils/test-mocks';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 describe('WalletDetailComponent', () => {
   let component: WalletDetailComponent;
@@ -22,9 +23,9 @@ describe('WalletDetailComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: WalletService, useClass: MockWalletService },
-        { provide: MatDialog, useValue: {} },
         { provide: MatSnackBar, useClass: MockMatSnackBar },
-        { provide: TranslateService, useClass: MockTranslateService }
+        { provide: TranslateService, useClass: MockTranslateService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ]
     }).compileComponents();
   }));

@@ -1,4 +1,4 @@
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
+import { MatDialogConfig, MatDialogRef } from '@angular/material';
 import { Renderer2 } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { Observable } from 'rxjs/Observable';
@@ -13,16 +13,19 @@ import { ConfirmationComponent } from '../components/layout/confirmation/confirm
 import { BlockchainService, ProgressStates } from '../services/blockchain.service';
 import { ScanAddressesComponent } from '../components/pages/wallets/scan-addresses/scan-addresses.component';
 import { WalletService } from '../services/wallet/wallet.service';
+import { BalanceService } from '../services/wallet/balance.service';
+import { CustomMatDialogService } from '../services/custom-mat-dialog.service';
 
-export function openUnlockWalletModal (wallet: Wallet | ConfirmSeedParams, unlockDialog: MatDialog): MatDialogRef<UnlockWalletComponent, any> {
+export function openUnlockWalletModal (wallet: Wallet | ConfirmSeedParams, unlockDialog: CustomMatDialogService, autoFocus: boolean = false): MatDialogRef<UnlockWalletComponent, any> {
   const config = new MatDialogConfig();
   config.width = '500px';
   config.data = wallet;
+  config.autoFocus = autoFocus;
 
   return unlockDialog.open(UnlockWalletComponent, config);
 }
 
-export function openChangeCoinModal (dialog: MatDialog, renderer: Renderer2, overlay: Overlay) {
+export function openChangeCoinModal (dialog: CustomMatDialogService, renderer: Renderer2, overlay: Overlay) {
   renderer.addClass(document.body, 'no-overflow');
 
   const config = new MatDialogConfig();
@@ -33,15 +36,16 @@ export function openChangeCoinModal (dialog: MatDialog, renderer: Renderer2, ove
   config.disableClose = true;
   config.panelClass = 'transparent-background-dialog';
   config.backdropClass = 'clear-dialog-background';
+  config.autoFocus = false;
 
-  return dialog.open(SelectCoinOverlayComponent, config).afterClosed()
+  return dialog.open(SelectCoinOverlayComponent, config, true).afterClosed()
     .map(response => {
       renderer.removeClass(document.body, 'no-overflow');
       return response;
     });
 }
 
-export function openChangeLanguageModal (dialog: MatDialog, disableClose = false): Observable<any> {
+export function openChangeLanguageModal (dialog: CustomMatDialogService, disableClose = false): Observable<any> {
   const config = new MatDialogConfig();
   config.width = '600px';
   config.disableClose = disableClose;
@@ -50,13 +54,14 @@ export function openChangeLanguageModal (dialog: MatDialog, disableClose = false
   return dialog.open(SelectLanguageComponent, config).afterClosed();
 }
 
-export function openQrModal (dialog: MatDialog, address: string) {
+export function openQrModal (dialog: CustomMatDialogService, address: string, showOutputsOption: boolean = false) {
   const config = new MatDialogConfig();
-  config.data = address;
+  config.data = { address: address, showOutputsOption: showOutputsOption };
+  config.autoFocus = false;
   dialog.open(QrCodeComponent, config);
 }
 
-export function showConfirmationModal(dialog: MatDialog, confirmationData: ConfirmationData): MatDialogRef<ConfirmationComponent, any> {
+export function showConfirmationModal(dialog: CustomMatDialogService, confirmationData: ConfirmationData): MatDialogRef<ConfirmationComponent, any> {
   return dialog.open(ConfirmationComponent, <MatDialogConfig>{
     width: '450px',
     data: confirmationData,
@@ -64,7 +69,7 @@ export function showConfirmationModal(dialog: MatDialog, confirmationData: Confi
   });
 }
 
-export function openDeleteWalletModal (dialog: MatDialog, wallet: Wallet, translateService: TranslateService, walletService: WalletService) {
+export function openDeleteWalletModal (dialog: CustomMatDialogService, wallet: Wallet, translateService: TranslateService, walletService: WalletService) {
   const mainText = translateService.instant('wallet.delete-confirmation1') + ' \"' +
     wallet.label + '\" ' +
     translateService.instant('wallet.delete-confirmation2');
@@ -84,7 +89,7 @@ export function openDeleteWalletModal (dialog: MatDialog, wallet: Wallet, transl
   });
 }
 
-export function scanAddresses(dialog: MatDialog, wallet: Wallet, blockchainService: BlockchainService, translate: TranslateService): Observable<any> {
+export function scanAddresses(dialog: CustomMatDialogService, wallet: Wallet, blockchainService: BlockchainService, translate: TranslateService): Observable<any> {
   return blockchainService.progress
     .filter(event => event.state === ProgressStates.Progress || event.state === ProgressStates.Error)
     .first()
@@ -102,4 +107,9 @@ export function scanAddresses(dialog: MatDialog, wallet: Wallet, blockchainServi
         autoFocus: false
       }).afterClosed();
     });
+}
+
+export function getTimeSinceLastBalanceUpdate(balanceService: BalanceService): number {
+  const diffMs: number = new Date().getTime() - balanceService.lastBalancesUpdateTime.getTime();
+  return Math.floor(diffMs / 60000);
 }

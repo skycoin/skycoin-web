@@ -16,7 +16,11 @@
                         (onStateChange)="changeForm($event)"></app-double-button>
   </div>
   <div class="row-container">
-    <app-create-wallet-form #formControl [create]="showNewForm" whiteText="true"></app-create-wallet-form>
+    <app-create-wallet-form
+    #formControl
+    [create]="showNewForm"
+    whiteText="true"
+    [showSlowMobileInfo]="showSlowMobileInfo"></app-create-wallet-form>
   </div>
   <div class="row-container -buttons-footer">
     <app-button #create
