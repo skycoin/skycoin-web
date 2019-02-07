@@ -5,7 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { BaseCoin } from '../coins/basecoin';
-import { TotalBalance, Wallet } from '../app.datatypes';
+import { Wallet } from '../app.datatypes';
+import { BalanceEvent, BalanceStates } from '../services/wallet/balance.service';
 
 // -- Components
 @Component({
@@ -129,8 +130,10 @@ export class MockBalanceService {
   hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
   lastBalancesUpdateTime: Date = new Date();
 
-  get totalBalance(): BehaviorSubject<TotalBalance> {
-    return new BehaviorSubject<TotalBalance>(null);
+  get totalBalance(): BehaviorSubject<BalanceEvent> {
+    return new BehaviorSubject<BalanceEvent>({
+      state: BalanceStates.Updating
+    });
   }
 
   startGettingBalances() { }
@@ -203,6 +206,12 @@ export class MockLanguageService {
   currentLanguage = new BehaviorSubject<string>('en');
 
   loadLanguageSettings() {
+  }
+}
+
+export class MockCustomMatDialogService {
+  get showingDialog() {
+    return Observable.of(false);
   }
 }
 

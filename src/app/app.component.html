@@ -4,22 +4,4 @@
     <div>{{ 'errors.crypto-no-available' | translate }}</div>
   </div>
 </div>
-<div class="size-alert" *ngIf="browserHasCryptoInsideWorkers">
-  <div>
-    <img src="assets/img/size-alert.png">
-    <div>{{ 'errors.window-size' | translate }}</div>
-    <div *ngIf="!isElectron && (appStoreUrl || googlePlayUrl)">
-      <br/>
-      <div>{{ 'mobile.try-the-app' | translate }}</div>
-      <div class="mobile-buttons-container">
-        <a *ngIf="appStoreUrl" [href]="appStoreUrl"><img src="assets/img/apps/as.png" /></a>
-        <a *ngIf="googlePlayUrl" [href]="googlePlayUrl"><img src="assets/img/apps/gp.png" /></a>
-      </div>
-      <div class="attribution-container">
-        <span *ngIf="appStoreUrl">{{ 'mobile.app-store-attribution' | translate }}</span>
-        <span *ngIf="googlePlayUrl">{{ 'mobile.google-play-attribution' | translate }}</span>
-      </div>
-    </div>
-  </div>
-</div>
 <router-outlet></router-outlet>

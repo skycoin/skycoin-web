@@ -3,9 +3,11 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { ISubscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
+import { config } from '../../../../app.config';
 
 export class ConfirmSeedParams {
   wallet: Wallet;
@@ -24,10 +26,12 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   disableDismiss = false;
   loadingProgress = 0;
   showConfirmSeedWarning;
+  showSlowMobileInfo = false;
 
   private wallet: Wallet;
   private unlockSubscription: ISubscription;
   private progressSubscription: ISubscription;
+  private slowInfoSubscription: ISubscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data,
@@ -52,6 +56,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.snackbar.dismiss();
     this.removeProgressSubscriptions();
+    this.removeSlowInfoSubscription();
   }
 
   closePopup() {
@@ -64,9 +69,14 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
     this.unlockButton.setLoading();
     this.disableDismiss = true;
 
+    this.createSlowInfoSubscription();
+
     const onProgressChanged = new EventEmitter<number>();
     if (this.wallet.addresses.length > 1) {
-      this.progressSubscription = onProgressChanged.subscribe((progress) => this.loadingProgress = progress);
+      this.progressSubscription = onProgressChanged.subscribe((progress) => {
+        this.createSlowInfoSubscription();
+        this.loadingProgress = progress;
+      });
     }
 
     this.unlockSubscription = this.walletService.unlockWallet(this.wallet, this.form.value.seed, onProgressChanged)
@@ -88,6 +98,8 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   }
 
   private onUnlockSuccess() {
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
     this.removeProgressSubscriptions();
     this.unlockButton.setSuccess();
     this.closePopup();
@@ -95,11 +107,13 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   }
 
   private onUnlockError(error: Error) {
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
     this.removeProgressSubscriptions();
     this.disableDismiss = false;
-    const config = new MatSnackBarConfig();
-    config.duration = 5000;
-    this.snackbar.open(error.message, null, config);
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 5000;
+    this.snackbar.open(error.message, null, snackBarConfig);
     this.unlockButton.setError(error.message);
   }
 
@@ -109,6 +123,19 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
     }
     if (this.unlockSubscription && !this.unlockSubscription.closed) {
       this.unlockSubscription.unsubscribe();
+    }
+  }
+
+  private createSlowInfoSubscription() {
+    this.removeSlowInfoSubscription();
+
+    this.slowInfoSubscription = Observable.of(1).delay(config.timeBeforeSlowMobileInfo)
+      .subscribe(() => this.showSlowMobileInfo = true);
+  }
+
+  private removeSlowInfoSubscription() {
+    if (this.slowInfoSubscription) {
+      this.slowInfoSubscription.unsubscribe();
     }
   }
 }

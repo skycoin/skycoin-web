@@ -13,6 +13,8 @@ export class QrCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('qr') qr: ElementRef;
   @ViewChild('btnImg') btnImg: ElementRef;
   address: string;
+  isCopying = false;
+  showOutputsOption = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -21,7 +23,8 @@ export class QrCodeComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    this.address = this.data.address ? this.data.address : this.data;
+    this.address = this.data.address;
+    this.showOutputsOption = this.data.showOutputsOption;
 
     const qrcode = new QRCode(this.qr.nativeElement, {
       text: this.coinService.currentCoin.value.coinName.toLowerCase() + ':' + this.address,
@@ -40,5 +43,16 @@ export class QrCodeComponent implements OnInit, AfterViewInit {
 
   onCopySuccess() {
     this.btnImg.nativeElement.src = 'assets/img/copy-qr-success.png';
+
+    this.isCopying = true;
+
+    // wait for a while and then remove the 'copying' class
+    setTimeout(() => {
+      this.isCopying = false;
+    }, 500);
+  }
+
+  closePopup() {
+    this.dialogRef.close();
   }
 }

@@ -1,7 +1,9 @@
 import { Component, Inject, ViewChild, OnDestroy } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
+import { ISubscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
@@ -11,6 +13,8 @@ import { CreateWalletFormComponent } from './create-wallet-form/create-wallet-fo
 import { Wallet } from '../../../../app.datatypes';
 import { scanAddresses } from '../../../../utils';
 import { BlockchainService } from '../../../../services/blockchain.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
+import { config } from '../../../../app.config';
 
 @Component({
   selector: 'app-create-wallet',
@@ -21,7 +25,10 @@ export class CreateWalletComponent implements OnDestroy {
   @ViewChild('formControl') formControl: CreateWalletFormComponent;
   @ViewChild('create') createButton: ButtonComponent;
 
+  showSlowMobileInfo = false;
   disableDismiss = false;
+
+  private slowInfoSubscription: ISubscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
@@ -31,10 +38,11 @@ export class CreateWalletComponent implements OnDestroy {
     private coinService: CoinService,
     private blockchainService: BlockchainService,
     private translate: TranslateService,
-    private dialog: MatDialog
+    private dialog: CustomMatDialogService
   ) { }
 
   ngOnDestroy() {
+    this.removeSlowInfoSubscription();
     this.snackBar.dismiss();
   }
 
@@ -45,6 +53,9 @@ export class CreateWalletComponent implements OnDestroy {
   createWallet() {
     this.createButton.setLoading();
     this.disableDismiss = true;
+
+    this.slowInfoSubscription = Observable.of(1).delay(config.timeBeforeSlowMobileInfo)
+      .subscribe(() => this.showSlowMobileInfo = true);
 
     const data = this.formControl.getData();
 
@@ -60,6 +71,9 @@ export class CreateWalletComponent implements OnDestroy {
     this.coinService.changeCoin(coin);
 
     if (!this.data.create) {
+      this.showSlowMobileInfo = false;
+      this.removeSlowInfoSubscription();
+
       scanAddresses(this.dialog, wallet, this.blockchainService, this.translate).subscribe(
         response => this.processScanResponse(initialCoin, wallet, false, response),
         error => this.processScanResponse(initialCoin, wallet, true, error)
@@ -81,16 +95,26 @@ export class CreateWalletComponent implements OnDestroy {
   }
 
   private finish() {
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
     this.createButton.setSuccess();
     this.dialogRef.close();
   }
 
   private onCreateError(errorMesasge: string) {
-    const config = new MatSnackBarConfig();
-    config.duration = 5000;
-    this.snackBar.open(errorMesasge, null, config);
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 5000;
+    this.snackBar.open(errorMesasge, null, snackBarConfig);
     this.createButton.setError(errorMesasge);
 
     this.disableDismiss = false;
+  }
+
+  private removeSlowInfoSubscription() {
+    if (this.slowInfoSubscription) {
+      this.slowInfoSubscription.unsubscribe();
+    }
   }
 }

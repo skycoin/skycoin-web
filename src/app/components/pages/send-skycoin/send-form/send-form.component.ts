@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { ISubscription, Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 import { BigNumber } from 'bignumber.js';
+import { Observable } from 'rxjs/Observable';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { SpendingService, HoursSelectionTypes } from '../../../../services/wallet/spending.service';
@@ -14,6 +15,8 @@ import { openUnlockWalletModal } from '../../../../utils/index';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
 import { BlockchainService } from '../../../../services/blockchain.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
+import { config } from '../../../../app.config';
 
 @Component({
   selector: 'app-send-form',
@@ -25,19 +28,21 @@ export class SendFormComponent implements OnInit, OnDestroy {
   @Input() formData: any;
   @Output() onFormSubmitted = new EventEmitter<any>();
 
+  showSlowMobileInfo = false;
   form: FormGroup;
   wallets: Wallet[];
   currentCoin: BaseCoin;
 
-  private unlockSubscription: ISubscription;
+  private processSubscription: ISubscription;
   private subscription: Subscription;
+  private slowInfoSubscription: ISubscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private walletService: WalletService,
     private spendingService: SpendingService,
     private snackbar: MatSnackBar,
-    private unlockDialog: MatDialog,
+    private unlockDialog: CustomMatDialogService,
     private coinService: CoinService,
     private blockchainService: BlockchainService
   ) {}
@@ -55,12 +60,10 @@ export class SendFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.removeSlowInfoSubscription();
+    this.removeProcessSubscription();
     this.subscription.unsubscribe();
     this.snackbar.dismiss();
-
-    if (this.unlockSubscription) {
-      this.unlockSubscription.unsubscribe();
-    }
   }
 
   onVerify(event = null) {
@@ -78,11 +81,9 @@ export class SendFormComponent implements OnInit, OnDestroy {
     const wallet = this.form.value.wallet;
 
     if (!wallet.seed) {
-      if (this.unlockSubscription) {
-        this.unlockSubscription.unsubscribe();
-      }
+      this.removeProcessSubscription();
 
-      this.unlockSubscription = openUnlockWalletModal(wallet, this.unlockDialog).componentInstance
+      this.processSubscription = openUnlockWalletModal(wallet, this.unlockDialog).componentInstance
         .onWalletUnlocked.first().subscribe(() => this.createTransaction(wallet));
     } else {
       this.createTransaction(wallet);
@@ -92,7 +93,12 @@ export class SendFormComponent implements OnInit, OnDestroy {
   private createTransaction(wallet: Wallet) {
     this.button.setLoading();
 
-    this.spendingService.createTransaction(
+    this.slowInfoSubscription = Observable.of(1).delay(config.timeBeforeSlowMobileInfo)
+      .subscribe(() => this.showSlowMobileInfo = true);
+
+    this.removeProcessSubscription();
+
+    this.processSubscription = this.spendingService.createTransaction(
       wallet,
       null,
       null,
@@ -105,14 +111,15 @@ export class SendFormComponent implements OnInit, OnDestroy {
         ShareFactor: new BigNumber(0.5),
       },
       null
-    )
-      .subscribe(
+    ).subscribe(
         transaction => this.onTransactionCreated(transaction),
         error => this.onError(error)
       );
   }
 
   private onTransactionCreated(transaction) {
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
     this.onFormSubmitted.emit({
       wallet: this.form.value.wallet,
       address: this.form.value.address,
@@ -122,9 +129,11 @@ export class SendFormComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
-    const config = new MatSnackBarConfig();
-    config.duration = 300000;
-    this.snackbar.open(error.message, null, config);
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 300000;
+    this.snackbar.open(error.message, null, snackBarConfig);
     this.button.setError(error.message);
   }
 
@@ -167,5 +176,17 @@ export class SendFormComponent implements OnInit, OnDestroy {
     }
 
     return null;
+  }
+
+  private removeProcessSubscription() {
+    if (this.processSubscription) {
+      this.processSubscription.unsubscribe();
+    }
+  }
+
+  private removeSlowInfoSubscription() {
+    if (this.slowInfoSubscription) {
+      this.slowInfoSubscription.unsubscribe();
+    }
   }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Subscription, ISubscription } from 'rxjs/Subscription';
 
 import { SpendingService } from '../../../../services/wallet/spending.service';
@@ -8,6 +7,7 @@ import { Wallet } from '../../../../app.datatypes';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
 import { openQrModal } from '../../../../utils';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-outputs',
@@ -26,7 +26,7 @@ export class OutputsComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private spendingService: SpendingService,
-    private dialog: MatDialog,
+    private dialog: CustomMatDialogService,
     private coinService: CoinService
   ) { }
 
@@ -46,7 +46,8 @@ export class OutputsComponent implements OnInit, OnDestroy {
     this.closeDataSubscription();
   }
 
-  showQr(address) {
+  showQr(event, address) {
+    event.stopPropagation();
     openQrModal(this.dialog, address);
   }
 

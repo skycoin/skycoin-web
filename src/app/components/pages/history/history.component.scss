@@ -43,11 +43,15 @@
   }
 
   .-address {
-    flex: 1;
+    min-width: 0;
 
     .-detail {
       &:not(:last-child) {
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+      }
+
+      > div {
+        display: flex;
       }
     }
 
@@ -71,6 +75,14 @@
 
       .-timestamp {
         color: $grey;
+
+        @media (max-width: $max-small-width) {
+          & {
+            display: block;
+            padding: 0 !important;
+            margin-top: 4px;
+          }
+        }
       }
     }
 
@@ -86,13 +98,32 @@
       display: inline-block;
       font-size: 13px;
       line-height: 15px;
-      margin: 0 4px;
+      margin: 0 8px;
+
+      @media (max-width: $max-small-width) {
+        & {
+          margin-left: 0px;
+        }
+      }
     }
   }
 
   .-balance {
     width: 200px;
     text-align: right;
+    flex-shrink: 0;
+
+    @media (max-width: $max-small-width) {
+      & {
+        width: 140px;
+      }
+    }
+
+    @media (max-width: $max-very-small-width) {
+      & {
+        width: 90px;
+      }
+    }
 
     h4 {
       color: $grey-dark;
@@ -104,13 +135,21 @@
 
     p {
       color: $grey;
-      display: inline-block;
       font-size: 13px;
       line-height: 15px;
       margin: 0;
+      float: right;
     }
   }
 }
+
 .-transaction:hover{
   background-color:$grey-lightest;
+}
+
+.footer {
+  color: $grey;
+  font-size: 13px;
+  text-align: center;
+  margin: $content-vertical-margin;
 }

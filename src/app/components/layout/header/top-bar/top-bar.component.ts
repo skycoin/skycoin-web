@@ -2,15 +2,14 @@ import { Component, Input, OnInit, OnDestroy, Renderer2, ViewChild, NgZone } fro
 import 'rxjs/add/observable/interval';
 import { Subscription } from 'rxjs/Subscription';
 import { Overlay } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs/Observable';
 
 import { BalanceService, BalanceStates } from '../../../../services/wallet/balance.service';
-import { TotalBalance } from '../../../../app.datatypes';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
-import { openChangeCoinModal, openChangeLanguageModal } from '../../../../utils';
+import { openChangeCoinModal, openChangeLanguageModal, getTimeSinceLastBalanceUpdate } from '../../../../utils';
 import { LanguageService, LanguageData } from '../../../../services/language.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -32,7 +31,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   constructor(private balanceService: BalanceService,
               private coinService: CoinService,
-              private dialog: MatDialog,
+              private dialog: CustomMatDialogService,
               private overlay: Overlay,
               private renderer: Renderer2,
               private languageService: LanguageService,
@@ -58,7 +57,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
           if (balance.state === BalanceStates.Obtained) {
             this.balanceObtained = true;
           }
-          this.updateTimeSinceLastBalanceUpdate();
+          this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService);
           this.problemUpdatingBalance = balance.state === BalanceStates.Error;
           this.updatingBalance = balance.state === BalanceStates.Updating;
         }
@@ -67,7 +66,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
     this._ngZone.runOutsideAngular(() => {
       this.subscription.add(
-        Observable.interval(5000).subscribe(() => this._ngZone.run(() => this.updateTimeSinceLastBalanceUpdate()))
+        Observable.interval(5000).subscribe(() => this._ngZone.run(() => this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService)))
       );
     });
   }
@@ -96,10 +95,5 @@ export class TopBarComponent implements OnInit, OnDestroy {
           this.languageService.changeLanguage(response);
         }
       });
-  }
-
-  private updateTimeSinceLastBalanceUpdate() {
-    const diffMs: number = new Date().getTime() - this.balanceService.lastBalancesUpdateTime.getTime();
-    this.timeSinceLastBalanceUpdate = Math.floor(diffMs / 60000);
   }
 }

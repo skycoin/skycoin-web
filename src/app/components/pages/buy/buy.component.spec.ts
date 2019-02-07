@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatCardModule, MatDividerModule, MatIconModule, MatListModule, MatDialogModule } from '@angular/material';
+import { MatCardModule, MatDividerModule, MatIconModule, MatListModule } from '@angular/material';
 
 import { BuyComponent } from './buy.component';
 import { PurchaseService } from '../../../services/purchase.service';
-import { MockTranslatePipe, MockPurchaseService, MockTellerStatusPipe, MockDateTimePipe } from '../../../utils/test-mocks';
+import { MockTranslatePipe, MockPurchaseService, MockTellerStatusPipe, MockDateTimePipe, MockCustomMatDialogService } from '../../../utils/test-mocks';
+import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
 
 describe('BuyComponent', () => {
   let component: BuyComponent;
@@ -21,11 +22,11 @@ describe('BuyComponent', () => {
         MatCardModule,
         MatDividerModule,
         MatIconModule,
-        MatListModule,
-        MatDialogModule
+        MatListModule
       ],
       providers: [
-        { provide: PurchaseService, useClass: MockPurchaseService }
+        { provide: PurchaseService, useClass: MockPurchaseService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ]
     })
     .compileComponents();

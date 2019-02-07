@@ -1,10 +1,10 @@
 import { Component, forwardRef, Output, EventEmitter, Input, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 
 import { BaseCoin } from '../../../coins/basecoin';
 import { openChangeCoinModal } from '../../../utils';
+import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-select-coin',
@@ -20,7 +20,7 @@ export class SelectCoinComponent implements ControlValueAccessor {
   @Output() onCoinChanged = new EventEmitter<BaseCoin>();
   @Input() selectedCoin: BaseCoin;
 
-  constructor(private dialog: MatDialog,
+  constructor(private dialog: CustomMatDialogService,
     private overlay: Overlay,
     private renderer: Renderer2) {}
 

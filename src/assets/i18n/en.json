@@ -3,7 +3,9 @@
     "loading": "Loading...",
     "new": "New",
     "load": "Load",
-    "address": "Address"
+    "address": "Address",
+    "close": "Close",
+    "slow-on-mobile": "Please wait. This process may take a minute or more on some mobile devices and slow PCs."
   },
 
   "errors": {
@@ -13,7 +15,6 @@
     "no-wallet": "Wallet does not exist",
     "no-outputs": "No unspent outputs",
     "no-wallets": "Currently there are no wallets",
-    "window-size": "The window is too narrow for the content.",
     "loading-error": "Error trying to get the data. Please try again later.",
     "crypto-no-available": "The web browser you are using is not compatible with this wallet (the crypto library is not available). Please update your browser or try using another."
   },
@@ -37,7 +38,7 @@
     "seed": "Wallet Seed",
     "qrcode": "QR Code",
     "disclaimer": "Disclaimer",
-    "qr-code": "View QR Code"
+    "qr-code": "Address"
   },
 
   "header": {
@@ -48,6 +49,7 @@
     "pending-txs2": "pending transactions.",
     "pending-txs3": "Data you see may not be updated.",
     "loading": "Loading...",
+    "connection-error-tooltip": "There was an error while trying to refresh the balance",
 
     "top-bar": {
       "updated1": "Balance updated:",
@@ -129,6 +131,8 @@
     "decrypt": "Decrypt Wallet",
     "edit": "Edit Wallet",
     "delete" : "Delete Wallet",
+    "unlock-wallet": "Unlock Wallet",
+    "options" : "Options",
     "add": "Add Wallet",
     "load": "Load Wallet",
     "locked": "Locked",
@@ -139,6 +143,8 @@
     "delete-confirmation2": "will be deleted. If you forget your seed, you will not be able to recover this wallet! Do you want to continue?",
     "delete-confirmation-check": "Yeah, I want to delete the wallet.",
     "add-confirmation": "If you add more addresses, the process of unlocking the wallet to perform certain operations will take more time. Do you want to continue?",
+    "already-adding-address-error": "An address is already being added. Please wait.",
+    "adding-address": "Adding address.",
 
     "new": {
       "create-title": "Create Wallet",
@@ -250,6 +256,10 @@
     "total-supply": "Total {{ coin }} supply"
   },
 
+  "outputs": {
+    "hash": "Hash"
+  },
+
   "network": {
     "automatic-peers": "Automatic peers",
     "default-peers": "Default peers"
@@ -258,9 +268,11 @@
   "pending-txs": {
     "timestamp": "Timestamp",
     "txid": "Transaction ID",
+    "id": "ID",
     "none": "Currently there are no pending transactions",
     "my": "Mine",
-    "all": "All"
+    "all": "All",
+    "transactions": "Transactions"
   },
 
   "nodes" : {
@@ -268,6 +280,7 @@
     "url": "Node URL",
     "custom-label": "Custom URL",
     "change-url": "Change URL",
+    "nodes": "Nodes",
 
     "change" : {
       "url-label": "Node URL (leave empty to use the default URL)",
@@ -343,11 +356,5 @@
       "wrong-seed": "Wrong seed",
       "invalid-wallet": "Invalid wallet"
     }
-  },
-
-  "mobile": {
-    "try-the-app": "You can try our mobile app:",
-    "app-store-attribution": "Apple, the Apple logo, iPhone, and iPad are trademarks of Apple Inc., registered in the U.S. and other countries and regions. App Store is a service mark of Apple Inc.",
-    "google-play-attribution": "Google Play and the Google Play logo are trademarks of Google LLC."
   }
 }

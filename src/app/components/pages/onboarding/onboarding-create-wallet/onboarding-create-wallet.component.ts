@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
+import { ISubscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
@@ -13,6 +14,8 @@ import { openChangeLanguageModal, showConfirmationModal, scanAddresses } from '.
 import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 import { ConfirmationData, Wallet } from '../../../../app.datatypes';
 import { BlockchainService } from '../../../../services/blockchain.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
+import { config } from '../../../../app.config';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -23,13 +26,16 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   @ViewChild('formControl') formControl: CreateWalletFormComponent;
   @ViewChild('create') createButton;
 
+  showSlowMobileInfo = false;
   showNewForm = true;
   doubleButtonActive = DoubleButtonActive.LeftButton;
   userHasWallets = false;
   creatingWallet = false;
 
+  private slowInfoSubscription: ISubscription;
+
   constructor(
-    private dialog: MatDialog,
+    private dialog: CustomMatDialogService,
     private walletService: WalletService,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -45,6 +51,7 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.removeSlowInfoSubscription();
     this.snackBar.dismiss();
   }
 
@@ -74,7 +81,7 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   }
 
   skip() {
-    this.router.navigate(['/wallets']);
+    this.router.navigate(['/wallets'], { replaceUrl: true });
   }
 
   private showLanguageModal() {
@@ -116,6 +123,9 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
     this.createButton.setLoading();
     this.creatingWallet = true;
 
+    this.slowInfoSubscription = Observable.of(1).delay(config.timeBeforeSlowMobileInfo)
+      .subscribe(() => this.showSlowMobileInfo = true);
+
     const data = this.formControl.getData();
 
     this.walletService.create(data.label, data.seed, data.coin.id, this.showNewForm)
@@ -130,6 +140,9 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
     this.coinService.changeCoin(coin);
 
     if (!this.showNewForm) {
+      this.showSlowMobileInfo = false;
+      this.removeSlowInfoSubscription();
+
       scanAddresses(this.dialog, wallet, this.blockchainService, this.translate).subscribe(
         response => this.processScanResponse(initialCoin, wallet, false, response),
         error => this.processScanResponse(initialCoin, wallet, true, error)
@@ -151,17 +164,27 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   }
 
   private finish() {
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
     this.createButton.setSuccess();
     this.skip();
     this.creatingWallet = false;
   }
 
   private onCreateError(errorMesasge: string) {
-    const config = new MatSnackBarConfig();
-    config.duration = 5000;
-    this.snackBar.open(errorMesasge, null, config);
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 5000;
+    this.snackBar.open(errorMesasge, null, snackBarConfig);
 
     this.createButton.setError(errorMesasge);
     this.creatingWallet = false;
+  }
+
+  private removeSlowInfoSubscription() {
+    if (this.slowInfoSubscription) {
+      this.slowInfoSubscription.unsubscribe();
+    }
   }
 }

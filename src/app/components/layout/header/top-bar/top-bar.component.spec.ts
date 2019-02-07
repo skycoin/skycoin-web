@@ -1,13 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatMenuModule, MatIconModule, MatTooltipModule, MatDialogModule } from '@angular/material';
+import { MatMenuModule, MatIconModule, MatTooltipModule } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { TopBarComponent } from './top-bar.component';
 import { BalanceService } from '../../../../services/wallet/balance.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockBalanceService, MockCoinService, MockLanguageService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockBalanceService, MockCoinService, MockLanguageService, MockCustomMatDialogService } from '../../../../utils/test-mocks';
 import { LanguageService } from '../../../../services/language.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 describe('TopBarComponent', () => {
   let component: TopBarComponent;
@@ -21,13 +22,13 @@ describe('TopBarComponent', () => {
         MatMenuModule,
         MatIconModule,
         MatTooltipModule,
-        RouterTestingModule,
-        MatDialogModule
+        RouterTestingModule
       ],
       providers: [
         { provide: BalanceService, useClass: MockBalanceService },
         { provide: CoinService, useClass: MockCoinService },
-        { provide: LanguageService, useClass: MockLanguageService }
+        { provide: LanguageService, useClass: MockLanguageService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ]
     })
     .compileComponents();

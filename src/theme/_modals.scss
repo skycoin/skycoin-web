@@ -1,11 +1,16 @@
 @import 'variables';
 
 .modal {
+  display: flex;
+  flex-direction: column;
+  height: inherit;
+  height: 100%;
+  width: 100%;
+
   .-body {
     line-height: 20px;
     font-size: 13px;
     color: $grey-dark;
-    opacity: 0.8;
   }
 
   .-check-container{
@@ -20,6 +25,12 @@
   app-button {
     button {
       margin-top: 28px;
+
+      @media (max-width: $max-small-width) {
+        & {
+          margin-top: 12px;
+        }
+      }
     }
   }
 }

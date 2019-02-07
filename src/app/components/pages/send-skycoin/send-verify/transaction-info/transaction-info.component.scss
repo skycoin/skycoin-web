@@ -80,6 +80,13 @@ h4 {
 
 .-tx-price {
   text-align: center;
+  width: 100%;
+
+  @media (max-width: $max-small-width) {
+    & {
+      margin-bottom: 25px;
+    }
+  }
 
   .-icon {
     &.-incoming {
