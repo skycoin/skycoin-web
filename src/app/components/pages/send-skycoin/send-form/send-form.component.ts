@@ -7,7 +7,7 @@ import 'rxjs/add/operator/filter';
 import { BigNumber } from 'bignumber.js';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
-import { SpendingService } from '../../../../services/wallet/spending.service';
+import { SpendingService, HoursSelectionTypes } from '../../../../services/wallet/spending.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
 import { Wallet } from '../../../../app.datatypes';
 import { openUnlockWalletModal } from '../../../../utils/index';
@@ -92,7 +92,20 @@ export class SendFormComponent implements OnInit, OnDestroy {
   private createTransaction(wallet: Wallet) {
     this.button.setLoading();
 
-    this.spendingService.createTransaction(wallet, this.form.value.address.replace(/\s/g, ''), new BigNumber(this.form.value.amount))
+    this.spendingService.createTransaction(
+      wallet,
+      null,
+      null,
+      [{
+        address: this.form.value.address.replace(/\s/g, ''),
+        coins: new BigNumber(this.form.value.amount),
+      }],
+      {
+        type: HoursSelectionTypes.Auto,
+        ShareFactor: new BigNumber(0.5),
+      },
+      null
+    )
       .subscribe(
         transaction => this.onTransactionCreated(transaction),
         error => this.onError(error)
