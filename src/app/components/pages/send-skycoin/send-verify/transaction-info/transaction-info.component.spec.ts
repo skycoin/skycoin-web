@@ -4,7 +4,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TransactionInfoComponent } from './transaction-info.component';
 import { PriceService } from '../../../../../services/price.service';
 import { CoinService } from '../../../../../services/coin.service';
-import { MockTranslatePipe, MockPriceService, MockCoinService } from '../../../../../utils/test-mocks';
+import { MockTranslatePipe, MockPriceService, MockCoinService, MockDateTimePipe } from '../../../../../utils/test-mocks';
 
 describe('TransactionInfoComponent', () => {
   let component: TransactionInfoComponent;
@@ -12,7 +12,7 @@ describe('TransactionInfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransactionInfoComponent, MockTranslatePipe ],
+      declarations: [ TransactionInfoComponent, MockTranslatePipe, MockDateTimePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: PriceService, useClass: MockPriceService },

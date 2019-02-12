@@ -5,7 +5,7 @@ import { HistoryComponent } from './history.component';
 import { HistoryService } from '../../../services/wallet/history.service';
 import { PriceService } from '../../../services/price.service';
 import { CoinService } from '../../../services/coin.service';
-import { MockTranslatePipe, MockPriceService, MockCoinService, MockHistoryService, MockCustomMatDialogService } from '../../../utils/test-mocks';
+import { MockTranslatePipe, MockPriceService, MockCoinService, MockHistoryService, MockCustomMatDialogService, MockDateTimePipe } from '../../../utils/test-mocks';
 import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
 
 describe('HistoryComponent', () => {
@@ -14,7 +14,7 @@ describe('HistoryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HistoryComponent, MockTranslatePipe ],
+      declarations: [ HistoryComponent, MockTranslatePipe, MockDateTimePipe ],
       providers: [
         { provide: HistoryService, useClass: MockHistoryService },
         { provide: PriceService, useClass: MockPriceService },
