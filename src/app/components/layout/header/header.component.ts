@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, NgZone } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
 import { BigNumber } from 'bignumber.js';
 import { Observable } from 'rxjs/Observable';
 
@@ -33,9 +33,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   balanceObtained = false;
   timeSinceLastBalanceUpdate = 0;
   problemUpdatingBalance: boolean;
+  synchronized = true;
 
   private price: number;
   private subscription: Subscription;
+  private synchronizedSubscription: ISubscription;
 
   get loading() {
     return this.isBlockchainLoading || !this.balanceObtained;
@@ -51,12 +53,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin);
+      .subscribe((coin: BaseCoin) => {
+        this.currentCoin = coin;
+
+        this.synchronized = true;
+        if (this.synchronizedSubscription) {
+          this.synchronizedSubscription.unsubscribe();
+          this.synchronizedSubscription = null;
+        }
+      });
 
     this.subscription.add(
       this.blockchainService.progress
         .filter(response => !!response)
-        .subscribe(response => this.updateBlockchainProgress(response))
+        .subscribe(response => {
+          this.updateBlockchainProgress(response);
+
+          // Adding the code here prevents the warning from flashing if the wallet is synchronized. Also, adding the
+          // subscription to this.subscription causes problems.
+          if (response.currentBlock && !this.synchronizedSubscription) {
+            this.synchronizedSubscription = this.blockchainService.synchronized.subscribe(value => this.synchronized = value);
+          }
+        })
     );
 
     this.subscription.add(
@@ -97,6 +115,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    if (this.synchronizedSubscription) {
+      this.synchronizedSubscription.unsubscribe();
+    }
   }
 
   private resetState() {
