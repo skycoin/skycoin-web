@@ -8,6 +8,7 @@
                 [disabled]="!wallet.balance || wallet.balance.isLessThanOrEqualTo(0)"
                 [ngValue]="wallet">
           {{ wallet.label }} — {{ (wallet.balance ? wallet.balance.decimalPlaces(6).toString() : 0) | number:'1.0-6' }} {{ currentCoin.coinSymbol }}
+          ({{ wallet.hours.decimalPlaces(0).toString() | number:'1.0-0' }} {{ currentCoin.hoursName }})
         </option>
       </select>
     </div>
