@@ -51,7 +51,7 @@
           <div class="-address">
             <h4 *ngIf="transaction.balance < 0 && transaction.confirmed">
               {{ 'history.sent' | translate }} {{ currentCoin.coinSymbol }}
-              <span class="-timestamp">{{ transaction.timestamp * 1000 | date:'short' }}</span>
+              <span class="-timestamp">{{ transaction.timestamp | dateTime }}</span>
             </h4>
             <h4 *ngIf="transaction.balance < 0 && !transaction.confirmed">
               {{ 'history.sending' | translate }} {{ currentCoin.coinSymbol }}
@@ -59,7 +59,7 @@
             </h4>
             <h4 *ngIf="transaction.balance > 0 && transaction.confirmed">
               {{ 'history.received' | translate }}  {{ currentCoin.coinSymbol }}
-              <span class="-timestamp">{{ transaction.timestamp * 1000 | date:'short' }}</span>
+              <span class="-timestamp">{{ transaction.timestamp | dateTime }}</span>
             </h4>
             <h4 *ngIf="transaction.balance > 0 && !transaction.confirmed">
               {{ 'history.receiving' | translate }} {{ currentCoin.coinSymbol }}

@@ -22,7 +22,7 @@
             <span>{{ 'tx.id' | translate }}:</span> <span>{{ transaction.txid }}</span>
           </div>
           <div class="-data">
-            <span>{{ 'tx.date' | translate }}:</span> <span>{{ transaction.timestamp * 1000 | date:'short' }}</span>
+            <span>{{ 'tx.date' | translate }}:</span> <span>{{ transaction.timestamp | dateTime }}</span>
           </div>
           <div class="-data">
             <span>{{ 'tx.status' | translate }}:</span> <span>{{ transaction.confirmed ? ('tx.confirmed' | translate) : ('tx.pending' | translate) }}</span>
