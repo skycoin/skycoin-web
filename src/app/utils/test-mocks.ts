@@ -75,7 +75,7 @@ export class MockCoinService {
 
   currentCoin = new BehaviorSubject<BaseCoin>({
     id: 1,
-    cmcTickerId: 1,
+    priceTickerId: 'btc-bitcoin',
     nodeUrl: 'nodeUrl',
     coinName: 'test coin',
     coinSymbol: 'test',
