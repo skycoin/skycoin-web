@@ -57,6 +57,9 @@
       <button mat-menu-item routerLink="/settings/outputs" [queryParams]="{ addr: address.address }">
         {{ 'wallet.address.outputs' | translate }}
       </button>
+      <button mat-menu-item routerLink="/history" [queryParams]="{ addr: address.address }">
+        {{ 'wallet.address.history' | translate }}
+      </button>
     </mat-menu>
   </ng-container>
   <div class="-record -small-adding-addess-msg-container -on-small-and-below-only" *ngIf="creatingAddress">

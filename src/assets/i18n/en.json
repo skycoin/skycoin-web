@@ -198,7 +198,8 @@
       "copy": "Copy",
       "copy-address": "Copy Address",
       "copied": "Copied!",
-      "outputs": "Unspent Outputs"
+      "outputs": "Unspent Outputs",
+      "history": "History"
     }
   },
 
@@ -306,7 +307,13 @@
     "received": "Received",
     "receiving": "Receiving",
     "pending": "Pending",
-    "price-tooltip": "Calculated at the current rate"
+    "price-tooltip": "Calculated at the current rate",
+    "no-txs": "You have no transaction history",
+    "no-txs-filter": "There are no transactions matching the current filter criteria",
+    "no-filter": "No filter active (press to select wallets/addresses)",
+    "filter": "Active filter: ",
+    "filters": "Active filters: ",
+    "all-addresses": "All addresses"
   },
 
   "teller": {
