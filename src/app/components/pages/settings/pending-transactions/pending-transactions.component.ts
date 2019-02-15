@@ -85,7 +85,12 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
     })
       .map(transaction => {
         transaction.amount = new BigNumber('0');
-        transaction.outputs.map(output => transaction.amount = transaction.amount.plus(output.coins));
+        transaction.hours = new BigNumber('0');
+        transaction.outputs.map(output => {
+          transaction.amount = transaction.amount.plus(output.coins);
+          transaction.hours = transaction.hours.plus(output.hours);
+        });
+
         return transaction;
       });
   }
