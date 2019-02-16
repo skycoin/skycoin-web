@@ -73,7 +73,7 @@ describe('HistoryService', () => {
       const apiResponse = createAddressTransactions(ownerAddress.address, destinationAddress, 13);
       spyApiService.get.and.returnValue( Observable.of([apiResponse]) );
 
-      const expectedTransaction: NormalTransaction = createTransaction([destinationAddress], ownerAddress.address, destinationAddress, 13, new BigNumber(-13));
+      const expectedTransaction: NormalTransaction = createTransaction([ownerAddress.address], ownerAddress.address, destinationAddress, 13, new BigNumber(-13));
       expectedTransaction['hoursSent'] = new BigNumber(NaN);
       expectedTransaction['hoursBurned'] = new BigNumber(NaN);
 
