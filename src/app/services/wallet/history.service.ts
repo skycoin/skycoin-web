@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BigNumber } from 'bignumber.js';
 
 import { ApiService } from '../api.service';
-import { Address, NormalTransaction } from '../../app.datatypes';
+import { Address, NormalTransaction, Wallet } from '../../app.datatypes';
 import { WalletService } from './wallet.service';
 import { GlobalsService } from '../globals.service';
 import { isEqualOrSuperiorVersion } from '../../utils/semver';
@@ -19,11 +19,20 @@ export class HistoryService {
   ) { }
 
   transactions(): Observable<any[]> {
-    return this.walletService.addresses.first()
-      .flatMap(addresses => {
+    let wallets: Wallet[];
+    const addressesMap: Map<string, boolean> = new Map<string, boolean>();
+
+
+    return this.walletService.wallets.first().flatMap(w => {
+      wallets = w;
+
+      return this.walletService.addresses.first();
+    }).flatMap(addresses => {
         if (addresses.length === 0) {
           return Observable.of([]);
         }
+
+        addresses.map(add => addressesMap.set(add.address, true));
 
         return this.globalsService.getValidNodeVersion().flatMap (version => {
           let TxObsv: Observable<any>;
@@ -49,36 +58,61 @@ export class HistoryService {
 
           return TxObsv.map(transactions => {
             return transactions.map(transaction => {
-              const outgoing = addresses.some(address => {
-                return transaction.inputs.some(input => input.owner === address.address);
-              });
+              const outgoing = transaction.inputs.some(input => addressesMap.has(input.owner));
 
-              const relevantOutputs = transaction.outputs.reduce((array, output) => {
-                const isMyOutput = addresses.some(address => address.address === output.dst);
-
-                if ((outgoing && !isMyOutput) || (!outgoing && isMyOutput)) {
-                  array.push(output);
-                }
-
-                return array;
-              }, []);
-
-              const calculatedOutputs = (outgoing && relevantOutputs.length === 0)
-              || (!outgoing && relevantOutputs.length === transaction.outputs.length)
-                ? transaction.outputs
-                : relevantOutputs;
-
-              transaction.addresses.push(
-                ...calculatedOutputs
-                  .map(output => output.dst)
-                  .filter((dst, i, self) => self.indexOf(dst) === i),
-              );
-
-              calculatedOutputs.map (output => transaction.balance = transaction.balance.plus(new BigNumber(output.coins)));
-              transaction.balance = (outgoing ? transaction.balance.negated() : transaction.balance);
-
+              const relevantAddresses: Map<string, boolean> = new Map<string, boolean>();
+              transaction.balance = new BigNumber('0');
               transaction.hoursSent = new BigNumber('0');
-              calculatedOutputs.map(output => transaction.hoursSent = transaction.hoursSent.plus(new BigNumber(output.hours)));
+
+              if (!outgoing) {
+                transaction.outputs.map(output => {
+                  if (addressesMap.has(output.dst)) {
+                    relevantAddresses.set(output.dst, true);
+                    transaction.balance = transaction.balance.plus(output.coins);
+                    transaction.hoursSent = transaction.hoursSent.plus(output.hours);
+                  }
+                });
+              } else {
+                const possibleReturnAddressesMap: Map<string, boolean> = new Map<string, boolean>();
+                transaction.inputs.map(input => {
+                  if (addressesMap.has(input.owner)) {
+                    relevantAddresses.set(input.owner, true);
+                    wallets.map(wallet => {
+                      if (wallet.addresses.some(add => add.address === input.owner)) {
+                        wallet.addresses.map(add => possibleReturnAddressesMap.set(add.address, true));
+                      }
+                    });
+                  }
+                });
+
+                transaction.outputs.map(output => {
+                  if (!possibleReturnAddressesMap.has(output.dst)) {
+                    transaction.balance = transaction.balance.minus(output.coins);
+                    transaction.hoursSent = transaction.hoursSent.plus(output.hours);
+                  }
+                });
+
+                if (transaction.balance.isEqualTo(0)) {
+                  transaction.coinsMovedInternally = true;
+                  const inputAddressesMap: Map<string, boolean> = new Map<string, boolean>();
+
+                  transaction.inputs.map(input => {
+                    inputAddressesMap.set(input.owner, true);
+                  });
+
+                  transaction.outputs.map(output => {
+                    if (!inputAddressesMap.has(output.dst)) {
+                      relevantAddresses.set(output.dst, true);
+                      transaction.balance = transaction.balance.plus(output.coins);
+                      transaction.hoursSent = transaction.hoursSent.plus(output.hours);
+                    }
+                  });
+                }
+              }
+
+              relevantAddresses.forEach((value, key) => {
+                transaction.addresses.push(key);
+              });
 
               let inputsHours = new BigNumber('0');
               transaction.inputs.map(input => inputsHours = inputsHours.plus(new BigNumber(input.calculated_hours)));
