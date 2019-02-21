@@ -30,6 +30,7 @@ export class Transaction {
   outputs: any[];
   hoursSent?: BigNumber;
   hoursBurned?: BigNumber;
+  coinsMovedInternally?: boolean;
 }
 
 export class NormalTransaction extends Transaction {
