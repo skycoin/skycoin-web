@@ -15,6 +15,22 @@ import { WalletService } from './wallet.service';
 import { GlobalsService } from '../globals.service';
 import { isEqualOrSuperiorVersion } from '../../utils/semver';
 
+export class Destination {
+  address: string;
+  coins: BigNumber;
+  hours?: BigNumber;
+}
+
+export enum HoursSelectionTypes {
+  Manual = 'manual',
+  Auto = 'auto'
+}
+
+export class HoursSelection {
+  type: HoursSelectionTypes;
+  ShareFactor?: BigNumber;
+}
+
 @Injectable()
 export class SpendingService {
   isInjectingTx = false;
@@ -33,8 +49,13 @@ export class SpendingService {
     coinService.currentCoin.subscribe((coin) => this.currentCoin = coin);
   }
 
-  createTransaction(wallet: Wallet, address: string, amount: BigNumber): Observable<Transaction> {
-    const addresses = wallet.addresses.map(a => a.address).join(',');
+  createTransaction(
+    wallet: Wallet,
+    addresses: string[]|null,
+    unspents: string[]|null,
+    destinations: Destination[],
+    hoursSelection: HoursSelection,
+    changeAddress: string|null): Observable<Transaction> {
 
     let unburnedHoursRatio: BigNumber;
 
@@ -43,70 +64,77 @@ export class SpendingService {
         if (isEqualOrSuperiorVersion(version, '0.25.0')) {
           return this.apiService.get('health').flatMap(response => {
             unburnedHoursRatio = new BigNumber(1).minus(new BigNumber(1).dividedBy(response.user_verify_transaction.burn_factor));
-            return this.getOutputs(addresses);
+            return this.getOutputs(wallet, addresses, unspents);
           });
         } else {
           unburnedHoursRatio = new BigNumber(0.5);
-          return this.getOutputs(addresses);
+          return this.getOutputs(wallet, addresses, unspents);
         }
       }).flatMap((outputs: Output[]) => {
-        const minRequiredOutputs =  this.getMinRequiredOutputs(amount, outputs);
-        let totalCoins = new BigNumber('0');
-        minRequiredOutputs.map(output => totalCoins = totalCoins.plus(output.coins));
+        // Calculate how many coins should be sent.
+        let amount = new BigNumber(0);
+        destinations.map(destination => amount = amount.plus(new BigNumber(destination.coins)));
 
-        if (totalCoins.isLessThan(amount)) {
-          throw new Error(
-            `${this.translate.instant('service.wallet.not-enough-hours1')} ${ this.currentCoin.hoursName } ${ this.translate.instant('service.wallet.not-enough-hours2') }`
+        // If the user manually set the number of hours to send, this calculates the minimum number of hours the
+        // inputs must have to satisfy the requirement and the fee.
+        let minimumHours = new BigNumber(0);
+        if (hoursSelection.type === HoursSelectionTypes.Manual) {
+          destinations.map(destination => minimumHours = minimumHours.plus(new BigNumber(destination.hours)));
+        }
+        minimumHours = minimumHours.multipliedBy(new BigNumber(1).dividedBy(unburnedHoursRatio));
+
+        // Obtain the outputs that will be used as inputs.
+        const minRequiredOutputs =  this.getMinRequiredOutputs(amount, minimumHours, outputs, false);
+        // Create the transaction.
+        let tx = this.buildTransaction(
+          unburnedHoursRatio,
+          minRequiredOutputs,
+          wallet,
+          destinations,
+          hoursSelection,
+          changeAddress,
+          amount,
+          minimumHours
+        );
+
+        // Calculate how many coins are available in the inputs.
+        let availableCoins = new BigNumber(0);
+        tx.inputs.map(input => availableCoins = availableCoins.plus(new BigNumber(input.coins)));
+
+        // If the inputs have the exact number of coins to send and adding an extra input causes less
+        // hours to be lost, it is added.
+        if (availableCoins.isEqualTo(amount)) {
+          const minRequiredOutputsPlusOne =  this.getMinRequiredOutputs(amount, minimumHours, outputs, true);
+          const txExtra = this.buildTransaction(
+            unburnedHoursRatio,
+            minRequiredOutputsPlusOne,
+            wallet, destinations,
+            hoursSelection,
+            changeAddress,
+            amount,
+            minimumHours
           );
+
+          const hoursLossedInTx = tx.hoursBurned.plus(tx.hoursSent);
+          const hoursLossedInTxExtra = txExtra.hoursBurned.plus(txExtra.hoursSent);
+
+          if (hoursLossedInTx.isGreaterThan(hoursLossedInTxExtra)) {
+            tx = txExtra;
+          }
         }
 
-        let totalHours = new BigNumber('0');
-        minRequiredOutputs.map(output => totalHours = totalHours.plus(output.calculated_hours));
-        let hoursToSend = totalHours.multipliedBy(unburnedHoursRatio).dividedBy(2).decimalPlaces(0, BigNumber.ROUND_FLOOR);
-
-        const txOutputs: TransactionOutput[] = [];
-        const txInputs: TransactionInput[] = [];
-        const calculatedHours = totalHours.multipliedBy(unburnedHoursRatio).decimalPlaces(0, BigNumber.ROUND_FLOOR);
-
-        const changeCoins = totalCoins.minus(amount).decimalPlaces(6);
-
-        if (changeCoins.isGreaterThan(0)) {
-          txOutputs.push({
-            address: wallet.addresses[0].address,
-            coins: changeCoins.toNumber(),
-            hours: calculatedHours.minus(hoursToSend).toNumber()
-          });
-        } else {
-          hoursToSend = calculatedHours;
-        }
-
-        txOutputs.push({ address: address, coins: amount.toNumber(), hours: hoursToSend.toNumber() });
-
-        if (address === wallet.addresses[0].address) {
-          hoursToSend = calculatedHours;
-        }
-
-        minRequiredOutputs.forEach(input => {
-          txInputs.push({
-            hash: input.hash,
-            secret: wallet.addresses.find(a => a.address === input.address).secret_key,
-            address: input.address,
-            calculated_hours: input.calculated_hours.toNumber(),
-            coins: input.coins.toNumber()
-          });
-        });
-
-        return this.generateRawTransaction(txInputs, txOutputs)
+        return this.generateRawTransaction(tx.inputs, tx.outputs)
           .flatMap((rawTransaction: string) => {
             return Observable.of({
-              inputs: txInputs,
-              outputs: txOutputs,
-              hoursSent: hoursToSend,
-              hoursBurned: totalHours.minus(calculatedHours),
+              inputs: tx.inputs,
+              outputs: tx.outputs,
+              hoursSent: tx.hoursSent,
+              hoursBurned: tx.hoursBurned,
               encoded: rawTransaction
             });
           });
       });
+
   }
 
   injectTransaction(encodedTransaction: string): Observable<string> {
@@ -137,32 +165,159 @@ export class SpendingService {
       });
   }
 
+  private buildTransaction(
+    unburnedHoursRatio: BigNumber,
+    minRequiredOutputs: Output[],
+    wallet: Wallet,
+    destinations: Destination[],
+    hoursSelection: HoursSelection,
+    changeAddress: string|null,
+    amount: BigNumber,
+    minimumHours: BigNumber): Transaction {
+
+    let totalCoins = new BigNumber('0');
+    minRequiredOutputs.map(output => totalCoins = totalCoins.plus(output.coins));
+    let totalHours = new BigNumber('0');
+    minRequiredOutputs.map(output => totalHours = totalHours.plus(output.calculated_hours));
+
+    if (totalCoins.isLessThan(amount) || totalHours.isLessThan(minimumHours)) {
+      throw new Error(
+        `${this.translate.instant('service.wallet.not-enough-hours1')} ${ this.currentCoin.hoursName } ${ this.translate.instant('service.wallet.not-enough-hours2') }`
+      );
+    }
+
+    const sendableHours = totalHours.multipliedBy(unburnedHoursRatio).decimalPlaces(0, BigNumber.ROUND_FLOOR);
+    let hoursToSend: BigNumber;
+    let hoursToReturn = new BigNumber(0);
+
+    const txOutputs: TransactionOutput[] = [];
+    const txInputs: TransactionInput[] = [];
+
+    const changeCoins = totalCoins.minus(amount).decimalPlaces(6);
+
+    if (hoursSelection.type === HoursSelectionTypes.Auto) {
+      if (changeCoins.isGreaterThan(0)) {
+        hoursToSend = sendableHours.multipliedBy(hoursSelection.ShareFactor).decimalPlaces(0, BigNumber.ROUND_FLOOR);
+      } else {
+        hoursToSend = sendableHours;
+      }
+    } else {
+      hoursToSend = new BigNumber(0);
+      destinations.map(destination => hoursToSend = hoursToSend.plus(new BigNumber(destination.hours)));
+    }
+
+    let sendedHours = new BigNumber(0);
+    destinations.forEach(dest => {
+      const output: TransactionOutput = {
+        address: dest.address,
+        coins: dest.coins.toNumber(),
+        hours: 0
+      };
+
+      let hours: BigNumber;
+      if (hoursSelection.type === HoursSelectionTypes.Auto) {
+        hours = hoursToSend.multipliedBy(dest.coins.dividedBy(amount)).decimalPlaces(0, BigNumber.ROUND_FLOOR);
+      } else {
+        hours = dest.hours;
+      }
+      sendedHours = sendedHours.plus(hours);
+
+      output.hours = hours.toNumber();
+      txOutputs.push(output);
+    });
+
+    if (hoursSelection.type === HoursSelectionTypes.Auto) {
+      if (sendedHours.isLessThan(hoursToSend)) {
+        txOutputs[0].hours = new BigNumber(txOutputs[0].hours).plus(hoursToSend.minus(sendedHours)).toNumber();
+      }
+    }
+
+    if (changeCoins.isGreaterThan(0)) {
+      hoursToReturn = sendableHours.minus(hoursToSend);
+      changeAddress = changeAddress ? changeAddress : wallet.addresses[0].address;
+
+      txOutputs.push({
+        address: changeAddress,
+        coins: changeCoins.toNumber(),
+        hours: hoursToReturn.toNumber()
+      });
+    }
+
+    if (changeCoins.isGreaterThan(0) && destinations.some(destination => destination.address === changeAddress)) {
+      hoursToSend = sendableHours;
+      hoursToReturn = new BigNumber(0);
+    }
+
+    minRequiredOutputs.forEach(input => {
+      txInputs.push({
+        hash: input.hash,
+        secret: wallet.addresses.find(a => a.address === input.address).secret_key,
+        address: input.address,
+        calculated_hours: input.calculated_hours.toNumber(),
+        coins: input.coins.toNumber()
+      });
+    });
+
+    return {
+      inputs: txInputs,
+      outputs: txOutputs,
+      hoursSent: hoursToSend,
+      hoursBurned: totalHours.minus(hoursToSend.plus(hoursToReturn))
+    };
+  }
+
   private getAddressesAsString(): Observable<string> {
     return this.walletService.currentWallets.map(wallets => wallets.map(wallet => {
       return wallet.addresses.map(address => address.address).join(',');
     }).join(','));
   }
 
-  private getOutputs(addresses): Observable<Output[]> {
-    if (!addresses) {
+  private getOutputs(wallet: Wallet, addresses: string[]|null, unspents: string[]|null): Observable<Output[]> {
+    if (!wallet) {
       return Observable.of([]);
     } else {
       return this.globalsService.getValidNodeVersion().flatMap (version => {
+        const requestedAddresses = addresses ? addresses.join(',') : wallet.addresses.map(a => a.address).join(',');
+
         let outputsRequest: Observable<any>;
         if (isEqualOrSuperiorVersion(version, '0.25.0')) {
-          outputsRequest = this.apiService.post('outputs', { addrs: addresses });
+          outputsRequest = this.apiService.post('outputs', { addrs: requestedAddresses });
         } else {
-          outputsRequest = this.apiService.get('outputs', { addrs: addresses });
+          outputsRequest = this.apiService.get('outputs', { addrs: requestedAddresses });
+        }
+
+        let unspentsMap: Map<string, boolean>;
+        let addressesMap: Map<string, boolean>;
+        if (unspents) {
+          unspentsMap = new Map<string, boolean>();
+          unspents.map(unspent => unspentsMap.set(unspent, true));
+        } else if (addresses) {
+          addressesMap = new Map<string, boolean>();
+          addresses.map(address => addressesMap.set(address, true));
         }
 
         return outputsRequest.map((response: GetOutputsRequest) => {
           const outputs: Output[] = [];
-          response.head_outputs.forEach(output => outputs.push({
-            address: output.address,
-            coins: new BigNumber(output.coins),
-            hash: output.hash,
-            calculated_hours: new BigNumber(output.calculated_hours)
-          }));
+          response.head_outputs.forEach(output => {
+            let addOutput = false;
+            if (unspents && unspentsMap.has(output.hash)) {
+              addOutput = true;
+            } else if (!unspents && addresses && addressesMap.has(output.address)) {
+              addOutput = true;
+            } else if (!unspents && !addresses) {
+              addOutput = true;
+            }
+
+            if (addOutput) {
+              outputs.push({
+                address: output.address,
+                coins: new BigNumber(output.coins),
+                hash: output.hash,
+                calculated_hours: new BigNumber(output.calculated_hours)
+              });
+            }
+          });
+
           return outputs;
         });
       });
@@ -219,7 +374,7 @@ export class SpendingService {
     });
   }
 
-  private getMinRequiredOutputs(transactionAmount: BigNumber, outputs: Output[]): Output[] {
+  private getMinRequiredOutputs(transactionAmount: BigNumber, transactionHoursAmount: BigNumber, outputs: Output[], addOneMore: boolean): Output[] {
 
     // Split the outputs into those with and without hours
     const outputsWithHours: Output[] = [];
@@ -237,44 +392,36 @@ export class SpendingService {
       return [];
     }
 
+    const sortedOutputs: Output[] = [];
+    const minRequiredOutputs: Output[] = [];
+    let sumCoins: BigNumber = new BigNumber(0);
+    let sumHours: BigNumber = new BigNumber(0);
+
     // Sort the outputs with hours by coins, from highest to lowest. If two items have the same amount of
     // coins, the one with the least hours is placed first.
     this.sortOutputs(outputsWithHours, true);
-
-    // Use the first nonzero output.
-    const minRequiredOutputs: Output[] = [outputsWithHours[0]];
-    let sumCoins: BigNumber = new BigNumber(outputsWithHours[0].coins);
-
-    // If it's enough, finish.
-    if (sumCoins.isGreaterThanOrEqualTo(transactionAmount)) {
-      return minRequiredOutputs;
-    }
-
-    // Sort the outputs without hours by coins, from lowest to highest.
-    this.sortOutputs(outputsWitouthHours, false);
-
-    // Add the outputs without hours, until having the necessary amount of coins.
-    outputsWitouthHours.forEach(output => {
-      if (sumCoins.isLessThan(transactionAmount)) {
-        minRequiredOutputs.push(output);
-        sumCoins = sumCoins.plus(output.coins);
-      }
-    });
-
-    // If it's enough, finish.
-    if (sumCoins.isGreaterThanOrEqualTo(transactionAmount)) {
-      return minRequiredOutputs;
-    }
-
+    // Add the first nonzero output.
+    sortedOutputs.push(outputsWithHours[0]);
     outputsWithHours.splice(0, 1);
-    // Sort the outputs with hours by coins, from lowest to highest.
-    this.sortOutputs(outputsWithHours, false);
 
-    // Add the outputs with hours, until having the necessary amount of coins.
-    outputsWithHours.forEach((output) => {
-      if (sumCoins.isLessThan(transactionAmount)) {
+    // Sort the outputs without hours by coins, from lowest to highest, and add then to the list.
+    this.sortOutputs(outputsWitouthHours, false);
+    outputsWitouthHours.map(out => sortedOutputs.push(out));
+
+    // Sort the outputs with hours by coins, from lowest to highest, and add then to the list.
+    this.sortOutputs(outputsWithHours, false);
+    outputsWithHours.map(out => sortedOutputs.push(out));
+
+    let extraAdded = false;
+    // Add outputs until having the necessary amount of coins and hours.
+    sortedOutputs.forEach(output => {
+      if (sumCoins.isLessThan(transactionAmount) || sumHours.isLessThan(transactionHoursAmount)) {
         minRequiredOutputs.push(output);
         sumCoins = sumCoins.plus(output.coins);
+        sumHours = sumCoins.plus(output.calculated_hours);
+      } else if (addOneMore === !extraAdded) {
+        extraAdded = true;
+        minRequiredOutputs.push(output);
       }
     });
 

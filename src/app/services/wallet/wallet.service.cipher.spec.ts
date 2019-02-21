@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BigNumber } from 'bignumber.js';
 
 import { WalletService } from './wallet.service';
-import { SpendingService } from './spending.service';
+import { SpendingService, HoursSelectionTypes } from './spending.service';
 import { ApiService } from '../api.service';
 import { CipherProvider } from '../cipher.provider';
 import { Wallet, Address, TransactionOutput, TransactionInput, Output, Balance } from '../../app.datatypes';
@@ -116,7 +116,20 @@ describe('WalletService with cipher:', () => {
 
       spyApiService.get.and.returnValue(Observable.of({ head_outputs: outputs }));
 
-      spendingService.createTransaction(wallet, destinationAddress, amount)
+      spendingService.createTransaction(
+        wallet,
+        null,
+        null,
+        [{
+          address: destinationAddress,
+          coins: amount,
+        }],
+        {
+          type: HoursSelectionTypes.Auto,
+          ShareFactor: new BigNumber(0.5),
+        },
+        null
+      )
         .subscribe(
           (result: any) => {
             expect(result.inputs).toEqual(expectedTxInputs);
@@ -139,7 +152,20 @@ describe('WalletService with cipher:', () => {
 
       spyApiService.get.and.returnValue(Observable.of({ head_outputs: outputs }));
 
-      spendingService.createTransaction(wallet, wrongDestinationAddress, amount)
+      spendingService.createTransaction(
+        wallet,
+        null,
+        null,
+        [{
+          address: wrongDestinationAddress,
+          coins: amount,
+        }],
+        {
+          type: HoursSelectionTypes.Auto,
+          ShareFactor: new BigNumber(0.5),
+        },
+        null
+      )
         .subscribe(
           () => {
             fail('should fail');

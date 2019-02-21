@@ -197,7 +197,8 @@
       "copy": "Copiar",
       "copy-address": "Copiar Dirección",
       "copied": "¡Copiado!",
-      "outputs": "Salidas No Gastadas"
+      "outputs": "Salidas No Gastadas",
+      "history": "Historial"
     }
   },
 
@@ -225,6 +226,7 @@
     "hours": "Horas",
     "id": "Tx ID",
     "show-more": "Mostrar más",
+    "hours-moved": "movida(s)",
     "hours-sent": "enviada(s)",
     "hours-received": "recibida(s)",
     "hours-burned": "quemada(s)",
@@ -300,12 +302,20 @@
 
   "history": {
     "tx-detail": "Detalles de la Transacción",
+    "moving": "Moviendo internamente",
+    "moved": "Movida internamente",
     "sending": "Enviando",
     "sent": "Enviada",
     "received": "Recibida",
     "receiving": "Recibiendo",
     "pending": "Pendiente",
-    "price-tooltip": "Calculado a la tasa actual"
+    "price-tooltip": "Calculado a la tasa actual",
+    "no-txs": "Usted no tiene historial de transacciones",
+    "no-txs-filter": "No hay transacciones que coincidan con los criterios de filtro actuales",
+    "no-filter": "Sin filtros activos (Presione para seleccionar billeteras/direcciones)",
+    "filter": "Filtro activo: ",
+    "filters": "Filtros activo: ",
+    "all-addresses": "Todas las direcciones"
   },
 
   "teller": {
