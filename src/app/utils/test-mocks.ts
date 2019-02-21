@@ -154,6 +154,10 @@ export class MockBlockchainService {
     return 3;
   }
 
+  get burnRate() {
+    return 2;
+  }
+
   lastBlock(): Observable<any> {
     return Observable.of({});
   }

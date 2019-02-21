@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material';
+import { MatSliderModule, MatInputModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -82,6 +82,8 @@ import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change
 import { GlobalsService } from './services/globals.service';
 import { WalletOptionsComponent } from './components/pages/wallets/wallet-detail/wallet-options/wallet-options.component';
 import { CustomMatDialogService } from './services/custom-mat-dialog.service';
+import { SendFormAdvancedComponent } from './components/pages/send-skycoin/send-form-advanced/send-form-advanced.component';
+import { SelectAddressComponent } from './components/pages/send-skycoin/send-form-advanced/select-address/select-address';
 
 @NgModule({
   declarations: [
@@ -125,7 +127,9 @@ import { CustomMatDialogService } from './services/custom-mat-dialog.service';
     ScanAddressesComponent,
     NodesComponent,
     ChangeNodeURLComponent,
-    WalletOptionsComponent
+    WalletOptionsComponent,
+    SendFormAdvancedComponent,
+    SelectAddressComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -139,7 +143,8 @@ import { CustomMatDialogService } from './services/custom-mat-dialog.service';
     SelectLanguageComponent,
     ScanAddressesComponent,
     ChangeNodeURLComponent,
-    WalletOptionsComponent
+    WalletOptionsComponent,
+    SelectAddressComponent
   ],
   imports: [
     BrowserModule,
@@ -161,6 +166,7 @@ import { CustomMatDialogService } from './services/custom-mat-dialog.service';
     MatToolbarModule,
     MatTooltipModule,
     MatCheckboxModule,
+    MatSliderModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
     FormsModule,

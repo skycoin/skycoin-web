@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeWhile';
+import BigNumber from 'bignumber.js';
 
 import { ApiService } from './api.service';
 import { BalanceService } from './wallet/balance.service';
@@ -33,6 +34,7 @@ export class BlockchainService {
   private maxDecimals = 6;
   private readonly defaultPeriod = 90000;
   private readonly shortPeriod = 5000;
+  private burnRateInternal = new BigNumber(0.5);
 
   get progress(): Observable<ProgressEvent> {
     return this.progressSubject.asObservable();
@@ -40,6 +42,10 @@ export class BlockchainService {
 
   get currentMaxDecimals(): number {
     return this.maxDecimals;
+  }
+
+  get burnRate() {
+    return this.burnRateInternal;
   }
 
   constructor (
@@ -126,8 +132,10 @@ export class BlockchainService {
         this.globalsService.setNodeVersion(response.version.version);
         if (isEqualOrSuperiorVersion(response.version.version, '0.25.0')) {
           this.maxDecimals = response.user_verify_transaction.max_decimals;
+          this.burnRateInternal = new BigNumber(response.user_verify_transaction.burn_factor);
         } else {
           this.maxDecimals = 6;
+          this.burnRateInternal = new BigNumber(2);
         }
       });
   }

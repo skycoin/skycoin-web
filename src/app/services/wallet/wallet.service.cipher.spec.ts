@@ -12,6 +12,8 @@ import { CoinService } from '../coin.service';
 import { MockCoinService, MockGlobalsService } from '../../utils/test-mocks';
 import { createWallet } from './wallet.service.spec';
 import { GlobalsService } from '../globals.service';
+import { BlockchainService } from '../blockchain.service';
+import { BalanceService } from './balance.service';
 
 describe('WalletService with cipher:', () => {
   let store = {};
@@ -29,6 +31,8 @@ describe('WalletService with cipher:', () => {
         WalletService,
         CipherProvider,
         SpendingService,
+        BlockchainService,
+        BalanceService,
         {
           provide: ApiService,
           useValue: jasmine.createSpyObj('ApiService', {
