@@ -45,6 +45,7 @@
     "syncing-blocks": "Sincronizando bloques",
     "update1": "La actualización",
     "update2": "está disponible.",
+    "synchronizing": "El nodo está sincronizando. Los datos mostrados pueden estar desactualizados",
     "pending-txs1": "Hay una o más",
     "pending-txs2": "transacciones pendientes.",
     "pending-txs3": "Los datos mostrados pueden estar desactualizados.",
@@ -203,6 +204,7 @@
   },
 
   "send": {
+    "synchronizing-warning": "El nodo todavía está sincronizando los datos, por lo que el saldo que se muestra puede ser incorrecto. ¿Seguro de que desea continuar?",
     "from-label": "Enviar desde",
     "to-label": "Enviar a",
     "amount-label": "Cantidad",

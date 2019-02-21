@@ -10,8 +10,8 @@ import { Observable } from 'rxjs/Observable';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { SpendingService, HoursSelectionTypes } from '../../../../services/wallet/spending.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
-import { Wallet } from '../../../../app.datatypes';
-import { openUnlockWalletModal } from '../../../../utils/index';
+import { Wallet, ConfirmationData } from '../../../../app.datatypes';
+import { openUnlockWalletModal, showConfirmationModal } from '../../../../utils/index';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
 import { BlockchainService } from '../../../../services/blockchain.service';
@@ -42,7 +42,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
     private walletService: WalletService,
     private spendingService: SpendingService,
     private snackbar: MatSnackBar,
-    private unlockDialog: CustomMatDialogService,
+    private dialog: CustomMatDialogService,
     private coinService: CoinService,
     private blockchainService: BlockchainService
   ) {}
@@ -83,11 +83,36 @@ export class SendFormComponent implements OnInit, OnDestroy {
     if (!wallet.seed) {
       this.removeProcessSubscription();
 
-      this.processSubscription = openUnlockWalletModal(wallet, this.unlockDialog).componentInstance
-        .onWalletUnlocked.first().subscribe(() => this.createTransaction(wallet));
+      this.processSubscription = openUnlockWalletModal(wallet, this.dialog).componentInstance
+        .onWalletUnlocked.first().subscribe(() => this.checkBeforeSending());
     } else {
-      this.createTransaction(wallet);
+      this.checkBeforeSending();
     }
+  }
+
+  private checkBeforeSending() {
+    this.blockchainService.synchronized.first().subscribe(synchronized => {
+      if (synchronized) {
+        this.createTransaction(this.form.value.wallet);
+      } else {
+        this.showSynchronizingWarning();
+      }
+    });
+  }
+
+  private showSynchronizingWarning() {
+    const confirmationData: ConfirmationData = {
+      text: 'send.synchronizing-warning',
+      headerText: 'confirmation.header-text',
+      confirmButtonText: 'confirmation.confirm-button',
+      cancelButtonText: 'confirmation.cancel-button',
+    };
+
+    showConfirmationModal(this.dialog, confirmationData).afterClosed().subscribe(confirmationResult => {
+      if (confirmationResult) {
+        this.createTransaction(this.form.value.wallet);
+      }
+    });
   }
 
   private createTransaction(wallet: Wallet) {

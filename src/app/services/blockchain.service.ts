@@ -29,6 +29,7 @@ export class ProgressEvent {
 @Injectable()
 export class BlockchainService {
   private progressSubject: BehaviorSubject<ProgressEvent> = new BehaviorSubject<ProgressEvent>(null);
+  private synchronizedSubject: BehaviorSubject<any> = new BehaviorSubject<boolean>(false);
   private connectionsSubscription: Subscription;
   private maxDecimals = 6;
   private readonly defaultPeriod = 90000;
@@ -36,6 +37,10 @@ export class BlockchainService {
 
   get progress(): Observable<ProgressEvent> {
     return this.progressSubject.asObservable();
+  }
+
+  get synchronized() {
+    return this.synchronizedSubject.asObservable();
   }
 
   get currentMaxDecimals(): number {
@@ -71,6 +76,7 @@ export class BlockchainService {
 
     this.globalsService.setNodeVersion(null);
     this.progressSubject.next({ state: ProgressStates.Restarting });
+    this.synchronizedSubject.next(false);
 
     this.connectionsSubscription = this.checkConnectionState()
       .subscribe(
@@ -105,6 +111,7 @@ export class BlockchainService {
         response.highest - response.current <= 5 ? this.shortPeriod : this.defaultPeriod
       );
     } else {
+      this.synchronizedSubject.next(true);
       this.balanceService.startGettingBalances();
     }
   }
