@@ -12,7 +12,7 @@
           <p *ngIf="highest && loading" class="coins"><span>{{ percentage | percent:'1.2-2' }}</span></p>
           <p *ngIf="!loading" class="coins"><span>{{ coins.decimalPlaces(6).toString() | number:'1.0-6' }}</span> {{ currentCoin.coinSymbol }}</p>
           <p *ngIf="!loading && balance" class="dollars">{{ balance }}</p>
-          <p *ngIf="!loading && !balance && currentCoin.cmcTickerId" class="dollars">{{ 'header.loading' | translate }}</p>
+          <p *ngIf="!loading && !balance && currentCoin.priceTickerId" class="dollars">{{ 'header.loading' | translate }}</p>
         </div>
       </div>
       <div class="hour-balance">

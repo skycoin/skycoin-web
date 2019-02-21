@@ -4,7 +4,7 @@ export abstract class BaseCoin {
   abstract coinName: string;
   abstract coinSymbol: string;
   abstract hoursName: string;
-  cmcTickerId: number;
+  priceTickerId: string;
   coinExplorer: string;
   imageName: string;
   gradientName: string;

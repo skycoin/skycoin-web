@@ -8,7 +8,7 @@ export class SkycoinCoin extends BaseCoin {
   coinName = 'Skycoin';
   coinSymbol = 'SKY';
   hoursName = 'Coin Hours';
-  cmcTickerId = 1619;
+  priceTickerId = 'sky-skycoin';
   coinExplorer = 'https://explorer.skycoin.net';
   imageName = 'skycoin-header.jpg';
   gradientName = 'skycoin-gradient.png';

@@ -228,6 +228,7 @@
     "hours": "Horas",
     "id": "Tx ID",
     "show-more": "Mostrar más",
+    "hours-moved": "movida(s)",
     "hours-sent": "enviada(s)",
     "hours-received": "recibida(s)",
     "hours-burned": "quemada(s)",
@@ -303,6 +304,8 @@
 
   "history": {
     "tx-detail": "Detalles de la Transacción",
+    "moving": "Moviendo internamente",
+    "moved": "Movida internamente",
     "sending": "Enviando",
     "sent": "Enviada",
     "received": "Recibida",
