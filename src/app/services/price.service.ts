@@ -14,7 +14,7 @@ export class PriceService {
   price = new BehaviorSubject<number>(null);
 
   private readonly updatePeriod = 10 * 60 * 1000;
-  private cmcTickerId: number | null = null;
+  private priceTickerId: string | null = null;
   private lastPriceSubscription: ISubscription;
   private timerSubscription: Subscription;
 
@@ -24,7 +24,7 @@ export class PriceService {
     private coinService: CoinService
   ) {
     this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
-      this.cmcTickerId = coin.cmcTickerId;
+      this.priceTickerId = coin.priceTickerId;
       this.startTimer();
     });
   }
@@ -44,7 +44,7 @@ export class PriceService {
   }
 
   private loadPrice() {
-    if (!this.cmcTickerId) {
+    if (!this.priceTickerId) {
       return;
     }
 
@@ -52,10 +52,10 @@ export class PriceService {
       this.lastPriceSubscription.unsubscribe();
     }
 
-    this.lastPriceSubscription = this.http.get(`https://api.coinmarketcap.com/v2/ticker/${this.cmcTickerId}/`)
+    this.lastPriceSubscription = this.http.get(`https://api.coinpaprika.com/v1/tickers/${this.priceTickerId}?quotes=USD`)
       .subscribe((response: any) => {
         this.lastPriceSubscription = null;
-        this.price.next(response.data.quotes.USD.price);
+        this.price.next(response.quotes.USD.price);
       },
       () => this.startTimer(60000));
   }

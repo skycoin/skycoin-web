@@ -18,7 +18,7 @@ in [BaseCoin](src/app/coins/basecoin.ts) are:
 - `coinName`: the full name of the coin.
 - `coinSymbol`: the short name of the coin.
 - `hoursName`: the name of the hours produced by the coin.
-- `cmcTickerId`: the ID of the coin in Coin Market Cap.
+- `priceTickerId`: the ID of the coin in Coin Paprika.
 - `coinExplorer`: the URL of the blockchain explorer of the coin.
 - `imageName`: name of the file with the image that will be displayed in the header. The image must be stored in
 [src/assets/img/coins](src/assets/img/coins) and it's size must be 1280x720px.

@@ -8,7 +8,7 @@ export class TestCoin extends BaseCoin {
   coinName = 'Testcoin';
   coinSymbol = 'TEST';
   hoursName = 'Test Hours';
-  cmcTickerId = 1;
+  priceTickerId = 'btc-bitcoin';
   coinExplorer = 'https://explorer.testcoin.net';
   imageName = 'testcoin-header.jpg';
   gradientName = 'testcoin-gradient.png';
