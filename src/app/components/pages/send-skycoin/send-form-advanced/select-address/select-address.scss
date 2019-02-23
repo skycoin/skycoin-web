@@ -30,6 +30,9 @@ button {
     font-size: 13px;
     line-height: 22px;
     color: $black;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .balance {

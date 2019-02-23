@@ -206,6 +206,7 @@
   "send": {
     "from-label": "Send from",
     "to-label": "Send to",
+    "address-label": "Address",
     "amount-label": "Amount",
     "notes-label": "Notes",
     "wallet-label": "Wallet",
@@ -225,6 +226,7 @@
     "destinations-label": "Destinations",
     "destinations-help1": "Destination addresses and their coins",
     "destinations-help2": "Destination addresses, their coins and coin hours",
+    "add-destination": "Add destination",
     "hours-allocation-label": "Automatic coin hours allocation",
     "options-label": "Options",
     "value-label": "Coin hours share factor",

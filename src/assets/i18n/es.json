@@ -205,6 +205,7 @@
   "send": {
     "from-label": "Enviar desde",
     "to-label": "Enviar a",
+    "address-label": "Dirección",
     "amount-label": "Cantidad",
     "notes-label": "Notas",
     "wallet-label": "Billetera",
@@ -224,6 +225,7 @@
     "destinations-label": "Destinatarios",
     "destinations-help1": "Direcciones de destino y sus monedas",
     "destinations-help2": "Direcciones de destino, sus monedas y horas",
+    "add-destination": "Agregar destinatario",
     "hours-allocation-label": "Asignación automática de horas",
     "options-label": "Opciones",
     "value-label": "Factor de repartición de las horas",
