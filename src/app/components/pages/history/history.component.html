@@ -44,27 +44,39 @@
       *ngIf="!transactions || transactions.length === 0"></app-loading-content>
     <div *ngIf="!!transactions && transactions.length > 0" class="-paper">
       <ng-container *ngFor="let transaction of transactions">
-        <div class="-transaction" *ngIf="transaction.balance !== 0" (click)="showTransaction(transaction)">
-          <div class="-icon" [ngClass]="{ '-incoming': transaction.balance > 0, '-pending': !transaction.confirmed }">
+        <div class="-transaction" (click)="showTransaction(transaction)">
+          <div class="-icon" [ngClass]="{ '-incoming': transaction.balance.isGreaterThan(0) && !transaction.coinsMovedInternally, '-pending': !transaction.confirmed }">
             <img src="assets/img/send-blue.png">
           </div>
           <div class="-address">
-            <h4 *ngIf="transaction.balance < 0 && transaction.confirmed">
-              {{ 'history.sent' | translate }} {{ currentCoin.coinSymbol }}
-              <span class="-timestamp">{{ transaction.timestamp | dateTime }}</span>
-            </h4>
-            <h4 *ngIf="transaction.balance < 0 && !transaction.confirmed">
-              {{ 'history.sending' | translate }} {{ currentCoin.coinSymbol }}
-              <span class="-pending">{{ 'history.pending' | translate }}</span>
-            </h4>
-            <h4 *ngIf="transaction.balance > 0 && transaction.confirmed">
-              {{ 'history.received' | translate }}  {{ currentCoin.coinSymbol }}
-              <span class="-timestamp">{{ transaction.timestamp | dateTime }}</span>
-            </h4>
-            <h4 *ngIf="transaction.balance > 0 && !transaction.confirmed">
-              {{ 'history.receiving' | translate }} {{ currentCoin.coinSymbol }}
-              <span class="-pending">{{ 'history.pending' | translate }}</span>
-            </h4>
+            <ng-container *ngIf="!transaction.coinsMovedInternally">
+              <h4 *ngIf="transaction.balance.isLessThan(0) && transaction.confirmed">
+                {{ 'history.sent' | translate }} {{ currentCoin.coinSymbol }}
+                <span class="-timestamp">{{ transaction.timestamp | dateTime }}</span>
+              </h4>
+              <h4 *ngIf="transaction.balance.isLessThan(0) && !transaction.confirmed">
+                {{ 'history.sending' | translate }} {{ currentCoin.coinSymbol }}
+                <span class="-pending">{{ 'history.pending' | translate }}</span>
+              </h4>
+              <h4 *ngIf="transaction.balance.isGreaterThan(0) && transaction.confirmed">
+                {{ 'history.received' | translate }}  {{ currentCoin.coinSymbol }}
+                <span class="-timestamp">{{ transaction.timestamp | dateTime }}</span>
+              </h4>
+              <h4 *ngIf="transaction.balance.isGreaterThan(0) && !transaction.confirmed">
+                {{ 'history.receiving' | translate }} {{ currentCoin.coinSymbol }}
+                <span class="-pending">{{ 'history.pending' | translate }}</span>
+              </h4>
+            </ng-container>
+            <ng-container *ngIf="transaction.coinsMovedInternally">
+              <h4 *ngIf="transaction.confirmed">
+                {{ 'history.moved' | translate }} {{ currentCoin.coinSymbol }}
+                <span class="-timestamp">{{ transaction.timestamp | dateTime }}</span>
+              </h4>
+              <h4 *ngIf="!transaction.confirmed">
+                {{ 'history.moving' | translate }} {{ currentCoin.coinSymbol }}
+                <span class="-pending">{{ 'history.pending' | translate }}</span>
+              </h4>
+            </ng-container>
             <div class="-detail" *ngFor="let address of transaction.addresses">
               <div>
                 <img class="qr-code-button -not-on-small-and-below" src="assets/img/qr-code-black.png" (click)="showQr($event, address)">
