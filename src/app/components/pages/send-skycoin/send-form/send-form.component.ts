@@ -64,6 +64,12 @@ export class SendFormComponent implements OnInit, OnDestroy {
         this.currentCoin = coin;
       })
     );
+
+    if (this.formData) {
+      Object.keys(this.form.controls).forEach(control => {
+        this.form.get(control).setValue(this.formData.form[control]);
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -199,12 +205,6 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
       this.form.controls.amount.updateValueAndValidity();
     });
-
-    if (this.formData) {
-      Object.keys(this.form.controls).forEach(control => {
-        this.form.get(control).setValue(this.formData.form[control]);
-      });
-    }
   }
 
   private validateAmount(amountControl: FormControl) {

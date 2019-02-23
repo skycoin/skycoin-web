@@ -13,7 +13,7 @@ import { NavBarService } from '../../../../services/nav-bar.service';
 import { SelectAddressComponent } from './select-address/select-address';
 import { Output as UnspentOutput, Wallet, Address, ConfirmationData, PreviewTransaction } from '../../../../app.datatypes';
 import { BlockchainService } from '../../../../services/blockchain.service';
-import { openUnlockWalletModal } from '../../../../utils';
+import { openUnlockWalletModal, showConfirmationModal } from '../../../../utils';
 import { SpendingService, HoursSelection, HoursSelectionTypes, Destination } from '../../../../services/wallet/spending.service';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { WalletService } from '../../../../services/wallet/wallet.service';
@@ -157,10 +157,35 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
       this.removeUnlockSubscription();
 
       this.unlockSubscription = openUnlockWalletModal(wallet, this.dialog).componentInstance
-        .onWalletUnlocked.first().subscribe(() => this.createTransaction());
+        .onWalletUnlocked.first().subscribe(() => this.checkBeforeSending());
     } else {
-      this.createTransaction();
+      this.checkBeforeSending();
     }
+  }
+
+  private checkBeforeSending() {
+    this.blockchainService.synchronized.first().subscribe(synchronized => {
+      if (synchronized) {
+        this.createTransaction();
+      } else {
+        this.showSynchronizingWarning();
+      }
+    });
+  }
+
+  private showSynchronizingWarning() {
+    const confirmationData: ConfirmationData = {
+      text: 'send.synchronizing-warning',
+      headerText: 'confirmation.header-text',
+      confirmButtonText: 'confirmation.confirm-button',
+      cancelButtonText: 'confirmation.cancel-button',
+    };
+
+    showConfirmationModal(this.dialog, confirmationData).afterClosed().subscribe(confirmationResult => {
+      if (confirmationResult) {
+        this.createTransaction();
+      }
+    });
   }
 
   addDestination() {
