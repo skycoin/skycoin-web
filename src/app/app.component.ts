@@ -7,6 +7,7 @@ import { config } from './app.config';
 import { environment } from '../environments/environment';
 import { CipherProvider } from './services/cipher.provider';
 import { CustomMatDialogService } from './services/custom-mat-dialog.service';
+import { Bip39WordListService } from './services/bip39-word-list.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
     cipherProvider: CipherProvider,
     router: Router,
     dialog: CustomMatDialogService,
-    renderer: Renderer2
+    renderer: Renderer2,
+    private bip38WordList: Bip39WordListService,
   ) {
     router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {

@@ -82,6 +82,7 @@ import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change
 import { GlobalsService } from './services/globals.service';
 import { WalletOptionsComponent } from './components/pages/wallets/wallet-detail/wallet-options/wallet-options.component';
 import { CustomMatDialogService } from './services/custom-mat-dialog.service';
+import { Bip39WordListService } from './services/bip39-word-list.service';
 
 @NgModule({
   declarations: [
@@ -188,7 +189,8 @@ import { CustomMatDialogService } from './services/custom-mat-dialog.service';
     HistoryService,
     SpendingService,
     GlobalsService,
-    CustomMatDialogService
+    CustomMatDialogService,
+    Bip39WordListService
   ],
   bootstrap: [AppComponent],
 })
