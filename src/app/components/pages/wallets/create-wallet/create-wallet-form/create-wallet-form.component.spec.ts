@@ -5,6 +5,7 @@ import { FormBuilder } from '@angular/forms';
 import { CreateWalletFormComponent } from './create-wallet-form.component';
 import { CoinService } from '../../../../../services/coin.service';
 import { MockTranslatePipe, MockCoinService } from '../../../../../utils/test-mocks';
+import { Bip39WordListService } from '../../../../../services/bip39-word-list.service';
 
 describe('CreateWalletFormComponent', () => {
   let component: CreateWalletFormComponent;
@@ -16,7 +17,8 @@ describe('CreateWalletFormComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: CoinService, useClass: MockCoinService }
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: Bip39WordListService, useValue: { validateWord: true } }
       ]
     })
     .compileComponents();

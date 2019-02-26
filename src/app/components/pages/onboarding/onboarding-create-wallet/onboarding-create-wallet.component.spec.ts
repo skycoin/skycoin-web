@@ -14,6 +14,7 @@ import { LanguageService } from '../../../../services/language.service';
 import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 import { BlockchainService } from '../../../../services/blockchain.service';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
+import { Bip39WordListService } from '../../../../services/bip39-word-list.service';
 
 describe('OnboardingCreateWalletComponent', () => {
   let component: OnboardingCreateWalletComponent;
@@ -42,6 +43,7 @@ describe('OnboardingCreateWalletComponent', () => {
           provide: TranslateService,
           useValue: jasmine.createSpyObj('TranslateService', ['instant'])
         },
+        { provide: Bip39WordListService, useValue: { validateWord: true } },
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });
