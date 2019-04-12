@@ -1,3 +1,5 @@
+![skycoin web](https://user-images.githubusercontent.com/8619106/56056491-f4bd8d80-5d79-11e9-8e55-8ebf2668edac.png)
+
 # Skycoin web client
 
 [![Build Status](https://travis-ci.org/skycoin/skycoin-web.svg?branch=master)](https://travis-ci.org/skycoin/skycoin-web)
