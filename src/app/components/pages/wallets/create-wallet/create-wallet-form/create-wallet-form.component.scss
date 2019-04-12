@@ -80,7 +80,6 @@ label[for=seed] {
 .-alert-box {
   background-color: #ffdede;
   padding: 15px;
-  align-items: center;
   margin-bottom: 20px;
 
   @media (min-width: $max-very-small-width+1) {
@@ -97,11 +96,16 @@ label[for=seed] {
         position: relative;
         top: -5px;
       }
+
+      mat-icon {
+        margin-top: 0px;
+      }
     }
   }
 
   mat-icon {
     margin-right: 10px;
+    margin-top: 5px;
     animation: blink 1s linear infinite;
   }
 
