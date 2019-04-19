@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CoinService } from '../../../services/coin.service';
 import { ISubscription } from 'rxjs/Subscription';
+
+import { CoinService } from '../../../services/coin.service';
+import { DoubleButtonActive } from '../../layout/double-button/double-button.component';
+import { NavBarService } from '../../../services/nav-bar.service';
 
 @Component({
   selector: 'app-send-skycoin',
@@ -11,12 +14,21 @@ export class SendSkycoinComponent implements OnInit, OnDestroy {
   showForm = true;
   restarting = false;
   formData: any;
+  activeForm: DoubleButtonActive;
+  activeForms = DoubleButtonActive;
 
+  private subscription: ISubscription;
   private coinSubscription: ISubscription;
 
   constructor(
-    private coinService: CoinService
-  ) {}
+    private coinService: CoinService,
+    navbarService: NavBarService
+  ) {
+    this.subscription = navbarService.activeComponent.subscribe(value => {
+      this.activeForm = value;
+      this.formData = null;
+    });
+  }
 
   ngOnInit() {
     this.coinSubscription = this.coinService.currentCoin
@@ -26,6 +38,7 @@ export class SendSkycoinComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.subscription.unsubscribe();
     this.coinSubscription.unsubscribe();
   }
 
@@ -52,8 +65,8 @@ export class SendSkycoinComponent implements OnInit, OnDestroy {
   get transaction() {
     const transaction = this.formData.transaction;
 
-    transaction.from = this.formData.wallet.label;
-    transaction.to = this.formData.address;
+    transaction.from = this.formData.form.wallet.label;
+    transaction.to = this.formData.to;
     transaction.balance = this.formData.amount;
 
     return transaction;

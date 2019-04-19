@@ -17,6 +17,7 @@ import { CoinService } from '../../../../services/coin.service';
 import { BlockchainService } from '../../../../services/blockchain.service';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { config } from '../../../../app.config';
+import { NavBarService } from '../../../../services/nav-bar.service';
 
 @Component({
   selector: 'app-send-form',
@@ -44,10 +45,13 @@ export class SendFormComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private dialog: CustomMatDialogService,
     private coinService: CoinService,
-    private blockchainService: BlockchainService
+    private blockchainService: BlockchainService,
+    private navbarService: NavBarService
   ) {}
 
   ngOnInit() {
+    this.navbarService.showSwitch('send.simple', 'send.advanced');
+
     this.initForm();
 
     this.subscription.add(this.walletService.currentWallets
@@ -55,14 +59,24 @@ export class SendFormComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(this.coinService.currentCoin
-      .subscribe((coin: BaseCoin) => this.currentCoin = coin)
+      .subscribe((coin: BaseCoin) => {
+        this.resetForm();
+        this.currentCoin = coin;
+      })
     );
+
+    if (this.formData) {
+      Object.keys(this.form.controls).forEach(control => {
+        this.form.get(control).setValue(this.formData.form[control]);
+      });
+    }
   }
 
   ngOnDestroy() {
     this.removeSlowInfoSubscription();
     this.removeProcessSubscription();
     this.subscription.unsubscribe();
+    this.navbarService.hideSwitch();
     this.snackbar.dismiss();
   }
 
@@ -88,6 +102,12 @@ export class SendFormComponent implements OnInit, OnDestroy {
     } else {
       this.checkBeforeSending();
     }
+  }
+
+  private resetForm() {
+    this.form.get('wallet').setValue('', { emitEvent: false });
+    this.form.get('address').setValue('');
+    this.form.get('amount').setValue('');
   }
 
   private checkBeforeSending() {
@@ -146,9 +166,13 @@ export class SendFormComponent implements OnInit, OnDestroy {
     this.showSlowMobileInfo = false;
     this.removeSlowInfoSubscription();
     this.onFormSubmitted.emit({
-      wallet: this.form.value.wallet,
-      address: this.form.value.address,
+      form: {
+        wallet: this.form.value.wallet,
+        address: this.form.value.address,
+        amount: this.form.value.amount,
+      },
       amount: new BigNumber(this.form.value.amount),
+      to: [this.form.value.address],
       transaction,
     });
   }
@@ -181,12 +205,6 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
       this.form.controls.amount.updateValueAndValidity();
     });
-
-    if (this.formData) {
-      Object.keys(this.form.controls).forEach(control => {
-        this.form.get(control).setValue(this.formData[control]);
-      });
-    }
   }
 
   private validateAmount(amountControl: FormControl) {
