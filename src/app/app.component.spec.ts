@@ -10,6 +10,7 @@ import { MockLanguageService, MockTranslatePipe, MockTranslateService, MockCusto
 import { LanguageService } from './services/language.service';
 import { CipherProvider } from './services/cipher.provider';
 import { CustomMatDialogService } from './services/custom-mat-dialog.service';
+import { Bip39WordListService } from './services/bip39-word-list.service';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -25,7 +26,8 @@ describe('AppComponent', () => {
         { provide: Router, useValue: { events: Observable.of({}) } },
         { provide: CipherProvider, useValue: { browserHasCryptoInsideWorkers: new BehaviorSubject<boolean>(true) } },
         { provide: Renderer2, useValue: { addClass: null, removeClass: null } },
-        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService },
+        { provide: Bip39WordListService, useValue: {} }
       ]
     }).compileComponents();
   }));

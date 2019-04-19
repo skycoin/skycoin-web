@@ -82,6 +82,7 @@ import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change
 import { GlobalsService } from './services/globals.service';
 import { WalletOptionsComponent } from './components/pages/wallets/wallet-detail/wallet-options/wallet-options.component';
 import { CustomMatDialogService } from './services/custom-mat-dialog.service';
+import { Bip39WordListService } from './services/bip39-word-list.service';
 import { SendFormAdvancedComponent } from './components/pages/send-skycoin/send-form-advanced/send-form-advanced.component';
 import { SelectAddressComponent } from './components/pages/send-skycoin/send-form-advanced/select-address/select-address';
 
@@ -194,7 +195,8 @@ import { SelectAddressComponent } from './components/pages/send-skycoin/send-for
     HistoryService,
     SpendingService,
     GlobalsService,
-    CustomMatDialogService
+    CustomMatDialogService,
+    Bip39WordListService
   ],
   bootstrap: [AppComponent],
 })
