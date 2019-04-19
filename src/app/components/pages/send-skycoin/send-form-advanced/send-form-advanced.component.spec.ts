@@ -1,24 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatSnackBarModule } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatSnackBarModule } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 
-import { SendFormComponent } from './send-form.component';
+import { SendFormAdvancedComponent } from './send-form-advanced.component';
+import { MockTranslatePipe, MockWalletService, MockSpendingService, MockCoinService, MockBlockchainService, MockCustomMatDialogService, MockNavBarService } from '../../../../utils/test-mocks';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { SpendingService } from '../../../../services/wallet/spending.service';
 import { CoinService } from '../../../../services/coin.service';
 import { BlockchainService } from '../../../../services/blockchain.service';
-import { MockTranslatePipe, MockWalletService, MockSpendingService, MockCoinService, MockBlockchainService, MockCustomMatDialogService, MockNavBarService } from '../../../../utils/test-mocks';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
 
-describe('SendFormComponent', () => {
-  let component: SendFormComponent;
-  let fixture: ComponentFixture<SendFormComponent>;
+describe('SendFormAdvancedComponent', () => {
+  let component: SendFormAdvancedComponent;
+  let fixture: ComponentFixture<SendFormAdvancedComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SendFormComponent, MockTranslatePipe ],
+      declarations: [ SendFormAdvancedComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       imports: [ MatSnackBarModule ],
       providers: [
@@ -30,11 +30,12 @@ describe('SendFormComponent', () => {
         { provide: CustomMatDialogService, useClass: MockCustomMatDialogService },
         { provide: NavBarService, useClass: MockNavBarService },
       ]
-    }).compileComponents();
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SendFormComponent);
+    fixture = TestBed.createComponent(SendFormAdvancedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

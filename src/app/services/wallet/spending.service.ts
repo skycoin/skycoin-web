@@ -14,6 +14,7 @@ import { CoinService } from '../coin.service';
 import { WalletService } from './wallet.service';
 import { GlobalsService } from '../globals.service';
 import { isEqualOrSuperiorVersion } from '../../utils/semver';
+import { BlockchainService } from '../blockchain.service';
 
 export class Destination {
   address: string;
@@ -44,6 +45,7 @@ export class SpendingService {
     private translate: TranslateService,
     private walletService: WalletService,
     private globalsService: GlobalsService,
+    private blockchainService: BlockchainService,
     coinService: CoinService,
   ) {
     coinService.currentCoin.subscribe((coin) => this.currentCoin = coin);
@@ -57,20 +59,10 @@ export class SpendingService {
     hoursSelection: HoursSelection,
     changeAddress: string|null): Observable<Transaction> {
 
-    let unburnedHoursRatio: BigNumber;
+    const unburnedHoursRatio = new BigNumber(1).minus(new BigNumber(1).dividedBy(this.blockchainService.burnRate));
 
-    return this.globalsService.getValidNodeVersion()
-      .flatMap (version => {
-        if (isEqualOrSuperiorVersion(version, '0.25.0')) {
-          return this.apiService.get('health').flatMap(response => {
-            unburnedHoursRatio = new BigNumber(1).minus(new BigNumber(1).dividedBy(response.user_verify_transaction.burn_factor));
-            return this.getOutputs(wallet, addresses, unspents);
-          });
-        } else {
-          unburnedHoursRatio = new BigNumber(0.5);
-          return this.getOutputs(wallet, addresses, unspents);
-        }
-      }).flatMap((outputs: Output[]) => {
+    return this.getOutputs(wallet, addresses, unspents)
+      .flatMap((outputs: Output[]) => {
         // Calculate how many coins should be sent.
         let amount = new BigNumber(0);
         destinations.map(destination => amount = amount.plus(new BigNumber(destination.coins)));
@@ -163,6 +155,10 @@ export class SpendingService {
           return wallet;
         });
       });
+  }
+
+  getWalletUnspentOutputs(wallet: Wallet): Observable<Output[]> {
+    return this.getOutputs(wallet, null, null);
   }
 
   private buildTransaction(

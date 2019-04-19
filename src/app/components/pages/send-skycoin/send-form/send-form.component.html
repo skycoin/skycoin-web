@@ -7,8 +7,11 @@
         <option *ngFor="let wallet of wallets"
                 [disabled]="!wallet.balance || wallet.balance.isLessThanOrEqualTo(0)"
                 [ngValue]="wallet">
-          {{ wallet.label }} — {{ (wallet.balance ? wallet.balance.decimalPlaces(6).toString() : 0) | number:'1.0-6' }} {{ currentCoin.coinSymbol }}
-          ({{ wallet.hours.decimalPlaces(0).toString() | number:'1.0-0' }} {{ currentCoin.hoursName }})
+          {{ wallet.label }} —
+          <span *ngIf="wallet.balance && wallet.hours">
+            {{ (wallet.balance ? wallet.balance.decimalPlaces(6).toString() : 0) | number:'1.0-6' }} {{ currentCoin.coinSymbol }}
+            ({{ wallet.hours.decimalPlaces(0).toString() | number:'1.0-0' }} {{ currentCoin.hoursName }})
+          </span>
         </option>
       </select>
     </div>
