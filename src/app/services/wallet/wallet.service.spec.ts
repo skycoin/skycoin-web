@@ -65,7 +65,7 @@ describe('WalletService', () => {
     it('should fail adding an address if the wallet seed is null', () => {
       const wallet = createWallet();
       wallet.seed = null;
-      wallet.addresses[0].next_seed = null;
+      wallet.nextSeed = null;
       spyTranslateService.instant.and.returnValue('trying to generate address without seed!');
 
       expect(() => walletService.addAddress(wallet))
@@ -78,7 +78,7 @@ describe('WalletService', () => {
       const newAddress = createAddress('new address');
       expectedWallet.addresses.push(newAddress);
 
-      spyCipherProvider.generateAddress.and.returnValue(Observable.of({ ...newAddress }));
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of({ address: newAddress, nextSeed: 'next seed' }));
 
       walletService.addAddress(wallet)
         .subscribe(() => {
@@ -100,10 +100,11 @@ describe('WalletService', () => {
         balance: new BigNumber(0),
         hours: new BigNumber(0),
         addresses: [walletAddress],
-        coinId: walletCoinId
+        coinId: walletCoinId,
+        nextSeed: 'next seed'
       };
 
-      spyCipherProvider.generateAddress.and.returnValue(Observable.of({ ...walletAddress }));
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of({ address: walletAddress, nextSeed: 'next seed' }));
 
       walletService.create(walletLabel, walletSeed, walletCoinId)
         .subscribe(() => expect(walletService.wallets.value[0]).toEqual(expectedWallet));
@@ -125,7 +126,7 @@ describe('WalletService', () => {
       const inputWallet: Wallet = createWallet('wallet', 'no seed');
       const correctSeed = 'seed';
 
-      spyCipherProvider.generateAddress.and.returnValue(Observable.of(createAddress()));
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of({ address: createAddress(), nextSeed: 'next seed' }));
       walletService.unlockWallet(inputWallet, correctSeed, new EventEmitter<number>())
         .subscribe(() => expect(inputWallet.seed).toEqual(correctSeed));
     }));
@@ -134,7 +135,7 @@ describe('WalletService', () => {
       const wallet: Wallet = createWallet();
       const wrongSeedAddress: Address = createAddress('wrong address');
 
-      spyCipherProvider.generateAddress.and.returnValue(Observable.of(wrongSeedAddress));
+      spyCipherProvider.generateAddress.and.returnValue(Observable.of({ address: wrongSeedAddress, nextSeed: 'next seed' }));
       spyTranslateService.instant.and.returnValue('Wrong seed');
 
       walletService.unlockWallet(wallet, 'wrong seed', new EventEmitter<number>())
@@ -146,10 +147,11 @@ describe('WalletService', () => {
   });
 });
 
-export function createWallet(label: string = 'label', seed: string = 'seed', balance: BigNumber = new BigNumber(0)): Wallet {
+export function createWallet(label: string = 'label', seed: string = 'seed', balance: BigNumber = new BigNumber(0), nextSeed = 'next seed'): Wallet {
   return {
     label: label,
     seed: seed,
+    nextSeed: nextSeed,
     needSeedConfirmation: true,
     balance: balance,
     hours: new BigNumber(0),
@@ -160,12 +162,11 @@ export function createWallet(label: string = 'label', seed: string = 'seed', bal
   };
 }
 
-export function createAddress(address: string = 'address', secretKey: string = 'secret key', publicKey: string = 'public key', nextSeed: string = 'next seed'): Address {
+export function createAddress(address: string = 'address', secretKey: string = 'secret key', publicKey: string = 'public key'): Address {
   return {
     address: address,
     secret_key: secretKey,
     public_key: publicKey,
-    next_seed: nextSeed,
     balance: new BigNumber(0),
     hours: new BigNumber(0),
     outputs: []

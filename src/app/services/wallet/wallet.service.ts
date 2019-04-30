@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 import { BigNumber } from 'bignumber.js';
 
-import { CipherProvider } from '../cipher.provider';
+import { CipherProvider, GenerateAddressResponse } from '../cipher.provider';
 import { Address, Wallet } from '../../app.datatypes';
 import { convertAsciiToHexa } from '../../utils/converters';
 import { defaultCoinId } from '../../constants/coins-id.const';
@@ -51,15 +51,14 @@ export class WalletService {
   }
 
   addAddress(wallet: Wallet, saveWallet = true): Observable<void> {
-    if (!wallet.seed || !wallet.addresses[wallet.addresses.length - 1].next_seed) {
+    if (!wallet.seed || !wallet.nextSeed) {
       throw new Error(this.translate.instant('service.wallet.address-without-seed'));
     }
 
-    const lastSeed = wallet.addresses[wallet.addresses.length - 1].next_seed;
-
-    return this.cipherProvider.generateAddress(lastSeed)
-      .map((addr: Address) => {
-        wallet.addresses.push(addr);
+    return this.cipherProvider.generateAddress(wallet.nextSeed)
+      .map((response: GenerateAddressResponse) => {
+        wallet.nextSeed = response.nextSeed;
+        wallet.addresses.push(response.address);
         if (saveWallet) {
           this.saveWallets();
         }
@@ -70,14 +69,15 @@ export class WalletService {
     seed = this.getCleanSeed(seed);
 
     return this.cipherProvider.generateAddress(convertAsciiToHexa(seed))
-      .map((fullAddress: Address) => {
+      .map((response: GenerateAddressResponse) => {
         const wallet = {
           label: label,
           seed: seed,
           needSeedConfirmation: true,
           balance: new BigNumber('0'),
           hours: new BigNumber('0'),
-          addresses: [fullAddress],
+          addresses: [response.address],
+          nextSeed: response.nextSeed,
           coinId: coinId
         };
 
@@ -205,23 +205,23 @@ export class WalletService {
 
   private unlockWalletAddresses(currentSeed: string, wallet: Wallet, index: number, onProgressChanged: EventEmitter<number>): Observable<boolean> {
     return this.cipherProvider.generateAddress(currentSeed)
-      .flatMap((fullAddress: Address) => {
-        if (fullAddress.address !== wallet.addresses[index].address) {
+      .flatMap((response: GenerateAddressResponse) => {
+        if (response.address.address !== wallet.addresses[index].address) {
           onProgressChanged.emit(0);
           return Observable.of(false);
         }
 
         onProgressChanged.emit((index + 1) / wallet.addresses.length * 100);
-        wallet.addresses[index].next_seed = fullAddress.next_seed;
-        wallet.addresses[index].public_key = fullAddress.public_key;
-        wallet.addresses[index].secret_key = fullAddress.secret_key;
+        wallet.nextSeed = response.nextSeed;
+        wallet.addresses[index].public_key = response.address.public_key;
+        wallet.addresses[index].secret_key = response.address.secret_key;
         index++;
 
         if (index === wallet.addresses.length) {
           return Observable.of(true);
         }
 
-        return this.unlockWalletAddresses(fullAddress.next_seed, wallet, index, onProgressChanged);
+        return this.unlockWalletAddresses(response.nextSeed, wallet, index, onProgressChanged);
       });
   }
 }

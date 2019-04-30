@@ -4,6 +4,7 @@ import { readJSON } from 'karma-read-json';
 import { testCases } from '../utils/jasmine-utils';
 import { Address } from '../app.datatypes';
 import { convertAsciiToHexa } from '../utils/converters';
+import { GenerateAddressResponse } from './cipher.provider.js';
 
 declare var CipherExtras;
 declare var Cipher;
@@ -35,12 +36,12 @@ describe('CipherProvider Lib', () => {
     testCases(expectedAddresses, (address: any) => {
       it('should generate many address correctly', done => {
         generatedAddress = generateAddress(seed);
-        seed = generatedAddress.next_seed;
+        seed = generatedAddress.nextSeed;
 
         const convertedAddress = {
-          address: generatedAddress.address,
-          public: generatedAddress.public_key,
-          secret: generatedAddress.secret_key
+          address: generatedAddress.address.address,
+          public: generatedAddress.address.public_key,
+          secret: generatedAddress.address.secret_key
         };
 
         expect(convertedAddress).toEqual(address);
@@ -48,7 +49,7 @@ describe('CipherProvider Lib', () => {
       });
 
       it('should pass the verification', done => {
-        verifyAddress(generatedAddress);
+        verifyAddress(generatedAddress.address);
         done();
       });
     });
@@ -160,19 +161,21 @@ function getSeedTestData(inputHashes, seedKeys, actualAddresses) {
 function generateAddresses(seed: string, keys: any[]): Address[] {
   return keys.map(() => {
     const generatedAddress = generateAddress(seed);
-    seed = generatedAddress.next_seed;
+    seed = generatedAddress.nextSeed;
 
-    return generatedAddress;
+    return generatedAddress.address;
   });
 }
 
-function generateAddress(seed: string): Address {
+function generateAddress(seed: string): GenerateAddressResponse {
   const address = Cipher.GenerateAddresses(seed);
   return {
-    address: address.Address,
-    public_key: address.Public,
-    secret_key: address.Secret,
-    next_seed: address.NextSeed
+    address: {
+      address: address.Address,
+      public_key: address.Public,
+      secret_key: address.Secret
+    },
+    nextSeed: address.NextSeed
   };
 }
 

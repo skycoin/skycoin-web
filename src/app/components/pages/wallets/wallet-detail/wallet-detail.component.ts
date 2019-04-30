@@ -119,7 +119,7 @@ export class WalletDetailComponent implements OnDestroy {
   }
 
   private verifyBeforeAddingNewAddress() {
-    if (!this.wallet.seed || !this.wallet.addresses[this.wallet.addresses.length - 1].next_seed) {
+    if (!this.wallet.seed || !this.wallet.nextSeed) {
       this.removeUnlockSubscription();
 
       this.unlockSubscription = openUnlockWalletModal(this.wallet, this.dialog).componentInstance.onWalletUnlocked.first()
