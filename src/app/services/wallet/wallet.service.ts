@@ -114,7 +114,9 @@ export class WalletService {
       throw new Error(this.translate.instant('service.wallet.invalid-wallet'));
     }
 
-    return this.checkWalletAddresses(wallet, 0, onProgressChanged)
+    const InitialNextSeed = wallet.nextSeed;
+
+    return this.checkWalletAddresses(wallet, 0, onProgressChanged, InitialNextSeed)
       .map(lastIndexWithTxs => {
         const unnecessaryAddresses = wallet.addresses.length - 1 - lastIndexWithTxs;
         if (unnecessaryAddresses > 0) {
@@ -125,6 +127,7 @@ export class WalletService {
       .catch(error => {
         if (wallet.addresses.length > 1) {
           wallet.addresses.splice(1, wallet.addresses.length - 1);
+          wallet.nextSeed = InitialNextSeed;
         }
         return Observable.throw(error);
       });
@@ -179,7 +182,7 @@ export class WalletService {
     return seed.replace(/(\n|\r\n)$/, '');
   }
 
-  private checkWalletAddresses(wallet: Wallet, lastIndexWithTxs: number, onProgressChanged: EventEmitter<ScanProgressData>): Observable<number> {
+  private checkWalletAddresses(wallet: Wallet, lastIndexWithTxs: number, onProgressChanged: EventEmitter<ScanProgressData>, nextSeed: string): Observable<number> {
     const minAdrressesToScan = environment.e2eTest ? 2 : 10;
     const maxAdrressesToScan = environment.e2eTest ? 2 : 100;
 
@@ -188,6 +191,9 @@ export class WalletService {
       .flatMap(transactions => {
         if (transactions && transactions.length > 0) {
           lastIndexWithTxs = wallet.addresses.length - 1;
+          nextSeed = wallet.nextSeed;
+        } else {
+          wallet.nextSeed = nextSeed;
         }
 
         onProgressChanged.emit({
@@ -198,7 +204,7 @@ export class WalletService {
         if (lastIndexWithTxs + minAdrressesToScan === wallet.addresses.length - 1 || wallet.addresses.length === maxAdrressesToScan) {
           return Observable.of(lastIndexWithTxs);
         } else {
-          return this.checkWalletAddresses(wallet, lastIndexWithTxs, onProgressChanged);
+          return this.checkWalletAddresses(wallet, lastIndexWithTxs, onProgressChanged, nextSeed);
         }
       });
   }

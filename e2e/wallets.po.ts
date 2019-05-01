@@ -154,12 +154,11 @@ export class WalletsPage {
 
   addAddress() {
     return element(by.css('.-btn-plus')).click().then(() => {
-      return browser.wait(() => {
-        const lastRecord = element.all(by.css('.-record')).last();
-        return lastRecord.element(by.css('.address-column')).getText().then((address) => {
-          return address === 'bSp3JvfGiHzumCpdaWT7tGRtejwhLDd2zv';
-        });
-      }, 10000);
+      browser.wait(ExpectedConditions.invisibilityOf(element(by.css('-disabled-span'))), 10000);
+      const lastRecord = element.all(by.css('.-record')).last();
+      return lastRecord.element(by.css('.address-column')).getText().then((address) => {
+        return address === 'bSp3JvfGiHzumCpdaWT7tGRtejwhLDd2zv';
+      });
     });
   }
 
