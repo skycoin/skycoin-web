@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class TransactionsPage {
   navigateTo() {
-    return browser.get('/history');
+    return browser.get('#/history');
   }
 
   getHeaderText() {
@@ -30,6 +30,7 @@ export class TransactionsPage {
   }
 
   hideTransactionModal() {
+    browser.sleep(250);
     return element(by.css('.-header img')).click().then(() => {
       return this.getTransactionDetailIsShow();
     });

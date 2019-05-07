@@ -1,30 +1,62 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/timer';
+import { ISubscription, Subscription } from 'rxjs/Subscription';
+
+import { CoinService } from './coin.service';
+import { BaseCoin } from '../coins/basecoin';
 
 @Injectable()
 export class PriceService {
 
-  price: Subject<number> = new BehaviorSubject<number>(null);
-  private readonly CMC_TICKER_ID = 1619;
+  price = new BehaviorSubject<number>(null);
+
   private readonly updatePeriod = 10 * 60 * 1000;
+  private priceTickerId: string | null = null;
+  private lastPriceSubscription: ISubscription;
+  private timerSubscription: Subscription;
 
   constructor(
-    private http: Http,
-    private ngZone: NgZone
+    private http: HttpClient,
+    private ngZone: NgZone,
+    private coinService: CoinService
   ) {
-    this.ngZone.runOutsideAngular(() => {
-      Observable.timer(0, this.updatePeriod)
-        .subscribe(() => this.ngZone.run(() => this.loadPrice()));
+    this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
+      this.priceTickerId = coin.priceTickerId;
+      this.startTimer();
     });
   }
 
+  private startTimer(firstConnectionDelay = 0) {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+    this.ngZone.runOutsideAngular(() => {
+      this.timerSubscription = Observable.timer(this.updatePeriod, this.updatePeriod)
+        .subscribe(() => this.ngZone.run(() => !this.lastPriceSubscription ? this.loadPrice() : null ));
+    });
+
+    this.timerSubscription.add(
+      Observable.of(1).delay(firstConnectionDelay).subscribe(() => this.loadPrice())
+    );
+  }
+
   private loadPrice() {
-    this.http.get(`https://api.coinmarketcap.com/v2/ticker/${this.CMC_TICKER_ID}/`)
-      .map(response => response.json())
-      .subscribe(response => this.price.next(response.data.quotes.USD.price));
+    if (!this.priceTickerId) {
+      return;
+    }
+
+    if (this.lastPriceSubscription) {
+      this.lastPriceSubscription.unsubscribe();
+    }
+
+    this.lastPriceSubscription = this.http.get(`https://api.coinpaprika.com/v1/tickers/${this.priceTickerId}?quotes=USD`)
+      .subscribe((response: any) => {
+        this.lastPriceSubscription = null;
+        this.price.next(response.quotes.USD.price);
+      },
+      () => this.startTimer(60000));
   }
 }

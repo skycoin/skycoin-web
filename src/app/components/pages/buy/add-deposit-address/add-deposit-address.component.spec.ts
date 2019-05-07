@@ -5,24 +5,9 @@ import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { AddDepositAddressComponent } from './add-deposit-address.component';
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
 import { PurchaseService } from '../../../../services/purchase.service';
-
-class MockWalletService {
-  get addresses(): Observable<any[]> {
-    return Observable.of([]);
-  }
-}
-
-class MockPurchaseService {
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
+import { MockTranslatePipe, MockPurchaseService, MockWalletService } from '../../../../utils/test-mocks';
 
 describe('AddDepositAddressComponent', () => {
   let component: AddDepositAddressComponent;

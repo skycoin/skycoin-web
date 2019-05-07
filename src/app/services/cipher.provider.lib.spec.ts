@@ -1,17 +1,18 @@
-import { TestBed, inject } from '@angular/core/testing';
+import '../../assets/scripts/main.js';
 import { readJSON } from 'karma-read-json';
 
-import { CipherProvider } from './cipher.provider';
 import { testCases } from '../utils/jasmine-utils';
+import { Address } from '../app.datatypes';
+import { convertAsciiToHexa } from '../utils/converters';
 
 declare var CipherExtras;
+declare var Cipher;
 
 describe('CipherProvider Lib', () => {
-  let cipherProvider: CipherProvider;
-  const addressesFilePath = 'e2e/test-fixtures/many-addresses.json';
-  const inputHashesFilePath = 'e2e/test-fixtures/input-hashes.json';
+  const fixturesPath = 'e2e/test-fixtures/';
+  const addressesFileName = 'many-addresses.json';
+  const inputHashesFileName = 'input-hashes.json';
 
-  const seedSignaturesPath = 'e2e/test-fixtures/';
   const seedSignaturesFiles = [
     'seed-0000.json', 'seed-0001.json', 'seed-0002.json',
     'seed-0003.json', 'seed-0004.json', 'seed-0005.json',
@@ -19,115 +20,108 @@ describe('CipherProvider Lib', () => {
     'seed-0009.json', 'seed-0010.json'
   ];
 
-  beforeAll(() => {
-    TestBed.configureTestingModule({
-      providers: [CipherProvider]
-    });
+  const extensiveMode = 'extensive';
 
-    cipherProvider = TestBed.get(CipherProvider);
-  });
+  const testSettings = process.argv.length > 0 && process.argv[0] === extensiveMode
+    ? { addressCount: 1000, seedFilesCount: 11 }
+    : { addressCount: 30, seedFilesCount: 2 };
 
   describe('generate address', () => {
-    let actualAddresses = [];
-    let expectedAddresses = [];
+    const addressFixtureFile = readJSON(fixturesPath + addressesFileName);
+    const expectedAddresses = addressFixtureFile.keys.slice(0, testSettings.addressCount);
+    let seed = convertAsciiToHexa(atob(addressFixtureFile.seed));
+    let generatedAddress;
 
-    beforeAll(() => {
-      const addressFixtureFile = readJSON(addressesFilePath);
-      expectedAddresses = addressFixtureFile.keys;
-
-      let seed = convertAsciiToHexa(atob(addressFixtureFile.seed));
-
-      actualAddresses = expectedAddresses.map(address => {
-        const generatedAddress = cipherProvider.generateAddress(seed);
+    testCases(expectedAddresses, (address: any) => {
+      it('should generate many address correctly', done => {
+        generatedAddress = generateAddress(seed);
         seed = generatedAddress.next_seed;
 
-        return generatedAddress;
-      });
-    });
-
-    it('should generate many address correctly', done => {
-      const convertedAddresses = actualAddresses.map(address => {
-        return {
-          address: address.address,
-          public: address.public_key,
-          secret: address.secret_key
+        const convertedAddress = {
+          address: generatedAddress.address,
+          public: generatedAddress.public_key,
+          secret: generatedAddress.secret_key
         };
+
+        expect(convertedAddress).toEqual(address);
+        done();
       });
 
-      expect(convertedAddresses).toEqual(expectedAddresses);
-      done();
-    });
-
-    it('should pass the verification', done => {
-      actualAddresses.map(address => {
-        const addressFromPubKey = CipherExtras.AddressFromPubKey(address.public_key);
-        const addressFromSecKey = CipherExtras.AddressFromSecKey(address.secret_key);
-
-        expect(addressFromPubKey && addressFromSecKey && addressFromPubKey === addressFromSecKey).toBe(true);
-
-        expect(CipherExtras.VerifySeckey(address.secret_key)).toBe(1);
-        expect(CipherExtras.VerifyPubkey(address.public_key)).toBe(1);
+      it('should pass the verification', done => {
+        verifyAddress(generatedAddress);
+        done();
       });
-
-      done();
     });
   });
 
   describe('seed signatures', () => {
-    let inputHashes = [];
+    const inputHashes = readJSON(fixturesPath + inputHashesFileName).hashes;
 
-    beforeAll(() => {
-      inputHashes = readJSON(inputHashesFilePath).hashes;
-    });
-
-    testCases(seedSignaturesFiles, (fileName: string) => {
+    testCases(seedSignaturesFiles.slice(0, testSettings.seedFilesCount), (fileName: string) => {
       describe(`should pass the verification for ${fileName}`, () => {
         let seedKeys;
         let actualAddresses;
         let testData: { signature: string, public_key: string, hash: string, secret_key: string, address: string }[] = [];
 
         beforeAll(() => {
-          const signaturesFixtureFile = readJSON(seedSignaturesPath + fileName);
-          let seed = convertAsciiToHexa(atob(signaturesFixtureFile.seed));
+          const signaturesFixtureFile = readJSON(fixturesPath + fileName);
+          const seed = convertAsciiToHexa(atob(signaturesFixtureFile.seed));
           seedKeys = signaturesFixtureFile.keys;
 
-          actualAddresses = seedKeys.map(() => {
-            const generatedAddress = cipherProvider.generateAddress(seed);
-            seed = generatedAddress.next_seed;
+          actualAddresses = generateAddresses(seed, seedKeys);
+          testData = getSeedTestData(inputHashes, seedKeys, actualAddresses);
+        });
 
-            return generatedAddress;
+        it('should check number of signatures and hashes', done => {
+          const result = seedKeys.some(key => key.signatures.length !== inputHashes.length);
+
+          expect(result).toEqual(false);
+          done();
+        });
+
+        it('should generate many address correctly', done => {
+          actualAddresses.forEach((address, index) => {
+            expect(address.address).toEqual(seedKeys[index].address);
+            expect(address.public_key).toEqual(seedKeys[index].public);
+            expect(address.secret_key).toEqual(seedKeys[index].secret);
           });
 
-          testData = getSeedTestData(inputHashes, seedKeys, actualAddresses);
+          done();
+        });
+
+        it('address should pass the verification', done => {
+          verifyAddresses(actualAddresses);
+          done();
         });
 
         it(`should verify signature correctly`, done => {
           testData.forEach(data => {
             const result = CipherExtras.VerifySignature(data.public_key, data.signature, data.hash);
-              expect(result).toBeUndefined();
-              done();
+            expect(result).toBeUndefined();
+            done();
           });
         });
 
         it(`should check signature correctly`, done => {
           testData.forEach(data => {
             const result = CipherExtras.ChkSig(data.address, data.hash, data.signature);
-              expect(result).toBeUndefined();
-              done();
+            expect(result).toBeUndefined();
+            done();
           });
         });
 
         it(`should verify signed hash correctly`, done => {
           testData.forEach(data => {
             const result = CipherExtras.VerifySignedHash(data.signature, data.hash);
-              expect(result).toBeUndefined();
-              done();
+            expect(result).toBeUndefined();
+            done();
           });
         });
 
         it(`should generate public key correctly`, done => {
           testData.forEach(data => {
             const pubKey = CipherExtras.PubKeyFromSig(data.signature, data.hash);
+            expect(pubKey).toBeTruthy();
             expect(pubKey === data.public_key).toBeTruthy();
             done();
           });
@@ -145,15 +139,6 @@ describe('CipherProvider Lib', () => {
   });
 });
 
-function convertAsciiToHexa(str): string {
-  const arr1: string[] = [];
-  for (let n = 0, l = str.length; n < l; n ++) {
-    const hex = Number(str.charCodeAt(n)).toString(16);
-    arr1.push(hex !== '0' ? hex : '00');
-  }
-  return arr1.join('');
-}
-
 function getSeedTestData(inputHashes, seedKeys, actualAddresses) {
   const data = [];
 
@@ -170,4 +155,37 @@ function getSeedTestData(inputHashes, seedKeys, actualAddresses) {
   }
 
   return data;
+}
+
+function generateAddresses(seed: string, keys: any[]): Address[] {
+  return keys.map(() => {
+    const generatedAddress = generateAddress(seed);
+    seed = generatedAddress.next_seed;
+
+    return generatedAddress;
+  });
+}
+
+function generateAddress(seed: string): Address {
+  const address = Cipher.GenerateAddresses(seed);
+  return {
+    address: address.Address,
+    public_key: address.Public,
+    secret_key: address.Secret,
+    next_seed: address.NextSeed
+  };
+}
+
+function verifyAddress(address) {
+  const addressFromPubKey = CipherExtras.AddressFromPubKey(address.public_key);
+  const addressFromSecKey = CipherExtras.AddressFromSecKey(address.secret_key);
+
+  expect(addressFromPubKey && addressFromSecKey && addressFromPubKey === addressFromSecKey).toBe(true);
+
+  expect(CipherExtras.VerifySeckey(address.secret_key)).toBe(1);
+  expect(CipherExtras.VerifyPubkey(address.public_key)).toBe(1);
+}
+
+function verifyAddresses(addresses) {
+  addresses.forEach(address => verifyAddress(address));
 }

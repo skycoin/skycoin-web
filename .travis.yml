@@ -1,3 +1,4 @@
+dist: xenial
 language: node_js
 node_js:
   - "6.9"
@@ -5,6 +6,7 @@ node_js:
 branches:
   only:
     - master
+    - develop
 
 services:
   - docker

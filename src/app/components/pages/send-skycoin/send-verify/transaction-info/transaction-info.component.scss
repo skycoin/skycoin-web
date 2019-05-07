@@ -15,7 +15,7 @@ h4 {
 
   .-number {
     padding: 10px;
-    background: $grey-light;
+    background: $grey-lightest;
     align-self: flex-start;
     border-radius: 10px;
   }
@@ -24,6 +24,10 @@ h4 {
     margin-left: 10px;
     display: flex;
     flex-direction: column;
+
+    div {
+      word-break: break-all;
+    }
 
     .-address {
       padding: 10px 0;
@@ -34,15 +38,20 @@ h4 {
 
 .-data {
   font-size: 12px;
+  display: flex;
 
   &:not(:last-child) {
     margin-bottom: 5px;
   }
 
   span:first-child {
-    color: $grey-dark;
+    color: $grey;
     display: inline-block;
     width: 60px;
+    flex-shrink: 0;
+  }
+  span:last-child {
+    word-break: break-all;
   }
 
   &.-more {
@@ -51,7 +60,7 @@ h4 {
     span {
       width: auto !important;
       margin-top: 20px;
-      color: $gradient-blue-dark;
+      color: $blue;
       cursor: pointer;
 
       mat-icon {
@@ -71,6 +80,13 @@ h4 {
 
 .-tx-price {
   text-align: center;
+  width: 100%;
+
+  @media (max-width: $max-small-width) {
+    & {
+      margin-bottom: 25px;
+    }
+  }
 
   .-icon {
     &.-incoming {
@@ -83,19 +99,19 @@ h4 {
   }
 
   h4 {
-    color: $grey-normal;
+    color: $grey-dark;
     font-size: 16px;
     font-weight: 700;
     margin: 10px 0 5px;
   }
 
   p {
-    color: $grey-dark;
+    color: $grey;
     font-size: 12px;
     margin: 0;
 
     span {
-      color: lighten($grey-dark, 40%);
+      color: lighten($grey, 40%);
     }
   }
 }

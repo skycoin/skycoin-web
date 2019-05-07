@@ -1,3 +1,12 @@
-.-buttons {
-  text-align: center;
+@import '../../../../../theme/_variables.scss';
+
+.alert-box {
+  margin-bottom: 20px;
+
+  .title {
+    font-size: 19px;
+    margin-bottom: 10px;
+    color: $red;
+    line-height: 1.3;
+  }
 }

@@ -1,88 +1,75 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
-import * as Bip39 from 'bip39';
+import { TranslateService } from '@ngx-translate/core';
+import { ISubscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
-import { WalletService } from '../../../../services/wallet.service';
+import { WalletService } from '../../../../services/wallet/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
-import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
-import { OnboardingSafeguardComponent } from './onboarding-safeguard/onboarding-safeguard.component';
+import { CoinService } from '../../../../services/coin.service';
+import { BaseCoin } from '../../../../coins/basecoin';
+import { LanguageService } from '../../../../services/language.service';
+import { openChangeLanguageModal, showConfirmationModal, scanAddresses } from '../../../../utils';
+import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
+import { ConfirmationData, Wallet } from '../../../../app.datatypes';
+import { BlockchainService } from '../../../../services/blockchain.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
+import { config } from '../../../../app.config';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
   templateUrl: './onboarding-create-wallet.component.html',
   styleUrls: ['./onboarding-create-wallet.component.scss'],
 })
-export class OnboardingCreateWalletComponent implements OnInit {
+export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
+  @ViewChild('formControl') formControl: CreateWalletFormComponent;
+  @ViewChild('create') createButton;
+
+  showSlowMobileInfo = false;
   showNewForm = true;
-  form: FormGroup;
   doubleButtonActive = DoubleButtonActive.LeftButton;
-  haveWallets = false;
+  userHasWallets = false;
+  creatingWallet = false;
+
+  private slowInfoSubscription: ISubscription;
 
   constructor(
-    private dialog: MatDialog,
+    private dialog: CustomMatDialogService,
     private walletService: WalletService,
     private router: Router,
-    private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private coinService: CoinService,
+    private languageService: LanguageService,
+    private blockchainService: BlockchainService,
+    private translate: TranslateService,
   ) { }
 
   ngOnInit() {
-    this.initForm();
-    this.existWallets();
+    this.checkUserWallets();
+    this.formControl.initForm(this.coinService.currentCoin.getValue());
   }
 
-  existWallets() {
-    this.walletService.all.subscribe(wallets => {
-      if (wallets.length === 0) {
-        this.haveWallets = false;
-        this.showDisclaimer();
-      }else {
-        this.haveWallets = true;
-      }
-    });
+  ngOnDestroy() {
+    this.removeSlowInfoSubscription();
+    this.snackBar.dismiss();
   }
 
-  initForm() {
-    this.form = this.formBuilder.group({
-        label: new FormControl('', Validators.compose([
-          Validators.required, Validators.minLength(2),
-        ])),
-        seed: new FormControl('', Validators.compose([
-          Validators.required, Validators.minLength(2),
-        ])),
-        confirm_seed: new FormControl('',
-          this.showNewForm ?
-            Validators.compose([
-              Validators.required,
-              Validators.minLength(2),
-            ])
-            : Validators.compose([]),
-        ),
-      },
-      this.showNewForm ? { validator: this.seedMatchValidator.bind(this) } : {},
-      );
-
-    if (this.showNewForm) {
-      this.generateSeed(128);
-    }
-  }
-
-  changeForm(newState) {
+  changeForm(newState: DoubleButtonActive) {
     newState === DoubleButtonActive.RightButton ? this.showNewForm = false : this.showNewForm = true;
-    this.initForm();
-  }
-
-  showDisclaimer() {
-    setTimeout(() => {
-      this.dialog.open(OnboardingDisclaimerComponent, this.createDialogConfig(true));
-    }, 0);
+    this.formControl.initForm(this.coinService.currentCoin.getValue(), this.showNewForm);
   }
 
   showSafe() {
-    this.dialog.open(OnboardingSafeguardComponent, this.createDialogConfig()).afterClosed().subscribe(result => {
+    const data: ConfirmationData = {
+      text: 'wizard.confirm.desc',
+      headerText: 'wizard.confirm.title',
+      checkboxText: 'wizard.confirm.checkbox',
+      confirmButtonText: 'wizard.confirm.button',
+      redTitle: true
+    };
+
+    showConfirmationModal(this.dialog, data).afterClosed().subscribe(result => {
       if (result) {
         this.createWallet();
       }
@@ -94,36 +81,110 @@ export class OnboardingCreateWalletComponent implements OnInit {
   }
 
   skip() {
-    this.router.navigate(['/wallets']);
+    this.router.navigate(['/wallets'], { replaceUrl: true });
   }
 
-  private generateSeed(entropy: number) {
-    this.form.controls.seed.setValue(Bip39.generateMnemonic(entropy));
+  private showLanguageModal() {
+    setTimeout(() => {
+      openChangeLanguageModal(this.dialog, true)
+        .subscribe(response => {
+          if (response) {
+            this.languageService.changeLanguage(response);
+          }
+          this.showDisclaimer();
+        });
+    }, 0);
+  }
+
+  private showDisclaimer() {
+    const data: ConfirmationData = {
+      text: 'onboarding.disclaimer.disclaimer-description',
+      headerText: 'title.disclaimer',
+      checkboxText: 'onboarding.disclaimer.disclaimer-check',
+      confirmButtonText: 'onboarding.disclaimer.continue-button',
+      disableDismiss: true,
+    };
+
+    showConfirmationModal(this.dialog, data);
+  }
+
+  private checkUserWallets() {
+    this.walletService.haveWallets.first().subscribe(result => {
+      if (!result) {
+        this.userHasWallets = false;
+        this.showLanguageModal();
+      } else {
+        this.userHasWallets = true;
+      }
+    });
   }
 
   private createWallet() {
-    this.walletService.create(this.form.value.label, this.form.value.seed)
-    .then(
-      () => this.skip(),
-      (error) => this.onCreateError(error.message)
-    );
+    this.createButton.setLoading();
+    this.creatingWallet = true;
+
+    this.slowInfoSubscription = Observable.of(1).delay(config.timeBeforeSlowMobileInfo)
+      .subscribe(() => this.showSlowMobileInfo = true);
+
+    const data = this.formControl.getData();
+
+    this.walletService.create(data.label, data.seed, data.coin.id, this.showNewForm)
+      .subscribe(
+        wallet => this.onCreateSuccess(wallet, data.coin),
+        (error) => this.onCreateError(error.message)
+      );
   }
 
-  private seedMatchValidator(g: FormGroup) {
-      return g.get('seed').value === g.get('confirm_seed').value
-        ? null : { mismatch: true };
+  private onCreateSuccess(wallet: Wallet, coin: BaseCoin) {
+    const initialCoin = this.coinService.currentCoin.value;
+    this.coinService.changeCoin(coin);
+
+    if (!this.showNewForm) {
+      this.showSlowMobileInfo = false;
+      this.removeSlowInfoSubscription();
+
+      scanAddresses(this.dialog, wallet, this.blockchainService, this.translate).subscribe(
+        response => this.processScanResponse(initialCoin, wallet, false, response),
+        error => this.processScanResponse(initialCoin, wallet, true, error)
+      );
+    } else {
+      this.finish();
+    }
+  }
+
+  private processScanResponse(initialCoin: BaseCoin, wallet: Wallet, isError: boolean, response) {
+    if (isError || response !== null) {
+      this.coinService.changeCoin(initialCoin);
+      this.onCreateError(response.message ? response.message : response.toString());
+    } else {
+      wallet.needSeedConfirmation = false;
+      this.walletService.add(wallet);
+      this.finish();
+    }
+  }
+
+  private finish() {
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
+    this.createButton.setSuccess();
+    this.skip();
+    this.creatingWallet = false;
   }
 
   private onCreateError(errorMesasge: string) {
-    const config = new MatSnackBarConfig();
-    config.duration = 5000;
-    this.snackBar.open(errorMesasge, null, config);
+    this.showSlowMobileInfo = false;
+    this.removeSlowInfoSubscription();
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 5000;
+    this.snackBar.open(errorMesasge, null, snackBarConfig);
+
+    this.createButton.setError(errorMesasge);
+    this.creatingWallet = false;
   }
 
-  private createDialogConfig(disableClose = false) {
-    const config = new MatDialogConfig();
-    config.width = '450px';
-    config.disableClose = disableClose;
-    return config;
+  private removeSlowInfoSubscription() {
+    if (this.slowInfoSubscription) {
+      this.slowInfoSubscription.unsubscribe();
+    }
   }
 }

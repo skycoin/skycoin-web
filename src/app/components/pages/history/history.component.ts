@@ -1,48 +1,238 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialogConfig } from '@angular/material/dialog';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 import { PriceService } from '../../../services/price.service';
-import { WalletService } from '../../../services/wallet.service';
+import { HistoryService } from '../../../services/wallet/history.service';
 import { TransactionDetailComponent } from './transaction-detail/transaction-detail.component';
-import { QrCodeComponent } from '../../layout/qr-code/qr-code.component';
+import { BaseCoin } from '../../../coins/basecoin';
+import { CoinService } from '../../../services/coin.service';
+import { openQrModal } from '../../../utils';
+import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
+import { NormalTransaction } from '../../../app.datatypes';
+import { WalletService } from '../../../services/wallet/wallet.service';
+
+export class Wallet {
+  label: string;
+  coins: string;
+  hours: string;
+  addresses: Address[];
+  allAddressesSelected: boolean;
+}
+
+export class Address {
+  address: string;
+  coins: string;
+  hours: string;
+  showingWholeWallet: boolean;
+}
 
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss'],
 })
+export class HistoryComponent implements OnInit, OnDestroy {
+  currentCoin: BaseCoin;
+  showError = false;
 
-export class HistoryComponent implements OnInit {
-  public transactions: any[];
-  public price: number;
-  private priceSubscription: Subscription;
+  allTransactions: NormalTransaction[];
+  transactions: NormalTransaction[];
+  price: number;
+  wallets: Wallet[];
+  form: FormGroup;
+
+  private requestedAddress: string;
+  private walletsLoaded = false;
+  private transactionsLoaded = false;
+  private subscription: Subscription;
+  private transactionsSubscription: ISubscription;
+  private filterSubscription: ISubscription;
+  private walletsSubscription: ISubscription;
+  private routeSubscription: ISubscription;
 
   constructor(
-    private walletService: WalletService,
+    private historyService: HistoryService,
     private priceService: PriceService,
-    private dialog: MatDialog,
-  ) { }
+    private dialog: CustomMatDialogService,
+    private coinService: CoinService,
+    private formBuilder: FormBuilder,
+    private walletService: WalletService,
+    route: ActivatedRoute,
+  ) {
+    this.form = this.formBuilder.group({
+      filter: [[]],
+    });
+
+    this.routeSubscription = route.queryParams.subscribe(params => {
+      this.requestedAddress = params['addr'];
+      this.showRequestedAddress();
+    });
+  }
 
   ngOnInit() {
-    this.priceSubscription = this.priceService.price.subscribe(price => this.price = price);
-    this.walletService.transactions().subscribe(transactions => {
-      this.transactions = transactions;
+    this.subscription = this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
+      this.allTransactions = null;
+      this.transactions = null;
+      this.currentCoin = coin;
+      this.showError = false;
+      this.transactionsLoaded = false;
+      this.walletsLoaded = false;
+      this.form.get('filter').setValue([]);
+
+      this.loadWallets();
+
+      this.closeTransactionsSubscription();
+      this.transactionsSubscription = this.historyService.transactions().subscribe(transactions => {
+          this.allTransactions = transactions;
+          this.transactions = transactions;
+
+          this.transactionsLoaded = true;
+          this.showRequestedAddress();
+        },
+        () => this.showError = true
+      );
     });
+
+    this.filterSubscription = this.form.get('filter').valueChanges.subscribe(() => {
+      const selectedfilters: (Wallet|Address)[] = this.form.get('filter').value;
+      this.wallets.forEach(wallet => {
+        wallet.allAddressesSelected = false;
+        wallet.addresses.forEach(address => address.showingWholeWallet = false);
+      });
+
+      if (selectedfilters.length === 0) {
+        this.transactions = this.allTransactions;
+      } else {
+        const selectedAddresses: Map<string, boolean> = new Map<string, boolean>();
+        selectedfilters.forEach(filter => {
+          if ((filter as Wallet).addresses) {
+            (filter as Wallet).addresses.forEach(address => {
+              selectedAddresses.set(address.address, true);
+              address.showingWholeWallet = true;
+            });
+            (filter as Wallet).allAddressesSelected = true;
+          } else {
+            selectedAddresses.set((filter as Address).address, true);
+          }
+        });
+
+        this.transactions = this.allTransactions.filter(tx =>
+          tx.inputs.some(input => selectedAddresses.has(input.owner)) || tx.outputs.some(output => selectedAddresses.has(output.dst)),
+        );
+      }
+    });
+
+    this.subscription.add(this.priceService.price.subscribe(price => this.price = price));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    this.closeTransactionsSubscription();
+    this.filterSubscription.unsubscribe();
+    this.walletsSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }
 
   showTransaction(transaction: any) {
     const config = new MatDialogConfig();
     config.width = '800px';
     config.data = transaction;
-    this.dialog.open(TransactionDetailComponent, config).afterClosed().subscribe();
+    this.dialog.open(TransactionDetailComponent, config);
   }
 
   showQr(event, address) {
     event.stopPropagation();
+    openQrModal(this.dialog, address);
+  }
 
-    const config = new MatDialogConfig();
-    config.data = address;
-    this.dialog.open(QrCodeComponent, config);
+  removeFilters() {
+    this.form.get('filter').setValue([]);
+  }
+
+  private loadWallets() {
+    if (this.walletsSubscription) {
+      this.walletsSubscription.unsubscribe();
+    }
+
+    this.walletsSubscription = this.walletService.currentWallets.delay(100).first().subscribe(wallets => {
+      this.wallets = [];
+      let incompleteData = false;
+
+      // A local copy of the data is created to avoid problems after updating the
+      // wallet addresses while updating the balance.
+      wallets.forEach(wallet => {
+        if (!wallet.balance || !wallet.hours || incompleteData) {
+          incompleteData = true;
+
+          return;
+        }
+
+        this.wallets.push({
+          label: wallet.label,
+          coins: wallet.balance.decimalPlaces(6).toString(),
+          hours: wallet.hours.decimalPlaces(0).toString(),
+          addresses: [],
+          allAddressesSelected: false,
+        });
+
+        wallet.addresses.forEach(address => {
+          if (!address.balance || !address.hours || incompleteData) {
+            incompleteData = true;
+
+            return;
+          }
+
+          this.wallets[this.wallets.length - 1].addresses.push({
+            address: address.address,
+            coins: address.balance.decimalPlaces(6).toString(),
+            hours: address.hours.decimalPlaces(0).toString(),
+            showingWholeWallet: false,
+          });
+        });
+      });
+
+      if (incompleteData) {
+        this.wallets = [];
+        this.loadWallets();
+      } else {
+        this.walletsSubscription.unsubscribe();
+        if (!this.walletsLoaded) {
+          this.walletsLoaded = true;
+          this.showRequestedAddress();
+        }
+      }
+
+    });
+  }
+
+  private closeTransactionsSubscription() {
+    if (this.transactionsSubscription && !this.transactionsSubscription.closed) {
+      this.transactionsSubscription.unsubscribe();
+    }
+  }
+
+  private showRequestedAddress() {
+    if (!this.transactionsLoaded || !this.wallets || this.wallets.length === 0) {
+      return;
+    }
+
+    if (this.requestedAddress) {
+      let addressFound: Address;
+      this.wallets.forEach(wallet => {
+        const found = wallet.addresses.find(address => address.address === this.requestedAddress);
+        if (found) {
+          addressFound = found;
+        }
+      });
+
+      if (addressFound) {
+        this.form.get('filter').setValue([addressFound]);
+      }
+    } else {
+      this.form.get('filter').setValue([]);
+    }
   }
 }

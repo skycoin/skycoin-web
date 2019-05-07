@@ -1,34 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { MatDialogModule, MatSnackBarModule } from '@angular/material';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatSnackBarModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { Observable } from 'rxjs/Observable';
-
-
-
-
+import { TranslateService } from '@ngx-translate/core';
 
 import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.component';
-import { WalletService } from '../../../../services/wallet.service';
-import { Wallet } from '../../../../app.datatypes';
-import { OnboardingDisclaimerComponent } from './onboarding-disclaimer/onboarding-disclaimer.component';
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
-
-class MockWalletService {
-  all: Observable<Wallet[]> = Observable.of();
-  generateSeed(entropy) {
-    return Observable.of('');
-  }
-}
+import { WalletService } from '../../../../services/wallet/wallet.service';
+import { CoinService } from '../../../../services/coin.service';
+import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService, MockBlockchainService, MockCustomMatDialogService } from '../../../../utils/test-mocks';
+import { LanguageService } from '../../../../services/language.service';
+import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
+import { BlockchainService } from '../../../../services/blockchain.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
+import { Bip39WordListService } from '../../../../services/bip39-word-list.service';
 
 describe('OnboardingCreateWalletComponent', () => {
   let component: OnboardingCreateWalletComponent;
@@ -38,30 +24,32 @@ describe('OnboardingCreateWalletComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         OnboardingCreateWalletComponent,
-        OnboardingDisclaimerComponent,
-        MockTranslatePipe
+        MockTranslatePipe,
+        CreateWalletFormComponent
       ],
       imports: [
-        MatDialogModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         MatSnackBarModule
       ],
       providers: [
         FormBuilder,
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: WalletService, useClass: MockWalletService },
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: LanguageService, useClass: MockLanguageService },
+        { provide: BlockchainService, useClass: MockBlockchainService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService },
+        {
+          provide: TranslateService,
+          useValue: jasmine.createSpyObj('TranslateService', ['instant'])
+        },
+        { provide: Bip39WordListService, useValue: { validateWord: true } },
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });
   }));
 
   beforeEach(() => {
-    TestBed.overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [ OnboardingDisclaimerComponent ],
-      }
-    });
-
     fixture = TestBed.createComponent(OnboardingCreateWalletComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

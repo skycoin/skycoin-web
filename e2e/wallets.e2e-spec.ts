@@ -28,28 +28,26 @@ describe('Wallets', () => {
     expect<any>(page.showAddWallet()).toEqual(true);
   });
 
-  it('should validate create wallet, seed mismatch', () => {
-    expect<any>(page.createWalletCheckValidationSeed()).toEqual(false);
-  });
-
   it('should validate create wallet, empty label', () => {
     expect<any>(page.createWalletCheckValidationLabel()).toEqual(false);
   });
 
+  it('should validate create wallet, seed mismatch', () => {
+    expect<any>(page.createWalletCheckValidationSeed()).toEqual(false);
+  });
+
   it('should not create wallet with already used seed', () => {
     expect<any>(page.createExistingWallet()).toEqual(false);
+    page.waitUntilLoading();
   });
 
   it('should create wallet', () => {
     expect<any>(page.createWallet()).toEqual(true);
+    page.waitUntilLoading();
   });
 
   it('should show load wallet', () => {
     expect<any>(page.showLoadWallet()).toEqual(true);
-  });
-
-  it('should validate load wallet, seed', () => {
-    expect<any>(page.loadWalletCheckValidationSeed()).toEqual(false);
   });
 
   it('should validate load wallet, empty label', () => {
@@ -60,8 +58,13 @@ describe('Wallets', () => {
     expect<any>(page.loadExistingWallet()).toEqual(false);
   });
 
+  it('should validate load wallet, seed', () => {
+    expect<any>(page.loadWalletCheckValidationSeed()).toEqual(false);
+  });
+
   it('should load wallet', () => {
     expect<any>(page.loadWallet()).toEqual(true);
+    page.waitUntilWalletIsCreated();
   });
 
   it('should expand wallet', () => {
@@ -70,6 +73,10 @@ describe('Wallets', () => {
 
   it('should show wallet QR modal', () => {
     expect<any>(page.showQrDialog()).toEqual(true);
+  });
+
+  it('should display correct address in the QR modal', () => {
+    expect<any>(page.checkQrDialogAddress()).toEqual(true);
   });
 
   it('should hide wallet QR modal', () => {
@@ -96,13 +103,9 @@ describe('Wallets', () => {
     expect<any>(page.changeWalletName()).toEqual(true);
   });
 
-  it('should display price information', () => {
-    expect<any>(page.showPriceInformation()).toEqual(true);
-  });
-
-  it('should decrypt wallet', () => {
+  it('should unlock wallet', () => {
     page.navigateTo();
-    expect<any>(page.canUnlock()).toEqual(true);
+    expect<any>(page.canUnlockWallet()).toEqual(true);
   });
 
   it('should always display add new address button for the wallet', () => {
@@ -116,5 +119,21 @@ describe('Wallets', () => {
 
   it('should unlock wallet component on add new address for locked wallet', () => {
     expect<any>(page.unlockWallet()).toEqual(true);
+  });
+
+  it('should add new address after unlocking the wallet', () => {
+    expect<any>(page.checkThirdAddress()).toEqual(true);
+  });
+
+  it('should open delete wallet dialog', () => {
+    expect<any>(page.openDeleteWalletDialog()).toEqual(true);
+  });
+
+  it('should cancel delete wallet dialog', () => {
+    expect<any>(page.cancelDeleteConfirmation()).toEqual(true);
+  });
+
+  it('should apply delete wallet dialog', () => {
+    expect<any>(page.deleteWallet()).toEqual(true);
   });
 });

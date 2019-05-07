@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/do';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http } from '@angular/http';

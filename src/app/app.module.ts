@@ -1,8 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { MatInputModule } from '@angular/material';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatSliderModule, MatInputModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -36,21 +35,18 @@ import { AddDepositAddressComponent } from './components/pages/buy/add-deposit-a
 import { BuyComponent } from './components/pages/buy/buy.component';
 import { HistoryComponent } from './components/pages/history/history.component';
 import { OnboardingCreateWalletComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
-import { OnboardingDisclaimerComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-disclaimer/onboarding-disclaimer.component';
-import { OnboardingSafeguardComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-safeguard/onboarding-safeguard.component';
 import { OnboardingEncryptWalletComponent } from './components/pages/onboarding/onboarding-encrypt-wallet/onboarding-encrypt-wallet.component';
 import { SendSkycoinComponent } from './components/pages/send-skycoin/send-skycoin.component';
 import { BlockchainComponent } from './components/pages/settings/blockchain/blockchain.component';
 import { OutputsComponent } from './components/pages/settings/outputs/outputs.component';
 import { PendingTransactionsComponent } from './components/pages/settings/pending-transactions/pending-transactions.component';
 import { TransactionDetailComponent } from './components/pages/history/transaction-detail/transaction-detail.component';
-import { WalletDetailComponent } from './components/pages/wallets/address-detail/wallet-detail.component';
+import { WalletDetailComponent } from './components/pages/wallets/wallet-detail/wallet-detail.component';
 import { ChangeNameComponent } from './components/pages/wallets/change-name/change-name.component';
 import { CreateWalletComponent } from './components/pages/wallets/create-wallet/create-wallet.component';
 import { UnlockWalletComponent } from './components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { WalletsComponent } from './components/pages/wallets/wallets.component';
 import { ClipboardDirective } from './directives/clipboard.directive';
-import { DateFromNowPipe } from './pipes/date-from-now.pipe';
 import { DateTimePipe } from './pipes/date-time.pipe';
 import { TellerStatusPipe } from './pipes/teller-status.pipe';
 import { ApiService } from './services/api.service';
@@ -58,13 +54,9 @@ import { BlockchainService } from './services/blockchain.service';
 import { ClipboardService } from './services/clipboard.service';
 import { PriceService } from './services/price.service';
 import { PurchaseService } from './services/purchase.service';
-import { WalletService } from './services/wallet.service';
 import { WizardGuardService } from './services/wizard-guard.service';
 import { AppRoutes } from './app.routes';
 import { CipherProvider } from './services/cipher.provider';
-import { FeatureToggleModule } from 'ngx-feature-toggle';
-import { FeatureService } from './services/feature.service';
-import { AppService } from './services/app.service';
 import { NumberFieldDirective } from './directives/number-field.directive';
 import { AppTranslateLoader } from './app.translate-loader';
 import { SendFormComponent } from './components/pages/send-skycoin/send-form/send-form.component';
@@ -72,6 +64,27 @@ import { SendVerifyComponent } from './components/pages/send-skycoin/send-verify
 import { TransactionInfoComponent } from './components/pages/send-skycoin/send-verify/transaction-info/transaction-info.component';
 import { ConfirmationComponent } from './components/layout/confirmation/confirmation.component';
 import { DisclaimerWarningComponent } from './components/layout/disclaimer-warning/disclaimer-warning.component';
+import { NavBarService } from './services/nav-bar.service';
+import { CoinService } from './services/coin.service';
+import { LoadingContentComponent } from './components/layout/loading-content/loading-content.component';
+import { SelectCoinComponent } from './components/layout/select-coin/select-coin.component';
+import { LanguageService } from './services/language.service';
+import { SelectCoinOverlayComponent } from './components/layout/select-coin-overlay/select-coin-overlay.component';
+import { SelectLanguageComponent } from './components/layout/select-language/select-language.component';
+import { WalletService } from './services/wallet/wallet.service';
+import { BalanceService } from './services/wallet/balance.service';
+import { HistoryService } from './services/wallet/history.service';
+import { SpendingService } from './services/wallet/spending.service';
+import { CreateWalletFormComponent } from './components/pages/wallets/create-wallet/create-wallet-form/create-wallet-form.component';
+import { ScanAddressesComponent } from './components/pages/wallets/scan-addresses/scan-addresses.component';
+import { NodesComponent } from './components/pages/settings/nodes/nodes.component';
+import { ChangeNodeURLComponent } from './components/pages/settings/nodes/change-url/change-node-url.component';
+import { GlobalsService } from './services/globals.service';
+import { WalletOptionsComponent } from './components/pages/wallets/wallet-detail/wallet-options/wallet-options.component';
+import { CustomMatDialogService } from './services/custom-mat-dialog.service';
+import { Bip39WordListService } from './services/bip39-word-list.service';
+import { SendFormAdvancedComponent } from './components/pages/send-skycoin/send-form-advanced/send-form-advanced.component';
+import { SelectAddressComponent } from './components/pages/send-skycoin/send-form-advanced/select-address/select-address';
 
 @NgModule({
   declarations: [
@@ -84,7 +97,6 @@ import { DisclaimerWarningComponent } from './components/layout/disclaimer-warni
     ClipboardDirective,
     NumberFieldDirective,
     CreateWalletComponent,
-    DateFromNowPipe,
     DateTimePipe,
     DoubleButtonComponent,
     HeaderComponent,
@@ -93,9 +105,7 @@ import { DisclaimerWarningComponent } from './components/layout/disclaimer-warni
     NavBarComponent,
     OutputsComponent,
     OnboardingCreateWalletComponent,
-    OnboardingDisclaimerComponent,
     OnboardingEncryptWalletComponent,
-    OnboardingSafeguardComponent,
     PendingTransactionsComponent,
     QrCodeComponent,
     SendSkycoinComponent,
@@ -109,7 +119,18 @@ import { DisclaimerWarningComponent } from './components/layout/disclaimer-warni
     SendVerifyComponent,
     TransactionInfoComponent,
     ConfirmationComponent,
-    DisclaimerWarningComponent
+    DisclaimerWarningComponent,
+    LoadingContentComponent,
+    SelectCoinComponent,
+    SelectCoinOverlayComponent,
+    SelectLanguageComponent,
+    CreateWalletFormComponent,
+    ScanAddressesComponent,
+    NodesComponent,
+    ChangeNodeURLComponent,
+    WalletOptionsComponent,
+    SendFormAdvancedComponent,
+    SelectAddressComponent
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -118,13 +139,16 @@ import { DisclaimerWarningComponent } from './components/layout/disclaimer-warni
     QrCodeComponent,
     UnlockWalletComponent,
     TransactionDetailComponent,
-    OnboardingDisclaimerComponent,
-    OnboardingSafeguardComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    SelectCoinOverlayComponent,
+    SelectLanguageComponent,
+    ScanAddressesComponent,
+    ChangeNodeURLComponent,
+    WalletOptionsComponent,
+    SelectAddressComponent
   ],
   imports: [
     BrowserModule,
-    HttpModule,
     HttpClientModule,
     MatButtonModule,
     MatCardModule,
@@ -143,10 +167,11 @@ import { DisclaimerWarningComponent } from './components/layout/disclaimer-warni
     MatToolbarModule,
     MatTooltipModule,
     MatCheckboxModule,
+    MatSliderModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(AppRoutes),
-    FeatureToggleModule,
+    FormsModule,
+    RouterModule.forRoot(AppRoutes, { useHash: true }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -155,16 +180,23 @@ import { DisclaimerWarningComponent } from './components/layout/disclaimer-warni
     }),
   ],
   providers: [
-    AppService,
     ApiService,
     BlockchainService,
     PurchaseService,
-    WalletService,
     PriceService,
     ClipboardService,
     WizardGuardService,
     CipherProvider,
-    FeatureService
+    NavBarService,
+    CoinService,
+    LanguageService,
+    WalletService,
+    BalanceService,
+    HistoryService,
+    SpendingService,
+    GlobalsService,
+    CustomMatDialogService,
+    Bip39WordListService
   ],
   bootstrap: [AppComponent],
 })

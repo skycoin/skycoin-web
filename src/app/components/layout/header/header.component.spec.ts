@@ -1,47 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { HeaderComponent } from './header.component';
 import { PriceService } from '../../../services/price.service';
-import { WalletService } from '../../../services/wallet.service';
-import { AppService } from '../../../services/app.service';
+import { BalanceService } from '../../../services/wallet/balance.service';
 import { BlockchainService } from '../../../services/blockchain.service';
-import { TotalBalance } from '../../../app.datatypes';
-
-class MockPriceService {
-  price: Subject<number> = new BehaviorSubject<number>(null);
-}
-
-class MockWalletService {
-  totalBalance: Subject<TotalBalance> = new BehaviorSubject<TotalBalance>(null);
-  hasPendingTransactions: Subject<boolean> = new ReplaySubject<boolean>();
-
-  sum() {
-  }
-}
-
-class MockAppService {
-  checkConnectionState()  {
-    return Observable.of(null);
-  }
-}
-
-class MockBlockchainService {
-  get progress() {
-    return Observable.of();
-  }
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
+import { CoinService } from '../../../services/coin.service';
+import {
+  MockTranslatePipe,
+  MockCoinService,
+  MockBlockchainService,
+  MockPriceService,
+  MockBalanceService
+} from '../../../utils/test-mocks';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -53,9 +24,9 @@ describe('HeaderComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: PriceService, useClass: MockPriceService },
-        { provide: WalletService, useClass: MockWalletService },
-        { provide: AppService, useClass: MockAppService },
-        { provide: BlockchainService, useClass: MockBlockchainService }
+        { provide: BalanceService, useClass: MockBalanceService },
+        { provide: BlockchainService, useClass: MockBlockchainService },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     }).compileComponents();
   }));

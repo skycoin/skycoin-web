@@ -58,7 +58,7 @@
     pointer-events: none;
     width: 20px;
     height: 20px;
-    background: rgba(30, 34, 39, 0.05);
+    background: $grey-very-light;
     border-radius: 6px;
     border-color: transparent;
   }
@@ -67,7 +67,7 @@
     line-height: normal;
     font-size: 14px;
 
-    color: #FBFBFB;
+    color: $white;
 
     img {
       width: 38px;

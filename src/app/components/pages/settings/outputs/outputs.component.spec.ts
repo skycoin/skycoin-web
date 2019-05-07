@@ -1,23 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute } from '@angular/router';
 
 import { OutputsComponent } from './outputs.component';
-import { WalletService } from '../../../../services/wallet.service';
-
-class MockWalletService {
-  outputsWithWallets() {
-    return Observable.of([]);
-  }
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
+import { SpendingService } from '../../../../services/wallet/spending.service';
+import { CoinService } from '../../../../services/coin.service';
+import { MockTranslatePipe, MockSpendingService, MockCoinService, MockCustomMatDialogService } from '../../../../utils/test-mocks';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 describe('OutputsComponent', () => {
   let component: OutputsComponent;
@@ -29,7 +19,9 @@ describe('OutputsComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { queryParams: Observable.of({}) } },
-        { provide: WalletService, useClass: MockWalletService }
+        { provide: SpendingService, useClass: MockSpendingService },
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ]
     }).compileComponents();
   }));

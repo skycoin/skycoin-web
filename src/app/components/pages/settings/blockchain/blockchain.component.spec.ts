@@ -1,29 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BlockchainComponent } from './blockchain.component';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { BlockchainService } from '../../../../services/blockchain.service';
-
-@Pipe({name: 'dateFromNow'})
-class MockDateFromNowPipe implements PipeTransform {
-  transform() {
-    return 'transformed value';
-  }
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
-
-class MockBlockchainService {
-  lastBlock(): Observable<any> {
-    return Observable.of({});
-  }
-}
+import { CoinService } from '../../../../services/coin.service';
+import { MockTranslatePipe, MockCoinService, MockDateTimePipe, MockBlockchainService } from '../../../../utils/test-mocks';
 
 describe('BlockchainComponent', () => {
   let component: BlockchainComponent;
@@ -33,12 +14,13 @@ describe('BlockchainComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         BlockchainComponent,
-        MockDateFromNowPipe,
+        MockDateTimePipe,
         MockTranslatePipe
       ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: BlockchainService, useClass: MockBlockchainService }
+        { provide: BlockchainService, useClass: MockBlockchainService },
+        { provide: CoinService, useClass: MockCoinService }
       ]
     }).compileComponents();
   }));

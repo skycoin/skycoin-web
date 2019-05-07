@@ -26,17 +26,15 @@ describe('Send Sky', () => {
 
   it('should preconfigure wallet', () => {
     walletPage.navigateTo().then(() => {
-      walletPage.unlockFirstWallet().then((result) => {
-       if (result) {
-         const sendLink = element(by.css('[routerlink="/send"]'));
-         return sendLink.click().then(() => {
-           expect<any>(true).toBeTruthy();
-         });
-       } else {
-         expect<any>(false).toBeTruthy();
-       }
-     });
-   });
+      if (walletPage.canUnlockWallet()) {
+        const sendLink = element(by.css('[routerlink="/send"]'));
+        return sendLink.click().then(() => {
+          expect<any>(true).toBeTruthy();
+        });
+      } else {
+        expect<any>(false).toBeTruthy();
+      }
+    });
   });
 
   it('should display title', () => {

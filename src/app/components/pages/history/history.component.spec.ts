@@ -1,29 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { MatDialogModule, MatDialog } from '@angular/material';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { HistoryComponent } from './history.component';
-import { WalletService } from '../../../services/wallet.service';
+import { HistoryService } from '../../../services/wallet/history.service';
 import { PriceService } from '../../../services/price.service';
-
-class MockWalletService {
-  transactions(): Observable<any[]> {
-    return Observable.of([]);
-  }
-}
-
-class MockPriceService {
-  price: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-}
-
-@Pipe({name: 'translate'})
-class MockTranslatePipe implements PipeTransform {
-  transform() {
-    return 'translated value';
-  }
-}
+import { CoinService } from '../../../services/coin.service';
+import { MockTranslatePipe, MockPriceService, MockCoinService, MockHistoryService, MockCustomMatDialogService, MockDateTimePipe, MockWalletService } from '../../../utils/test-mocks';
+import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
+import { WalletService } from '../../../services/wallet/wallet.service';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
@@ -31,12 +18,15 @@ describe('HistoryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HistoryComponent, MockTranslatePipe ],
-      imports: [ MatDialogModule ],
+      declarations: [ HistoryComponent, MockTranslatePipe, MockDateTimePipe ],
       providers: [
-        MatDialog,
+        FormBuilder,
         { provide: WalletService, useClass: MockWalletService },
-        { provide: PriceService, useClass: MockPriceService }
+        { provide: ActivatedRoute, useValue: { queryParams: Observable.of({}) } },
+        { provide: HistoryService, useClass: MockHistoryService },
+        { provide: PriceService, useClass: MockPriceService },
+        { provide: CoinService, useClass: MockCoinService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

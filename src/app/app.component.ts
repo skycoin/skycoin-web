@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import 'rxjs/add/operator/takeWhile';
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { LanguageService } from './services/language.service';
+import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { config } from './app.config';
+import { environment } from '../environments/environment';
+import { CipherProvider } from './services/cipher.provider';
+import { CustomMatDialogService } from './services/custom-mat-dialog.service';
+import { Bip39WordListService } from './services/bip39-word-list.service';
 
 @Component({
   selector: 'app-root',
@@ -10,22 +15,49 @@ import { config } from './app.config';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-
   current: number;
   highest: number;
   otcEnabled: boolean;
   version: string;
+  browserHasCryptoInsideWorkers: boolean;
 
   constructor(
-    private translate: TranslateService
+    private languageService: LanguageService,
+    cipherProvider: CipherProvider,
+    router: Router,
+    dialog: CustomMatDialogService,
+    renderer: Renderer2,
+    private bip38WordList: Bip39WordListService,
   ) {
+    router.events.subscribe((event: RouterEvent) => {
+      if (event instanceof NavigationEnd) {
+        window.scrollTo(0, 0);
+      }
+    });
+
+    cipherProvider.browserHasCryptoInsideWorkers.subscribe(value => {
+      this.browserHasCryptoInsideWorkers = value;
+    });
+
+    dialog.showingDialog.subscribe(value => {
+      if (!value) {
+        renderer.addClass(document.body, 'fix-error-position');
+      } else {
+        renderer.removeClass(document.body, 'fix-error-position');
+      }
+    });
   }
 
   ngOnInit() {
     this.otcEnabled = config.otcEnabled;
-    this.translate.addLangs(['en']);
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+    this.languageService.loadLanguageSettings();
+
+    window.onbeforeunload = (e) => {
+      if (environment.production && !environment.e2eTest) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
   }
 
   loading() {

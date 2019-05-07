@@ -8,18 +8,21 @@ import { ConfirmationData } from '../../../app.datatypes';
   styleUrls: ['./confirmation.component.scss']
 })
 export class ConfirmationComponent {
-  acceptDeletion = false;
+  accepted = false;
+  disableDismiss = false;
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmationData
-  ) { }
+  ) {
+    this.disableDismiss = !!data.disableDismiss;
+  }
 
   closeModal(isConfirmed: boolean) {
     this.dialogRef.close(isConfirmed);
   }
 
   setAccept(event) {
-    this.acceptDeletion = event.checked ? true : false;
+    this.accepted = event.checked ? true : false;
   }
 }

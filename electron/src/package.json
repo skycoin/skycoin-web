@@ -1,0 +1,10 @@
+{
+  "main": "electron-main.js",
+  "license": "MIT",
+  "description": "skycoin lite wallet",
+  "private": true,
+  "dependencies": {
+    "electron-context-menu": "^0.9.1",
+    "electron-debug": "^1.5.0"
+  }
+}

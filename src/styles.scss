@@ -1,4 +1,6 @@
 @import 'theme/_variables';
+@import 'theme/_tables';
+@import 'theme/_modals';
 @import '~bootstrap/scss/bootstrap-grid.scss';
 
 /* You can add global styles to this file, and also import other style files */
@@ -8,65 +10,51 @@
 @font-face {
   font-family: 'Skycoin';
   font-style: normal;
-  font-weight: 700;
-  src: url('assets/fonts/skycoin/Skycoin-Light.woff2') format('woff2'),
-  url('assets/fonts/skycoin/Skycoin-Light.woff') format('woff');
+  font-weight: 200;
+  src: url('./assets/fonts/skycoin/Skycoin-Light.woff2') format('woff2'),
+  url('./assets/fonts/skycoin/Skycoin-Light.woff') format('woff');
 }
 @font-face {
   font-family: 'Skycoin';
   font-style: italic;
-  font-weight: 700;
-  src: url('assets/fonts/skycoin/Skycoin-LightItalic.woff2') format('woff2'),
-  url('assets/fonts/skycoin/Skycoin-LightItalic.woff') format('woff');
+  font-weight: 200;
+  src: url('./assets/fonts/skycoin/Skycoin-LightItalic.woff2') format('woff2'),
+  url('./assets/fonts/skycoin/Skycoin-LightItalic.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Skycoin';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./assets/fonts/skycoin/Skycoin-Regular.woff2') format('woff2'),
+  url('./assets/fonts/skycoin/Skycoin-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Skycoin';
+  font-style: italic;
+  font-weight: 400;
+  src: url('./assets/fonts/skycoin/Skycoin-RegularItalic.woff2') format('woff2'),
+  url('./assets/fonts/skycoin/Skycoin-RegularItalic.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Skycoin';
   font-style: normal;
   font-weight: 700;
-  src: url('assets/fonts/skycoin/Skycoin-Regular.woff2') format('woff2'),
-  url('assets/fonts/skycoin/Skycoin-Regular.woff') format('woff');
+  src: url('./assets/fonts/skycoin/Skycoin-Bold.woff2') format('woff2'),
+  url('./assets/fonts/skycoin/Skycoin-Bold.woff') format('woff');
 }
 @font-face {
   font-family: 'Skycoin';
   font-style: italic;
   font-weight: 700;
-  src: url('assets/fonts/skycoin/Skycoin-RegularItalic.woff2') format('woff2'),
-  url('assets/fonts/skycoin/Skycoin-RegularItalic.woff') format('woff');
+  src: url('./assets/fonts/skycoin/Skycoin-BoldItalic.woff2') format('woff2'),
+  url('./assets/fonts/skycoin/Skycoin-BoldItalic.woff') format('woff');
 }
-
-@font-face {
-  font-family: 'Skycoin';
-  font-style: normal;
-  font-weight: 700;
-  src: url('assets/fonts/skycoin/Skycoin-Bold.woff2') format('woff2'),
-  url('assets/fonts/skycoin/Skycoin-Bold.woff') format('woff');
-}
-@font-face {
-  font-family: 'Skycoin';
-  font-style: italic;
-  font-weight: 700;
-  src: url('assets/fonts/skycoin/Skycoin-BoldItalic.woff2') format('woff2'),
-  url('assets/fonts/skycoin/Skycoin-BoldItalic.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Skycoin';
-  font-style: italic;
-  font-weight: 700;
-  src: url('assets/fonts/skycoin/Skycoin-BoldItalic.woff2') format('woff2'),
-  url('assets/fonts/skycoin/Skycoin-BoldItalic.woff') format('woff');
-}
-
-$mat-font-family: Skycoin, sans-serif;
-$white: #FBFBFB;
-
-$primary-color: #0072ff;
-$secondary-color: #ffc125;
 
 body, div, h1, h2, h3, h4, h5, h6, p, span, a, button, option, select,
 mat-panel-description, mat-panel-title, mat-option.mat-option {
-  font-family: $mat-font-family;
+  font-family: Skycoin, sans-serif;
 }
 
 html {
@@ -74,50 +62,85 @@ html {
 }
 
 body {
-  background-color: #f7f7f7;
+  background-color: $grey-lightest;
   margin: 0;
   padding: 0;
   height: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
-header {
-  background: url("assets/header.png") center center / cover, linear-gradient(-155deg, #686e96 0%, #373b5c 100%);
-  width: 100%;
-  height: 300px;
+.mat-tooltip {
+  font-size: 11px;
 }
 
-mat-dialog-container {
-  border-radius: 5px !important;
+.-paper {
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.01), 1px 1px 2px 2px rgba(0, 0, 0, 0.01);
+  margin: $content-vertical-margin $normal-content-lateral-margin;
+
+  @media (max-width: $max-small-width) {
+    & {
+      margin: $content-vertical-margin $small-content-lateral-margin;
+    }
+  }
+
+  @media (max-width: $max-very-small-width) {
+    & {
+      margin: $content-vertical-margin $very-small-content-lateral-margin;
+    }
+  }
 }
 
-.mat-dialog-container {
-  padding: 0 !important;
+.default-dialog-style {
+  height: 100%;
+  padding: 20px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 90vw !important;
+
+  mat-dialog-container {
+    border-radius: 5px !important;
+    padding: 0 !important;
+    display: flex !important;
+    height: auto !important;
+    max-height: 100% !important;
+
+    > :first-child {
+      width: 100%;
+    }
+  }
 }
 
-.header-container {
-  max-width: 848px;
-  text-align: center;
-  padding-top: 40px;
-  margin-right: auto;
-  margin-left: auto;
+.transparent-background-dialog {
+  max-width: unset !important;
+  padding: 0;
+
+  .mat-dialog-container {
+    background-color: transparent !important;
+    box-shadow: unset;
+    overflow: hidden;
+    padding: 0;
+  }
 }
 
-.header-container h1 {
-  font-size: 3em;
-  color: white;
+.clear-dialog-background {
+  background-color: rgba(245, 245, 245, 0.976);
+  margin: -100%;
+}
+
+.cdk-overlay-dark-backdrop {
+  margin: -100%;
+}
+
+.mat-select-panel {
+  min-width: 100% !important;
 }
 
 .button-line {
   margin-top: 40px;
   text-align: right;
-}
-
-.datatable-row-group {
-  cursor: pointer;
-}
-
-button.active {
-  background-color: rgba(0, 0, 0, .12);
 }
 
 mat-spinner.in-button {
@@ -130,10 +153,30 @@ mat-spinner.in-button {
     height: 24px !important;
     width: 24px !important;
   }
+  
+  &.small {
+    height: 18px !important;
+    width: 18px !important;
+  
+    svg {
+      height: 18px !important;
+      width: 18px !important;
+    }
+  }
 
   circle {
     stroke: #000;
     opacity: 0.3;
+  }
+
+  &.big {
+    height: 36px !important;
+    width: 36px !important;
+
+    svg {
+      height: 36px !important;
+      width: 36px !important;
+    }
   }
 }
 
@@ -151,8 +194,14 @@ mat-panel-title {
   min-width: 100%;
   min-height: 100%;
 
+  @media (max-width: $max-small-width) {
+    & {
+      padding-bottom: $mobile-nav-bar-height;
+    }
+  }
+
   &.sky-container-grey {
-    background-color: $grey-light;
+    background-color: $grey-lightest;
   }
 }
 
@@ -164,19 +213,21 @@ mat-panel-title {
   margin-bottom: 20px;
 
   label {
-    color: #1e2227;
+    color: $grey-dark;
     display: block;
     font-size: 13px;
-    line-height: 10px;
-    margin-bottom: 10px;
+    line-height: 20px;
+    margin-bottom: 2px;
+
+    &.slow-mobile-info {
+      opacity: 0.75;
+      text-align: center;
+      animation: blinker 2s linear infinite;
+    }
   }
-  /*
-      line-height: 20px;
-      margin-bottom: 2px;
-  */
 
   input {
-    border: 2px solid rgba(0, 0, 0, 0.05);
+    border: 2px solid $grey-very-light;
     border-radius: 6px;
     box-sizing: border-box;
     display: block;
@@ -187,7 +238,7 @@ mat-panel-title {
 
   select {
     background-color: white;
-    border: 2px solid rgba(0, 0, 0, 0.05);
+    border: 2px solid $grey-very-light;
     border-radius: 6px;
     box-sizing: border-box;
     display: block;
@@ -198,7 +249,7 @@ mat-panel-title {
   }
 
   textarea {
-    border: 2px solid rgba(0, 0, 0, 0.05);
+    border: 2px solid $grey-very-light;
     border-radius: 6px;
     box-sizing: border-box;
     display: block;
@@ -220,7 +271,7 @@ mat-panel-title {
   }
 }
 
-.dark button.enabled {
+.dark-button button.enabled {
   background-color: $black !important;
   span {
     color: white;
@@ -243,7 +294,7 @@ mat-panel-title {
   position: absolute;
   top: 0;
   right: 0;
-  background: url('/assets/img/chevron-right-grey.png') no-repeat;
+  background: url('./assets/img/chevron-right-grey.png') no-repeat;
   background-size: 32px 32px;
   width: 32px;
   height: 32px;
@@ -279,38 +330,6 @@ On-boarding components
   label {
     color: white;
   }
-
-  input {
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-    box-sizing: border-box;
-    display: block;
-    line-height: 20px;
-    padding: 10px 10px;
-    width: 100%;
-  }
-
-  select {
-    background-color: white;
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-    box-sizing: border-box;
-    display: block;
-    line-height: 20px;
-    padding: 10px 10px;
-    width: 100%;
-    -webkit-appearance:none;
-  }
-
-  textarea {
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-    box-sizing: border-box;
-    display: block;
-    line-height: 20px;
-    padding: 10px 10px;
-    width: 100%;
-  }
 }
 
 .primary button.enabled {
@@ -325,9 +344,48 @@ On-boarding components
   }
 }
 
+.-check {
+  label {
+    font-family: Skycoin;
+    line-height: normal;
+    font-size: 14px;
+    white-space: normal;
+    color: $grey-dark;
+    text-align: left;
+  }
+
+  .mat-checkbox-label {
+    line-height: 20px;
+  }
+
+  .mat-checkbox-checkmark-path {
+    position: absolute;
+    width: 18px;
+    height: 8px;
+    left: 4.59px;
+    top: 9px;
+    stroke: $gradient-blue-dark !important;
+  }
+
+  .mat-checkbox-background, .mat-checkbox-frame {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    box-sizing: border-box;
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+    background: $grey-very-light !important;
+    border-radius: 6px;
+    border-color: transparent;
+  }
+}
+
 .mat-menu-panel {
   border-radius: 5px !important;
-  background-color: #fefefe;
+  background-color: $white;
 
   .mat-menu-item {
     font-family: Skycoin;
@@ -347,22 +405,6 @@ On-boarding components
 General Helpers
  */
 
-.primary-color {
-  color: $primary-color;
-}
-
-.secondary-color {
-  color: $secondary-color;
-}
-
-.no-opacity {
-  opacity: 1 !important;
-}
-
-.light-opacity {
-  opacity: 0.2
-}
-
 .rotate-90 {
   transform: rotate(90deg);
 }
@@ -373,4 +415,66 @@ General Helpers
 
 .rotate-270 {
   transform: rotate(270deg);
+}
+
+.mouse-disabled {
+  pointer-events: none;
+}
+
+.no-overflow {
+  overflow: hidden;
+}
+
+.link {
+  color: $blue !important;
+  cursor: pointer;
+}
+
+.-one-line-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.-break-all {
+  word-break: break-all;
+}
+
+@keyframes blinker {
+  80% {
+    opacity: 0;
+  }
+}
+
+/**
+Responsive design
+ */
+
+@media (min-width: ($max-small-width+1)) {
+  .-on-small-and-below-only {
+    display: none !important;
+  }
+}
+@media (max-width: $max-small-width) {
+  .-not-on-small-and-below {
+    display: none !important;
+  }
+}
+@media (min-width: ($max-very-small-width+1)) {
+  .-on-very-small-only {
+    display: none !important;
+  }
+}
+@media (max-width: $max-very-small-width) {
+  .-not-on-very-small {
+    display: none !important;
+  }
+}
+
+.fix-error-position {
+  @media (max-width: $max-small-width) {
+    .cdk-global-overlay-wrapper[style*="align-items: flex-end;"] > div {
+      margin-bottom: $mobile-nav-bar-height !important;
+    }
+  }
 }

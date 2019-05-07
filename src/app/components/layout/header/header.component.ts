@@ -1,12 +1,15 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, Input, OnDestroy, OnInit, NgZone } from '@angular/core';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { BigNumber } from 'bignumber.js';
+import { Observable } from 'rxjs/Observable';
 
 import { PriceService } from '../../../services/price.service';
-import { WalletService } from '../../../services/wallet.service';
-import { BlockchainService } from '../../../services/blockchain.service';
-import { AppService } from '../../../services/app.service';
+import { BalanceService, BalanceStates } from '../../../services/wallet/balance.service';
+import { BlockchainService, ProgressEvent, ProgressStates } from '../../../services/blockchain.service';
 import { ConnectionError } from '../../../enums/connection-error.enum';
-import { TotalBalance } from '../../../app.datatypes';
+import { CoinService } from '../../../services/coin.service';
+import { BaseCoin } from '../../../coins/basecoin';
+import { getTimeSinceLastBalanceUpdate } from '../../../utils';
 
 @Component({
   selector: 'app-header',
@@ -16,90 +19,146 @@ import { TotalBalance } from '../../../app.datatypes';
 export class HeaderComponent implements OnInit, OnDestroy {
   @Input() headline: string;
 
-  coins = 0;
-  hours: number;
+  coins: BigNumber = new BigNumber('0');
+  hours: BigNumber;
   balance: string;
   hasPendingTxs: boolean;
-  connectionError: ConnectionError;
+  connectionError: ConnectionError = null;
   connectionErrorsList = ConnectionError;
   percentage: number;
-  querying = true;
+  isBlockchainLoading = false;
   current: number;
   highest: number;
+  currentCoin: BaseCoin;
+  balanceObtained = false;
+  timeSinceLastBalanceUpdate = 0;
+  problemUpdatingBalance: boolean;
+  synchronized = true;
 
-  private isBlockchainLoading = false;
-  private isBalanceLoaded = false;
   private price: number;
-  private priceSubscription: Subscription;
-  private walletSubscription: Subscription;
-  private blockchainSubscription: Subscription;
+  private subscription: Subscription;
+  private synchronizedSubscription: ISubscription;
 
   get loading() {
-    return this.isBlockchainLoading || !this.balance || !this.isBalanceLoaded;
+    return this.isBlockchainLoading || !this.balanceObtained;
   }
 
   constructor(
-    private appService: AppService,
     private priceService: PriceService,
-    private walletService: WalletService,
-    private blockchainService: BlockchainService
+    private balanceService: BalanceService,
+    private blockchainService: BlockchainService,
+    private coinService: CoinService,
+    private _ngZone: NgZone
   ) {}
 
   ngOnInit() {
-    this.appService.checkConnectionState()
-      .subscribe((error: ConnectionError) => this.setConnectionError(error));
+    this.subscription = this.coinService.currentCoin
+      .subscribe((coin: BaseCoin) => {
+        this.currentCoin = coin;
 
-    this.blockchainSubscription = this.blockchainService.progress
-      .filter(response => !!response)
-      .subscribe(response => this.updateBlockchainProgress(response));
-
-    this.priceSubscription = this.priceService.price
-      .subscribe(price => {
-        this.price = price;
-        this.calculateBalance();
-      });
-
-    this.walletSubscription = this.walletService.totalBalance
-      .subscribe((balance: TotalBalance) => {
-        if (balance) {
-          this.coins = balance.coins;
-          this.hours = balance.hours;
-
-          this.calculateBalance();
-          this.isBalanceLoaded = true;
+        this.synchronized = true;
+        if (this.synchronizedSubscription) {
+          this.synchronizedSubscription.unsubscribe();
+          this.synchronizedSubscription = null;
         }
       });
 
-    this.walletService.hasPendingTransactions
-      .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs);
+    this.subscription.add(
+      this.blockchainService.progress
+        .filter(response => !!response)
+        .subscribe(response => {
+          this.updateBlockchainProgress(response);
+
+          // Adding the code here prevents the warning from flashing if the wallet is synchronized. Also, adding the
+          // subscription to this.subscription causes problems.
+          if (response.currentBlock && !this.synchronizedSubscription) {
+            this.synchronizedSubscription = this.blockchainService.synchronized.subscribe(value => this.synchronized = value);
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.priceService.price
+        .subscribe(price => {
+          this.price = price;
+          this.calculateBalance();
+        })
+    );
+
+    this.subscription.add(
+      this.balanceService.totalBalance
+        .subscribe(balance => {
+          if (balance && balance.state === BalanceStates.Obtained) {
+            this.coins = balance.balance.coins;
+            this.hours = balance.balance.hours;
+            this.balanceObtained = true;
+
+            this.calculateBalance();
+          }
+
+          this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService);
+          this.problemUpdatingBalance = balance.state === BalanceStates.Error;
+        })
+    );
+
+    this._ngZone.runOutsideAngular(() => {
+      this.subscription.add(
+        Observable.interval(5000).subscribe(() => this._ngZone.run(() => this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService)))
+      );
+    });
+
+    this.subscription.add(
+      this.balanceService.hasPendingTransactions
+        .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs)
+    );
   }
 
   ngOnDestroy() {
-    this.priceSubscription.unsubscribe();
-    this.walletSubscription.unsubscribe();
-    this.blockchainSubscription.unsubscribe();
+    this.subscription.unsubscribe();
+    if (this.synchronizedSubscription) {
+      this.synchronizedSubscription.unsubscribe();
+    }
   }
 
-  private updateBlockchainProgress(response) {
-    if (response.isError) {
-      this.setConnectionError(response.error);
-      return;
+  private resetState() {
+    this.coins = new BigNumber('0');
+    this.price = null;
+    this.balance = null;
+    this.balanceObtained = false;
+    this.isBlockchainLoading = false;
+    this.percentage = null;
+    this.current = null;
+    this.highest = null;
+  }
+
+  private updateBlockchainProgress(response: ProgressEvent) {
+    switch (response.state) {
+      case ProgressStates.Restarting: {
+        this.resetState();
+        break;
+      }
+      case ProgressStates.Error: {
+        this.setConnectionError(response.error);
+        break;
+      }
+      case ProgressStates.Progress: {
+        this.connectionError = null;
+        this.isBlockchainLoading = response.highestBlock !== response.currentBlock;
+
+        if (this.isBlockchainLoading) {
+          this.highest = response.highestBlock;
+          this.current = response.currentBlock;
+        }
+
+        this.percentage = response.currentBlock / response.highestBlock;
+        break;
+      }
     }
-
-    this.isBlockchainLoading = response.highest !== response.current;
-    this.querying = !this.isBlockchainLoading && !this.isBalanceLoaded;
-
-    if (this.isBlockchainLoading) {
-      this.highest = response.highest;
-      this.current = response.current;
-    }
-
-    this.percentage = response.current && response.highest ? (response.current / response.highest) : 0;
   }
 
   private calculateBalance() {
     if (this.price) {
-      const balance = Math.round(this.coins * this.price * 100) / 100;
+      const balance = this.coins.multipliedBy(this.price).toNumber();
       this.balance = '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100) + ')';
     }
   }

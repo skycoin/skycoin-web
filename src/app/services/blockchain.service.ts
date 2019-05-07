@@ -1,46 +1,103 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/takeWhile';
+import BigNumber from 'bignumber.js';
 
 import { ApiService } from './api.service';
-import { WalletService } from './wallet.service';
+import { BalanceService } from './wallet/balance.service';
 import { ConnectionError } from '../enums/connection-error.enum';
+import { CoinService } from './coin.service';
+import { environment } from '../../environments/environment';
+import { GlobalsService } from './globals.service';
+import { isEqualOrSuperiorVersion } from '../utils/semver';
+
+export enum ProgressStates {
+  Progress,
+  Error,
+  Restarting,
+}
+
+export class ProgressEvent {
+  state: ProgressStates;
+  error?: ConnectionError;
+  currentBlock?: number;
+  highestBlock?: number;
+}
 
 @Injectable()
 export class BlockchainService {
+  private progressSubject: BehaviorSubject<ProgressEvent> = new BehaviorSubject<ProgressEvent>(null);
+  private synchronizedSubject: BehaviorSubject<any> = new BehaviorSubject<boolean>(false);
+  private connectionsSubscription: Subscription;
+  private maxDecimals = 6;
+  private readonly defaultPeriod = 90000;
+  private readonly shortPeriod = 5000;
+  private burnRateInternal = new BigNumber(0.5);
 
-  private progressSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-
-  get progress() {
+  get progress(): Observable<ProgressEvent> {
     return this.progressSubject.asObservable();
+  }
+
+  get synchronized() {
+    return this.synchronizedSubject.asObservable();
+  }
+
+  get currentMaxDecimals(): number {
+    return this.maxDecimals;
+  }
+
+  get burnRate() {
+    return this.burnRateInternal;
   }
 
   constructor (
     private apiService: ApiService,
-    private walletService: WalletService
+    private balanceService: BalanceService,
+    private globalsService: GlobalsService,
+    coinService: CoinService
   ) {
-    this.loadBlockchainBlocks();
+    coinService.currentCoin.subscribe(() => {
+      this.startCheckingNode();
+    });
   }
 
-  blocks(num: number = 5100) {
-    return this.apiService.get('last_blocks', { num: num }).map(response => response.blocks.reverse());
+  lastBlock(): Observable<any> {
+    return this.apiService.get('last_blocks', { num: 1 })
+      .map(response => response.blocks[0]);
   }
 
-  lastBlock() {
-    return this.blocks(1).map(blocks => blocks[0]);
+  coinSupply(): Observable<any> {
+    return this.apiService.get('coinSupply');
   }
 
-  private loadBlockchainBlocks() {
-    IntervalObservable
-      .create(90000)
-      .startWith(1)
-      .flatMap(() => this.getBlockchainProgress())
-      .takeWhile((response: any) => !response.current || response.current !== response.highest)
+  private startCheckingNode() {
+    if (!!this.connectionsSubscription && !this.connectionsSubscription.closed) {
+      this.connectionsSubscription.unsubscribe();
+    }
+
+    this.balanceService.stopGettingBalances();
+
+    this.globalsService.setNodeVersion(null);
+    this.progressSubject.next({ state: ProgressStates.Restarting });
+    this.synchronizedSubject.next(false);
+
+    this.connectionsSubscription = this.checkConnectionState()
       .subscribe(
-        response => this.progressSubject.next(response),
-        () => this.onLoadBlockchainError(),
-        () => this.completeLoading()
+        () => this.checkBlockchainProgress(0),
+        error => error && error.reported ? null : this.onLoadBlockchainError()
+      );
+  }
+
+  private checkBlockchainProgress(delay: number) {
+    this.connectionsSubscription = Observable.of(1)
+      .delay(delay)
+      .flatMap(() => this.getBlockchainProgress())
+      .subscribe(
+        (response: any) => this.onBlockchainProgress(response),
+        () => this.onLoadBlockchainError()
       );
   }
 
@@ -48,16 +105,45 @@ export class BlockchainService {
     return this.apiService.get('blockchain/progress');
   }
 
-  private completeLoading() {
-    this.finishLoadingBlockchain();
-    this.walletService.loadBalances();
+  private onBlockchainProgress(response: any) {
+    this.progressSubject.next({
+      state: ProgressStates.Progress,
+      currentBlock: response.current,
+      highestBlock: response.highest
+    });
+
+    if (response.current !== response.highest) {
+      this.checkBlockchainProgress(
+        response.highest - response.current <= 5 ? this.shortPeriod : this.defaultPeriod
+      );
+    } else {
+      this.synchronizedSubject.next(true);
+      this.balanceService.startGettingBalances();
+    }
   }
 
-  private finishLoadingBlockchain() {
-    this.progressSubject.next({ current: 999999999999, highest: 999999999999 });
+  private onLoadBlockchainError(error: ConnectionError = ConnectionError.UNAVAILABLE_BACKEND) {
+    this.progressSubject.next({ state: ProgressStates.Error, error: error });
   }
 
-  private onLoadBlockchainError() {
-    this.progressSubject.next({ isError: true, error: ConnectionError.UNAVAILABLE_BACKEND });
+  private checkConnectionState(): Observable<any> {
+    return this.apiService.get('network/connections')
+      .map((status: any) => {
+        if ((!status.connections || status.connections.length === 0) && !environment.e2eTest) {
+          this.onLoadBlockchainError(ConnectionError.NO_ACTIVE_CONNECTIONS);
+          throw { reported: true };
+        }
+      })
+      .flatMap(() => this.apiService.get('health'))
+      .map ((response: any) => {
+        this.globalsService.setNodeVersion(response.version.version);
+        if (isEqualOrSuperiorVersion(response.version.version, '0.25.0')) {
+          this.maxDecimals = response.user_verify_transaction.max_decimals;
+          this.burnRateInternal = new BigNumber(response.user_verify_transaction.burn_factor);
+        } else {
+          this.maxDecimals = 6;
+          this.burnRateInternal = new BigNumber(2);
+        }
+      });
   }
 }

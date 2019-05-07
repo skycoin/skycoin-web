@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CoinService } from '../../../services/coin.service';
 
 declare var QRCode: any;
 
@@ -9,31 +10,49 @@ declare var QRCode: any;
   styleUrls: ['./qr-code.component.scss'],
 })
 export class QrCodeComponent implements OnInit, AfterViewInit {
-  @ViewChild('qr') qr: any;
+  @ViewChild('qr') qr: ElementRef;
   @ViewChild('btnImg') btnImg: ElementRef;
   address: string;
+  isCopying = false;
+  showOutputsOption = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<QrCodeComponent>,
+    private coinService: CoinService
   ) { }
 
   ngOnInit() {
-    this.address = this.data.address ? this.data.address : this.data;
-    this.qr = new QRCode(this.qr.nativeElement, {
-      text: this.address,
-      width: 230,
-      height: 230,
+    this.address = this.data.address;
+    this.showOutputsOption = this.data.showOutputsOption;
+
+    const qrcode = new QRCode(this.qr.nativeElement, {
+      text: this.coinService.currentCoin.value.coinName.toLowerCase() + ':' + this.address,
+      width: 300,
+      height: 300,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
       useSVG: false,
       correctLevel: QRCode.CorrectLevel['M'],
     });
   }
 
   ngAfterViewInit() {
-    this.btnImg.nativeElement.src = '../../../../assets/img/copy-qr.png';
+    this.btnImg.nativeElement.src = 'assets/img/copy-qr.png';
   }
 
   onCopySuccess() {
-    this.btnImg.nativeElement.src = '../../../../assets/img/copy-qr-success.png';
+    this.btnImg.nativeElement.src = 'assets/img/copy-qr-success.png';
+
+    this.isCopying = true;
+
+    // wait for a while and then remove the 'copying' class
+    setTimeout(() => {
+      this.isCopying = false;
+    }, 500);
+  }
+
+  closePopup() {
+    this.dialogRef.close();
   }
 }

@@ -1,47 +1,101 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
 
-import { WalletService } from '../../../../services/wallet.service';
-import {  Wallet } from '../../../../app.datatypes';
+import { SpendingService } from '../../../../services/wallet/spending.service';
+import { Wallet } from '../../../../app.datatypes';
+import { BaseCoin } from '../../../../coins/basecoin';
+import { CoinService } from '../../../../services/coin.service';
+import { openQrModal } from '../../../../utils';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-outputs',
   templateUrl: './outputs.component.html',
   styleUrls: ['./outputs.component.scss']
 })
-export class OutputsComponent implements OnInit {
-
+export class OutputsComponent implements OnInit, OnDestroy {
   wallets: Wallet[];
+  currentCoin: BaseCoin;
+  showError = false;
+
+  private subscription: Subscription;
+  private dataSubscription: ISubscription;
+  private urlParams: Params;
 
   constructor(
     private route: ActivatedRoute,
-    private walletService: WalletService
+    private spendingService: SpendingService,
+    private dialog: CustomMatDialogService,
+    private coinService: CoinService
   ) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => this.getWalletsOutputs(params));
+    this.subscription = this.route.queryParams.flatMap (params => {
+      this.urlParams = params;
+      return this.coinService.currentCoin;
+    }).subscribe((coin: BaseCoin) => {
+      this.wallets = null;
+      this.currentCoin = coin;
+      this.getWalletsOutputs();
+    });
   }
 
-  private getWalletsOutputs(queryParams: Params) {
-    const address = queryParams['addr'];
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    this.closeDataSubscription();
+  }
 
-    this.walletService.outputsWithWallets().subscribe(wallets => {
-      if (address) {
-        const filteredWallets: Wallet[]  = wallets.filter(wallet => {
-          return wallet.addresses.find((addr) => {
-            return addr.address === address;
-          });
-        }).map(wallet => {
-          return Object.assign({}, wallet);
-        });
+  showQr(event, address) {
+    event.stopPropagation();
+    openQrModal(this.dialog, address);
+  }
 
-        this.wallets = filteredWallets.map(wallet => {
-          wallet.addresses = wallet.addresses.filter(addr => addr.address === address);
-          return wallet;
-        });
-      } else {
-        this.wallets = wallets;
+  private getWalletsOutputs() {
+    const address = this.urlParams['addr'];
+    this.showError = false;
+
+    this.closeDataSubscription();
+    this.dataSubscription = this.spendingService.outputsWithWallets().subscribe(wallets => {
+      if (wallets.length === 0) {
+        this.wallets = [];
+        return;
       }
+
+      this.wallets = !!address
+        ? this.getOutputsForSpecificAddress(wallets, address)
+        : this.getOutputs(wallets);
+    },
+    () => this.showError = true);
+  }
+
+  private getOutputsForSpecificAddress(wallets, address: string) {
+    const filteredWallets: Wallet[]  = wallets.filter(wallet => {
+      return wallet.addresses.find((addr) => {
+        return addr.address === address;
+      });
+    }).map(wallet => {
+      return Object.assign({}, wallet);
     });
+
+    return filteredWallets.map(wallet => {
+      wallet.addresses = wallet.addresses.filter(addr => addr.address === address);
+      return wallet;
+    });
+  }
+
+  private getOutputs(wallets) {
+    const copiedWallets = wallets.map(wallet => Object.assign({}, wallet));
+
+    return copiedWallets.filter(wallet => {
+      wallet.addresses = wallet.addresses.filter(addr => addr.outputs.length > 0);
+      return wallet.addresses.length > 0;
+    });
+  }
+
+  private closeDataSubscription() {
+    if (this.dataSubscription && !this.dataSubscription.closed) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 }

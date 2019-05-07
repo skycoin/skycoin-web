@@ -1,8 +1,15 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Renderer2, ViewChild, NgZone } from '@angular/core';
+import 'rxjs/add/observable/interval';
 import { Subscription } from 'rxjs/Subscription';
+import { Overlay } from '@angular/cdk/overlay';
+import { Observable } from 'rxjs/Observable';
 
-import { WalletService } from '../../../../services/wallet.service';
-import { TotalBalance } from '../../../../app.datatypes';
+import { BalanceService, BalanceStates } from '../../../../services/wallet/balance.service';
+import { CoinService } from '../../../../services/coin.service';
+import { BaseCoin } from '../../../../coins/basecoin';
+import { openChangeCoinModal, openChangeLanguageModal, getTimeSinceLastBalanceUpdate } from '../../../../utils';
+import { LanguageService, LanguageData } from '../../../../services/language.service';
+import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -12,33 +19,81 @@ import { TotalBalance } from '../../../../app.datatypes';
 export class TopBarComponent implements OnInit, OnDestroy {
   @Input() headline: string;
 
-  timeSinceLastUpdateBalances = 0;
-  isBalanceObtained = false;
-  isBalanceUpdated: boolean;
-  private updateBalancesSubscription: Subscription;
+  timeSinceLastBalanceUpdate = 0;
+  balanceObtained = false;
+  problemUpdatingBalance: boolean;
+  updatingBalance = false;
+  currentCoin: BaseCoin;
+  language: LanguageData;
+  hasManyCoins: boolean;
 
-  constructor(private walletService: WalletService) {
+  private subscription: Subscription;
+
+  constructor(private balanceService: BalanceService,
+              private coinService: CoinService,
+              private dialog: CustomMatDialogService,
+              private overlay: Overlay,
+              private renderer: Renderer2,
+              private languageService: LanguageService,
+              private _ngZone: NgZone) {
   }
 
   ngOnInit() {
-    this.walletService.totalBalance
-      .subscribe((balance: TotalBalance) => {
-        if (balance && !this.isBalanceObtained) {
-          this.isBalanceObtained = true;
+    this.subscription = this.languageService.currentLanguage
+      .subscribe(lang => this.language = lang);
+
+    this.hasManyCoins = this.coinService.coins.length > 1;
+
+    this.subscription.add(
+      this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
+        this.currentCoin = coin;
+        this.balanceObtained = false;
+      })
+    );
+
+    this.subscription.add(
+      this.balanceService.totalBalance.subscribe(balance => {
+        if (balance) {
+          if (balance.state === BalanceStates.Obtained) {
+            this.balanceObtained = true;
+          }
+          this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService);
+          this.problemUpdatingBalance = balance.state === BalanceStates.Error;
+          this.updatingBalance = balance.state === BalanceStates.Updating;
         }
+      })
+    );
 
-        this.isBalanceUpdated = !!balance;
-      });
+    this._ngZone.runOutsideAngular(() => {
+      this.subscription.add(
+        Observable.interval(5000).subscribe(() => this._ngZone.run(() => this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService)))
+      );
+    });
+  }
 
-    this.updateBalancesSubscription = this.walletService.timeSinceLastBalancesUpdate
-      .subscribe((time: number) => {
-        if (time != null) {
-          this.timeSinceLastUpdateBalances = time;
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  refresBalance() {
+    this.balanceService.startGettingBalances();
+  }
+
+  changeCoin() {
+    openChangeCoinModal(this.dialog, this.renderer, this.overlay)
+      .subscribe(response => {
+        if (response) {
+          this.coinService.changeCoin(response);
         }
       });
   }
 
-  ngOnDestroy() {
-    this.updateBalancesSubscription.unsubscribe();
+  changelanguage() {
+    openChangeLanguageModal(this.dialog)
+      .subscribe(response => {
+        if (response) {
+          this.languageService.changeLanguage(response);
+        }
+      });
   }
 }
