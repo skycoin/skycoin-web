@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
     this.languageService.loadLanguageSettings();
 
     window.onbeforeunload = (e) => {
-      if (environment.production && !environment.e2eTest) {
+      if (environment.production && !environment.e2eTest && !window['isElectron']) {
         e.preventDefault();
         e.returnValue = '';
       }

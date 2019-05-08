@@ -5,12 +5,6 @@ const childProcess = require('child_process');
 const path = require('path')
 const url = require('url');
 
-// This adds refresh and devtools console keybindings
-// Page can refresh with cmd+r, ctrl+r, F5
-// Devtools can be toggled with cmd+alt+i, ctrl+shift+i, F12
-require('electron-debug')({enabled: true, showDevTools: false});
-require('electron-context-menu')({});
-
 global.eval = function() { throw new Error('bad!!'); }
 
 // Detect if the code is running with the "dev" arg. The "dev" arg is added when running npm
@@ -179,18 +173,20 @@ function createWindow() {
   var template = [{
     label: 'Skycoin',
     submenu: [
-      { label: 'Quit', accelerator: 'Command+Q', click: function() { app.quit(); } }
+      { label: 'Reload', role: 'reload' },
+      { type: 'separator' },
+      { label: 'Quit', role: 'quit' }
     ]
   }, {
     label: 'Edit',
     submenu: [
-      { label: 'Undo', accelerator: 'CmdOrCtrl+Z', role: 'undo' },
-      { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo' },
+      { label: 'Undo', role: 'undo' },
+      { label: 'Redo', role: 'redo' },
       { type: 'separator' },
-      { label: 'Cut', accelerator: 'CmdOrCtrl+X', role: 'cut' },
-      { label: 'Copy', accelerator: 'CmdOrCtrl+C', role: 'copy' },
-      { label: 'Paste', accelerator: 'CmdOrCtrl+V', role: 'paste' },
-      { label: 'Select All', accelerator: 'CmdOrCtrl+A', role: 'selectall' }
+      { label: 'Cut', role: 'cut' },
+      { label: 'Copy', role: 'copy' },
+      { label: 'Paste', role: 'paste' },
+      { label: 'Select All', role: 'selectall' }
     ]
   }, {
     label: 'Show',
@@ -200,7 +196,7 @@ function createWindow() {
         accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
         click: (item, focusedWindow) => {
           if (focusedWindow) {
-            focusedWindow.toggleDevTools();
+            win.webContents.openDevTools();
           }
         }
       },
@@ -217,10 +213,17 @@ function createWindow() {
 
   // Blocks the connection if the URL is not in allowedHosts.
   session.defaultSession.webRequest.onBeforeRequest(['*://*./*'], function(details, callback) {
-    let requestHost = url.parse(details.url).host;
-    if (!allowedHosts.has(requestHost) && !allowedNodes.has(requestHost)) {
-      callback({cancel: true})
-      return;
+    if (!details.url.startsWith('chrome-devtools://')) {
+      let requestUrl = details.url;
+      if (details.url.startsWith('blob:')) {
+        requestUrl = requestUrl.substr('blob:'.length, requestUrl.length - 'blob:'.length);
+      }
+
+      let requestHost = url.parse(requestUrl).host;
+      if (!allowedHosts.has(requestHost) && !allowedNodes.has(requestHost)) {
+        callback({cancel: true})
+        return;
+      }
     }
     callback({cancel: false})
   });
