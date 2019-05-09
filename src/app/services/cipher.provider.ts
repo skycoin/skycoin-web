@@ -5,6 +5,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Address, TransactionInput, TransactionOutput } from '../app.datatypes';
 import { CipherWebWorkerHelper, CipherWebWorkerOperation } from '../utils/cipher-web-worker-helper';
 
+export interface GenerateAddressResponse {
+  address: Address;
+  nextSeed: string;
+}
+
 @Injectable()
 export class CipherProvider {
 
@@ -14,7 +19,7 @@ export class CipherProvider {
     CipherWebWorkerHelper.initialize(this);
   }
 
-  generateAddress(seed): Observable<Address> {
+  generateAddress(seed): Observable<GenerateAddressResponse> {
     return CipherWebWorkerHelper.ExcecuteWorker(CipherWebWorkerOperation.CreateAdress, seed)
       .map((address) => this.convertToAddress(address));
   }
@@ -24,12 +29,14 @@ export class CipherProvider {
     return CipherWebWorkerHelper.ExcecuteWorker(CipherWebWorkerOperation.PrepareTransaction, data);
   }
 
-  private convertToAddress(address): Address {
+  private convertToAddress(address): GenerateAddressResponse {
     return {
-      next_seed: address.NextSeed,
-      secret_key: address.Secret,
-      public_key: address.Public,
-      address: address.Address
+      nextSeed: address.NextSeed,
+      address: {
+        secret_key: address.Secret,
+        public_key: address.Public,
+        address: address.Address
+      }
     };
   }
 }

@@ -11,11 +11,11 @@ export interface Wallet {
   opened?: boolean;
   hideEmpty?: boolean;
   coinId?: number;
+  nextSeed?: string;
 }
 
 export interface Address {
   address: string;
-  next_seed?: string;
   secret_key?: string;
   public_key?: string;
   balance?: BigNumber;

@@ -29,7 +29,7 @@ describe('CipherProvider', () => {
     spyOn(CipherWebWorkerHelper, 'ExcecuteWorker').and.returnValue(Observable.of(createAddressInCipherFormat()));
 
     cipherProvider.generateAddress('seed')
-      .subscribe(addr => expect(addr).toEqual(expectedAddress));
+      .subscribe(addr => expect(addr.address).toEqual(expectedAddress));
   });
 
   it('should throw error in case of any error in web worker', () => {
@@ -59,7 +59,6 @@ describe('CipherProvider', () => {
 function createAddress(): Address {
   return {
     address: '2uATq4pdSb8Ka1YKSAAbp6Npehs3QQqTnb',
-    next_seed: '9fe8bfb01de85dbba36cbd9854ad7478cd63459fedb4c9f7847bf280ee17a32c',
     public_key: '030a797a31100d3a7b5b403f551975e9a12f93b4d4e9e44b402b84832e0c7b89d2',
     secret_key: '20c3db0e1f3b95d98d1f78d73c134af8f1b5dd34cc05f053da94c20d72558862'
   };
