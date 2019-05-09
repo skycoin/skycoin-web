@@ -42,7 +42,7 @@ Before building the application, the `dist` folder must be updated. To update it
 the following command:
 
 ```sh
-make build
+make build-for-electron
 ```
 
 Additionally, it is necessary to compile the content server first. You can do it by running, from the `./electron` folder, the

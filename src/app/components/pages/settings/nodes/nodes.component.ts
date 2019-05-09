@@ -5,6 +5,7 @@ import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { ChangeNodeURLComponent } from './change-url/change-node-url.component';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-nodes',
@@ -12,9 +13,9 @@ import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.s
   styleUrls: ['./nodes.component.scss'],
 })
 export class NodesComponent implements OnInit {
-
   coins: BaseCoin[];
   customNodeUrls: object;
+  enableCustomNodes = environment.enableCustomNodes;
 
   constructor(
     private coinService: CoinService,
