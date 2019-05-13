@@ -4,6 +4,9 @@
 build:
 	npm run build
 
+build-for-electron: ## compiles a version to be used with Electron
+	npm run build-for-local-fs
+
 build-for-local-fs: ## compiles a version to be used from the local file system
 	npm run build-for-local-fs
 

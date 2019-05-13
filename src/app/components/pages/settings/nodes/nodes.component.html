@@ -19,7 +19,7 @@
             <i class="material-icons -custom-url-icon" [matTooltip]="'nodes.custom-label' | translate">announcement</i>
             <span [attr.title]="customNodeUrls[coin.id.toString()]">{{ customNodeUrls[coin.id.toString()] }}</span>
           </div>
-          <div class="-width-150 -text-right">
+          <div *ngIf="enableCustomNodes" class="-width-150 -text-right">
             <span class="-link" (click)="changeNodeURL(coin)">{{ 'nodes.change-url' | translate }}</span>
           </div>
         </div>
