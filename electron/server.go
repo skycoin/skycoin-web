@@ -29,6 +29,26 @@ var (
 	port string
 )
 
+// ContentSecurityPolicy csp header in http response
+const ContentSecurityPolicy = "default-src 'self'" +
+	"; worker-src 'self' blob:" +
+	"; connect-src 'self' https://api.coinpaprika.com https://node.skycoin.net" +
+	"; img-src 'self' 'unsafe-inline' data:" +
+	"; style-src 'self' 'unsafe-inline'" +
+	"; object-src	'none'" +
+	"; form-action 'none'" +
+	"; frame-ancestors 'none'" +
+	"; block-all-mixed-content" +
+	"; base-uri 'self'"
+
+// CSPHandler enables CSP
+func CSPHandler(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Security-Policy", ContentSecurityPolicy)
+		handler.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	flag.StringVar(&path, "path", "-1", "contents path")
 	flag.StringVar(&port, "port", "-1", "server port")
@@ -38,7 +58,7 @@ func main() {
 		handler := http.FileServer(http.Dir(path))
 		s := &http.Server{
 			Addr:         walletHost + ":" + port,
-			Handler:      handler,
+			Handler:      CSPHandler(handler),
 			ReadTimeout:  serverReadTimeout,
 			WriteTimeout: serverWriteTimeout,
 			IdleTimeout:  serverIdleTimeout,
