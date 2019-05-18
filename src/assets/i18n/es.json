@@ -132,6 +132,7 @@
     "decrypt": "Desencriptar Billetera",
     "edit": "Editar Billetera",
     "delete" : "Borrar Billetera",
+    "unlock-wallet": "Desbloquear Billetera",
     "options" : "Opciones",
     "add": "Agregar Billetera",
     "load": "Cargar Billetera",
