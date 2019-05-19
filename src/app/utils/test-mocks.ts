@@ -86,6 +86,8 @@ export class MockCoinService {
     iconName: 'icon.png',
     bigIconName: 'big-icon.png',
   });
+
+  removeTemporarilyAllowedCoin() {}
 }
 
 export class MockWalletService {
