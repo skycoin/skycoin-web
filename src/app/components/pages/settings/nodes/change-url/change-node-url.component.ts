@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
-import { CoinService } from '../../../../../services/coin.service';
+import { CoinService, TemporarilyAllowCoinResult } from '../../../../../services/coin.service';
 import { ButtonComponent } from '../../../../layout/button/button.component';
 import { isEqualOrSuperiorVersion } from '../../../../../utils/semver';
 
@@ -48,6 +48,7 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.removeVerificationSubscription();
     this.snackBar.dismiss();
+    this.coinService.removeTemporarilyAllowedCoin();
   }
 
   closePopup() {
@@ -65,6 +66,28 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
 
       if (this.newUrl.endsWith('/')) {
         this.newUrl = this.newUrl.substr(0, this.newUrl.length - 1);
+      }
+
+      const coinAllowed = this.coinService.temporarilyAllowCoin(this.data.coinId, this.newUrl);
+      if (coinAllowed !== TemporarilyAllowCoinResult.OK) {
+        setTimeout(() => {
+          let text;
+          if (coinAllowed === TemporarilyAllowCoinResult.AlreadyInUse) {
+            text = this.translate.instant('nodes.change.url-error');
+          } else {
+            text = this.translate.instant('nodes.change.cancelled-error');
+          }
+
+          const config = new MatSnackBarConfig();
+          config.duration = 5000;
+          this.snackBar.open(text, null, config);
+          this.actionButton.setError(text);
+
+          this.actionButton.resetState();
+          this.disableDismiss = false;
+        }, 32);
+
+        return;
       }
 
       this.removeVerificationSubscription();

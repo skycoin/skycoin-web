@@ -314,6 +314,8 @@
 
     "change" : {
       "url-label": "Node URL (leave empty to use the default URL)",
+      "url-error": "The entered host is already in use for this or another coin.",
+      "cancelled-error": "Operation cancelled.",
       "cancel-button": "Cancel",
       "change-button": "Change",
       "return-button": "Return",
@@ -325,7 +327,14 @@
       "coin-name": "Coin",
       "node-version": "Node version",
       "last-block": "Last block",
-      "hours-burn-rate": "Hours burn rate"
+      "hours-burn-rate": "Hours burn rate",
+
+      "confirmation" : {
+        "title": "Security",
+        "text": "Do you really want to allow access to \"{{ url }}\"?",
+        "ok": "Ok",
+        "cancel": "Cancel"
+      }
     }
   },
 

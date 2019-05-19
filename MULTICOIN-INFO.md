@@ -40,6 +40,13 @@ Once the class is created and the image files are added, it is necessary to add 
 class in the [CoinService.coins](src/app/services/coin.service.ts) array. That must be done in the
 `CoinService.loadAvailableCoins` function.
 
+After that, you must add the host name of the coin node to the `defaultCoinHosts` array, inside
+[electron/src/electron-main.js](electron/src/electron-main.js). For example, if the node is in
+`https://node.skycoin.net`, you must add a new entry with `node.skycoin.net`.
+
+To finish, add the node URL (`https://node.skycoin.net`, for example) in the `connect-src` section of the
+`Content-Security-Policy` header defined in [docker/images/nginx.conf](docker/images/nginx.conf).
+
 ## Additional information about the header images
 
 The image indicated in `imageName` is the one that will be shown in the upper part of the wallet, as the background
