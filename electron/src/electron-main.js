@@ -236,8 +236,9 @@ function createWindow() {
   });
 }
 
+const customNodeUrlsFilePath = path.join(app.getPath('appData'), './Skycoin');
 // File with the info about the custom node URLs added by the user.
-const customNodeUrlsFile = './nodes.snd'
+const customNodeUrlsFile = path.join(customNodeUrlsFilePath, './custom-nodes.snd');
 
 // Load, from customNodeUrlsFile, the custom node URLs added by the user and add them to the URL whitelist.
 ipcMain.on('loadNodeUrlsSync', (event) => {
@@ -311,6 +312,10 @@ ipcMain.on('removeTemporarilyAllowedCoinSync', (event) => {
 
 // Adds a temporarily allowed coin to customNodeUrlsFile, so its URL can be accesses in future sessions.
 ipcMain.on('acceptTemporarilyAllowedCoinSync', (event) => {
+  if (coinsWithAllowedNodes.has(temporarilyAllowedCoin['id'] + '')) {
+    allowedNodes.delete(url.parse(coinsWithAllowedNodes.get(temporarilyAllowedCoin['id'] + '')).host);
+  }
+
   coinsWithAllowedNodes.set(temporarilyAllowedCoin['id'] + '', temporarilyAllowedCoin['url']);
   allowedNodes.set(temporarilyAllowedCoin['host'], true);
 
@@ -326,6 +331,10 @@ function saveNodeUrls() {
   coinsWithAllowedNodes.forEach((val, key) => {
     data[key] = val;
   });
+
+  if (!fs.existsSync(customNodeUrlsFilePath)) {
+    fs.mkdirSync(customNodeUrlsFilePath, { recursive: true });
+  }
 
   fs.writeFileSync(customNodeUrlsFile, JSON.stringify(data), 'utf8');
 }
