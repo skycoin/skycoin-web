@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { BaseCoin } from '../coins/basecoin';
@@ -5,7 +6,15 @@ import { SkycoinCoin } from '../coins/skycoin.coin';
 import { TestCoin } from '../coins/test.coin';
 import { defaultCoinId } from '../constants/coins-id.const';
 import { environment } from '../../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
+export enum TemporarilyAllowCoinResult {
+  OK = 0,
+  AlreadyInUse = 1,
+  Cancelled = 2,
+}
+
+@Injectable()
 export class CoinService {
 
   currentCoin: BehaviorSubject<BaseCoin> = new BehaviorSubject<BaseCoin>(null);
@@ -15,7 +24,7 @@ export class CoinService {
   private readonly correntCoinStorageKey = 'currentCoin';
   private readonly nodeUrlsStorageKey = 'nodeUrls';
 
-  constructor() {
+  constructor(private translate: TranslateService) {
     this.loadAvailableCoins();
     this.loadNodeUrls();
     this.loadCurrentCoin();
@@ -26,6 +35,28 @@ export class CoinService {
     if (coin.id !== this.currentCoin.value.id) {
       this.currentCoin.next(coin);
       this.saveCoin(coin.id);
+    }
+  }
+
+  temporarilyAllowCoin(id: number, url: string): TemporarilyAllowCoinResult {
+    if (window['isElectron']) {
+      const params = {
+        id: id,
+        url: url,
+        confirmationTitle: this.translate.instant('nodes.change.confirmation.title'),
+        confirmationText: this.translate.instant('nodes.change.confirmation.text', {url: url}),
+        confirmationOk: this.translate.instant('nodes.change.confirmation.ok'),
+        confirmationCancel: this.translate.instant('nodes.change.confirmation.cancel'),
+      };
+      return window['ipcRenderer'].sendSync('temporarilyAllowCoinSync', params);
+    } else {
+      return TemporarilyAllowCoinResult.OK;
+    }
+  }
+
+  removeTemporarilyAllowedCoin() {
+    if (window['isElectron']) {
+      window['ipcRenderer'].sendSync('removeTemporarilyAllowedCoinSync');
     }
   }
 
@@ -40,9 +71,15 @@ export class CoinService {
       delete this.customNodeUrls[coinId.toString()];
     }
 
-    localStorage.setItem(this.nodeUrlsStorageKey, JSON.stringify(this.customNodeUrls));
-
-    this.updateNodesUrls();
+    if (!window['isElectron']) {
+      localStorage.setItem(this.nodeUrlsStorageKey, JSON.stringify(this.customNodeUrls));
+    } else {
+      if (url !== '') {
+        window['ipcRenderer'].sendSync('acceptTemporarilyAllowedCoinSync');
+      } else {
+        window['ipcRenderer'].sendSync('removeAllowedCoinSync', coinId);
+      }
+    }
 
     if (coinId === this.currentCoin.value.id) {
       this.currentCoin.next(this.currentCoin.value);
@@ -50,10 +87,13 @@ export class CoinService {
   }
 
   private loadNodeUrls() {
-    const savedUrls: object = JSON.parse(localStorage.getItem(this.nodeUrlsStorageKey));
-    this.customNodeUrls = savedUrls ? savedUrls : {};
-
-    this.updateNodesUrls();
+    if (!window['isElectron']) {
+      const savedUrls: object = JSON.parse(localStorage.getItem(this.nodeUrlsStorageKey));
+      this.customNodeUrls = savedUrls ? savedUrls : {};
+    } else {
+      const savedUrls = window['ipcRenderer'].sendSync('loadNodeUrlsSync');
+      this.customNodeUrls = savedUrls ? JSON.parse(savedUrls) : {};
+    }
   }
 
   private loadCurrentCoin() {
@@ -82,23 +122,5 @@ export class CoinService {
       }
       IDs[value.id] = true;
     });
-
-    this.updateNodesUrls();
-  }
-
-  private updateNodesUrls() {
-    if (window['isElectron']) {
-      const nodes: string[] = [];
-      this.coins.forEach((value: BaseCoin) => {
-        nodes.push(value.nodeUrl);
-      });
-
-      if (this.customNodeUrls) {
-        Object.keys(this.customNodeUrls).forEach(val => nodes.push(this.customNodeUrls[val]));
-      }
-
-      // The list is used by Electron to know which hosts should not be blocked.
-      window['ipcRenderer'].sendSync('setNodesUrls', nodes);
-    }
   }
 }

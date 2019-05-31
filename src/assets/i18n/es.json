@@ -314,6 +314,8 @@
 
     "change" : {
       "url-label": "URL del nodo (dejar vacío para usar la URL por defecto)",
+      "url-error": "El host indicado ya está en uso por esta u otra moneda.",
+      "cancelled-error": "Operación cancelada.",
       "cancel-button": "Cancelar",
       "change-button": "Cambiar",
       "return-button": "Regresar",
@@ -325,7 +327,14 @@
       "coin-name": "Moneda",
       "node-version": "Versión del nodo",
       "last-block": "Último bloque",
-      "hours-burn-rate": "Tasa de quema de horas"
+      "hours-burn-rate": "Tasa de quema de horas",
+
+      "confirmation" : {
+        "title": "Seguridad",
+        "text": "¿Realmente desea permitir el acceso a \"{{ url }}\"?",
+        "ok": "Ok",
+        "cancel": "Cancelar"
+      }
     }
   },
 
