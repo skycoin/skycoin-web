@@ -24,7 +24,8 @@
         "styles.scss"
       ],
       "scripts": [
-        "assets/scripts/qrcode.min.js"
+        "assets/scripts/qrcode.min.js",
+        "assets/scripts/wasm_exec.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

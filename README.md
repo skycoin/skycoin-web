@@ -75,8 +75,8 @@ For security reasons, this wallet does not store the the seeds, neither in the b
 maintain a backup of them. The seeds are also not transmitted anywhere outside the application code.
 
 To maintain maximum compatibility with Skycoin's original code, the cryptographic functions used by this wallet are in the
-[skycoin-lite](https://github.com/skycoin/skycoin-lite) repository, coded in Go (Golang), and are transpiled using gopherjs.
-The transpiled code is in the [src/assets/scripts/main.js](/src/assets/scripts/main.js) file, in this repository.
+[skycoin-lite](https://github.com/skycoin/skycoin-lite) repository, coded in Go (Golang), and are compiled to wasm.
+The compiled wasm file is [src/assets/scripts/skycoin-lite.wasm](/src/assets/scripts/skycoin-lite.wasm).
 
 The mnemonic phrases are created using the [bip39 library](https://www.npmjs.com/package/bip39). To create mnemonic phrases
 with enough entropy, that library uses the [randombytes library](https://www.npmjs.com/package/randombytes), which uses

@@ -2,11 +2,12 @@ import { TestBed, fakeAsync } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 import { BigNumber } from 'bignumber.js';
+import { HttpClientModule } from '@angular/common/http';
 
 import { WalletService } from './wallet.service';
 import { SpendingService, HoursSelectionTypes } from './spending.service';
 import { ApiService } from '../api.service';
-import { CipherProvider } from '../cipher.provider';
+import { CipherProvider, InitializationResults } from '../cipher.provider';
 import { Wallet, Address, TransactionOutput, TransactionInput, Output, Balance } from '../../app.datatypes';
 import { CoinService } from '../coin.service';
 import { MockCoinService, MockGlobalsService } from '../../utils/test-mocks';
@@ -27,6 +28,7 @@ describe('WalletService with cipher:', () => {
     spyOn(localStorage, 'getItem').and.callFake((key) => store[key]);
 
     TestBed.configureTestingModule({
+      imports: [ HttpClientModule ],
       providers: [
         WalletService,
         CipherProvider,
@@ -72,17 +74,25 @@ describe('WalletService with cipher:', () => {
     expect(cipherProvider).toBeTruthy();
   });
 
+  it('cipher service should be initialized', done => {
+    cipherProvider.initialize().subscribe(response => {
+      expect(response === InitializationResults.Ok).toBeTruthy();
+
+      done();
+    });
+  });
+
   describe('cipher should generate an address', () => {
     it('on add address to wallet', () => {
       const wallet = createWallet();
       wallet.nextSeed = 'f0cecf181dc39bc99d0b9bec3fdce293c22af99af20320974eab1217d0d75b69';
       const expectedWallet = createWallet();
-      expectedWallet.nextSeed = 'f0cecf181dc39bc99d0b9bec3fdce293c22af99af20320974eab1217d0d75b69';
+      expectedWallet.nextSeed = '3043a0ac64d63f4eaff7f7c66c30ca5ab544f87f04bbe0f60d189bb8ff125d52';
       const newAddress =
         createAddress(
-          'fJfDHydeWopE5EbxDpH2EVf8kY47HQYb5Y',
-          '03c4e2d7b538a3717b6a489d3690605bc03746f1a04a4fd341a7da5b7c8fa742b3',
-          'eca11b3aaf8858756af559840d2731b865bf5f09f91355c67066d4f676af6f8a'
+          '2ewXR5RsixF8yJQSuTSUTKWbjeb7y9brjmE',
+          '03841048e4989e456987627083ef3b04626c9afde52fa6137453d6aabe74971b87',
+          '0f901b534792e62cf7c4b6584f430fc22f4f2e7f686197441c96a8cafb098c9a'
         );
 
       expectedWallet.addresses.push(newAddress);

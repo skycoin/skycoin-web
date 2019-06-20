@@ -13,7 +13,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 1003;
+      z-index: 100000;
       background: #000000;
       overflow: hidden;
       display: inline-flex;
@@ -41,10 +41,17 @@
     @-webkit-keyframes splash-spin { 100% { -webkit-transform: rotate(360deg); } }
     @keyframes splash-spin { 100% { -moz-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
   </style>
+  <script>
+    window.removeSplash = function() {
+      var element = document.getElementById('splashScreen');
+      element.parentNode.removeChild(element);
+    }
+  </script>
 </head>
 <body>
-<app-root>
-  <div class="skycoin-splash">
+  <app-root></app-root>
+
+  <div id="splashScreen" class="skycoin-splash">
     <div class="skycoin-splash-container">
       <img src="assets/logo-splash.png">
       <div>
@@ -52,6 +59,5 @@
       </div>
     </div>
   </div>
-</app-root>
 </body>
 </html>
