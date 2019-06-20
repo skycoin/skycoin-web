@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "USD",
     "loading": "Cargando...",
     "new": "Nueva",
     "load": "Cargar",
@@ -213,6 +214,7 @@
     "notes-label": "Notas",
     "wallet-label": "Billetera",
     "addresses-label": "Direcciones",
+    "invalid-amount": "Por favor introduzca una cantidad válida",
     "addresses-help": "Limite las direcciones desde donde pueden enviarse las monedas y las horas",
     "all-addresses": "Todas las direcciones de la billetera seleccionada.",
     "outputs-label": "Salidas no gastadas",

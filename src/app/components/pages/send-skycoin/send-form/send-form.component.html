@@ -22,8 +22,26 @@
     <input formControlName="address" id="address" [placeholder]="'send.recipient-address' | translate" >
   </div>
   <div class="form-field">
-    <label for="amount">{{ 'send.amount-label' | translate }}</label>
-    <input formControlName="amount" id="amount" [placeholder]="currentCoin.coinSymbol" (keydown.enter)="onVerify($event)">
+    <label for="amount" class="amount-label">{{ 'send.amount-label' | translate }}</label>
+    <div class="coin-selector-container" *ngIf="price" [ngClass]="{ disabled: busy }">
+      <app-double-button
+        [leftButtonText]="currentCoin.coinSymbol"
+        [rightButtonText]="'common.usd' | translate"
+        className="light small"
+        [activeButton]="selectedCurrency"
+        (onStateChange)="changeActiveCurrency($event)"
+      ></app-double-button>
+    </div>
+    <input formControlName="amount" id="amount" [placeholder]="selectedCurrency === doubleButtonActive.LeftButton ? currentCoin.coinSymbol : ('common.usd' | translate)" (keydown.enter)="onVerify($event)">
+    <div class="coins-value-label" [ngClass]="{ red: value >= 0 && valueGreaterThanBalance }" *ngIf="price">
+      <span *ngIf="value < 0">{{ 'send.invalid-amount' | translate }}</span>
+      <span *ngIf="value >= 0 && selectedCurrency === doubleButtonActive.LeftButton">
+        &#x007e; {{ value | number:'1.0-2' }} {{ 'common.usd' | translate }}
+      </span>
+      <span *ngIf="value >= 0 && selectedCurrency === doubleButtonActive.RightButton">
+        &#x007e; {{ value | number:('1.0-' + blockchainService.currentMaxDecimals) }} {{ currentCoin.coinSymbol }}
+      </span>
+    </div>
   </div>
 
   <div class="form-field -on-small-and-below-only" *ngIf="showSlowMobileInfo">
