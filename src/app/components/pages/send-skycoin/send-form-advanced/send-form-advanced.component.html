@@ -91,10 +91,19 @@
   </ng-container>
 
   <div class="form-field">
-    <label for="destination0">
+    <label for="destination0" class="destinations-label">
       {{ 'send.destinations-label' | translate }}
       <mat-icon [matTooltip]="('send.destinations-help' + (this.autoHours ? '1' : '2')) | translate">help</mat-icon>
     </label>
+    <div class="coin-selector-container" *ngIf="price" [ngClass]="{ disabled: busy }">
+      <app-double-button
+        [leftButtonText]="currentCoin.coinSymbol"
+        [rightButtonText]="'common.usd' | translate"
+        className="light small"
+        [activeButton]="selectedCurrency"
+        (onStateChange)="changeActiveCurrency($event)"
+      ></app-double-button>
+    </div>
 
     <div formArrayName="destinations" *ngFor="let dest of destControls; let i = index;" class="-destination">
       <div [formGroupName]="i" class="row -inner-container">
@@ -113,7 +122,16 @@
           </label>
           <div class="-input-addon">
             <input formControlName="coins" [id]="'amount' + i">
-            <span>{{ currentCoin.coinSymbol }}</span>
+            <span>{{ selectedCurrency === doubleButtonActive.LeftButton ? currentCoin.coinSymbol : ('common.usd' | translate) }}</span>
+          </div>
+          <div class="coins-value-label" *ngIf="price">
+            <span *ngIf="values[i] < 0">{{ 'send.invalid-amount' | translate }}</span>
+            <span *ngIf="values[i] >= 0 && selectedCurrency === doubleButtonActive.LeftButton">
+              &#x007e; {{ values[i] | number:'1.0-2' }} {{ 'common.usd' | translate }}
+            </span>
+            <span *ngIf="values[i] >= 0 && selectedCurrency === doubleButtonActive.RightButton">
+              &#x007e; {{ values[i] | number:('1.0-' + blockchainService.currentMaxDecimals) }} {{ currentCoin.coinSymbol }}
+            </span>
           </div>
         </div>
         <div class="col-lg-3 col-md-4">
