@@ -19,7 +19,8 @@ module.exports = function (config) {
       require('karma-read-json')
     ],
     files: [
-      { pattern: 'e2e/test-fixtures/*.json', included: false }
+      { pattern: 'e2e/test-fixtures/*.json', included: false },
+      { pattern: 'src/assets/scripts/wasm_exec.js', included: true }
     ],
     client: {
       // this works only with `karma start`, not `karma run`.
