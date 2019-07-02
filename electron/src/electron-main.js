@@ -176,6 +176,12 @@ function createWindow() {
     });
   }
 
+  // Open links with target='_blank' in default browser.
+  win.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    require('electron').shell.openExternal(url);
+  });
+
   // create application's main menu
   var template = [{
     label: 'Skycoin',
@@ -296,7 +302,7 @@ ipcMain.on('temporarilyAllowCoinSync', (event, data) => {
       temporarilyAllowedCoin['id'] = data.id;
       temporarilyAllowedCoin['url'] = data.url;
       temporarilyAllowedCoin['host'] = coinHost;
-    
+
       event.returnValue = 0;
     } else {
       event.returnValue = 2;
