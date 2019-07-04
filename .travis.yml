@@ -3,10 +3,10 @@ language: node_js
 node_js:
   - "6.9"
 
-branches:
-  only:
-    - master
-    - develop
+# branches:
+#   only:
+#     - master
+#     - develop
 
 services:
   - docker
@@ -17,6 +17,10 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
+
+before_script:
+  - npm install
+  - cd electron && npm install
 
 script:
   - make check
