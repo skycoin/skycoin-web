@@ -1,7 +1,7 @@
 dist: xenial
 language: node_js
 node_js:
-  - "6.9"
+  - "10.15"
 
 matrix:
   include:
@@ -24,7 +24,7 @@ addons:
 
 before_script:
   - npm install
-  - cd electron && npm install
+  - cd electron && npm install && cd ..
 
 script:
   - make check
