@@ -22,13 +22,18 @@ addons:
     packages:
       - google-chrome-stable
 
-before_script:
+install:
   - npm install
   - cd electron && npm install && cd ..
 
 script:
-  - make check
+  # Run 'check' on linux, as osx does not have `docker` service.
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi
+  - make lint
+  - make unit-test
   - make build
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make build-electron-linux; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make build-electron-mac; fi
 
 notifications:
   # https://github.com/kvld/travisci-telegram TravisCI Telegram Bot integration

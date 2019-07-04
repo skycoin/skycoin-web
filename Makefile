@@ -26,7 +26,7 @@ run-docker: ## runs docker container
 	docker volume create skycoin-data
 	docker volume create skycoin-wallet
 	chmod 777 $(PWD)/e2e/test-fixtures/blockchain-180.db
-	
+
 	docker run -d --rm \
 	-v skycoin-data:/data \
 	-v skycoin-wallet:/wallet \
@@ -49,7 +49,7 @@ e2e-test: ## runs e2e tests using a node running in Docker
 e2e-prod-test: ## runs e2e prod tests using a node running in Docker
 	npm run e2e-docker-prod
 
-check: run-docker lint unit-test e2e-test e2e-prod-test stop-docker ## runs linter, unit tests, e2e tests
+check: run-docker e2e-test e2e-prod-test stop-docker ## runs linter, unit tests, e2e tests
 
 prepare-electron-requirements: ## Creates the necessary files to be able to package the wallet with Electron
 	cd electron; ./build-server.sh
