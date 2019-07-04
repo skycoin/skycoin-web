@@ -6,21 +6,25 @@ node_js:
 matrix:
   include:
     - os: linux
+      services:
+        - docker
     - os: osx
+      osx_image: xcode10
 # branches:
 #   only:
 #     - master
 #     - develop
 
 services:
-  - docker
+  - xvfb
 
 addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+  chrome: stable
+  # apt:
+  #   sources:
+  #     - google-chrome
+  #   packages:
+  #     - google-chrome-stable
 
 install:
   - npm install
@@ -28,12 +32,12 @@ install:
 
 script:
   # Run 'check' on linux, as osx does not have `docker` service.
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi
-  - make lint
-  - make unit-test
-  - make build
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make build-electron-linux; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make build-electron-mac; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi || exit 1
+  - make lint || exit 1
+  - make unit-test || exit 1
+  - make build || exit 1
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make build-electron-linux; fi || exit 1
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make build-electron-mac; fi || exit 1
 
 notifications:
   # https://github.com/kvld/travisci-telegram TravisCI Telegram Bot integration
