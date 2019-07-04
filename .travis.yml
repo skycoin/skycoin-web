@@ -20,15 +20,13 @@ services:
 
 addons:
   chrome: stable
-  # apt:
-  #   sources:
-  #     - google-chrome
-  #   packages:
-  #     - google-chrome-stable
+
+before_script:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./ci-scripts/add-key.sh; fi
 
 install:
   - npm install
-  - cd electron && npm install && cd ..
+  - cd electron && npm install && ./build-server.sh && cd ..
 
 script:
   # Run 'check' on linux, as osx does not have `docker` service.
