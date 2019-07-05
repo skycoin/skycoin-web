@@ -14,10 +14,22 @@
             "allowToChangeInstallationDirectory": true
         },
         "mac": {
-            "category": "public.app-category.productivity"
+            "category": "public.app-category.productivity",
+            "extraFiles": [
+              {
+                "from": "./server/${os}_${arch}/",
+                "to": "./Resources/app"
+              }
+            ]
         },
         "win": {
-            "target": "nsis"
+            "target": "nsis",
+            "extraFiles": [
+              {
+                "from": "./server/${os}_${arch}/",
+                "to": "./resources/app"
+              }
+            ]
         },
         "linux": {
             "category": "Network",
@@ -25,6 +37,10 @@
                 {
                     "from": "build/icons/icon512x512.png",
                     "to": "./Resources"
+                },
+                {
+                  "from": "./server/${os}_${arch}/",
+                  "to": "./resources/app"
                 }
             ]
         },
@@ -32,14 +48,10 @@
             "!**/*",
             "src/**/*"
         ],
-        "extraFiles": [
-            {
-                "from": "./server/${os}_${arch}/",
-                "to": "./"
-            },
+        "extraResources": [
             {
                 "from": "../dist/",
-                "to": "./dist/"
+                "to": "./app/dist/"
             }
         ],
         "directories": {
