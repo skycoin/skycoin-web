@@ -53,9 +53,9 @@ before_script:
 
 script:
   # Run 'check' on linux, as osx does not have `docker` service.
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi || exit 1
-  - make lint || exit 1
-  - make unit-test || exit 1
+  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi || exit 1
+  # - make lint || exit 1
+  # - make unit-test || exit 1
   - make build || exit 1
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make build-electron-linux; fi || exit 1
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make build-electron-mac; fi || exit 1
@@ -63,3 +63,12 @@ script:
 notifications:
   # https://github.com/kvld/travisci-telegram TravisCI Telegram Bot integration
   webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
+
+deploy:
+  provider: releases
+  api_key:
+    secure: $GB_AUTH
+  file: electron/release/*
+  on:
+    repo: iketheadore/skycoin-web
+    branch: travis-fix
