@@ -9,11 +9,24 @@ matrix:
       services:
         - docker
     - os: osx
-      osx_image: xcode10
+      osx_image: xcode8
 # branches:
 #   only:
 #     - master
 #     - develop
+
+env:
+  global:
+    - ELECTRON_CACHE: $HOME/.cache/electron
+    - ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
+
+cache:
+  directories:
+  - electron/node_modules
+  - electron/src/node_modules
+  - $HOME/.cache/electron
+  - $HOME/.cache/electron-builder
+  - $HOME/.npm/_prebuilds
 
 services:
   - xvfb
