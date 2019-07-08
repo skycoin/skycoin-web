@@ -24,3 +24,19 @@ install:
 build_script:
   - npm run build
   - cd electron && npm run dist-win
+
+after_build:
+  - ps: 7z a skycoin-web.zip c:\gopath\src\github.com\skycoin\skycoin-web\electron\release\*
+  - ps: ls *.zip
+
+artifacts:
+  - path: skycoin-web.zip
+    name: skycoin-web
+
+deploy:
+  release: skycoin-web
+  provider: GitHub
+  auth_token: $(GB_AUTH)
+  artifact: skycoin-web
+  unzip: true
+  set_public: true
