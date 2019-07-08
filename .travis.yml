@@ -72,4 +72,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: iketheadore/skycoin-web
-    branch: travis-fix
+    tag: true

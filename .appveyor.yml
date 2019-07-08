@@ -34,9 +34,8 @@ artifacts:
     name: skycoin-web
 
 deploy:
-  release: skycoin-web
   provider: GitHub
   auth_token: $(GB_AUTH)
   artifact: skycoin-web
-  unzip: true
-  set_public: true
+  on:
+    APPVEYOR_REPO_TAG: true
