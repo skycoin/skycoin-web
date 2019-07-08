@@ -66,9 +66,10 @@ notifications:
 
 deploy:
   provider: releases
-  api_key:
-    secure: $GB_AUTH
+  api_key: $GB_AUTH
+  file_glob: true
   file: electron/release/*
+  skip_cleanup: true
   on:
     repo: iketheadore/skycoin-web
     branch: travis-fix
