@@ -62,7 +62,7 @@ function startServer() {
           // limits
           return './resources/app/server.exe';
         case 'linux':
-          return path.join(path.dirname(appPath), './resources/app/skycoin');
+          return path.join(path.dirname(appPath), './resources/app/server');
         default:
           return './resources/app/server';
       }
@@ -73,9 +73,9 @@ function startServer() {
         case 'darwin':
           return path.join(appPath, '../../Resources/app/dist/')
         case 'win32':
-          return path.join(appPath, './resources/app/dist/');
+          return path.join(path.dirname(appPath), './resources/app/dist/');
         case 'linux':
-          return path.join(appPath, './resources/app/dist/');
+          return path.join(path.dirname(appPath), './resources/app/dist/');
         default:
           return './resources/app/dist/';
       }
