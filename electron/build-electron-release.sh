@@ -13,10 +13,12 @@ fi
 APP_VERSION=`grep version package.json | sed 's/[,\", ]//g' | awk '{split($0,a,":");print a[2]}'`
 
 # package name
-PKG_NAME=`grep productName package.json | sed 's/[,\", ]//g' | awk '{split($0,s,":");print tolower(s[2])}'`
+PKG_NAME=`grep name package.json | sed 's/[,\", ]//g' | awk '{split($0,s,":");print s[2]}'`
 
 # product name
-PDT_NAME=`grep productName package.json | sed 's/[,\", ]//g' | awk '{split($0,s,":");print s[2]}'`
+PDT_NAME=`grep productName package.json | awk '{split($0,s,":");print s[2]}' | sed 's/^[ \t]*//;s/[,\"]//g'`
+PDT_NAME_LOWER=`grep productName package.json | awk '{split($0,s,":");print s[2]}' | sed 's/^[ \t]*//;s/[,\"]//g' | awk '{print tolower}'`
+
 
 if [[ "$OSARCH" == *"darwin/amd64"* ]]; then
   if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -27,9 +29,17 @@ if [[ "$OSARCH" == *"darwin/amd64"* ]]; then
   fi
 fi
 
-if [[ "$OSARCH" == *"windows/amd64"* ]]; then
-  ./build-server.sh "windows/amd64"
-  npm run dist-win
+if [[ "$OSARCH" == *"windows"* ]]; then
+  if [[ "$OSARCH" == *"windows/amd64"* ]]; then
+    ./build-server.sh "windows/amd64"
+    npm run dist-win64
+  elif [[ "$OSARCH" == *"windows/386"* ]]; then
+    ./build-server.sh "windows/386"
+    npm run dist-win32
+  else
+    ./build-server.sh "windows/amd64 windows/386"
+    npm run dist-win
+  fi
 fi
 
 if [[ "$OSARCH" == *"linux/amd64"* ]]; then
@@ -54,7 +64,7 @@ if [[ -e "$EXE" ]]; then
 fi
 
 # rename dmg file
-DMG="${PKG_NAME}-${APP_VERSION}.dmg"
+DMG="${PDT_NAME_LOWER}-${APP_VERSION}.dmg"
 if [[ -e "$DMG" ]]; then
   mv "$DMG" "${PKG_NAME}-${APP_VERSION}-gui-electron-osx.dmg"
 fi
@@ -70,7 +80,7 @@ if [[ -e "$SNAP" ]]; then
 fi
 
 # delete app zip file
-MZIP="${PKG_NAME}-${APP_VERSION}-mac.zip"
+MZIP="${PDT_NAME_LOWER}-${APP_VERSION}-mac.zip"
 if [[ -e "$MZIP" ]]; then
   rm "$MZIP"
 fi

@@ -1,6 +1,6 @@
 {
-    "name": "skycoin",
-    "productName": "Skycoin",
+    "name": "skycoin-lite",
+    "productName": "Skycoin Lite",
     "author": "skycoin",
     "main": "src/electron-main.js",
     "version": "1.0.0",
