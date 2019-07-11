@@ -17,7 +17,7 @@ PKG_NAME=`grep name package.json | sed 's/[,\", ]//g' | awk '{split($0,s,":");pr
 
 # product name
 PDT_NAME=`grep productName package.json | awk '{split($0,s,":");print s[2]}' | sed 's/^[ \t]*//;s/[,\"]//g'`
-PDT_NAME_LOWER=`grep productName package.json | awk '{split($0,s,":");print s[2]}' | sed 's/^[ \t]*//;s/[,\"]//g' | awk '{print tolower}'`
+PDT_NAME_LOWER=`grep productName package.json | awk '{split($0,s,":");print s[2]}' | sed 's/^[ \t]*//;s/[,\"]//g' | awk '{print tolower($0)}'`
 
 
 if [[ "$OSARCH" == *"darwin/amd64"* ]]; then
