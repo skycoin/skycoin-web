@@ -55,17 +55,20 @@ e2e-prod-test: ## runs e2e prod tests using a node running in Docker
 
 check: run-docker e2e-test e2e-prod-test stop-docker ## runs linter, unit tests, e2e tests
 
-prepare-electron-requirements: ## Creates the necessary files to be able to package the wallet with Electron
-	cd electron; ./build-server.sh
+# prepare-electron-requirements: ## Creates the necessary files to be able to package the wallet with Electron
+# 	cd electron; ./build-server.sh
 
 build-electron-win: ## creates an Electron wallet for Windows, from the contents of the dist folder
 	cd electron; npm run dist-win
 
-build-electron-linux: ## creates an Electron wallet for Linux, from the contents of the dist folder
-	cd electron; npm run dist-linux
+# build-electron-linux: ## creates an Electron wallet for Linux, from the contents of the dist folder
+# 	cd electron; npm run dist-linux
 
-build-electron-mac: ## creates an Electron wallet for Mac, from the contents of the dist folder
-	cd electron; npm run dist-mac
+# build-electron-mac: ## creates an Electron wallet for Mac, from the contents of the dist folder
+# 	cd electron; npm run dist-mac
+
+build-electron: ## creates Electron wallets for Mac and Linux.
+	./ci-scripts/build-wallets.sh
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

@@ -55,7 +55,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi || exit 1
   - make lint || exit 1
   - make unit-test || exit 1
-  - ./ci-scripts/build-wallets.sh || exit 1
+  - make build-electron || exit 1
 
 notifications:
   # https://github.com/kvld/travisci-telegram TravisCI Telegram Bot integration
