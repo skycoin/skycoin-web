@@ -1,6 +1,10 @@
 .DEFAULT_GOAL := help
 .PHONY: lint check help
 
+install-deps-ui: ## install npm dependences
+	npm install
+	cd electron && npm install
+
 build:
 	npm run build
 
