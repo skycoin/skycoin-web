@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatDialogConfig, MatSnackBarConfig } from '@angular/material';
-import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import { BigNumber } from 'bignumber.js';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/retryWhen';
@@ -52,7 +52,7 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
   values: number[];
   price: number;
 
-  private subscriptions: Subscription;
+  private subscriptionsGroup: ISubscription[] = [];
   private getOutputsSubscriptions: ISubscription;
   private unlockSubscription: ISubscription;
   private destinationSubscriptions: ISubscription[] = [];
@@ -83,7 +83,7 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
       ),
     });
 
-    this.subscriptions = this.form.get('wallet').valueChanges.subscribe((wallet: Wallet) => {
+    this.subscriptionsGroup.push(this.form.get('wallet').valueChanges.subscribe((wallet: Wallet) => {
       this.wallet = wallet;
 
       this.closeGetOutputsSubscriptions();
@@ -108,9 +108,9 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
 
       this.updateAvailableBalance();
       this.form.get('destinations').updateValueAndValidity();
-    });
+    }));
 
-    this.subscriptions.add(this.form.get('addresses').valueChanges.subscribe(() => {
+    this.subscriptionsGroup.push(this.form.get('addresses').valueChanges.subscribe(() => {
       this.form.get('outputs').setValue(null);
       this.unspentOutputs = this.filterUnspentOutputs();
 
@@ -118,19 +118,19 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
       this.form.get('destinations').updateValueAndValidity();
     }));
 
-    this.subscriptions.add(this.form.get('outputs').valueChanges.subscribe(() => {
+    this.subscriptionsGroup.push(this.form.get('outputs').valueChanges.subscribe(() => {
       this.updateAvailableBalance();
       this.form.get('destinations').updateValueAndValidity();
     }));
 
-    this.subscriptions.add(this.coinService.currentCoin
+    this.subscriptionsGroup.push(this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => {
         this.resetForm();
         this.currentCoin = coin;
       })
     );
 
-    this.subscriptions.add(this.priceService.price.subscribe(price => {
+    this.subscriptionsGroup.push(this.priceService.price.subscribe(price => {
       this.price = price;
       this.updateValues();
     }));
@@ -142,7 +142,7 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.closeGetOutputsSubscriptions();
-    this.subscriptions.unsubscribe();
+    this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
     this.navbarService.hideSwitch();
     this.snackbar.dismiss();
     this.destinationSubscriptions.forEach(s => s.unsubscribe());

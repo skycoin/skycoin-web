@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, Renderer2, ViewChild, NgZone } from '@angular/core';
 import 'rxjs/add/observable/interval';
-import { Subscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import { Overlay } from '@angular/cdk/overlay';
 import { Observable } from 'rxjs/Observable';
 
@@ -27,7 +27,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   language: LanguageData;
   hasManyCoins: boolean;
 
-  private subscription: Subscription;
+  private subscriptionsGroup: ISubscription[] = [];
 
   constructor(private balanceService: BalanceService,
               private coinService: CoinService,
@@ -39,19 +39,19 @@ export class TopBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.languageService.currentLanguage
-      .subscribe(lang => this.language = lang);
+    this.subscriptionsGroup.push(this.languageService.currentLanguage
+      .subscribe(lang => this.language = lang));
 
     this.hasManyCoins = this.coinService.coins.length > 1;
 
-    this.subscription.add(
+    this.subscriptionsGroup.push(
       this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
         this.currentCoin = coin;
         this.balanceObtained = false;
       })
     );
 
-    this.subscription.add(
+    this.subscriptionsGroup.push(
       this.balanceService.totalBalance.subscribe(balance => {
         if (balance) {
           if (balance.state === BalanceStates.Obtained) {
@@ -65,14 +65,14 @@ export class TopBarComponent implements OnInit, OnDestroy {
     );
 
     this._ngZone.runOutsideAngular(() => {
-      this.subscription.add(
+      this.subscriptionsGroup.push(
         Observable.interval(5000).subscribe(() => this._ngZone.run(() => this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService)))
       );
     });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
   }
 
   refresBalance() {

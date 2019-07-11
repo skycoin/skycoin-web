@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, NgZone } from '@angular/core';
-import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import { BigNumber } from 'bignumber.js';
 import { Observable } from 'rxjs/Observable';
 
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   synchronized = true;
 
   private price: number;
-  private subscription: Subscription;
+  private subscriptionsGroup: ISubscription[] = [];
   private synchronizedSubscription: ISubscription;
 
   get loading() {
@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscription = this.coinService.currentCoin
+    this.subscriptionsGroup.push(this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => {
         this.currentCoin = coin;
 
@@ -61,9 +61,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.synchronizedSubscription.unsubscribe();
           this.synchronizedSubscription = null;
         }
-      });
+      }));
 
-    this.subscription.add(
+    this.subscriptionsGroup.push(
       this.blockchainService.progress
         .filter(response => !!response)
         .subscribe(response => {
@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         })
     );
 
-    this.subscription.add(
+    this.subscriptionsGroup.push(
       this.priceService.price
         .subscribe(price => {
           this.price = price;
@@ -85,7 +85,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         })
     );
 
-    this.subscription.add(
+    this.subscriptionsGroup.push(
       this.balanceService.totalBalance
         .subscribe(balance => {
           if (balance && balance.state === BalanceStates.Obtained) {
@@ -102,19 +102,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
 
     this._ngZone.runOutsideAngular(() => {
-      this.subscription.add(
+      this.subscriptionsGroup.push(
         Observable.interval(5000).subscribe(() => this._ngZone.run(() => this.timeSinceLastBalanceUpdate = getTimeSinceLastBalanceUpdate(this.balanceService)))
       );
     });
 
-    this.subscription.add(
+    this.subscriptionsGroup.push(
       this.balanceService.hasPendingTransactions
         .subscribe(hasPendingTxs => this.hasPendingTxs = hasPendingTxs)
     );
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
     if (this.synchronizedSubscription) {
       this.synchronizedSubscription.unsubscribe();
     }
