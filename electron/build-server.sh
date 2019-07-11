@@ -11,7 +11,6 @@ if [[ "$OSARCH" == *"windows/386"* ]]; then
   env GOOS=windows GOARCH=386 go build -o ./server/win_ia32/server.exe
 fi
 
-
 if [[ "$OSARCH" == *"windows/amd64"* ]]; then
   echo "Compiling for win_x64"
   env GOOS=windows GOARCH=amd64 go build -o ./server/win_x64/server.exe

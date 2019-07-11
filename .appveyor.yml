@@ -18,10 +18,14 @@ install:
   - go version
   - go env
   - ps: Install-Product node 10.15 x64
-  - ps: make install-deps-ui
+  - npm install
+  - cd electron && npm install && cd ..
 
 build_script:
-  - ps: make build-electron-win
+  - npm run build
+  - cd electron
+  - cmd: bash ./build-electron-release.sh 'windows'
+  - ps: ls release\
 
 after_build:
   - ps: 7z a skycoin-web.zip c:\gopath\src\github.com\skycoin\skycoin-web\electron\release\*
