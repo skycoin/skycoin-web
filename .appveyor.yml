@@ -26,18 +26,19 @@ build_script:
   - cd electron
   - cmd: bash ./build-electron-release.sh 'windows'
   - ps: ls release\
+  - ps: cd ..
 
 after_build:
-  - ps: 7z a skycoin-web.zip c:\gopath\src\github.com\skycoin\skycoin-web\electron\release\*
+  - ps: 7z a skycoin-lite-win.zip c:\gopath\src\github.com\skycoin\skycoin-web\electron\release\*
   - ps: ls *.zip
 
 artifacts:
-  - path: skycoin-web.zip
-    name: skycoin-web
+  - path: skycoin-lite-win.zip
+    name: skycoin-lite-win
 
 deploy:
   provider: GitHub
   auth_token: $(GB_AUTH)
-  artifact: skycoin-web
+  artifact: skycoin-lite-win
   on:
     APPVEYOR_REPO_TAG: true
