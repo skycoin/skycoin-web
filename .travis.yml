@@ -58,15 +58,21 @@ script:
   - make build-electron || exit 1
 
 notifications:
+  email:
+    - travis@skuycoin.net
   # https://github.com/kvld/travisci-telegram TravisCI Telegram Bot integration
   webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
 
 deploy:
-  provider: releases
-  api_key: $GB_AUTH
-  file_glob: true
-  file: electron/release/*
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  bucket: $AWS_BUCKET
   skip_cleanup: true
+  local_dir: electron/release
+  upload-dir: wallet-lite
+  acl: public_read
+  region: $AWS_REGION
   on:
-    repo: iketheadore/skycoin-web
+    repo: skycoin/skycoin-web
     tags: true

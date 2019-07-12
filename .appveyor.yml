@@ -37,8 +37,20 @@ artifacts:
     name: skycoin-lite-win
 
 deploy:
-  provider: GitHub
-  auth_token: $(GB_AUTH)
+  provider: S3
+  access_key_id: $(AWS_ACCESS_KEY_ID)
+  secret_access_key: $(AWS_SECRET_ACCESS_KEY)
+  bucket: $(AWS_BUCKET)
+  region: $(AWS_REGION)
+  folder: wallet-lite
   artifact: skycoin-lite-win
+  unzip: true
+  set_public: true
   on:
     APPVEYOR_REPO_TAG: true
+
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: false
