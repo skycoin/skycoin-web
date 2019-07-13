@@ -102,7 +102,7 @@ describe('CipherProvider Lib', () => {
 
         it(`should verify signature correctly`, done => {
           testData.forEach(data => {
-            const result = window['SkycoinCipherExtras'].verifySignature(data.public_key, data.signature, data.hash);
+            const result = window['SkycoinCipherExtras'].verifyPubKeySignedHash(data.public_key, data.signature, data.hash);
             expect(result).toBeNull();
             done();
           });
@@ -110,7 +110,7 @@ describe('CipherProvider Lib', () => {
 
         it(`should check signature correctly`, done => {
           testData.forEach(data => {
-            const result = window['SkycoinCipherExtras'].chkSig(data.address, data.hash, data.signature);
+            const result = window['SkycoinCipherExtras'].verifyAddressSignedHash(data.address, data.signature, data.hash);
             expect(result).toBeNull();
             done();
           });
@@ -118,7 +118,7 @@ describe('CipherProvider Lib', () => {
 
         it(`should verify signed hash correctly`, done => {
           testData.forEach(data => {
-            const result = window['SkycoinCipherExtras'].verifySignedHash(data.signature, data.hash);
+            const result = window['SkycoinCipherExtras'].verifySignatureRecoverPubKey(data.signature, data.hash);
             expect(result).toBeNull();
             done();
           });
