@@ -32,7 +32,7 @@ var (
 // ContentSecurityPolicy csp header in http response
 const ContentSecurityPolicy = "default-src 'self'" +
 	"; worker-src 'self' blob:" +
-	"; connect-src 'self' https://api.coinpaprika.com https://node.skycoin.net" +
+	"; connect-src *" +
 	"; img-src 'self' 'unsafe-inline' data:" +
 	"; style-src 'self' 'unsafe-inline'" +
 	"; object-src	'none'" +

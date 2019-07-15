@@ -18,6 +18,8 @@ import { BlockchainService } from '../../../../services/blockchain.service';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { config } from '../../../../app.config';
 import { NavBarService } from '../../../../services/nav-bar.service';
+import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
+import { PriceService } from '../../../../services/price.service';
 
 @Component({
   selector: 'app-send-form',
@@ -25,6 +27,9 @@ import { NavBarService } from '../../../../services/nav-bar.service';
   styleUrls: ['./send-form.component.scss'],
 })
 export class SendFormComponent implements OnInit, OnDestroy {
+
+  public static readonly MaxUsdDecimal = 6;
+
   @ViewChild('button') button: ButtonComponent;
   @Input() formData: any;
   @Output() onFormSubmitted = new EventEmitter<any>();
@@ -33,21 +38,32 @@ export class SendFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   wallets: Wallet[];
   currentCoin: BaseCoin;
+  doubleButtonActive = DoubleButtonActive;
+  selectedCurrency = DoubleButtonActive.LeftButton;
+  value: number;
+  valueGreaterThanBalance = false;
+  price: number;
 
   private processSubscription: ISubscription;
   private subscription: Subscription;
   private slowInfoSubscription: ISubscription;
 
   constructor(
+    public blockchainService: BlockchainService,
     private formBuilder: FormBuilder,
     private walletService: WalletService,
     private spendingService: SpendingService,
     private snackbar: MatSnackBar,
     private dialog: CustomMatDialogService,
     private coinService: CoinService,
-    private blockchainService: BlockchainService,
-    private navbarService: NavBarService
-  ) {}
+    private navbarService: NavBarService,
+    priceService: PriceService,
+  ) {
+    this.subscription = priceService.price.subscribe(price => {
+      this.price = price;
+      this.updateValue();
+    });
+  }
 
   ngOnInit() {
     this.navbarService.showSwitch('send.simple', 'send.advanced');
@@ -67,7 +83,11 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
     if (this.formData) {
       Object.keys(this.form.controls).forEach(control => {
-        this.form.get(control).setValue(this.formData.form[control]);
+        if (this.form.get(control)) {
+          this.form.get(control).setValue(this.formData.form[control]);
+        }
+
+        this.selectedCurrency = this.formData.form.currency;
       });
     }
   }
@@ -104,10 +124,46 @@ export class SendFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  changeActiveCurrency(value) {
+    this.selectedCurrency = value;
+    this.updateValue();
+    this.form.get('amount').updateValueAndValidity();
+  }
+
+  private updateValue() {
+    if (!this.price) {
+      this.value = null;
+
+      return;
+    }
+    if (!this.form || this.validateAmount(this.form.get('amount') as FormControl) !== null || this.form.get('amount').value * 1 === 0) {
+      this.value = -1;
+
+      return;
+    }
+
+    const coinsInWallet = this.form.get('wallet').value && (this.form.get('wallet').value as Wallet).balance ?
+      (this.form.get('wallet').value as Wallet).balance.toNumber() : -1;
+
+    this.valueGreaterThanBalance = false;
+    if (this.selectedCurrency === DoubleButtonActive.LeftButton) {
+      this.value = new BigNumber(this.form.get('amount').value).multipliedBy(this.price).decimalPlaces(2).toNumber();
+      if (coinsInWallet > 0 && parseFloat(this.form.get('amount').value) > coinsInWallet) {
+        this.valueGreaterThanBalance = true;
+      }
+    } else {
+      this.value = new BigNumber(this.form.get('amount').value).dividedBy(this.price).decimalPlaces(this.blockchainService.currentMaxDecimals).toNumber();
+      if (coinsInWallet > 0 && this.value > coinsInWallet) {
+        this.valueGreaterThanBalance = true;
+      }
+    }
+  }
+
   private resetForm() {
     this.form.get('wallet').setValue('', { emitEvent: false });
     this.form.get('address').setValue('');
     this.form.get('amount').setValue('');
+    this.selectedCurrency = DoubleButtonActive.LeftButton;
   }
 
   private checkBeforeSending() {
@@ -142,14 +198,13 @@ export class SendFormComponent implements OnInit, OnDestroy {
       .subscribe(() => this.showSlowMobileInfo = true);
 
     this.removeProcessSubscription();
-
     this.processSubscription = this.spendingService.createTransaction(
       wallet,
       null,
       null,
       [{
         address: this.form.value.address.replace(/\s/g, ''),
-        coins: new BigNumber(this.form.value.amount),
+        coins: this.selectedCurrency === DoubleButtonActive.LeftButton ? new BigNumber(this.form.value.amount) : new BigNumber(this.value.toString()),
       }],
       {
         type: HoursSelectionTypes.Auto,
@@ -170,6 +225,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
         wallet: this.form.value.wallet,
         address: this.form.value.address,
         amount: this.form.value.amount,
+        currency: this.selectedCurrency,
       },
       amount: new BigNumber(this.form.value.amount),
       to: [this.form.value.address],
@@ -193,18 +249,20 @@ export class SendFormComponent implements OnInit, OnDestroy {
       amount: ['', [Validators.required]]
     });
 
-    this.subscription = this.form.controls.wallet.valueChanges.subscribe(value => {
+    this.subscription.add(this.form.controls.wallet.valueChanges.subscribe(value => {
       const balance = value && value.balance ? value.balance : 0;
 
       this.form.controls.amount.setValidators([
         Validators.required,
-        Validators.min(0.000001),
-        Validators.max(balance),
-        this.validateAmount.bind(this),
+        this.validateAmountWithValue.bind(this),
       ]);
 
       this.form.controls.amount.updateValueAndValidity();
-    });
+    }));
+
+    this.subscription.add(this.form.get('amount').valueChanges.subscribe(value => {
+      this.updateValue();
+    }));
   }
 
   private validateAmount(amountControl: FormControl) {
@@ -214,8 +272,37 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
     const parts = amountControl.value.toString().split('.');
 
-    if (parts.length === 2 && parts[1].length > this.blockchainService.currentMaxDecimals) {
-      return { Invalid: true };
+    if (this.selectedCurrency === DoubleButtonActive.LeftButton) {
+      if (parts.length === 2 && parts[1].length > this.blockchainService.currentMaxDecimals) {
+        return { Invalid: true };
+      }
+    } else {
+      if (parts.length === 2 && parts[1].length > SendFormComponent.MaxUsdDecimal) {
+        return { Invalid: true };
+      }
+    }
+
+    return null;
+  }
+
+  private validateAmountWithValue(amountControl: FormControl) {
+    const firstValidation = this.validateAmount(amountControl);
+    if (firstValidation) {
+      return firstValidation;
+    }
+
+    const coinsInWallet = this.form.get('wallet').value && (this.form.get('wallet').value as Wallet).balance ?
+      (this.form.get('wallet').value as Wallet).balance.toNumber() : -1;
+
+    if (this.selectedCurrency === DoubleButtonActive.LeftButton) {
+      if (parseFloat(amountControl.value) > coinsInWallet) {
+        return { Invalid: true };
+      }
+    } else {
+      this.updateValue();
+      if (this.value > coinsInWallet) {
+        return { Invalid: true };
+      }
     }
 
     return null;

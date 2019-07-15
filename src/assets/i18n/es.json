@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "USD",
     "loading": "Cargando...",
     "new": "Nueva",
     "load": "Cargar",
@@ -213,6 +214,7 @@
     "notes-label": "Notas",
     "wallet-label": "Billetera",
     "addresses-label": "Direcciones",
+    "invalid-amount": "Por favor introduzca una cantidad válida",
     "addresses-help": "Limite las direcciones desde donde pueden enviarse las monedas y las horas",
     "all-addresses": "Todas las direcciones de la billetera seleccionada.",
     "outputs-label": "Salidas no gastadas",
@@ -314,6 +316,8 @@
 
     "change" : {
       "url-label": "URL del nodo (dejar vacío para usar la URL por defecto)",
+      "url-error": "El host indicado ya está en uso por esta u otra moneda.",
+      "cancelled-error": "Operación cancelada.",
       "cancel-button": "Cancelar",
       "change-button": "Cambiar",
       "return-button": "Regresar",
@@ -325,7 +329,14 @@
       "coin-name": "Moneda",
       "node-version": "Versión del nodo",
       "last-block": "Último bloque",
-      "hours-burn-rate": "Tasa de quema de horas"
+      "hours-burn-rate": "Tasa de quema de horas",
+
+      "confirmation" : {
+        "title": "Seguridad",
+        "text": "¿Realmente desea permitir el acceso a \"{{ url }}\"?",
+        "ok": "Ok",
+        "cancel": "Cancelar"
+      }
     }
   },
 

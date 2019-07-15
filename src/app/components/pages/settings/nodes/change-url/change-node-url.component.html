@@ -2,7 +2,7 @@
   <div [formGroup]="form" *ngIf="showingUrlForm">
     <div class="form-field">
       <label for="url">{{ 'nodes.change.url-label' | translate}}</label>
-      <input formControlName="url" id="url" (keydown.enter)="change()">
+      <input formControlName="url" id="url" (keydown.enter)="startChange()">
     </div>
   </div>
   <div class="property-container" *ngIf="!showingUrlForm">
