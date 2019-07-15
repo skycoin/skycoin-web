@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
   e2eTest: false,
-  enableCustomNodes: false,
+  enableCustomNodes: true,
 };

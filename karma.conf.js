@@ -1,10 +1,8 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/0.13/config/configuration-file.html
 
-process.env.CHROME_BIN = require('puppeteer').executablePath()
-
 module.exports = function (config) {
- 
+
   var cipherParamIndex = process.argv.indexOf('--cipher');
   // check if command line has cipher parameter with not empty value
   if (cipherParamIndex > -1 && (cipherParamIndex + 1) < process.argv.length && process.argv[cipherParamIndex + 1]) {
