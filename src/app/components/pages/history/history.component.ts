@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogConfig } from '@angular/material/dialog';
-import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -47,7 +47,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
   private requestedAddress: string;
   private walletsLoaded = false;
   private transactionsLoaded = false;
-  private subscription: Subscription;
+  private subscriptionsGroup: ISubscription[] = [];
   private transactionsSubscription: ISubscription;
   private filterSubscription: ISubscription;
   private walletsSubscription: ISubscription;
@@ -73,7 +73,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
+    this.subscriptionsGroup.push(this.coinService.currentCoin.subscribe((coin: BaseCoin) => {
       this.allTransactions = null;
       this.transactions = null;
       this.currentCoin = coin;
@@ -94,7 +94,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
         },
         () => this.showError = true
       );
-    });
+    }));
 
     this.filterSubscription = this.form.get('filter').valueChanges.subscribe(() => {
       const selectedfilters: (Wallet|Address)[] = this.form.get('filter').value;
@@ -125,11 +125,11 @@ export class HistoryComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscription.add(this.priceService.price.subscribe(price => this.price = price));
+    this.subscriptionsGroup.push(this.priceService.price.subscribe(price => this.price = price));
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
     this.closeTransactionsSubscription();
     this.filterSubscription.unsubscribe();
     this.walletsSubscription.unsubscribe();

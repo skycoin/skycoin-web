@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogConfig } from '@angular/material/dialog';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Wallet } from '../../../app.datatypes';
@@ -23,7 +23,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
   currentCoin: BaseCoin;
   showLockIcons: boolean;
 
-  private subscription: Subscription;
+  private subscriptionsGroup: ISubscription[] = [];
   private confirmSeedSubscription: Subscription;
   private deleteWalletSubscription: Subscription;
 
@@ -37,17 +37,17 @@ export class WalletsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.walletService.currentWallets.subscribe( (wallets) => {
+    this.subscriptionsGroup.push(this.walletService.currentWallets.subscribe( (wallets) => {
       this.wallets = wallets;
-    });
+    }));
 
-    this.subscription.add(this.coinService.currentCoin
+    this.subscriptionsGroup.push(this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => this.currentCoin = coin)
     );
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
     this.removeConfirmationSuscriptions();
   }
 
