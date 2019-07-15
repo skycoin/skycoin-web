@@ -55,6 +55,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi || exit 1
   - make lint || exit 1
   - make unit-test || exit 1
+  - make cipher-test || exit 1
   # Do not do code signing if it's a PR.
   - if [[ "$TRAVIS_PULL_REQUEST" == true && "$TRAVIS_OS_NAME" == "osx" ]]; then
       CSC_IDENTITY_AUTO_DISCOVERY=false make build-electron || exit 1;
