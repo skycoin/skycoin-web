@@ -2,14 +2,6 @@
 
 set -e -o pipefail
 
-echo "test env from travis:  AWS_REGION=$AWS_REGION"
-echo "test env from travis:  KEY_CHAIN=$OSX_KEYCHAIN"
-if [[ "$OSX_KEYCHAIN" == "testbuild.keychain" ]]; then
-  echo "secure value exists"
-else
-  echo "secure values do not exist"
-fi
-
 KEY_CHAIN=build.keychain
 echo "security create keychain"
 if ! security show-keychain-info "$KEY_CHAIN" ; then
