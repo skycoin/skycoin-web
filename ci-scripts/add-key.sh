@@ -5,9 +5,7 @@ set -e -o pipefail
 KEY_CHAIN=build.keychain
 echo "security create keychain"
 if ! security show-keychain-info "$KEY_CHAIN" ; then
-  if ! security create-keychain -p "$OSX_KEYCHAIN_PWD" "$KEY_CHAIN"; then
-    echo "create keychain failed, error code: $?"
-  fi
+  security -v create-keychain -p "$OSX_KEYCHAIN_PWD" "$KEY_CHAIN"
 fi
 # Make the keychain the default so identities are found
 echo "security default-keychain"

@@ -22,13 +22,13 @@ env:
     - ELECTRON_CACHE: $HOME/.cache/electron
     - ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
 
-# cache:
-#   directories:
-#     - node_modules
-#     - electron/node_modules
-#     - $HOME/.cache/electron
-#     - $HOME/.cache/electron-builder
-#     - $HOME/.npm/_prebuilds
+cache:
+  directories:
+    - node_modules
+    - electron/node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
+    - $HOME/.npm/_prebuilds
 
 services:
   - xvfb
@@ -57,11 +57,11 @@ script:
   - make unit-test || exit 1
   - make build-electron || exit 1
 
-notifications:
-  email:
-    - travis@skuycoin.net
-  # https://github.com/kvld/travisci-telegram TravisCI Telegram Bot integration
-  webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
+# notifications:
+#   email:
+#     - travis@skuycoin.net
+#   # https://github.com/kvld/travisci-telegram TravisCI Telegram Bot integration
+#   webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
 
 deploy:
   provider: s3
