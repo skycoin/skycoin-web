@@ -2,7 +2,7 @@
 // https://karma-runner.github.io/0.13/config/configuration-file.html
 
 module.exports = function (config) {
- 
+
   var cipherParamIndex = process.argv.indexOf('--cipher');
   // check if command line has cipher parameter with not empty value
   if (cipherParamIndex > -1 && (cipherParamIndex + 1) < process.argv.length && process.argv[cipherParamIndex + 1]) {
