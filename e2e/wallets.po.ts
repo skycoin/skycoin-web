@@ -2,7 +2,7 @@ import { browser, by, element, ExpectedConditions } from 'protractor';
 
 export class WalletsPage {
   navigateTo() {
-    return browser.get('#/wallets');
+    return browser.get('#/wallets').then(() => browser.sleep(500));
   }
 
   getHeaderText() {

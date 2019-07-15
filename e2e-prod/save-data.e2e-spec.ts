@@ -16,7 +16,7 @@ describe('Save data', () => {
     page.loadWallet().then(() => {
       expect<any>(page.verifyIfShowingWalletsPage()).toEqual(true);
 
-      browser.get('#/wallets');
+      browser.get('#/wallets').then(() => browser.sleep(500));
       expect<any>(page.verifyLocalStorage()).toEqual(null);
       expect<any>(page.verifyIfShowingWalletsPage()).toEqual(false);
       done();

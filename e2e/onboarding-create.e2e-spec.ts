@@ -6,7 +6,7 @@ describe('Onboarding Create', () => {
   let page: OnboardingCreatePage;
 
   beforeAll(() => {
-    browser.get('/');
+    browser.get('/').then(() => browser.sleep(500));
 
     page = new OnboardingCreatePage();
     page.navigateTo();
@@ -118,7 +118,7 @@ describe('Onboarding Create', () => {
   });
 
   it('should load wallet with correct address', done => {
-    browser.get('#/wizard');
+    browser.get('#/wizard').then(() => browser.sleep(500));
     expect<any>(page.verifyLoadedWalletAddress()).toEqual(true);
     done();
   });

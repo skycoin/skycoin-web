@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class TransactionsPage {
   navigateTo() {
-    return browser.get('#/history');
+    return browser.get('#/history').then(() => browser.sleep(500));
   }
 
   getHeaderText() {
