@@ -5,9 +5,9 @@ go:
 
 matrix:
   include:
-    - os: linux
-      services:
-        - docker
+    # - os: linux
+    #   services:
+    #     - docker
     - os: osx
       osx_image: xcode8
 
@@ -22,40 +22,40 @@ env:
     - ELECTRON_CACHE: $HOME/.cache/electron
     - ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
 
-cache:
-  directories:
-    - node_modules
-    - electron/node_modules
-    - $HOME/.cache/electron
-    - $HOME/.cache/electron-builder
-    - $HOME/.npm/_prebuilds
+# cache:
+#   directories:
+#     - node_modules
+#     - electron/node_modules
+#     - $HOME/.cache/electron
+#     - $HOME/.cache/electron-builder
+#     - $HOME/.npm/_prebuilds
 
-services:
-  - xvfb
+# services:
+#   - xvfb
 
-addons:
-  chrome: stable
+# addons:
+#   chrome: stable
 
 install:
-  - nvm install 10.15
-  - nvm use 10.15
+#   - nvm install 10.15
+#   - nvm use 10.15
   - if [[ ! -d "$GOPATH/src/github.com/skycoin/skycoin-web" ]]; then
     mkdir -p $GOPATH/src/github.com/skycoin;
     ln -s $TRAVIS_BUILD_DIR $GOPATH/src/github.com/skycoin/skycoin-web;
     fi
   - cd $GOPATH/src/github.com/skycoin/skycoin-web
-  - make install-deps-ui
+  # - make install-deps-ui
 
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./ci-scripts/add-key.sh; fi
 
-script:
-  # Run 'check' on linux, as osx does not have `docker` service.
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi || exit 1
-  - make lint || exit 1
-  - make unit-test || exit 1
-  - make build-electron || exit 1
+# script:
+#   # Run 'check' on linux, as osx does not have `docker` service.
+#   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make check; fi || exit 1
+#   - make lint || exit 1
+#   - make unit-test || exit 1
+#   - make build-electron || exit 1
 
 # notifications:
 #   email:
