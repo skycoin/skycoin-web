@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
 
   private checkCipherProviderResponse(response) {
     if (window['removeSplash']) {
-      setTimeout(()=> window['removeSplash']());
+      setTimeout(() => window['removeSplash']());
     }
     if (response !== InitializationResults.Ok) {
       if (response === InitializationResults.ErrorLoadingWasmFile) {
