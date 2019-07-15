@@ -25,7 +25,7 @@ export class ApiService {
         if (this.url.endsWith('/')) {
           this.url = this.url.substring(0, this.url.length - 1);
         }
-        this.url += '/api/v1/';
+        this.url += '/api/';
       });
   }
 
@@ -34,9 +34,13 @@ export class ApiService {
       .catch((error: any) => this.getErrorMessage(error));
   }
 
-  post(url, body = {}, options: any = {}): Observable<any> {
+  post(url, body = {}, options: any = {}, useV2 = false): Observable<any> {
+    if (useV2) {
+      options.json = true;
+    }
+
     return this.http.post(
-      this.getUrl(url),
+      this.getUrl(url, useV2),
       options.json ? JSON.stringify(body) : this.getQueryString(body),
       this.getRequestOptions(options)
     ).catch((error: any) => this.getErrorMessage(error));
@@ -78,22 +82,27 @@ export class ApiService {
     return params;
   }
 
-  private getUrl(url: string): string {
+  private getUrl(url: string, useV2 = false): string {
     if (url.startsWith('/')) {
       url = url.substring(1);
     }
-    return this.url + url;
-  }
 
-  private getCsrf(): Observable<any> {
-    return this.get('csrf').map(response => response.csrf_token);
+    return this.url + (useV2 ? 'v2/' : 'v1/') + url;
   }
 
   private getErrorMessage(error: any): Observable<string> {
-    if (error.error && typeof error.error === 'string') {
-      return Observable.throw(new Error(parseResponseMessage(error.error.trim())));
-    } if (error.message) {
-      return Observable.throw(new Error(parseResponseMessage(error.message.trim())));
+    if (error) {
+      if (typeof error['_body'] === 'string') {
+        return Observable.throw(new Error(parseResponseMessage(error)));
+      }
+
+      if (error.error && typeof error.error === 'string') {
+        return Observable.throw(new Error(parseResponseMessage(error.error.trim())));
+      } else if (error.error && error.error.error && error.error.error.message) {
+        return Observable.throw(new Error(parseResponseMessage(error.error.error.message.trim())));
+      } else if (error.message) {
+        return Observable.throw(new Error(parseResponseMessage(error.message.trim())));
+      }
     }
 
     return this.translate.get('service.api.server-error')

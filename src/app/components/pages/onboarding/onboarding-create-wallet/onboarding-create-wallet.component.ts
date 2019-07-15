@@ -9,7 +9,7 @@ import { WalletService } from '../../../../services/wallet/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { CoinService } from '../../../../services/coin.service';
 import { BaseCoin } from '../../../../coins/basecoin';
-import { LanguageService } from '../../../../services/language.service';
+import { LanguageService, LanguageData } from '../../../../services/language.service';
 import { openChangeLanguageModal, showConfirmationModal, scanAddresses } from '../../../../utils';
 import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 import { ConfirmationData, Wallet } from '../../../../app.datatypes';
@@ -31,8 +31,10 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   doubleButtonActive = DoubleButtonActive.LeftButton;
   userHasWallets = false;
   creatingWallet = false;
+  language: LanguageData;
 
   private slowInfoSubscription: ISubscription;
+  private subscription: ISubscription;
 
   constructor(
     private dialog: CustomMatDialogService,
@@ -48,11 +50,15 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.checkUserWallets();
     this.formControl.initForm(this.coinService.currentCoin.getValue());
+
+    this.subscription = this.languageService.currentLanguage
+      .subscribe(lang => this.language = lang);
   }
 
   ngOnDestroy() {
     this.removeSlowInfoSubscription();
     this.snackBar.dismiss();
+    this.subscription.unsubscribe();
   }
 
   changeForm(newState: DoubleButtonActive) {
@@ -94,6 +100,15 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
           this.showDisclaimer();
         });
     }, 0);
+  }
+
+  changelanguage() {
+    openChangeLanguageModal(this.dialog)
+      .subscribe(response => {
+        if (response) {
+          this.languageService.changeLanguage(response);
+        }
+      });
   }
 
   private showDisclaimer() {

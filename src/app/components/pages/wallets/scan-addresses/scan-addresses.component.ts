@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
 import { Wallet } from '../../../../app.datatypes';
@@ -16,7 +16,7 @@ export class ScanAddressesComponent implements OnInit, OnDestroy {
   progress = new ScanProgressData();
   showSlowMobileInfo = false;
 
-  private subscription: Subscription;
+  private subscriptionsGroup: ISubscription[] = [];
   private slowInfoSubscription: ISubscription;
 
   constructor(
@@ -30,7 +30,7 @@ export class ScanAddressesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
     this.removeSlowInfoSubscription();
   }
 
@@ -42,12 +42,12 @@ export class ScanAddressesComponent implements OnInit, OnDestroy {
     this.createSlowInfoSubscription();
 
     const onProgressChanged = new EventEmitter<ScanProgressData>();
-    this.subscription = onProgressChanged.subscribe((progress: ScanProgressData) => {
+    this.subscriptionsGroup.push(onProgressChanged.subscribe((progress: ScanProgressData) => {
       this.createSlowInfoSubscription();
       this.progress = progress;
-    });
+    }));
 
-    this.subscription.add(this.walletService.scanAddresses(this.data, onProgressChanged)
+    this.subscriptionsGroup.push(this.walletService.scanAddresses(this.data, onProgressChanged)
       .subscribe(
         () => this.closePopup(null),
         (error: Error) => this.closePopup(error)

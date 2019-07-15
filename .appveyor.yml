@@ -1,0 +1,56 @@
+image: Visual Studio 2017
+platform:
+  - x64
+
+clone_folder: c:\gopath\src\github.com\skycoin\skycoin-web
+
+environment:
+  GOPATH: c:\gopath
+
+cache:
+  - 'electron\node_modules'
+  - '%USERPROFILE%\.electron'
+
+install:
+  - echo %PATH%
+  - echo %GOPATH%
+  - set PATH=%GOPATH\bin;c:\go\bin;%PATH%
+  - go version
+  - go env
+  - ps: Install-Product node 10.15 x64
+  - npm install
+  - cd electron && npm install && cd ..
+
+build_script:
+  - npm run build
+  - cd electron
+  - cmd: bash ./build-electron-release.sh 'windows'
+  - ps: ls release\
+  - ps: cd ..
+
+after_build:
+  - ps: 7z a skycoin-lite-win.zip c:\gopath\src\github.com\skycoin\skycoin-web\electron\release\*
+  - ps: ls *.zip
+
+artifacts:
+  - path: skycoin-lite-win.zip
+    name: skycoin-lite-win
+
+deploy:
+  provider: S3
+  access_key_id: $(AWS_ACCESS_KEY_ID)
+  secret_access_key: $(AWS_SECRET_ACCESS_KEY)
+  bucket: $(AWS_BUCKET)
+  region: $(AWS_REGION)
+  folder: wallet-lite
+  artifact: skycoin-lite-win
+  unzip: true
+  set_public: true
+  on:
+    APPVEYOR_REPO_TAG: true
+
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: false

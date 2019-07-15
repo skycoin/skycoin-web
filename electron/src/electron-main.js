@@ -52,26 +52,32 @@ function startServer() {
     }
 
     // Resolve server binary location
-    var exePath = path.dirname(app.getPath('exe'));
+    var appPath = app.getPath('exe');
     var exe = (() => {
       switch (process.platform) {
         case 'darwin':
-          return path.join(exePath, './../server')
+          return path.join(appPath, '../../Resources/app/server')
         case 'win32':
-          return path.join(exePath, './server.exe');
+          // User only the relative path on windows due to short path length
+          // limits
+          return './resources/app/server.exe';
+        case 'linux':
+          return path.join(path.dirname(appPath), './resources/app/server');
         default:
-          return path.join(exePath, './server');
+          return './resources/app/server';
       }
     })()
 
     var contentsPath = (() => {
       switch (process.platform) {
         case 'darwin':
-          return path.join(exePath, './../dist/')
+          return path.join(appPath, '../../Resources/app/dist/')
         case 'win32':
-          return path.join(exePath, './dist/');
+          return path.join(path.dirname(appPath), './resources/app/dist/');
+        case 'linux':
+          return path.join(path.dirname(appPath), './resources/app/dist/');
         default:
-          return path.join(exePath, './dist/');
+          return './resources/app/dist/';
       }
     })()
 
@@ -175,6 +181,12 @@ function createWindow() {
       require('electron').shell.openExternal(url);
     });
   }
+
+  // Open links with target='_blank' in default browser.
+  win.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    require('electron').shell.openExternal(url);
+  });
 
   // create application's main menu
   var template = [{
@@ -296,7 +308,7 @@ ipcMain.on('temporarilyAllowCoinSync', (event, data) => {
       temporarilyAllowedCoin['id'] = data.id;
       temporarilyAllowedCoin['url'] = data.url;
       temporarilyAllowedCoin['host'] = coinHost;
-    
+
       event.returnValue = 0;
     } else {
       event.returnValue = 2;

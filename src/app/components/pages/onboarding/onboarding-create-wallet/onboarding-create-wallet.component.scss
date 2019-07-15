@@ -1,5 +1,18 @@
 @import '../../../../../theme/_variables';
 
+.language-button {
+  position: fixed;
+  right: 30px;
+  top: 50px;
+
+  .flag {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    top: -3px;
+  }
+}
+
 .row-container {
   max-width: 450px;
   width: 80%;

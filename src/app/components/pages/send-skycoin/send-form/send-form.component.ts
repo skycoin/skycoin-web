@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
-import { ISubscription, Subscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 import { BigNumber } from 'bignumber.js';
@@ -45,7 +45,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
   price: number;
 
   private processSubscription: ISubscription;
-  private subscription: Subscription;
+  private subscriptionsGroup: ISubscription[] = [];
   private slowInfoSubscription: ISubscription;
 
   constructor(
@@ -59,10 +59,10 @@ export class SendFormComponent implements OnInit, OnDestroy {
     private navbarService: NavBarService,
     priceService: PriceService,
   ) {
-    this.subscription = priceService.price.subscribe(price => {
+    this.subscriptionsGroup.push(priceService.price.subscribe(price => {
       this.price = price;
       this.updateValue();
-    });
+    }));
   }
 
   ngOnInit() {
@@ -70,11 +70,11 @@ export class SendFormComponent implements OnInit, OnDestroy {
 
     this.initForm();
 
-    this.subscription.add(this.walletService.currentWallets
+    this.subscriptionsGroup.push(this.walletService.currentWallets
       .subscribe(wallets => this.wallets = wallets)
     );
 
-    this.subscription.add(this.coinService.currentCoin
+    this.subscriptionsGroup.push(this.coinService.currentCoin
       .subscribe((coin: BaseCoin) => {
         this.resetForm();
         this.currentCoin = coin;
@@ -95,7 +95,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.removeSlowInfoSubscription();
     this.removeProcessSubscription();
-    this.subscription.unsubscribe();
+    this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
     this.navbarService.hideSwitch();
     this.snackbar.dismiss();
   }
@@ -249,7 +249,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
       amount: ['', [Validators.required]]
     });
 
-    this.subscription.add(this.form.controls.wallet.valueChanges.subscribe(value => {
+    this.subscriptionsGroup.push(this.form.controls.wallet.valueChanges.subscribe(value => {
       const balance = value && value.balance ? value.balance : 0;
 
       this.form.controls.amount.setValidators([
@@ -260,7 +260,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
       this.form.controls.amount.updateValueAndValidity();
     }));
 
-    this.subscription.add(this.form.get('amount').valueChanges.subscribe(value => {
+    this.subscriptionsGroup.push(this.form.get('amount').valueChanges.subscribe(value => {
       this.updateValue();
     }));
   }
