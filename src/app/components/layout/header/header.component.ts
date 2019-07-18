@@ -159,7 +159,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private calculateBalance() {
     if (this.price) {
       const balance = this.coins.multipliedBy(this.price).toNumber();
-      this.balance = '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100) + ')';
+      this.balance = '$' + balance.toFixed(2) + ' ($' + (Math.round(this.price * 100) / 100).toFixed(2) + ')';
     }
   }
 
