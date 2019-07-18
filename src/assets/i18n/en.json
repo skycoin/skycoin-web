@@ -6,10 +6,13 @@
     "load": "Load",
     "address": "Address",
     "close": "Close",
-    "slow-on-mobile": "Please wait. This process may take a minute or more on some mobile devices and slow PCs."
+    "slow-on-mobile": "Please wait. This process may take a minute or more on some mobile devices and slow PCs.",
+    "success": "Success",
+    "warning": "Warning"
   },
 
   "errors": {
+    "error": "Error",
     "fetch-version": "Unable to fetch latest release version from Github",
     "incorrect-password": "Incorrect password",
     "api-disabled": "API disabled",
@@ -168,7 +171,8 @@
       "select-coin": "Select coin",
       "unconventional-seed-title": "Possible error",
       "unconventional-seed-text": "You introduced an unconventional seed. If you did it for any special reason, you can continue (only recommended for advanced users). However, if your intention is to use a normal system seed, you must delete all the additional text and special characters.",
-      "unconventional-seed-check": "Continue with the unconventional seed."
+      "unconventional-seed-check": "Continue with the unconventional seed.",
+      "wallet-created": "The wallet has been added to the list."
     },
 
     "scan": {
@@ -243,7 +247,8 @@
     "advanced": "Advanced",
     "select-wallet": "Select Wallet",
     "recipient-address": "Recipient address",
-    "your-note": "Your note here"
+    "your-note": "Your note here",
+    "sent": "Transaction successfully sent."
   },
 
   "tx": {
@@ -330,6 +335,7 @@
       "node-version": "Node version",
       "last-block": "Last block",
       "hours-burn-rate": "Hours burn rate",
+      "url-changed": "The URL has been changed.",
 
       "confirmation" : {
         "title": "Security",

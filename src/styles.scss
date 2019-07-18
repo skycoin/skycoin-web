@@ -471,14 +471,6 @@ Responsive design
   }
 }
 
-.fix-error-position {
-  @media (max-width: $max-small-width) {
-    .cdk-global-overlay-wrapper[style*="align-items: flex-end;"] > div {
-      margin-bottom: $mobile-nav-bar-height !important;
-    }
-  }
-}
-
 .coin-selector-container {
   display: inline-block;
   margin-left: 5px;

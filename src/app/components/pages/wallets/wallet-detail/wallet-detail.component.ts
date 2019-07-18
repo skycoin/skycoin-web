@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialogConfig } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -12,6 +11,7 @@ import { Subscription, ISubscription } from 'rxjs/Subscription';
 import { WalletOptionsComponent, WalletOptionsResponses } from './wallet-options/wallet-options.component';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { config } from '../../../../app.config';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 @Component({
   selector: 'app-wallet-detail',
@@ -30,12 +30,12 @@ export class WalletDetailComponent implements OnDestroy {
   constructor(
     private walletService: WalletService,
     private dialog: CustomMatDialogService,
-    private snackBar: MatSnackBar,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private msgBarService: MsgBarService,
   ) {}
 
   ngOnDestroy() {
-    this.snackBar.dismiss();
+    this.msgBarService.hide();
     this.removeUnlockSubscription();
     this.removeSlowInfoSubscription();
   }
@@ -131,9 +131,7 @@ export class WalletDetailComponent implements OnDestroy {
 
   private addNewAddress() {
     if (this.creatingAddress === true) {
-      const snackBarConfig = new MatSnackBarConfig();
-      snackBarConfig.duration = 5000;
-      this.snackBar.open(this.translateService.instant('wallet.already-adding-address-error'), null, snackBarConfig);
+      this.msgBarService.showError('wallet.already-adding-address-error');
 
       return;
     }
@@ -160,10 +158,7 @@ export class WalletDetailComponent implements OnDestroy {
     this.showSlowMobileInfo = false;
     this.removeSlowInfoSubscription();
     this.creatingAddress = false;
-
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 5000;
-    this.snackBar.open(error.message, null, snackBarConfig);
+    this.msgBarService.showError(error.message);
   }
 
   private removeUnlockSubscription() {

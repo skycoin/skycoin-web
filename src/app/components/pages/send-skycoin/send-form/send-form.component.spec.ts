@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatSnackBarModule } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
@@ -18,7 +17,9 @@ import { MockTranslatePipe,
   MockBlockchainService,
   MockCustomMatDialogService,
   MockNavBarService,
-  MockPriceService } from '../../../../utils/test-mocks';
+  MockPriceService,
+  MockMsgBarService} from '../../../../utils/test-mocks';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 describe('SendFormComponent', () => {
   let component: SendFormComponent;
@@ -28,7 +29,6 @@ describe('SendFormComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ SendFormComponent, MockTranslatePipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
-      imports: [ MatSnackBarModule ],
       providers: [
         FormBuilder,
         { provide: WalletService, useClass: MockWalletService },
@@ -38,6 +38,7 @@ describe('SendFormComponent', () => {
         { provide: CustomMatDialogService, useClass: MockCustomMatDialogService },
         { provide: NavBarService, useClass: MockNavBarService },
         { provide: PriceService, useClass: MockPriceService },
+        { provide: MsgBarService, useClass: MockMsgBarService },
       ]
     }).compileComponents();
   }));

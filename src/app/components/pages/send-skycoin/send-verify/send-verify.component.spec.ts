@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatSnackBar } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { SendVerifyComponent } from './send-verify.component';
 import { BalanceService } from '../../../../services/wallet/balance.service';
 import { SpendingService } from '../../../../services/wallet/spending.service';
-import { MockTranslatePipe, MockBalanceService, MockSpendingService, MockMatSnackBar } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockBalanceService, MockSpendingService, MockMsgBarService } from '../../../../utils/test-mocks';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 describe('SendVerifyComponent', () => {
   let component: SendVerifyComponent;
@@ -18,7 +18,7 @@ describe('SendVerifyComponent', () => {
       providers: [
         { provide: BalanceService, useClass: MockBalanceService },
         { provide: SpendingService, useClass: MockSpendingService },
-        { provide: MatSnackBar, useClass: MockMatSnackBar }
+        { provide: MsgBarService, useClass: MockMsgBarService },
       ]
     })
     .compileComponents();
