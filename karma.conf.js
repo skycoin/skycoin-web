@@ -2,11 +2,9 @@
 // https://karma-runner.github.io/0.13/config/configuration-file.html
 
 module.exports = function (config) {
-
-  var cipherParamIndex = process.argv.indexOf('--cipher');
-  // check if command line has cipher parameter with not empty value
-  if (cipherParamIndex > -1 && (cipherParamIndex + 1) < process.argv.length && process.argv[cipherParamIndex + 1]) {
-    var cipherMode = process.argv[cipherParamIndex + 1];
+ 
+  if (process.argv.indexOf('--cipher') > -1) {
+    var testCipher = true;
   }
 
   config.set({
@@ -21,11 +19,12 @@ module.exports = function (config) {
       require('karma-read-json')
     ],
     files: [
-      { pattern: 'e2e/test-fixtures/*.json', included: false }
+      { pattern: 'e2e/test-fixtures/*.json', included: false },
+      { pattern: 'src/assets/scripts/wasm_exec.js', included: true }
     ],
     client: {
       // this works only with `karma start`, not `karma run`.
-      cipher: cipherMode,
+      cipher: testCipher,
       args: ['--browserNoActivityTimeout', config.browserNoActivityTimeout],
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },

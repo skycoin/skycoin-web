@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { config } from './app.config';
 import { environment } from '../environments/environment';
-import { CipherProvider } from './services/cipher.provider';
+import { CipherProvider, InitializationResults } from './services/cipher.provider';
 import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 import { Bip39WordListService } from './services/bip39-word-list.service';
 
@@ -19,7 +19,8 @@ export class AppComponent implements OnInit {
   highest: number;
   otcEnabled: boolean;
   version: string;
-  browserHasCryptoInsideWorkers: boolean;
+  browserCompatibleWithWasm = true;
+  wasmFileLoaded = true;
 
   constructor(
     private languageService: LanguageService,
@@ -35,9 +36,9 @@ export class AppComponent implements OnInit {
       }
     });
 
-    cipherProvider.browserHasCryptoInsideWorkers.subscribe(value => {
-      this.browserHasCryptoInsideWorkers = value;
-    });
+    cipherProvider.initialize().subscribe(response => {
+      this.checkCipherProviderResponse(response);
+    }, response => this.checkCipherProviderResponse(response));
 
     dialog.showingDialog.subscribe(value => {
       if (!value) {
@@ -62,5 +63,18 @@ export class AppComponent implements OnInit {
 
   loading() {
     return !this.current || !this.highest || this.current !== this.highest;
+  }
+
+  private checkCipherProviderResponse(response) {
+    if (window['removeSplash']) {
+      setTimeout(() => window['removeSplash']());
+    }
+    if (response !== InitializationResults.Ok) {
+      if (response === InitializationResults.ErrorLoadingWasmFile) {
+        this.wasmFileLoaded = false;
+      } else {
+        this.browserCompatibleWithWasm = false;
+      }
+    }
   }
 }

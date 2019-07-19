@@ -1,4 +1,3 @@
-import '../../assets/scripts/main.js';
 import { readJSON } from 'karma-read-json';
 
 import { testCases } from '../utils/jasmine-utils';
@@ -6,8 +5,7 @@ import { Address } from '../app.datatypes';
 import { convertAsciiToHexa } from '../utils/converters';
 import { GenerateAddressResponse } from './cipher.provider.js';
 
-declare var CipherExtras;
-declare var Cipher;
+declare var Go: any;
 
 describe('CipherProvider Lib', () => {
   const fixturesPath = 'e2e/test-fixtures/';
@@ -21,11 +19,18 @@ describe('CipherProvider Lib', () => {
     'seed-0009.json', 'seed-0010.json'
   ];
 
-  const extensiveMode = 'extensive';
+  const testSettings = { addressCount: 1000, seedFilesCount: 11 };
 
-  const testSettings = process.argv.length > 0 && process.argv[0] === extensiveMode
-    ? { addressCount: 1000, seedFilesCount: 11 }
-    : { addressCount: 30, seedFilesCount: 2 };
+  describe('Initialization', () => {
+    it('should be initialized', done => {
+      const go = new Go();
+      window['WebAssembly'].instantiateStreaming(fetch('/assets/scripts/skycoin-lite.wasm'), go.importObject).then((result) => {
+        go.run(result.instance);
+
+        done();
+      });
+    });
+  });
 
   describe('generate address', () => {
     const addressFixtureFile = readJSON(fixturesPath + addressesFileName);
@@ -97,31 +102,31 @@ describe('CipherProvider Lib', () => {
 
         it(`should verify signature correctly`, done => {
           testData.forEach(data => {
-            const result = CipherExtras.VerifySignature(data.public_key, data.signature, data.hash);
-            expect(result).toBeUndefined();
+            const result = window['SkycoinCipherExtras'].verifyPubKeySignedHash(data.public_key, data.signature, data.hash);
+            expect(result).toBeNull();
             done();
           });
         });
 
         it(`should check signature correctly`, done => {
           testData.forEach(data => {
-            const result = CipherExtras.ChkSig(data.address, data.hash, data.signature);
-            expect(result).toBeUndefined();
+            const result = window['SkycoinCipherExtras'].verifyAddressSignedHash(data.address, data.signature, data.hash);
+            expect(result).toBeNull();
             done();
           });
         });
 
         it(`should verify signed hash correctly`, done => {
           testData.forEach(data => {
-            const result = CipherExtras.VerifySignedHash(data.signature, data.hash);
-            expect(result).toBeUndefined();
+            const result = window['SkycoinCipherExtras'].verifySignatureRecoverPubKey(data.signature, data.hash);
+            expect(result).toBeNull();
             done();
           });
         });
 
         it(`should generate public key correctly`, done => {
           testData.forEach(data => {
-            const pubKey = CipherExtras.PubKeyFromSig(data.signature, data.hash);
+            const pubKey = window['SkycoinCipherExtras'].pubKeyFromSig(data.signature, data.hash);
             expect(pubKey).toBeTruthy();
             expect(pubKey === data.public_key).toBeTruthy();
             done();
@@ -130,7 +135,7 @@ describe('CipherProvider Lib', () => {
 
         it(`sign hash should be created`, done => {
           testData.forEach(data => {
-            const sig = CipherExtras.SignHash(data.hash, data.secret_key);
+            const sig = window['SkycoinCipherExtras'].signHash(data.hash, data.secret_key);
             expect(sig).toBeTruthy();
             done();
           });
@@ -168,25 +173,25 @@ function generateAddresses(seed: string, keys: any[]): Address[] {
 }
 
 function generateAddress(seed: string): GenerateAddressResponse {
-  const address = Cipher.GenerateAddresses(seed);
+  const address = window['SkycoinCipher'].generateAddress(seed);
   return {
     address: {
-      address: address.Address,
-      public_key: address.Public,
-      secret_key: address.Secret
+      address: address.address,
+      public_key: address.public,
+      secret_key: address.secret
     },
-    nextSeed: address.NextSeed
+    nextSeed: address.nextSeed
   };
 }
 
 function verifyAddress(address) {
-  const addressFromPubKey = CipherExtras.AddressFromPubKey(address.public_key);
-  const addressFromSecKey = CipherExtras.AddressFromSecKey(address.secret_key);
+  const addressFromPubKey = window['SkycoinCipherExtras'].addressFromPubKey(address.public_key);
+  const addressFromSecKey = window['SkycoinCipherExtras'].addressFromSecKey(address.secret_key);
 
   expect(addressFromPubKey && addressFromSecKey && addressFromPubKey === addressFromSecKey).toBe(true);
 
-  expect(CipherExtras.VerifySeckey(address.secret_key)).toBe(1);
-  expect(CipherExtras.VerifyPubkey(address.public_key)).toBe(1);
+  expect(window['SkycoinCipherExtras'].verifySeckey(address.secret_key)).toBe(null);
+  expect(window['SkycoinCipherExtras'].verifyPubkey(address.public_key)).toBe(null);
 }
 
 function verifyAddresses(addresses) {

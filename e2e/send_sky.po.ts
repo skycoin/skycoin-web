@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class SendSkyPage {
   navigateTo() {
-    return browser.get('#/send');
+    return browser.get('#/send').then(() => browser.sleep(500));
   }
 
   getHeaderText() {

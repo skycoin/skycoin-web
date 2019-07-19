@@ -8,7 +8,7 @@ describe('Send Sky', () => {
   let walletPage: WalletsPage;
 
   beforeAll(() => {
-    browser.get('/');
+    browser.get('/').then(() => browser.sleep(500));
     browser.executeScript(
       `window.localStorage.setItem(\'wallets\',
         JSON.stringify([{"label":"Test wallet","addresses":

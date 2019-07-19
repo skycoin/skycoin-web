@@ -2,7 +2,7 @@ import { browser, by, element, ElementFinder, ExpectedConditions } from 'protrac
 
 export class OnboardingCreatePage {
   navigateTo() {
-    return browser.get('#/wizard/create');
+    return browser.get('#/wizard/create').then(() => browser.sleep(500));
   }
 
   getHeaderText() {
