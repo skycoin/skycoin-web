@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar, MatDialogConfig, MatSnackBarConfig } from '@angular/material';
+import { MatDialogConfig } from '@angular/material';
 import { ISubscription } from 'rxjs/Subscription';
 import { BigNumber } from 'bignumber.js';
 import { Observable } from 'rxjs/Observable';
@@ -22,6 +22,7 @@ import { CoinService } from '../../../../services/coin.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { PriceService } from '../../../../services/price.service';
 import { SendFormComponent } from '../send-form/send-form.component';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 @Component({
   selector: 'app-send-form-advanced',
@@ -62,11 +63,11 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
     private spendingService: SpendingService,
     private formBuilder: FormBuilder,
     private dialog: CustomMatDialogService,
-    private snackbar: MatSnackBar,
     private navbarService: NavBarService,
     private blockchainService: BlockchainService,
     private coinService: CoinService,
     private priceService: PriceService,
+    private msgBarService: MsgBarService,
   ) { }
 
   ngOnInit() {
@@ -144,7 +145,7 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
     this.closeGetOutputsSubscriptions();
     this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
     this.navbarService.hideSwitch();
-    this.snackbar.dismiss();
+    this.msgBarService.hide();
     this.destinationSubscriptions.forEach(s => s.unsubscribe());
   }
 
@@ -210,7 +211,7 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.snackbar.dismiss();
+    this.msgBarService.hide();
     this.button.resetState();
 
     const wallet = this.form.value.wallet;
@@ -489,10 +490,8 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
         }, 3000);
       })
       .catch(error => {
-        const snackBarConfig = new MatSnackBarConfig();
-        snackBarConfig.duration = 300000;
-        this.snackbar.open(error.message, null, snackBarConfig);
-        this.button.setError(error.message);
+        this.msgBarService.showError(error.message);
+        this.button.resetState();
       });
   }
 

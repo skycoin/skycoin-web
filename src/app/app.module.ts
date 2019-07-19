@@ -14,7 +14,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -85,6 +84,8 @@ import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 import { Bip39WordListService } from './services/bip39-word-list.service';
 import { SendFormAdvancedComponent } from './components/pages/send-skycoin/send-form-advanced/send-form-advanced.component';
 import { SelectAddressComponent } from './components/pages/send-skycoin/send-form-advanced/select-address/select-address';
+import { MsgBarService } from './services/msg-bar.service';
+import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
 
 @NgModule({
   declarations: [
@@ -130,7 +131,8 @@ import { SelectAddressComponent } from './components/pages/send-skycoin/send-for
     ChangeNodeURLComponent,
     WalletOptionsComponent,
     SendFormAdvancedComponent,
-    SelectAddressComponent
+    SelectAddressComponent,
+    MsgBarComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -162,7 +164,6 @@ import { SelectAddressComponent } from './components/pages/send-skycoin/send-for
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    MatSnackBarModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
@@ -196,7 +197,8 @@ import { SelectAddressComponent } from './components/pages/send-skycoin/send-for
     SpendingService,
     GlobalsService,
     CustomMatDialogService,
-    Bip39WordListService
+    Bip39WordListService,
+    MsgBarService,
   ],
   bootstrap: [AppComponent],
 })

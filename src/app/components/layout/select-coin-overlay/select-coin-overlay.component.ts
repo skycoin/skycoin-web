@@ -1,6 +1,5 @@
 import { Component, Input, HostListener, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
@@ -11,6 +10,7 @@ import { BaseCoin } from '../../../coins/basecoin';
 import { ISubscription } from 'rxjs/Subscription';
 import { WalletService } from '../../../services/wallet/wallet.service';
 import { SpendingService } from '../../../services/wallet/spending.service';
+import { MsgBarService } from '../../../services/msg-bar.service';
 
 @Component({
   selector: 'app-select-coin-overlay',
@@ -31,7 +31,7 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
     private walletService: WalletService,
     private spendingService: SpendingService,
     private translate: TranslateService,
-    private snackbar: MatSnackBar
+    private msgBarService: MsgBarService,
   ) { }
 
   ngOnInit() {
@@ -91,7 +91,7 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.searchSuscription.unsubscribe();
-    this.snackbar.dismiss();
+    this.msgBarService.hide();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -102,11 +102,9 @@ export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
   }
 
   close(result: BaseCoin | null) {
-    this.snackbar.dismiss();
+    this.msgBarService.hide();
     if (result && this.spendingService.isInjectingTx) {
-      const config = new MatSnackBarConfig();
-      config.duration = 10000;
-      this.snackbar.open(this.translate.instant('change-coin.injecting-tx'), null, config);
+      this.msgBarService.showError('change-coin.injecting-tx');
       return;
     }
     this.dialogRef.close(result);

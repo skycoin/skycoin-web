@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
@@ -20,6 +19,7 @@ import { config } from '../../../../app.config';
 import { NavBarService } from '../../../../services/nav-bar.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { PriceService } from '../../../../services/price.service';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 @Component({
   selector: 'app-send-form',
@@ -53,10 +53,10 @@ export class SendFormComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private walletService: WalletService,
     private spendingService: SpendingService,
-    private snackbar: MatSnackBar,
     private dialog: CustomMatDialogService,
     private coinService: CoinService,
     private navbarService: NavBarService,
+    private msgBarService: MsgBarService,
     priceService: PriceService,
   ) {
     this.subscriptionsGroup.push(priceService.price.subscribe(price => {
@@ -97,7 +97,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
     this.removeProcessSubscription();
     this.subscriptionsGroup.forEach(sub => sub.unsubscribe());
     this.navbarService.hideSwitch();
-    this.snackbar.dismiss();
+    this.msgBarService.hide();
   }
 
   onVerify(event = null) {
@@ -109,7 +109,7 @@ export class SendFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.snackbar.dismiss();
+    this.msgBarService.hide();
     this.button.resetState();
 
     const wallet = this.form.value.wallet;
@@ -236,10 +236,8 @@ export class SendFormComponent implements OnInit, OnDestroy {
   private onError(error) {
     this.showSlowMobileInfo = false;
     this.removeSlowInfoSubscription();
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 300000;
-    this.snackbar.open(error.message, null, snackBarConfig);
-    this.button.setError(error.message);
+    this.msgBarService.showError(error.message);
+    this.button.resetState();
   }
 
   private initForm() {

@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { config } from '../../../../app.config';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 export class ConfirmSeedParams {
   wallet: Wallet;
@@ -38,7 +38,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<UnlockWalletComponent>,
     private formBuilder: FormBuilder,
     private walletService: WalletService,
-    private snackbar: MatSnackBar
+    private msgBarService: MsgBarService,
   ) {
     if (data.wallet) {
       this.showConfirmSeedWarning = true;
@@ -54,7 +54,7 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.snackbar.dismiss();
+    this.msgBarService.hide();
     this.removeProgressSubscriptions();
     this.removeSlowInfoSubscription();
   }
@@ -111,10 +111,8 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
     this.removeSlowInfoSubscription();
     this.removeProgressSubscriptions();
     this.disableDismiss = false;
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 5000;
-    this.snackbar.open(error.message, null, snackBarConfig);
-    this.unlockButton.setError(error.message);
+    this.msgBarService.showError(error.message);
+    this.unlockButton.resetState();
   }
 
   private removeProgressSubscriptions() {

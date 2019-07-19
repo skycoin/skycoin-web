@@ -1,6 +1,6 @@
 import { Component, Inject, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -15,6 +15,7 @@ import { scanAddresses } from '../../../../utils';
 import { BlockchainService } from '../../../../services/blockchain.service';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { config } from '../../../../app.config';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 @Component({
   selector: 'app-create-wallet',
@@ -34,16 +35,16 @@ export class CreateWalletComponent implements OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data,
     public dialogRef: MatDialogRef<CreateWalletComponent>,
     private walletService: WalletService,
-    private snackBar: MatSnackBar,
     private coinService: CoinService,
     private blockchainService: BlockchainService,
     private translate: TranslateService,
-    private dialog: CustomMatDialogService
+    private dialog: CustomMatDialogService,
+    private msgBarService: MsgBarService,
   ) { }
 
   ngOnDestroy() {
     this.removeSlowInfoSubscription();
-    this.snackBar.dismiss();
+    this.msgBarService.hide();
   }
 
   closePopup() {
@@ -99,15 +100,14 @@ export class CreateWalletComponent implements OnDestroy {
     this.removeSlowInfoSubscription();
     this.createButton.setSuccess();
     this.dialogRef.close();
+    setTimeout(() => this.msgBarService.showDone('wallet.new.wallet-created'));
   }
 
   private onCreateError(errorMesasge: string) {
     this.showSlowMobileInfo = false;
     this.removeSlowInfoSubscription();
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 5000;
-    this.snackBar.open(errorMesasge, null, snackBarConfig);
-    this.createButton.setError(errorMesasge);
+    this.msgBarService.showError(errorMesasge);
+    this.createButton.resetState();
 
     this.disableDismiss = false;
   }

@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { AppComponent } from './app.component';
-import { MockLanguageService, MockTranslatePipe, MockTranslateService, MockCustomMatDialogService } from './utils/test-mocks';
+import { MockLanguageService, MockTranslatePipe, MockTranslateService, MockCustomMatDialogService, MockMsgBarService } from './utils/test-mocks';
 import { LanguageService } from './services/language.service';
 import { CipherProvider, InitializationResults } from './services/cipher.provider';
 import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 import { Bip39WordListService } from './services/bip39-word-list.service';
+import { MsgBarService } from './services/msg-bar.service';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -28,7 +29,8 @@ describe('AppComponent', () => {
         } },
         { provide: Renderer2, useValue: { addClass: null, removeClass: null } },
         { provide: CustomMatDialogService, useClass: MockCustomMatDialogService },
-        { provide: Bip39WordListService, useValue: {} }
+        { provide: Bip39WordListService, useValue: {} },
+        { provide: MsgBarService, useClass: MockMsgBarService },
       ]
     }).compileComponents();
   }));

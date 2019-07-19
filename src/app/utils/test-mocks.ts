@@ -172,9 +172,13 @@ export class MockBlockchainService {
   }
 }
 
-export class MockMatSnackBar {
-  dismiss() {
-  }
+export class MockMsgBarService {
+  set msgBarComponent(value) { }
+  show() { }
+  hide() { }
+  showError(body: string, duration = 20000) { }
+  showWarning(body: string, duration = 20000) { }
+  showDone(body: string, duration = 10000) { }
 }
 
 export class MockTranslateService {

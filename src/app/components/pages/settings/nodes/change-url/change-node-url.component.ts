@@ -4,12 +4,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ISubscription } from 'rxjs/Subscription';
 import BigNumber from 'bignumber.js';
 import { HttpClient } from '@angular/common/http';
-import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
 import { CoinService, TemporarilyAllowCoinResult } from '../../../../../services/coin.service';
 import { ButtonComponent } from '../../../../layout/button/button.component';
 import { isEqualOrSuperiorVersion } from '../../../../../utils/semver';
+import { MsgBarService } from '../../../../../services/msg-bar.service';
 
 @Component({
   selector: 'app-change-node-url',
@@ -30,6 +30,7 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
 
   private newUrl: string;
   private verificationSubscription: ISubscription;
+  private initialURL: string;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: {coinId: number, url: string},
@@ -37,9 +38,11 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private coinService: CoinService,
     private http: HttpClient,
-    private snackBar: MatSnackBar,
     private translate: TranslateService,
-  ) {}
+    private msgBarService: MsgBarService,
+  ) {
+    this.initialURL = data.url;
+  }
 
   ngOnInit() {
     this.initForm();
@@ -47,7 +50,7 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.removeVerificationSubscription();
-    this.snackBar.dismiss();
+    this.msgBarService.hide();
     this.coinService.removeTemporarilyAllowedCoin();
   }
 
@@ -56,7 +59,7 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
   }
 
   startChange() {
-    this.snackBar.dismiss();
+    this.msgBarService.hide();
 
     this.newUrl = this.form.value.url.trim();
 
@@ -77,12 +80,7 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
           } else {
             text = this.translate.instant('nodes.change.cancelled-error');
           }
-
-          const config = new MatSnackBarConfig();
-          config.duration = 5000;
-          this.snackBar.open(text, null, config);
-          this.actionButton.setError(text);
-
+          this.msgBarService.showError(text);
           this.actionButton.resetState();
           this.disableDismiss = false;
         }, 32);
@@ -130,6 +128,10 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
   completeChange() {
     this.coinService.changeNodeUrl(this.data.coinId, this.newUrl);
     this.closePopup();
+
+    if (this.initialURL !== this.newUrl) {
+      setTimeout(() => this.msgBarService.showDone('nodes.change.url-changed'));
+    }
   }
 
   private cancelChange(invalidNodeVersion: boolean, csrfActivated: boolean) {
@@ -145,10 +147,8 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
       errorMesasge = this.translate.instant('nodes.change.connection-error');
     }
 
-    const config = new MatSnackBarConfig();
-    config.duration = 5000;
-    this.snackBar.open(errorMesasge, null, config);
-    this.actionButton.setError(errorMesasge);
+    this.msgBarService.showError(errorMesasge);
+    this.actionButton.resetState();
   }
 
   private removeVerificationSubscription() {

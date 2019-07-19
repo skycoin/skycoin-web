@@ -5,7 +5,8 @@ import { FormBuilder } from '@angular/forms';
 
 import { ChangeNameComponent } from './change-name.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
-import { MockTranslatePipe, MockWalletService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockMsgBarService } from '../../../../utils/test-mocks';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 describe('ChangeNameComponent', () => {
   let component: ChangeNameComponent;
@@ -19,7 +20,8 @@ describe('ChangeNameComponent', () => {
         FormBuilder,
         { provide: WalletService, useClass: MockWalletService },
         { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MsgBarService, useClass: MockMsgBarService },
       ]
     })
     .compileComponents();

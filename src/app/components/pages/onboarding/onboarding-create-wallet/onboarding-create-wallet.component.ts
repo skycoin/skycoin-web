@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +15,7 @@ import { ConfirmationData, Wallet } from '../../../../app.datatypes';
 import { BlockchainService } from '../../../../services/blockchain.service';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { config } from '../../../../app.config';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -40,11 +40,11 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
     private dialog: CustomMatDialogService,
     private walletService: WalletService,
     private router: Router,
-    private snackBar: MatSnackBar,
     private coinService: CoinService,
     private languageService: LanguageService,
     private blockchainService: BlockchainService,
     private translate: TranslateService,
+    private msgBarService: MsgBarService,
   ) { }
 
   ngOnInit() {
@@ -57,7 +57,7 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.removeSlowInfoSubscription();
-    this.snackBar.dismiss();
+    this.msgBarService.hide();
     this.subscription.unsubscribe();
   }
 
@@ -189,11 +189,9 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   private onCreateError(errorMesasge: string) {
     this.showSlowMobileInfo = false;
     this.removeSlowInfoSubscription();
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 5000;
-    this.snackBar.open(errorMesasge, null, snackBarConfig);
+    this.msgBarService.showError(errorMesasge);
 
-    this.createButton.setError(errorMesasge);
+    this.createButton.resetState();
     this.creatingWallet = false;
   }
 

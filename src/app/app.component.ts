@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { LanguageService } from './services/language.service';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -8,6 +8,8 @@ import { environment } from '../environments/environment';
 import { CipherProvider, InitializationResults } from './services/cipher.provider';
 import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 import { Bip39WordListService } from './services/bip39-word-list.service';
+import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
+import { MsgBarService } from './services/msg-bar.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +17,8 @@ import { Bip39WordListService } from './services/bip39-word-list.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  @ViewChild('msgBar') msgBar: MsgBarComponent;
+
   current: number;
   highest: number;
   otcEnabled: boolean;
@@ -29,6 +33,7 @@ export class AppComponent implements OnInit {
     dialog: CustomMatDialogService,
     renderer: Renderer2,
     private bip38WordList: Bip39WordListService,
+    private msgBarService: MsgBarService,
   ) {
     router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
@@ -59,6 +64,8 @@ export class AppComponent implements OnInit {
         e.returnValue = '';
       }
     };
+
+    this.msgBarService.msgBarComponent = this.msgBar;
   }
 
   loading() {

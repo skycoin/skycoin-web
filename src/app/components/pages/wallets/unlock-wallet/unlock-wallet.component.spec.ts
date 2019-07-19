@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 
 import { UnlockWalletComponent } from './unlock-wallet.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
-import { MockTranslatePipe, MockWalletService, MockMatSnackBar } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockMsgBarService } from '../../../../utils/test-mocks';
+import { MsgBarService } from '../../../../services/msg-bar.service';
 
 describe('UnlockWalletComponent', () => {
   let component: UnlockWalletComponent;
@@ -20,7 +21,7 @@ describe('UnlockWalletComponent', () => {
         { provide: WalletService, useClass: MockWalletService },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: MatSnackBar, useClass: MockMatSnackBar }
+        { provide: MsgBarService, useClass: MockMsgBarService },
       ]
     })
     .compileComponents();
