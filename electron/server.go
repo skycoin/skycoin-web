@@ -31,7 +31,7 @@ var (
 
 // ContentSecurityPolicy csp header in http response
 const ContentSecurityPolicy = "default-src 'self'" +
-	"; worker-src 'self' blob:" +
+	"; script-src 'self' 'unsafe-eval'" +
 	"; connect-src *" +
 	"; img-src 'self' 'unsafe-inline' data:" +
 	"; style-src 'self' 'unsafe-inline'" +
