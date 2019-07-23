@@ -5,7 +5,7 @@ COPY . /usr/src/skycoin-web
 WORKDIR /usr/src/skycoin-web
 
 RUN npm install -g @angular/cli \
-    && npm install \
+    && npm install --unsafe-perm \
     && npm run build
 
 FROM nginx:alpine
