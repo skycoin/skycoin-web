@@ -8,13 +8,22 @@ import { TranslateService } from '@ngx-translate/core';
 import { OnboardingCreateWalletComponent } from './onboarding-create-wallet.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { CoinService } from '../../../../services/coin.service';
-import { MockTranslatePipe, MockWalletService, MockCoinService, MockLanguageService, MockBlockchainService, MockCustomMatDialogService, MockMsgBarService } from '../../../../utils/test-mocks';
+import {
+  MockTranslatePipe,
+  MockWalletService,
+  MockCoinService,
+  MockLanguageService,
+  MockBlockchainService,
+  MockCustomMatDialogService,
+  MockMsgBarService,
+  MockHwWalletService } from '../../../../utils/test-mocks';
 import { LanguageService } from '../../../../services/language.service';
 import { CreateWalletFormComponent } from '../../wallets/create-wallet/create-wallet-form/create-wallet-form.component';
 import { BlockchainService } from '../../../../services/blockchain.service';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { Bip39WordListService } from '../../../../services/bip39-word-list.service';
 import { MsgBarService } from '../../../../services/msg-bar.service';
+import { HwWalletService } from '../../../../services/hw-wallet/hw-wallet.service';
 
 describe('OnboardingCreateWalletComponent', () => {
   let component: OnboardingCreateWalletComponent;
@@ -44,6 +53,7 @@ describe('OnboardingCreateWalletComponent', () => {
         },
         { provide: Bip39WordListService, useValue: { validateWord: true } },
         { provide: MsgBarService, useClass: MockMsgBarService },
+        { provide: HwWalletService, useClass: MockHwWalletService },
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

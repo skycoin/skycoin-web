@@ -13,6 +13,7 @@ export class ButtonComponent {
   @Input() spinnerStyle = 'primary';
   @Output() action = new EventEmitter();
   @ViewChild('tooltip') tooltip: MatTooltip;
+  @ViewChild('button') button: HTMLButtonElement;
 
   error: string;
   state: number;
@@ -23,6 +24,10 @@ export class ButtonComponent {
       this.error = '';
       this.action.emit();
     }
+  }
+
+  focus() {
+    this.button.focus();
   }
 
   setLoading() {

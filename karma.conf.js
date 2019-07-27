@@ -20,6 +20,7 @@ module.exports = function (config) {
     ],
     files: [
       { pattern: 'e2e/test-fixtures/*.json', included: false },
+      { pattern: 'test-fixtures/*.json', included: false },
       { pattern: 'src/assets/scripts/wasm_exec.js', included: true }
     ],
     client: {

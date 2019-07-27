@@ -15,6 +15,8 @@ import { WalletService } from './wallet.service';
 import { GlobalsService } from '../globals.service';
 import { isEqualOrSuperiorVersion } from '../../utils/semver';
 import { BlockchainService } from '../blockchain.service';
+import { HwWalletService } from '../hw-wallet/hw-wallet.service';
+import { TxEncoder } from '../../utils/tx-encoder';
 
 export class Destination {
   address: string;
@@ -46,6 +48,7 @@ export class SpendingService {
     private walletService: WalletService,
     private globalsService: GlobalsService,
     private blockchainService: BlockchainService,
+    private hwWalletService: HwWalletService,
     coinService: CoinService,
   ) {
     coinService.currentCoin.subscribe((coin) => this.currentCoin = coin);
@@ -60,6 +63,10 @@ export class SpendingService {
     changeAddress: string|null): Observable<Transaction> {
 
     return this.globalsService.getValidNodeVersion().flatMap (version => {
+      if (wallet.isHardware && !changeAddress) {
+        changeAddress = wallet.addresses[0].address;
+      }
+
       if (isEqualOrSuperiorVersion(version, '0.26.0')) {
         if (unspents) {
           addresses = null;
@@ -111,6 +118,15 @@ export class SpendingService {
         ).flatMap(transaction => {
           const data = transaction.data;
 
+          if (wallet.isHardware) {
+            if (data.transaction.inputs.length > 8) {
+              throw new Error(this.translate.instant('hardware-wallet.errors.too-many-inputs-outputs'));
+            }
+            if (data.transaction.outputs.length > 8) {
+              throw new Error(this.translate.instant('hardware-wallet.errors.too-many-inputs-outputs'));
+            }
+          }
+
           let hoursSent = new BigNumber('0');
           data.transaction.outputs
             .filter(o => destinations.find(dest => dest.address === o.address))
@@ -136,7 +152,7 @@ export class SpendingService {
             });
           });
 
-          return this.generateRawTransaction(txInputs, txOutputs)
+          return this.generateRawTransaction(txInputs, txOutputs, wallet, data.transaction.inner_hash)
             .flatMap((rawTransaction: string) => {
               return Observable.of({
                 inputs: txInputs,
@@ -151,6 +167,9 @@ export class SpendingService {
         return response;
 
       } else {
+        if (wallet.isHardware) {
+          return Observable.throw(new Error(this.translate.instant('hardware-wallet.errors.incompatible-node')));
+        }
 
         // Legacy code for 0.25.1 and previous versions
         const unburnedHoursRatio = new BigNumber(1).minus(new BigNumber(1).dividedBy(this.blockchainService.burnRate));
@@ -209,7 +228,7 @@ export class SpendingService {
               }
             }
 
-            return this.generateRawTransaction(tx.inputs, tx.outputs)
+            return this.generateRawTransaction(tx.inputs, tx.outputs, wallet, null)
               .flatMap((rawTransaction: string) => {
                 return Observable.of({
                   inputs: tx.inputs,
@@ -436,15 +455,58 @@ export class SpendingService {
     return this.apiService.post('injectTransaction', { rawtx: rawTransaction }, { json: true });
   }
 
-  private generateRawTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[]): Observable<string> {
-    const convertedOutputs: TransactionOutput[] = txOutputs.map(output => {
-      return {
-        ...output,
-        coins: parseInt(new BigNumber(output.coins).multipliedBy(this.coinsMultiplier).toFixed(0), 10)
-      };
-    });
+  private generateRawTransaction(txInputs: TransactionInput[], txOutputs: TransactionOutput[], wallet: Wallet, innerHash: string): Observable<string> {
+    if (!wallet.isHardware) {
+      const convertedOutputs: TransactionOutput[] = txOutputs.map(output => {
+        return {
+          ...output,
+          coins: parseInt(new BigNumber(output.coins).multipliedBy(this.coinsMultiplier).toFixed(0), 10)
+        };
+      });
 
-    return this.cipherProvider.prepareTransaction(txInputs, convertedOutputs);
+      return this.cipherProvider.prepareTransaction(txInputs, convertedOutputs);
+    } else {
+      const hwOutputs = [];
+      const hwInputs = [];
+
+      txOutputs.forEach(output => {
+        hwOutputs.push({
+          address: output.address,
+          coin: parseInt(new BigNumber(output.coins).multipliedBy(1000000).toFixed(0), 10),
+          hour: output.hours,
+        });
+      });
+
+      if (hwOutputs.length > 1) {
+        for (let i = txOutputs.length - 1; i >= 0; i--) {
+          if (hwOutputs[i].address === wallet.addresses[0].address) {
+            hwOutputs[i].address_index = 0;
+            break;
+          }
+        }
+      }
+
+      const addressesMap: Map<string, number> = new Map<string, number>();
+      wallet.addresses.forEach((address, i) => addressesMap.set(address.address, i));
+
+      txInputs.forEach(input => {
+        hwInputs.push({
+          hashIn: input.hash,
+          index: addressesMap.get(input.address),
+        });
+      });
+
+      return this.hwWalletService.signTransaction(hwInputs, hwOutputs).flatMap(signatures => {
+        const rawTransaction = TxEncoder.encode(
+          txInputs,
+          txOutputs,
+          signatures.rawResponse,
+          innerHash,
+        );
+
+        return Observable.of(rawTransaction);
+      });
+    }
   }
 
   private sortOutputs(outputs: Output[], highestToLowest: boolean) {

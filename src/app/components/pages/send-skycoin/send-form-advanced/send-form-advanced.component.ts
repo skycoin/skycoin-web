@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/retryWhen';
 import 'rxjs/add/operator/concat';
 import 'rxjs/add/operator/take';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ButtonComponent } from '../../../layout/button/button.component';
 import { NavBarService } from '../../../../services/nav-bar.service';
@@ -23,6 +24,8 @@ import { DoubleButtonActive } from '../../../layout/double-button/double-button.
 import { PriceService } from '../../../../services/price.service';
 import { SendFormComponent } from '../send-form/send-form.component';
 import { MsgBarService } from '../../../../services/msg-bar.service';
+import { HwWalletService } from '../../../../services/hw-wallet/hw-wallet.service';
+import { getHardwareWalletErrorMsg } from '../../../../utils/errors';
 
 @Component({
   selector: 'app-send-form-advanced',
@@ -57,6 +60,7 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
   private getOutputsSubscriptions: ISubscription;
   private unlockSubscription: ISubscription;
   private destinationSubscriptions: ISubscription[] = [];
+  private processSubscription: ISubscription;
 
   constructor(
     public walletService: WalletService,
@@ -68,6 +72,8 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
     private coinService: CoinService,
     private priceService: PriceService,
     private msgBarService: MsgBarService,
+    private hwWalletService: HwWalletService,
+    private translate: TranslateService,
   ) { }
 
   ngOnInit() {
@@ -147,6 +153,7 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
     this.navbarService.hideSwitch();
     this.msgBarService.hide();
     this.destinationSubscriptions.forEach(s => s.unsubscribe());
+    this.removeProcessSubscription();
   }
 
   preview() {
@@ -214,15 +221,27 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
     this.msgBarService.hide();
     this.button.resetState();
 
-    const wallet = this.form.value.wallet;
+    const wallet: Wallet = this.form.value.wallet;
 
-    if (!wallet.seed) {
+    if (!wallet.isHardware && !wallet.seed) {
       this.removeUnlockSubscription();
 
       this.unlockSubscription = openUnlockWalletModal(wallet, this.dialog).componentInstance
         .onWalletUnlocked.first().subscribe(() => this.checkBeforeSending());
     } else {
-      this.checkBeforeSending();
+      if (!wallet.isHardware) {
+        this.checkBeforeSending();
+      } else {
+        this.button.setLoading();
+        this.removeProcessSubscription();
+        this.processSubscription = this.hwWalletService.checkIfCorrectHwConnected(wallet.addresses[0].address).subscribe(
+          () => this.checkBeforeSending(),
+          err => {
+            this.msgBarService.showError(getHardwareWalletErrorMsg(this.translate, err));
+            this.button.resetState();
+          },
+        );
+      }
     }
   }
 
@@ -490,7 +509,10 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
         }, 3000);
       })
       .catch(error => {
-        this.msgBarService.showError(error.message);
+        if (error && error.result) {
+          error = getHardwareWalletErrorMsg(this.translate, error);
+        }
+        this.msgBarService.showError(error);
         this.button.resetState();
       });
   }
@@ -593,6 +615,12 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
 
     if (this.getOutputsSubscriptions) {
       this.getOutputsSubscriptions.unsubscribe();
+    }
+  }
+
+  private removeProcessSubscription() {
+    if (this.processSubscription) {
+      this.processSubscription.unsubscribe();
     }
   }
 

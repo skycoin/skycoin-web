@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { MatDialogConfig } from '@angular/material';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
@@ -16,6 +17,8 @@ import { BlockchainService } from '../../../../services/blockchain.service';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { config } from '../../../../app.config';
 import { MsgBarService } from '../../../../services/msg-bar.service';
+import { HwWalletService } from '../../../../services/hw-wallet/hw-wallet.service';
+import { HwOptionsDialogComponent } from '../../../layout/hardware-wallet/hw-options-dialog/hw-options-dialog.component';
 
 @Component({
   selector: 'app-onboarding-create-wallet',
@@ -32,6 +35,7 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   userHasWallets = false;
   creatingWallet = false;
   language: LanguageData;
+  hwCompatibilityActivated = false;
 
   private slowInfoSubscription: ISubscription;
   private subscription: ISubscription;
@@ -45,7 +49,10 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
     private blockchainService: BlockchainService,
     private translate: TranslateService,
     private msgBarService: MsgBarService,
-  ) { }
+    hwWalletService: HwWalletService,
+  ) {
+    this.hwCompatibilityActivated = hwWalletService.hwWalletCompatibilityActivated;
+  }
 
   ngOnInit() {
     this.checkUserWallets();
@@ -109,6 +116,18 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
           this.languageService.changeLanguage(response);
         }
       });
+  }
+
+  useHardwareWallet() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '566px';
+    dialogConfig.autoFocus = false;
+    dialogConfig.data = true;
+    this.dialog.open(HwOptionsDialogComponent, dialogConfig).afterClosed().subscribe(result => {
+      if (result) {
+        this.router.navigate(['/wallets']);
+      }
+    });
   }
 
   private showDisclaimer() {

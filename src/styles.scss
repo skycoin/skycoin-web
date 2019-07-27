@@ -180,6 +180,23 @@ mat-spinner.in-button {
   }
 }
 
+mat-spinner.in-text {
+  display: inline-block;
+  height: 12px !important;
+  width: 12px !important;
+  margin: 0 !important;
+  margin-left: 7px !important;
+
+  svg {
+    height: 12px !important;
+    width: 12px !important;
+
+    circle {
+      stroke: $gradient-blue-dark;
+    }
+  }
+}
+
 snack-bar-container {
   background-color: rgba(255, 0, 0, 0.8) !important;
 }
@@ -398,6 +415,66 @@ On-boarding components
       height: 35px;
       line-height: 35px;
     }
+  }
+}
+
+/**
+Alerts
+ */
+
+.alert-box {
+  color: $red;
+  font-size: 12px;
+  padding: 0 10px;
+  line-height: 1.5;
+  background-color: #ffdede;
+  padding: 15px;
+  display: flex;
+  margin-bottom: 20px;
+
+  @media (min-width: $max-very-small-width+1) {
+    & {
+      display: flex;
+    }
+  }
+
+  .title {
+    font-size: 20px;
+
+    @media (max-width: $max-very-small-width) {
+      >span {
+        position: relative;
+        top: -5px;
+      }
+
+      mat-icon {
+        margin-top: 0px;
+      }
+    }
+  }
+
+  mat-icon {
+    margin-top: 5px;
+    margin-right: 10px;
+    animation: alert-blinking 1s linear infinite;
+  }
+
+  mat-checkbox {
+    margin-top: 10px;
+    display: inline-block;
+  }
+}
+
+@keyframes alert-blinking {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@media (max-width: $max-very-small-width) {
+  .-very-small-screen-alert-box {
+    margin: 0px -24px;
+    padding: 24px !important;
   }
 }
 

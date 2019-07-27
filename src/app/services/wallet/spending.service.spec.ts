@@ -9,7 +9,7 @@ import { WalletService } from './wallet.service';
 import { ApiService } from '../api.service';
 import { CipherProvider } from '../cipher.provider';
 import { CoinService } from '../coin.service';
-import { MockCoinService, MockWalletService, MockGlobalsService, MockBlockchainService } from '../../utils/test-mocks';
+import { MockCoinService, MockWalletService, MockGlobalsService, MockBlockchainService, MockHwWalletService } from '../../utils/test-mocks';
 import { createWallet, createAddress } from './wallet.service.spec';
 import { GlobalsService } from '../globals.service';
 import {
@@ -19,6 +19,7 @@ import {
   Output,
   GetOutputsRequestOutput } from '../../app.datatypes';
 import { BlockchainService } from '../blockchain.service';
+import { HwWalletService } from '../hw-wallet/hw-wallet.service';
 
 describe('SpendingService', () => {
   let store = {};
@@ -52,7 +53,8 @@ describe('SpendingService', () => {
         },
         { provide: CoinService, useClass: MockCoinService },
         { provide: GlobalsService, useClass: MockGlobalsService },
-        { provide: BlockchainService, useClass: MockBlockchainService }
+        { provide: BlockchainService, useClass: MockBlockchainService },
+        { provide: HwWalletService, useClass: MockHwWalletService },
       ]
     });
 

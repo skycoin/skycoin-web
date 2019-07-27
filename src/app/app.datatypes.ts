@@ -12,6 +12,9 @@ export interface Wallet {
   hideEmpty?: boolean;
   coinId?: number;
   nextSeed?: string;
+  isHardware?: boolean;
+  hasHwSecurityWarnings?: boolean;
+  stopShowingHwSecurityPopup?: boolean;
 }
 
 export interface Address {
@@ -22,6 +25,7 @@ export interface Address {
   hours?: BigNumber;
   outputs?: GetOutputsRequestOutput[];
   isCopying?: boolean;
+  confirmed?: boolean; // Optional parameter for hardware wallets only
 }
 
 export class Transaction {
@@ -120,4 +124,6 @@ export interface ConfirmationData {
   cancelButtonText?: string;
   redTitle?: boolean;
   disableDismiss?: boolean;
+  linkText?: string;
+  linkFunction?(): void;
 }

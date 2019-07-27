@@ -109,6 +109,7 @@
   "wizard": {
     "wallet-desc": "If you don't have a wallet, use the generated seed to create a new one. If you already have a wallet, toggle over to \"Load Wallet\" and enter your seed.",
     "encrypt-desc": "Increase security of your wallet by encrypting it. By entering a password below, your wallet will be encrypted. Only those with the password will be able access the wallet and remove funds.",
+    "hardware-wallet-link": "Using a Skywallet?",
     "finish-button": "Finish",
     "skip-button": "Skip",
     "back-button": "Back",
@@ -142,15 +143,19 @@
     "add": "Add Wallet",
     "load": "Load Wallet",
     "locked": "Locked",
+    "hw-security-warning": "Possible security risk. Access the Skywallet options (by pressing the \"Skywallet\" button below the wallets list) while the device is connected for more information.",
     "wallet": "Wallet",
+    "hardware-wallet": "Skywallet",
     "locked-tooltip": "The seed is necessary to send transactions",
     "unlocked-tooltip": "Wallet temporarily unlocked to send transactions",
+    "hw-delete-confirmation": "WARNING: The wallet \"{{ name }}\" will be removed from the list. To add it again, you will have to reconnect the device and open the Skywallet options (by pressing the \"Skywallet\" button below the wallets list). Do you want to continue?",
     "delete-confirmation1": "WARNING: the wallet",
     "delete-confirmation2": "will be deleted. If you forget your seed, you will not be able to recover this wallet! Do you want to continue?",
     "delete-confirmation-check": "Yeah, I want to delete the wallet.",
     "add-confirmation": "If you add more addresses, the process of unlocking the wallet to perform certain operations will take more time. Do you want to continue?",
     "already-adding-address-error": "An address is already being added. Please wait.",
     "adding-address": "Adding address.",
+    "max-hardware-wallets-error": "You have already reached the max number of addresses that can be added to the Skywallet.",
 
     "new": {
       "create-title": "Create Wallet",
@@ -202,9 +207,11 @@
     },
 
     "address": {
+      "show": "Press to show",
       "copy": "Copy",
       "copy-address": "Copy Address",
       "copied": "Copied!",
+      "confirm": "Confirm address",
       "outputs": "Unspent Outputs",
       "history": "History"
     }
@@ -411,6 +418,163 @@
       "not-enough-hours2": "to perform transaction!",
       "wrong-seed": "Wrong seed",
       "invalid-wallet": "Invalid wallet"
+    }
+  },
+
+  "hardware-wallet": {
+    "general" : {
+      "default-wallet-name": "New Skywallet",
+      "error-disconnected": "Unable to perform the operation. The Skywallet is not connected.",
+      "simple-error": "Error. Unable to perform the operation.",
+      "generic-error": "Unable to perform the operation. Make sure you have connected a valid Skywallet and that it is not waiting for input.",
+      "generic-error-internet": "Unable to perform the operation. Make sure you have connected a valid Skywallet that is not waiting for input and that you have a connection to the internet/node.",
+      "error-incorrect-wallet": "Unable to perform the operation. The connected Skywallet is different from the expected one.",
+      "error-incorrect-pin": "Unable to perform the operation. The PIN you have entered is incorrect.",
+      "confirm": "Please confirm the operation on the Skywallet.",
+      "confirm-and-more": "Please confirm the operation on the Skywallet and follow the instructions displayed.",
+      "follow": "Please follow the instructions displayed on the Skywallet.",
+      "close": "Close",
+      "cancel": "Cancel",
+      "continue": "Continue",
+      "completed": "Operation completed successfully.",
+      "refused": "The operation failed or was canceled.",
+      "name-updated": "The name used to identify this Skywallet in the wallet list has been updated to match the one shown on the device."
+    },
+    "errors": {
+      "too-many-inputs-outputs": "The transaction has too many inputs or outputs for the Skywallet. Please try again creating several smaller transactions, each one with a smaller number of recipients (if the current transaction has many) or coins.",
+      "daemon-connection": "Problem connecting to the Skywallet service.",
+      "timeout": "The operation was canceled due to inactivity or because the device did not respond. Please try again.",
+      "invalid-address-generated": "There was a problem with the address generator and the operation had to be canceled.",
+      "invalid-address": "Invalid address.",
+      "not-in-bootloader-mode": "To use this option the Skywallet must be in bootloader mode.",
+      "incompatible-node": "The node to which you are connected cannot perform this operation with a hardware wallet. Please connect to a node running v0.26.0 or higher."
+    },
+    "security-warning" : {
+      "title": "Security warning",
+      "text": "The last time this Skywallet was connected, one or more security warnings were found. We recommend that you open the Skywallet options (by pressing the link below) while the device is connected and solve the security problems before continuing.",
+      "link": "Open the Skywallet options window.",
+      "check": "I understand the risks and want to continue",
+      "continue": "Continue",
+      "cancel": "Cancel"
+    },
+    "options" : {
+      "connecting": "Connecting...",
+      "disconnected": "No Skywallet detected. Please connect a Skywallet to use this option.",
+      "unconfigured-detected-title": "Unconfigured Skywallet",
+      "unconfigured-detected": "A seedless Skywallet has been detected. Select \"Configure automatically\" if you want to configure it as a brand new wallet and start using it. Select \"Restore backup\" if you want to configure the Skywallet with a previously created seed backup.",
+      "configured-detected": "Skywallet detected. The device is identified in the wallets list as:",
+      "security-warnings-title": "Security warnings",
+      "security-warning-title": "Security warning",
+      "unchecked-version-warning": "It was not possible to verify if the firmware of your Skywallet is up to date. This could be due to problems with your internet connection or because the service is under maintenance.",
+      "outdated-version-warning": "The firmware of your Skywallet is outdated. We recommend you to update it as soon as possible to ensure safety. To do this, select the \"Update firmware\" option.",
+      "backup-warning": "You should backup the Skywallet seed or you could lose access to the funds in case of problems. To do this, select the \"Create a backup\" option.",
+      "pin-warning": "The connected Skywallet does not have a PIN. The PIN code protects the Skywallet from unauthorized parties accessing the device. To create a PIN code, select the \"Create PIN code\" option.",
+      "options": "Options:",
+      "update-firmware": "Update firmware",
+      "configure-automatically": "Configure automatically",
+      "restore-backup": "Restore backup",
+      "create-backup": "Create a backup",
+      "wipe": "Wipe the device",
+      "confirm-seed": "Confirm seed",
+      "create-pin": "Create PIN code",
+      "change-pin": "Change PIN code",
+      "delete-pin": "Delete PIN code",
+      "forgotten-pin1": "If you cannot access the wallet because you have forgotten the PIN, you can wipe the Skywallet and then restore it with the seed by clicking",
+      "forgotten-pin2": "here.",
+      "firmware-version": "Device firmware version:"
+    },
+    "update-firmware-warning" : {
+      "title": "Outdated Firmware",
+      "text": "WARNING: the firmware in your Skywallet is outdated. To stay safe, it is recommended to update it.",
+      "cancel": "Cancel",
+      "update": "Update"
+    },
+    "update-firmware" : {
+      "title-connecting": "Connecting...",
+      "title-update": "Update Firmware",
+      "title-install": "Install Firmware",
+      "text-downloading": "Checking device and downloading files...",
+      "text-bootloader": "WARNING: if you have already configured this device, before continuing you must have a backup of your seed or you could permanently lose access to the funds.",
+      "text-not-bootloader": "To update the firmware of your Skywallet you must connect it in bootloader mode (connect it to the computer while pressing the two physical buttons of the device). WARNING: if you have already configured this device, before continuing you must have a backup of your seed or you could permanently lose access to the funds.",
+      "text-no-firmware": "Welcome. The currently connected Skywallet does not have a firmware installed. A firmware will now be installed so you can start using the device. NOTE: if you have already configured this device and want to recover the funds, you will need your seed.",
+      "check": "I understand the risks and want to continue",
+      "follow": "The firmware update has been sent to the Skywallet. Please continue the process on the device.",
+      "connection-error": "It was not possible to download the firmware. This could be due to problems with your internet connection or because the service is under maintenance.",
+      "timeout": "The operation was canceled due to inactivity. Please disconnect the device, reconnect it and try again.",
+      "finished": "Your device has been configured correctly. Please unplug it before continuing."
+    },
+    "generate-seed" : {
+      "text": "Before proceeding, you can select the number of words you want the seed to have. The seed is a list of words that can be used to recover access to the coins in case of problems. Both values are safe, so if you do not have a special reason for selecting one or the other, you can leave the default value.",
+      "configuring": "Configuring..."
+    },
+    "restore-seed" : {
+      "text": "Before proceeding, please select the number of words that the seed you want to recover has.",
+      "check-text": "You can use this option to enter a seed and check if it is equal to the one in the Skywallet. Before start, select the number of words the seed you want to check has.",
+      "warning" : "WARNING: to avoid potential problems, use only seeds created with a Skywallet.",
+      "error-wrong-word": "Error: The retyped word does not match the one requested by the Skywallet.",
+      "error-invalid-seed": "Error: The seed is not valid. Please be sure to enter the correct words in the correct order.",
+      "error-wrong-seed": "Error: The seed is valid but does not match the one in the device.",
+      "correct-seed": "The seed is valid and matches the one in the device."
+    },
+    "added" : {
+      "title": "New Skywallet",
+      "configuring": "New Skywallet detected. Configuring...",
+      "done": "Done",
+      "added1": "The connected Skywallet has been added to the wallets list with the following name:",
+      "added2": "Now you can check the balance and the addresses of the Skywallet even when it is not connected. Additionally, you can change the name of the wallet or remove it from the wallets list, if you wish.",
+      "ok": "Ok"
+    },
+    "wipe" : {
+      "warning": "WARNING: All the data on the Skywallet will be deleted. If you do not have a backup, you will not be able to access your funds again.",
+      "confirm-delete": "Also remove from the wallets list"
+    },
+    "create-backup" : {
+      "warning": "WARNING: You can only use this option to backup your Skywallet seed once. If you decide to continue, you will have to write down a group of words (it is recommended to do it on paper and not on a computer) that will appear on the screen of the Skywallet and store the list in a safe place. Anyone with access to the word list (the \"seed\") will be able access the wallet funds, so extreme caution is advised.",
+      "instructions": "Write down the word list that appear on the screen of the Skywallet. Make sure you respect the order and write each word correctly."
+    },
+    "seed-word" : {
+      "title": "Enter word",
+      "info1": "Enter the word shown on the device",
+      "info2": "You will be asked to enter the words of your backup seed in random order. Also, additional random words could be requested.",
+      "word": "Requested word",
+      "error-invalid-word": "The entered word is not valid.",
+      "error-loading-words": "Loading the word list. Please wait."
+    },
+    "change-pin" : {
+      "pin-mismatch": "Unable to perform the operation. The PINs you have entered do not match."
+    },
+    "remove-pin" : {
+      "warning": "WARNING: It is not recommended to remove the PIN code from your Skywallet, as it will be vulnerable to being used by unauthorized parties in case of loss or theft.",
+      "check": "I understand the risks and want to continue"
+    },
+    "enter-pin" : {
+      "title": "Enter PIN",
+      "title-change-current": "Enter the current PIN",
+      "title-change-new": "Enter the new PIN",
+      "title-change-confirm": "Confirm the new PIN",
+      "instructions": "The PIN layout is displayed on the Skywallet screen.",
+      "instructions-tx": "Enter the PIN to confirm and sign the transaction.",
+      "instructions-change": "Please enter a secure PIN consisting of 4 to 8 numbers.",
+      "help": "Need help?"
+    },
+    "pin-help" : {
+      "title": "Help",
+      "part1": "When it is necessary to enter the PIN to continue, the Skywallet screen will display a matrix of 9 boxes with numbers in random order (the order changes each time) and you will be asked to enter the PIN in the software wallet using a matrix of 9 buttons that simply show the symbol •.",
+      "part2": "To enter the PIN, look at the position of the PIN numbers in numbers matrix on the screen of the Skywallet and press the corresponding buttons in the software wallet. For example, if the PIN is \"23\" and the number 2 is in the upper left, number 3 in the middle of the Skywallet numbers matrix, press the upper left and middle button in that order in the software wallet.",
+      "part3": "If you wish, you can also use the numpad on your keyboard to enter the PIN. However, as in the previous example, if the PIN is \"23\", you can not simply type \"23\" with the numpad, but you will have to press the keys that are in the position where the numbers 2 and 3 are shown on the screen of the Skywallet. Taking into account the previous example, you would have to press the \"7\" and \"5\" keys, because those are the keys that you are in the same position as the numbers shown by the Skywallet."
+    },
+    "create-tx" : {
+      "title": "Create transaction",
+      "upper-text": "Please confirm the operation in the Skywallet after verifying if the following data matches EXACTLY with the transaction you wish to send and with those shown by the Skywallet:",
+      "lower-text": "If any data does not correspond to what the Skywallet shows or the transaction you wish to send, cancel the operation on your Skywallet.",
+      "send-p1": "and",
+      "send-p2": "to"
+    },
+    "confirm-address" : {
+      "title": "Confirm address",
+      "instructions": "Please confirm on the Skywallet if the address is:",
+      "short-confirmation": "Address confirmed.",
+      "confirmation": "Address confirmed. For security, you can re-show the address in the Skywallet using the \"Confirm address\" option, in the menu that you can display by pressing the button at the right of the address balance."
     }
   }
 }

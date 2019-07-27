@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 import { BigNumber } from 'bignumber.js';
 import { HttpClientModule } from '@angular/common/http';
+import { Http } from '@angular/http';
 
 import { WalletService } from './wallet.service';
 import { SpendingService, HoursSelectionTypes } from './spending.service';
@@ -10,11 +11,13 @@ import { ApiService } from '../api.service';
 import { CipherProvider, InitializationResults } from '../cipher.provider';
 import { Wallet, Address, TransactionOutput, TransactionInput, Output, Balance } from '../../app.datatypes';
 import { CoinService } from '../coin.service';
-import { MockCoinService, MockGlobalsService } from '../../utils/test-mocks';
+import { MockCoinService, MockGlobalsService, MockCustomMatDialogService, MockHwWalletService } from '../../utils/test-mocks';
 import { createWallet } from './wallet.service.spec';
 import { GlobalsService } from '../globals.service';
 import { BlockchainService } from '../blockchain.service';
 import { BalanceService } from './balance.service';
+import { HwWalletService } from '../hw-wallet/hw-wallet.service';
+import { CustomMatDialogService } from '../custom-mat-dialog.service';
 
 describe('WalletService with cipher:', () => {
   let store = {};
@@ -47,8 +50,14 @@ describe('WalletService with cipher:', () => {
           provide: TranslateService,
           useValue: jasmine.createSpyObj('TranslateService', ['instant'])
         },
+        {
+          provide: Http,
+          useValue: jasmine.createSpyObj('Http', ['get'])
+        },
         { provide: CoinService, useClass: MockCoinService },
-        { provide: GlobalsService, useClass: MockGlobalsService }
+        { provide: GlobalsService, useClass: MockGlobalsService },
+        { provide: HwWalletService, useClass: MockHwWalletService },
+        { provide: CustomMatDialogService, useClass: MockCustomMatDialogService }
       ]
     });
 

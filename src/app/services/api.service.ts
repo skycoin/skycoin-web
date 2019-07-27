@@ -8,7 +8,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { CoinService } from './coin.service';
 import { BaseCoin } from '../coins/basecoin';
-import { parseResponseMessage } from '../utils/errors';
 
 @Injectable()
 export class ApiService {
@@ -90,22 +89,34 @@ export class ApiService {
     return this.url + (useV2 ? 'v2/' : 'v1/') + url;
   }
 
-  private getErrorMessage(error: any): Observable<string> {
+  getErrorMessage(error: any, connectingToHwWalletDaemon = false): Observable<string> {
     if (error) {
       if (typeof error['_body'] === 'string') {
-        return Observable.throw(new Error(parseResponseMessage(error)));
+        return Observable.throw(new Error(this.parseResponseMessage(error)));
       }
 
       if (error.error && typeof error.error === 'string') {
-        return Observable.throw(new Error(parseResponseMessage(error.error.trim())));
+        return Observable.throw(new Error(this.parseResponseMessage(error.error.trim())));
       } else if (error.error && error.error.error && error.error.error.message) {
-        return Observable.throw(new Error(parseResponseMessage(error.error.error.message.trim())));
+        return Observable.throw(new Error(this.parseResponseMessage(error.error.error.message.trim())));
       } else if (error.message) {
-        return Observable.throw(new Error(parseResponseMessage(error.message.trim())));
+        return Observable.throw(new Error(this.parseResponseMessage(error.message.trim())));
       }
     }
 
-    return this.translate.get('service.api.server-error')
+    return this.translate.get(connectingToHwWalletDaemon ? 'hardware-wallet.errors.daemon-connection' : 'service.api.server-error')
       .flatMap(message => Observable.throw(new Error(message)));
+  }
+
+  private parseResponseMessage(body: string): string {
+    if (body.startsWith('400') || body.startsWith('403')) {
+      const parts = body.split(' - ', 2);
+
+      return parts.length === 2
+        ? parts[1].charAt(0).toUpperCase() + parts[1].slice(1)
+        : body;
+    }
+
+    return body;
   }
 }

@@ -21,7 +21,7 @@ export class WalletOptionsComponent {
 
   showUnlockOption: boolean;
   constructor(
-    @Inject(MAT_DIALOG_DATA) data: Wallet,
+    @Inject(MAT_DIALOG_DATA) public data: Wallet,
     public dialogRef: MatDialogRef<WalletOptionsComponent>
   ) {
     this.showUnlockOption = !environment.production && !data.seed;
