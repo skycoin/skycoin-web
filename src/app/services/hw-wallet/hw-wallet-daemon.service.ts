@@ -67,9 +67,17 @@ export class HwWalletDaemonService {
 
   private checkResponse(response: Observable<any>, checkingConnected = false, smallTimeout = false) {
     return response
-      .timeout(smallTimeout ? 30000 : 50000)
+      .timeout(smallTimeout ? 30000 : 55000)
       .flatMap((res: any) => {
         const finalResponse = res.json();
+
+        if (finalResponse.data && finalResponse.data.length) {
+          if (finalResponse.data.length === 1) {
+            finalResponse.data = finalResponse.data[0];
+          } else {
+            finalResponse.data = finalResponse.data;
+          }
+        }
 
         if (checkingConnected) {
           this.ngZone.run(() => this.updateHwConnected(!!finalResponse.data));
@@ -97,13 +105,17 @@ export class HwWalletDaemonService {
           });
         }
 
+        if (typeof finalResponse.data === 'string' && (finalResponse.data as string).indexOf('ButtonRequest') !== -1) {
+          return this.post('/intermediate/button');
+        }
+
         return Observable.of(finalResponse);
       })
       .catch((error: any) => {
         if (error && error.name && error.name === 'TimeoutError') {
           this.put('/cancel').subscribe();
 
-          return Observable.throw({_body: HwWalletDaemonService.errorTimeout });
+          return Observable.throw(new Error(HwWalletDaemonService.errorTimeout));
         }
 
         if (error && (error as Error).message && typeof (error as Error).message === 'string') {
