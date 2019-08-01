@@ -86,6 +86,7 @@ import { SendFormAdvancedComponent } from './components/pages/send-skycoin/send-
 import { SelectAddressComponent } from './components/pages/send-skycoin/send-form-advanced/select-address/select-address';
 import { MsgBarService } from './services/msg-bar.service';
 import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
+import { MultipleDestinationsDialogComponent } from './components/layout/multiple-destinations-dialog/multiple-destinations-dialog.component';
 
 @NgModule({
   declarations: [
@@ -133,6 +134,7 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     SendFormAdvancedComponent,
     SelectAddressComponent,
     MsgBarComponent,
+    MultipleDestinationsDialogComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -147,7 +149,8 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     ScanAddressesComponent,
     ChangeNodeURLComponent,
     WalletOptionsComponent,
-    SelectAddressComponent
+    SelectAddressComponent,
+    MultipleDestinationsDialogComponent,
   ],
   imports: [
     BrowserModule,
