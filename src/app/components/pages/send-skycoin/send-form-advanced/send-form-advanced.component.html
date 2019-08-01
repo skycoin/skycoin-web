@@ -104,7 +104,7 @@
         (onStateChange)="changeActiveCurrency($event)"
       ></app-double-button>
     </div>
-    <span class="-options" (click)="openMultipleDestinationsPopup()" [ngClass]="{'disabled' : busy}">
+    <span class="-options" (click)="openMultipleDestinationsPopup()">
       {{ 'send.bulk-send.title' | translate }} <mat-icon>keyboard_arrow_down</mat-icon>
     </span>
 
