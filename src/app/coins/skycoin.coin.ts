@@ -12,6 +12,7 @@ export class SkycoinCoin extends BaseCoin {
   coinExplorer = 'https://explorer.skycoin.net';
   imageName = 'skycoin-header.jpg';
   gradientName = 'skycoin-gradient.png';
+  swaplabApiKey = 'w4bxe2tbf9beb72r';
   iconName = 'skycoin-icon.png';
   bigIconName = 'skycoin-icon-b.png';
 }

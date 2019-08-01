@@ -8,6 +8,7 @@ export abstract class BaseCoin {
   coinExplorer: string;
   imageName: string;
   gradientName: string;
+  swaplabApiKey: string;
   abstract iconName: string;
   abstract bigIconName: string;
 }

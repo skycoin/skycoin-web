@@ -5,7 +5,8 @@ import { NavBarComponent } from './nav-bar.component';
 import { NavBarService } from '../../../../services/nav-bar.service';
 import { DoubleButtonComponent } from '../../double-button/double-button.component';
 import { ButtonComponent } from '../../button/button.component';
-import { MockTranslatePipe, MockNavBarService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockNavBarService, MockCoinService } from '../../../../utils/test-mocks';
+import { CoinService } from '../../../../services/coin.service';
 
 describe('NavBarComponent', () => {
   let component: NavBarComponent;
@@ -15,7 +16,10 @@ describe('NavBarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ NavBarComponent, MockTranslatePipe, DoubleButtonComponent, ButtonComponent, MatTooltip ],
       imports: [ MatIconModule, MatProgressSpinnerModule ],
-      providers: [ { provide: NavBarService, useClass: MockNavBarService } ]
+      providers: [
+        { provide: NavBarService, useClass: MockNavBarService },
+        { provide: CoinService, useClass: MockCoinService },
+      ]
     })
     .compileComponents();
   }));

@@ -9,6 +9,7 @@ import { OnboardingEncryptWalletComponent } from './components/pages/onboarding/
 import { BuyComponent } from './components/pages/buy/buy.component';
 import { OnboardingCreateWalletComponent } from './components/pages/onboarding/onboarding-create-wallet/onboarding-create-wallet.component';
 import { NodesComponent } from './components/pages/settings/nodes/nodes.component';
+import { ExchangeComponent } from './components/pages/exchange/exchange.component';
 
 export const AppRoutes = [
   {
@@ -34,6 +35,11 @@ export const AppRoutes = [
   {
     path: 'buy',
     component: BuyComponent,
+    canActivate: [WizardGuardService],
+  },
+  {
+    path: 'exchange',
+    component: ExchangeComponent,
     canActivate: [WizardGuardService],
   },
   {

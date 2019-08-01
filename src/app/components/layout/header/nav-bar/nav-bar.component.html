@@ -18,15 +18,21 @@
         <span>{{ 'title.history' | translate }}</span>
       </div>
     </div>
-    <div class="flex-fill -not-on-small-and-below"></div>
-    <div class="-button -not-on-small-and-below" *ngIf="false">
+    <div class="flex-fill -not-on-semi-small-and-below"></div>
+    <div class="-button -low-opacity" routerLink="/exchange" routerLinkActive="-full-opacity" *ngIf="exchangeEnabled">
+      <div>
+        <img src="assets/img/money-gold.png">
+        <span>{{ 'title.buy-coin' | translate }} {{ coinName }}</span>
+      </div>
+    </div>
+    <div class="-button -not-on-semi-small-and-below" *ngIf="false">
       <img src="assets/img/money-gold.png">
-      <span class="secondary-color">{{ 'title.buy-coin' | translate }}</span>
+      <span class="secondary-color">{{ 'title.buy-coin' | translate }} {{ coinName }}</span>
     </div>
 
     <app-double-button
       *ngIf="navbarService.switchVisible"
-      class="-switch -not-on-small-and-below"
+      class="-switch -not-on-semi-small-and-below"
       [leftButtonText]="navbarService.leftText | translate"
       [rightButtonText]="navbarService.rightText | translate"
       [activeButton]="navbarService.activeComponent | async"
@@ -37,7 +43,7 @@
   </div>
 </div>
 
-<div class="-on-small-and-below-only">
+<div class="-on-semi-small-and-below-only">
   <app-double-button
     *ngIf="navbarService.switchVisible"
     class="-switch"

@@ -4,7 +4,7 @@
   background-color: $white;
   min-height: 66px;
 
-  @media (max-width: $max-small-width) {
+  @media (max-width: $max-semi-small-width) {
     & {
       display: block;
       background-color: transparent;
@@ -17,9 +17,9 @@
   display: flex;
   width: 100%;
 
-  @media (max-width: $max-small-width) {
+  @media (max-width: $max-semi-small-width) {
     & {
-      display: table;
+      display: flex;
       position: fixed;
       bottom: 0px;
       left: 0px;
@@ -34,10 +34,14 @@
     cursor: pointer;
     padding: 0 20px;
 
-    @media (max-width: $max-small-width) {
+    @media (max-width: $max-semi-small-width) {
       & {
-        display: table-cell;
-        vertical-align: middle;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 0;
       }
 
       > div {
@@ -53,7 +57,7 @@
       padding: 17px 0;
       width: 32px;
 
-      @media (max-width: $max-small-width) {
+      @media (max-width: $max-semi-small-width) {
         & {
           height: 28px;
           width: 28px;
@@ -68,12 +72,13 @@
       height: 66px;
       line-height: 66px;
       margin: 0 5px;
+      text-align: center;
 
-      @media (max-width: $max-small-width) {
+      @media (max-width: $max-semi-small-width) {
         & {
           font-size: 11px;
           height: auto;
-          line-height: unset;
+          line-height: 1;
           margin: 0;
         }
       }
@@ -101,7 +106,7 @@
   align-self: center;
   padding: 0 20px;
 
-  @media (max-width: $max-small-width) {
+  @media (max-width: $max-semi-small-width) {
     & {
       display: block;
       padding: 10px 20px 0px 20px;

@@ -86,6 +86,12 @@ import { SendFormAdvancedComponent } from './components/pages/send-skycoin/send-
 import { SelectAddressComponent } from './components/pages/send-skycoin/send-form-advanced/select-address/select-address';
 import { MsgBarService } from './services/msg-bar.service';
 import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
+import { ExchangeService } from './services/exchange.service';
+import { ExchangeHistoryComponent } from './components/pages/exchange/exchange-history/exchange-history.component';
+import { ExchangeComponent } from './components/pages/exchange/exchange.component';
+import { ExchangeCreateComponent } from './components/pages/exchange/exchange-create/exchange-create.component';
+import { ExchangeStatusComponent } from './components/pages/exchange/exchange-status/exchange-status.component';
+import { EnterSwaplabIdComponent } from './components/pages/exchange/enter-swaplab-id/enter-swaplab-id.component';
 
 @NgModule({
   declarations: [
@@ -133,6 +139,11 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     SendFormAdvancedComponent,
     SelectAddressComponent,
     MsgBarComponent,
+    ExchangeComponent,
+    ExchangeCreateComponent,
+    ExchangeStatusComponent,
+    ExchangeHistoryComponent,
+    EnterSwaplabIdComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -147,7 +158,9 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     ScanAddressesComponent,
     ChangeNodeURLComponent,
     WalletOptionsComponent,
-    SelectAddressComponent
+    SelectAddressComponent,
+    ExchangeHistoryComponent,
+    EnterSwaplabIdComponent,
   ],
   imports: [
     BrowserModule,
@@ -199,6 +212,7 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     CustomMatDialogService,
     Bip39WordListService,
     MsgBarService,
+    ExchangeService,
   ],
   bootstrap: [AppComponent],
 })

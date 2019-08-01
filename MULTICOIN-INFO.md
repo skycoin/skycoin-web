@@ -25,6 +25,8 @@ in [BaseCoin](src/app/coins/basecoin.ts) are:
 - `gradientName`: name of the file with the gradient that will be displayed in front of the header background.
 The image must be stored in [src/assets/img/coins](src/assets/img/coins) and should have the smallest possible
 size. If you do not want to add a gradient, you can simply ignore this property (more information below).
+- `swaplabApiKey`: The Swaplab API key, if the coin is available in Swaplab. If no key is provided, the option for
+buying coins will not be available.
 - `iconName`: name of the file with the small icon that will be displayed inside the button for changing the coin,
 in the header. The icon will be shown when the coin is selected, so it should look good above the `imageName` and
 `gradientName` images. The image must be stored in [src/assets/img/coins](src/assets/img/coins) and it's size

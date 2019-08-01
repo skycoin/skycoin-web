@@ -36,7 +36,7 @@
       </div>
     </div>
   </div>
-  <app-nav-bar class="-not-on-small-and-below"></app-nav-bar>
+  <app-nav-bar class="-not-on-semi-small-and-below"></app-nav-bar>
   <mat-progress-bar
     [style.visibility]="loading ? 'visible' : 'hidden'"
     class="progress-bar"
@@ -44,7 +44,7 @@
     [mode]="!isBlockchainLoading ? 'query' : 'determinate'"
     [value]="percentage * 100">
   </mat-progress-bar>
-  <app-nav-bar class="-on-small-and-below-only"></app-nav-bar>
+  <app-nav-bar class="-on-semi-small-and-below-only"></app-nav-bar>
   <mat-toolbar class="notification-bar" *ngIf="connectionError != null">
     <div *ngIf="connectionError === connectionErrorsList.NO_ACTIVE_CONNECTIONS">
       {{ 'header.errors.no-connections' | translate }}

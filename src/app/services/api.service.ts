@@ -90,7 +90,7 @@ export class ApiService {
     return this.url + (useV2 ? 'v2/' : 'v1/') + url;
   }
 
-  private getErrorMessage(error: any): Observable<string> {
+  getErrorMessage(error: any): Observable<string> {
     if (error) {
       if (typeof error['_body'] === 'string') {
         return Observable.throw(new Error(parseResponseMessage(error)));

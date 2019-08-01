@@ -83,6 +83,7 @@ export class MockCoinService {
     coinExplorer: 'testUrl',
     imageName: 'imageName.png',
     gradientName: 'imageName.png',
+    swaplabApiKey: '123',
     iconName: 'icon.png',
     bigIconName: 'big-icon.png',
   });
