@@ -39,6 +39,7 @@ export class ChangeNameComponent implements OnInit, OnDestroy {
   msgIcons = MessageIcons;
   maxHwWalletLabelLength = HwWalletService.maxLabelLength;
   busy = false;
+  showCharactersWarning = false;
 
   private newLabel: string;
   private hwConnectionSubscription: ISubscription;
@@ -64,6 +65,8 @@ export class ChangeNameComponent implements OnInit, OnDestroy {
     }
 
     if (this.data.wallet.isHardware) {
+      this.showCharactersWarning = true;
+
       this.hwConnectionSubscription = this.hwWalletService.walletConnectedAsyncEvent.subscribe(connected => {
         if (!connected) {
           this.closePopup();
