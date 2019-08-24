@@ -1,38 +1,42 @@
-<app-modal [headline]="'title.qr-code' | translate" [dialog]="dialogRef">
-  <div #qr id="qr"></div>
-  <div class="row header-sel-theme -address-footer">
-    <span class="-not-on-small-and-below">{{ address }}</span>
-    <img
-      #btnImg
-      class="-button-qr -not-on-small-and-below"
-      [matTooltip]="'qr-code.copy-address' | translate"
-      [clipboard]="address"
-      (copyEvent)="onCopySuccess()">
-    <button
-      mat-button
-      color="accent"
-      class="mobile-button -on-small-and-below-only"
-      [clipboard]="address"
-      (copyEvent)="onCopySuccess()"
-      (mouseleave)="isCopying = false">
-      <div>
-        <div class="label">{{ address }}</div>
-        <div class="copy-label link">
-          {{ 'wallet.address.copy' | translate }}
-        </div>
-        <div class="copying-label link" [ngClass]="{ copying: isCopying }">{{'wallet.address.copied' | translate}}</div>
-      </div>
-    </button>
-    <div class="mobile-buttons-separator -on-small-and-below-only" *ngIf="showOutputsOption"></div>
-    <button
-      mat-button
-      color="accent"
-      class="mobile-button -on-small-and-below-only"
-      *ngIf="showOutputsOption"
-      routerLink="/settings/outputs"
-      [queryParams]="{ addr: address }"
-      (click)="closePopup()">
-      <div class="label link">{{ 'wallet.address.outputs' | translate }}</div>
-    </button>
+<app-modal class="modal" [headline]="(!data.hideCoinRequestForm ? 'qr.title' : 'qr.title-read-only') | translate" [dialog]="dialogRef">
+  <div class="qr-container">
+    <div #qr class="qr" id="qr"></div>
+  </div>
+  <div class="separator"></div>
+  <div class="data-container" *ngIf="!data.ignoreCoinPrefix || !data.hideCoinRequestForm">
+    <div class="title">{{ 'qr.data' | translate }}</div>
+    <div class="data" (click)="copyText(currentQrContent)"><span class="text">{{ currentQrContent }}</span><span class="fa copy">&#xf0c5;</span></div>
+  </div>
+  <div class="data-container">
+    <div class="title">{{ 'qr.address' | translate }}</div>
+    <div class="data" (click)="copyText(data.address)"><span class="text">{{ data.address }}</span><span class="fa copy">&#xf0c5;</span></div>
+  </div>
+
+  <div class="link -not-on-small-and-below" *ngIf="!showForm && !data.hideCoinRequestForm" (click)="startShowingForm()">{{ 'qr.request-link' | translate }}<mat-icon>keyboard_arrow_down</mat-icon></div>
+  <div class="-on-small-and-below-only" *ngIf="!showForm && !data.hideCoinRequestForm">
+    <div class="link" (click)="startShowingForm()">{{ 'qr.request-link' | translate }}<mat-icon>keyboard_arrow_down</mat-icon></div>
+    <div class="link" *ngIf="data.showExtraAddressOptions" (click)="goToDetail('/settings/outputs'); closePopup();">{{ 'wallet.address.outputs' | translate }}<mat-icon>keyboard_arrow_right</mat-icon></div>
+    <div class="link" *ngIf="data.showExtraAddressOptions" (click)="goToDetail('/history'); closePopup();">{{ 'wallet.address.history' | translate }}<mat-icon>keyboard_arrow_right</mat-icon></div>
+  </div>
+
+  <div [formGroup]="form" *ngIf="showForm">
+    <div class="form-field">
+      <label for="coins">
+        {{ 'qr.amount' | translate }} <span class="invalid" *ngIf="invalidCoins">{{ 'qr.invalid' | translate }}</span>
+      </label>
+      <input maxlength="20" formControlName="coins" id="coins">
+    </div>
+    <div class="form-field">
+      <label for="hours">
+        {{ 'qr.hours' | translate }} <span class="invalid" *ngIf="invalidHours">{{ 'qr.invalid' | translate }}</span>
+      </label>
+      <input maxlength="20" formControlName="hours" id="hours">
+    </div>
+    <div class="form-field">
+      <label for="note">
+        {{ 'qr.message' | translate }}
+      </label>
+      <input maxlength="100" formControlName="note" id="note">
+    </div>
   </div>
 </app-modal>

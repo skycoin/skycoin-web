@@ -135,7 +135,7 @@ export class WalletsPage {
   }
 
   checkQrDialogAddress() {
-    return element(by.css('.-address-footer > span')).getText().then((address: string) => {
+    return element(by.css('app-modal .data-container:nth-child(4) > div.data > span.text')).getText().then((address: string) => {
       return address === 'quS3czcXyeqSAhrza7df643P4yGS8PNPap';
     });
   }
