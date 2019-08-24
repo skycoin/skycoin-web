@@ -252,12 +252,24 @@ const customNodeUrlsFilePath = path.join(app.getPath('appData'), './Skycoin');
 // File with the info about the custom node URLs added by the user.
 const customNodeUrlsFile = path.join(customNodeUrlsFilePath, './custom-nodes.snd');
 
+// Indicates if the code should use persistent storage or ignore it.
+let shouldUsePersistentStorage = true;
+// Sets if the code should use persistent storage or ignore it.
+ipcMain.on('setIfshouldUsePersistentStorageSync', (event, val) => {
+  shouldUsePersistentStorage = val;
+  if (!val) {
+    allowedNodes.clear();
+  }
+
+  event.returnValue = null;
+});
+
 // Load, from customNodeUrlsFile, the custom node URLs added by the user and add them to the URL whitelist.
 ipcMain.on('loadNodeUrlsSync', (event) => {
   let rawData;
   let data;
 
-  if (fs.existsSync(customNodeUrlsFile)) {
+  if (shouldUsePersistentStorage && fs.existsSync(customNodeUrlsFile)) {
     rawData = fs.readFileSync(customNodeUrlsFile, 'utf8');
   } else {
     rawData = '{}';
@@ -300,7 +312,7 @@ ipcMain.on('temporarilyAllowCoinSync', (event, data) => {
     message: data.confirmationText,
     cancelId: 0,
     noLink: true,
-  }
+  };
 
   dialog.showMessageBox(win, dialogOptions, response => {
     if (response === 1) {
@@ -313,7 +325,7 @@ ipcMain.on('temporarilyAllowCoinSync', (event, data) => {
     } else {
       event.returnValue = 2;
     }
-  })
+  });
 });
 
 // Removes a coin temporarily added to the URL whitelist.
@@ -339,16 +351,18 @@ ipcMain.on('acceptTemporarilyAllowedCoinSync', (event) => {
 
 // Updates customNodeUrlsFile.
 function saveNodeUrls() {
-  const data = {};
-  coinsWithAllowedNodes.forEach((val, key) => {
-    data[key] = val;
-  });
+  if (shouldUsePersistentStorage) {
+    const data = {};
+    coinsWithAllowedNodes.forEach((val, key) => {
+      data[key] = val;
+    });
 
-  if (!fs.existsSync(customNodeUrlsFilePath)) {
-    fs.mkdirSync(customNodeUrlsFilePath, { recursive: true });
+    if (!fs.existsSync(customNodeUrlsFilePath)) {
+      fs.mkdirSync(customNodeUrlsFilePath, { recursive: true });
+    }
+
+    fs.writeFileSync(customNodeUrlsFile, JSON.stringify(data), 'utf8');
   }
-
-  fs.writeFileSync(customNodeUrlsFile, JSON.stringify(data), 'utf8');
 }
 
 // Enforce single instance

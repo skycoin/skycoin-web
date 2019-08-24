@@ -29,6 +29,10 @@ export class CoinService {
     this.loadNodeUrls();
     this.loadCurrentCoin();
     sessionStorage.setItem(this.correntCoinStorageKey, this.currentCoin.getValue().id.toString());
+
+    if (window['isElectron']) {
+      window['ipcRenderer'].sendSync('setIfshouldUsePersistentStorageSync', !environment.production);
+    }
   }
 
   changeCoin(coin: BaseCoin) {
@@ -72,7 +76,9 @@ export class CoinService {
     }
 
     if (!window['isElectron']) {
-      localStorage.setItem(this.nodeUrlsStorageKey, JSON.stringify(this.customNodeUrls));
+      if (!environment.production) {
+        localStorage.setItem(this.nodeUrlsStorageKey, JSON.stringify(this.customNodeUrls));
+      }
     } else {
       if (url !== '') {
         window['ipcRenderer'].sendSync('acceptTemporarilyAllowedCoinSync');
@@ -87,25 +93,36 @@ export class CoinService {
   }
 
   private loadNodeUrls() {
-    if (!window['isElectron']) {
-      const savedUrls: object = JSON.parse(localStorage.getItem(this.nodeUrlsStorageKey));
-      this.customNodeUrls = savedUrls ? savedUrls : {};
+    if (!environment.production) {
+      if (!window['isElectron']) {
+        const savedUrls: object = JSON.parse(localStorage.getItem(this.nodeUrlsStorageKey));
+        this.customNodeUrls = savedUrls ? savedUrls : {};
+      } else {
+        const savedUrls = window['ipcRenderer'].sendSync('loadNodeUrlsSync');
+        this.customNodeUrls = savedUrls ? JSON.parse(savedUrls) : {};
+      }
     } else {
-      const savedUrls = window['ipcRenderer'].sendSync('loadNodeUrlsSync');
-      this.customNodeUrls = savedUrls ? JSON.parse(savedUrls) : {};
+      this.customNodeUrls = {};
     }
   }
 
   private loadCurrentCoin() {
-    const storedCoinId = sessionStorage.getItem(this.correntCoinStorageKey) || localStorage.getItem(this.correntCoinStorageKey);
-    const coinId = storedCoinId ? +storedCoinId : defaultCoinId;
+    let coinId: number;
+    if (!environment.production) {
+      const storedCoinId = sessionStorage.getItem(this.correntCoinStorageKey) || localStorage.getItem(this.correntCoinStorageKey);
+      coinId = storedCoinId ? +storedCoinId : defaultCoinId;
+    } else {
+      coinId = defaultCoinId;
+    }
     const coin = this.coins.find((c: BaseCoin) => c.id === coinId);
     this.currentCoin.next(coin);
   }
 
   private saveCoin(coinId: number) {
-    localStorage.setItem(this.correntCoinStorageKey, coinId.toString());
-    sessionStorage.setItem(this.correntCoinStorageKey, coinId.toString());
+    if (!environment.production) {
+      localStorage.setItem(this.correntCoinStorageKey, coinId.toString());
+      sessionStorage.setItem(this.correntCoinStorageKey, coinId.toString());
+    }
   }
 
   private loadAvailableCoins() {
