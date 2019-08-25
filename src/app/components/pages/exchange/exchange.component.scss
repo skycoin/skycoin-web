@@ -1,0 +1,52 @@
+@import '../../../../theme/variables';
+
+.-paper {
+  padding: 30px;
+}
+
+.-contact {
+  margin: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: $max-small-width) {
+    & {
+      margin: 0;
+      display: inherit;
+      margin-bottom: 30px;
+
+      .link-container {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  span {
+    font-size: 13px;
+    margin: 0 5px;
+    opacity: .5;
+    display: inline-block;
+    vertical-align: middle;
+
+    a {
+      text-decoration: none;
+      color: $blue;
+    }
+  }
+
+  .history {
+    opacity: 1;
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+  }
+
+  .history-text {
+    font-size: 14px;
+    opacity: 1;
+  }
+}

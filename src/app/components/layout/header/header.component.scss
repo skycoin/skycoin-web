@@ -1,7 +1,7 @@
 @import '../../../../theme/variables';
 
 .-container {
-  @media (min-width: $max-small-width+1) {
+  @media (min-width: $max-semi-small-width+1) {
     background-color: $white;
     border-bottom: 2px solid $grey-very-light;
   }

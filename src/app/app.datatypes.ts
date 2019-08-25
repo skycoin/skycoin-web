@@ -121,3 +121,39 @@ export interface ConfirmationData {
   redTitle?: boolean;
   disableDismiss?: boolean;
 }
+
+export class TradingPair {
+  from: string;
+  to: string;
+  price: number;
+  pair: string;
+  min: number;
+  max: number;
+}
+
+export class ExchangeOrder {
+  pair: string;
+  fromAmount: number|null;
+  toAmount: number;
+  toAddress: string;
+  toTag: string|null;
+  refundAddress: string|null;
+  refundTag: string|null;
+  id: string;
+  exchangeAddress: string;
+  exchangeTag: string|null;
+  toTx?: string|null;
+  status: string;
+  message?: string;
+}
+
+export class StoredExchangeOrder {
+  id: string;
+  pair: string;
+  fromAmount: number;
+  toAmount: number;
+  address: string;
+  timestamp: number;
+  price: number;
+  loadedFromId?: boolean;
+}

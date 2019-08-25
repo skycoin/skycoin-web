@@ -30,7 +30,7 @@
     "wallets": "Wallets",
     "send": "Send",
     "history": "History",
-    "buy-coin": "Buy Skycoin",
+    "buy-coin": "Buy",
     "network": "Networking",
     "blockchain": "Blockchain",
     "outputs": "Outputs",
@@ -43,7 +43,10 @@
     "seed": "Wallet Seed",
     "qrcode": "QR Code",
     "disclaimer": "Disclaimer",
-    "qr-code": "Address"
+    "qr-code": "Address",
+    "exchange": "Exchange",
+    "select-address": "Select Address",
+    "order-history": "Order history"
   },
 
   "header": {
@@ -424,6 +427,73 @@
       "not-enough-hours2": "to perform transaction!",
       "wrong-seed": "Wrong seed",
       "invalid-wallet": "Invalid wallet"
+    }
+  },
+
+  "exchange": {
+    "you-send": "You send",
+    "you-get": "You get (approx.)",
+    "to-address": "To {{coin}} address",
+    "price": "Exchange rate",
+    "time-15": "Exchange time",
+    "exchange-button": "Exchange",
+    "min-amount": "Minimum amount:",
+    "max-amount": "Maximum amount:",
+    "agree-1": "I agree with",
+    "agree-2": "Terms of Use",
+    "agree-3": "and",
+    "agree-4": "Privacy Policy",
+    "powered-by": "Powered by",
+    "need-help": "Need help?",
+    "support-portal": "Support portal",
+    "history": "Order History",
+    "check-order": "Check Order",
+    "order-not-found": "Order not found",
+    "uninitiated-operation": "It was not possible to load the operation because it has not been initiated (the deposit was not made). Please start a new operation. If you made the deposit, try again in a few minutes.",
+    "status": "Status",
+    "exchanging": "Exchanging {{from}} for {{to}}",
+    "select": "Select",
+    "offline": "Exchange is temporarily offline",
+    "problem-connecting": "Unable to connect with the service. Please check your Internet connection and try again later.",
+    "invalid-address": "Invalid address.",
+    "statuses": {
+      "user-waiting": "Waiting for deposit. Please send {{amount}} {{from}} to the exchange address shown below",
+      "user-waiting-info": "The system is waiting for you to make the deposit into the exchange address. The exchange process will start after the deposit is detected and confirmed in the blockchain. If you have already made the deposit, it should be detected shortly.",
+      "market-waiting-confirmations": "Waiting for transaction confirmations",
+      "market-waiting-confirmations-info": "The deposit has already been detected and the system is waiting for it to be confirmed in the blockchain.",
+      "market-confirmed": "Transaction accepted",
+      "market-confirmed-info": "The transaction has already been confirmed in the blockchain. Preparing to make the exchange soon.",
+      "market-exchanged": "Traded {{from}} for {{to}}",
+      "market-exchanged-info": "The exchange has been made. The funds will be transferred to your address in a moment.",
+      "market-withdraw-waiting": "Sending {{to}} to your address",
+      "market-withdraw-waiting-info": "The process for sending the coins to your address has been initiated.",
+      "complete": "Exchange completed!",
+      "complete-info": "The funds have been successfully sent to your address.",
+      "error": "Error occurred",
+      "error-info": "There was an error in the operation, you can find more information below. If you need help, please save all the operation data shown below and contact technical support using the link in the lower right part of this page.",
+      "user-deposit-timeout": "Order canceled due to inactivity",
+      "user-deposit-timeout-info": "The system has canceled the order because no deposit was detected, please open a new order. If you need help, please save all the operation data shown below and contact technical support using the link in the lower right part of this page."
+    },
+    "history-window": {
+      "address": "Address",
+      "date": "Date"
+    },
+    "details": {
+      "exchange-addr": "Exchange address (valid for this exchange operation only)",
+      "exchange-addr-tag": "Payment ID or Destination Tag which must be used for the transaction",
+      "tx-id": "Transaction ID",
+      "order-id": "Order ID",
+      "initial-price": "Initial exchange rate",
+      "error-msg": "Error message",
+      "details": "Details",
+      "start-date": "Start date",
+      "back": "Back",
+      "back-alert": "The operation is still in progress. Do you really want to return to the form? You can see the progress of this operation again by pressing the \"Order history\" button.",
+      "back-alert-without-history": "The operation is still in progress. Do you really want to return to the form? You can see the progress of this operation again by pressing the \"Check Order\" button and entering the Order ID."
+    },
+    "id-window": {
+      "cancel-button": "Cancel",
+      "check-button": "Check"
     }
   }
 }

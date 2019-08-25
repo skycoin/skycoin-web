@@ -1,0 +1,41 @@
+<div class="sky-container sky-container-grey">
+  <app-header [headline]="'title.exchange' | translate"></app-header>
+
+  <div class="container">
+    <div class="-paper" *ngIf="!restarting">
+      <app-exchange-create
+        *ngIf="!currentOrderDetails && !loading"
+        (submitted)="showStatus($event)"
+      ></app-exchange-create>
+
+      <app-exchange-status
+        *ngIf="currentOrderDetails && !loading"
+        [orderDetails]="currentOrderDetails"
+        (goBack)="goBack()"
+      ></app-exchange-status>
+    </div>
+    <div class="-contact">
+      <div>
+        <span *ngIf="hasHistory || inProductionMode" class="history">
+          <a *ngIf="!inProductionMode" href="#" (click)="showHistory($event)"><mat-icon>history</mat-icon> <span class="history-text">
+            {{ 'exchange.history' | translate }} {{ currentCoinSymbol ? ('(' + currentCoinSymbol + ')') : '' }}
+          </span></a>
+          <a *ngIf="inProductionMode" href="#" (click)="checkOrder($event)"><mat-icon>history</mat-icon> <span class="history-text">{{ 'exchange.check-order' | translate }}</span></a>
+        </span>
+      </div>
+      <div>
+        <span class="link-container">
+          {{ 'exchange.need-help' | translate }}
+          <a href="https://swaplabcc.freshdesk.com/support/home" target="_blank" rel="noreferrer nofollow">
+            {{ 'exchange.support-portal' | translate }}
+          </a>
+        </span>
+        <span class="-not-on-small-and-below">|</span>
+        <span class="link-container">
+          {{ 'exchange.powered-by' | translate }}
+          <a href="https://swaplab.cc" target="_blank" rel="noreferrer nofollow">SWAPLAB.CC</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

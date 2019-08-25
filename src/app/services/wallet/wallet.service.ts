@@ -161,6 +161,12 @@ export class WalletService {
     this.wallets.next(this.wallets.value);
   }
 
+  verifyAddress(address: string) {
+    return this.apiService.post('address/verify', { address }, {}, true)
+      .map(() => true)
+      .catch(() => Observable.of(false));
+  }
+
   private loadWallets() {
     if (!environment.production) {
       const storedWallets: string = localStorage.getItem('wallets');

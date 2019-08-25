@@ -450,6 +450,16 @@ General Helpers
 Responsive design
  */
 
+@media (min-width: ($max-semi-small-width+1)) {
+  .-on-semi-small-and-below-only {
+    display: none !important;
+  }
+}
+@media (max-width: $max-semi-small-width) {
+  .-not-on-semi-small-and-below {
+    display: none !important;
+  }
+}
 @media (min-width: ($max-small-width+1)) {
   .-on-small-and-below-only {
     display: none !important;

@@ -1,0 +1,16 @@
+<app-modal class="modal" [headline]="'exchange.check-order' | translate" [dialog]="dialogRef">
+  <div [formGroup]="form">
+    <div class="form-field">
+      <label for="id">{{ 'exchange.details.order-id' | translate}}</label>
+      <input formControlName="id" id="id" (keydown.enter)="check()">
+    </div>
+  </div>
+  <div class="-buttons">
+    <app-button (action)="closePopup()">
+      {{ 'exchange.id-window.cancel-button' | translate}}
+    </app-button>
+    <app-button (action)="check()" class="primary" [disabled]="!form.valid">
+      {{ 'exchange.id-window.check-button' | translate}}
+    </app-button>
+  </div>
+</app-modal>

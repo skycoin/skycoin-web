@@ -31,6 +31,7 @@ var allowedHosts = new Map();
 allowedHosts.set('127.0.0.1:' + serverPort, true);
 allowedHosts.set('api.coinpaprika.com', true);
 allowedHosts.set('api.github.com', true);
+allowedHosts.set('swaplab.cc', true);
 if (dev) {
   allowedHosts.set('localhost:4200', true);
 }
