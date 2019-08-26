@@ -8,7 +8,7 @@ import { Wallet, ConfirmationData } from '../app.datatypes';
 import { UnlockWalletComponent, ConfirmSeedParams } from '../components/pages/wallets/unlock-wallet/unlock-wallet.component';
 import { SelectCoinOverlayComponent } from '../components/layout/select-coin-overlay/select-coin-overlay.component';
 import { SelectLanguageComponent } from '../components/layout/select-language/select-language.component';
-import { QrCodeComponent } from '../components/layout/qr-code/qr-code.component';
+import { QrCodeComponent, QrDialogConfig } from '../components/layout/qr-code/qr-code.component';
 import { ConfirmationComponent } from '../components/layout/confirmation/confirmation.component';
 import { BlockchainService, ProgressStates } from '../services/blockchain.service';
 import { ScanAddressesComponent } from '../components/pages/wallets/scan-addresses/scan-addresses.component';
@@ -54,11 +54,9 @@ export function openChangeLanguageModal (dialog: CustomMatDialogService, disable
   return dialog.open(SelectLanguageComponent, config).afterClosed();
 }
 
-export function openQrModal (dialog: CustomMatDialogService, address: string, showOutputsOption: boolean = false) {
-  const config = new MatDialogConfig();
-  config.data = { address: address, showOutputsOption: showOutputsOption };
-  config.autoFocus = false;
-  dialog.open(QrCodeComponent, config);
+export function openQrModal (dialog: CustomMatDialogService, address: string, showExtraAddressOptions: boolean = false) {
+  const config: QrDialogConfig = { address, showExtraAddressOptions };
+  QrCodeComponent.openDialog(dialog, config);
 }
 
 export function showConfirmationModal(dialog: CustomMatDialogService, confirmationData: ConfirmationData): MatDialogRef<ConfirmationComponent, any> {
