@@ -4,17 +4,19 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TranslateService } from '@ngx-translate/core';
 import { BigNumber } from 'bignumber.js';
+import { Http } from '@angular/http';
 
 import { WalletService } from './wallet.service';
 import { CipherProvider } from '../cipher.provider';
 import { CoinService } from '../coin.service';
 import { EventEmitter } from '@angular/core';
-import { MockCoinService, MockGlobalsService } from '../../utils/test-mocks';
+import { MockCoinService, MockGlobalsService, MockHwWalletService } from '../../utils/test-mocks';
 import { ApiService } from '../api.service';
 import { GlobalsService } from '../globals.service';
 import {
   Wallet,
   Address } from '../../app.datatypes';
+import { HwWalletService } from '../hw-wallet/hw-wallet.service';
 
 describe('WalletService', () => {
   let store = {};
@@ -43,8 +45,13 @@ describe('WalletService', () => {
             'get': Observable.of([])
           })
         },
+        {
+          provide: Http,
+          useValue: jasmine.createSpyObj('Http', ['get'])
+        },
         { provide: CoinService, useClass: MockCoinService },
-        { provide: GlobalsService, useClass: MockGlobalsService }
+        { provide: GlobalsService, useClass: MockGlobalsService },
+        { provide: HwWalletService, useClass: MockHwWalletService }
       ]
     });
 

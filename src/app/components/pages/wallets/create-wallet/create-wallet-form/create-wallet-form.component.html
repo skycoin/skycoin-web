@@ -36,7 +36,7 @@
     </div>
   </div>
 </div>
-<div class="red-disclaimer-box -alert-box" [ngClass]="{'-very-small-screen-alert-box': !whiteText}" *ngIf="form.valid && !normalSeed">
+<div class="alert-box" [ngClass]="{'-very-small-screen-alert-box': !whiteText}" *ngIf="form.valid && !normalSeed">
   <mat-icon class="-not-on-very-small">error</mat-icon>
   <div>
     <div class="title"><mat-icon class="-on-very-small-only">error</mat-icon><span>{{ 'wallet.new.unconventional-seed-title' | translate}}</span></div>

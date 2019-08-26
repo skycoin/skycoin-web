@@ -68,9 +68,14 @@ export function showConfirmationModal(dialog: CustomMatDialogService, confirmati
 }
 
 export function openDeleteWalletModal (dialog: CustomMatDialogService, wallet: Wallet, translateService: TranslateService, walletService: WalletService) {
-  const mainText = translateService.instant('wallet.delete-confirmation1') + ' \"' +
-    wallet.label + '\" ' +
-    translateService.instant('wallet.delete-confirmation2');
+  let mainText: string;
+  if (wallet.isHardware) {
+    mainText = translateService.instant('wallet.hw-delete-confirmation', {name: wallet.label});
+  } else {
+    mainText = translateService.instant('wallet.delete-confirmation1') + ' \"' +
+      wallet.label + '\" ' +
+      translateService.instant('wallet.delete-confirmation2');
+  }
 
   const confirmationData: ConfirmationData = {
     text: mainText,

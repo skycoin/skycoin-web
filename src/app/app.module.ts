@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatSliderModule, MatInputModule } from '@angular/material';
+import { MatSliderModule, MatInputModule, MatAutocompleteModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -21,6 +21,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { ButtonComponent } from './components/layout/button/button.component';
@@ -86,6 +87,27 @@ import { SendFormAdvancedComponent } from './components/pages/send-skycoin/send-
 import { SelectAddressComponent } from './components/pages/send-skycoin/send-form-advanced/select-address/select-address';
 import { MsgBarService } from './services/msg-bar.service';
 import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
+import { HwOptionsDialogComponent } from './components/layout/hardware-wallet/hw-options-dialog/hw-options-dialog.component';
+import { HwWipeDialogComponent } from './components/layout/hardware-wallet/hw-wipe-dialog/hw-wipe-dialog.component';
+import { HwAddedDialogComponent } from './components/layout/hardware-wallet/hw-added-dialog/hw-added-dialog.component';
+import { HwGenerateSeedDialogComponent } from './components/layout/hardware-wallet/hw-generate-seed-dialog/hw-generate-seed-dialog.component';
+import { HwBackupDialogComponent } from './components/layout/hardware-wallet/hw-backup-dialog/hw-backup-dialog.component';
+import { HwMessageComponent } from './components/layout/hardware-wallet/hw-message/hw-message.component';
+import { HwPinDialogComponent } from './components/layout/hardware-wallet/hw-pin-dialog/hw-pin-dialog.component';
+import { HwChangePinDialogComponent } from './components/layout/hardware-wallet/hw-change-pin-dialog/hw-change-pin-dialog.component';
+import { HwPinHelpDialogComponent } from './components/layout/hardware-wallet/hw-pin-help-dialog/hw-pin-help-dialog.component';
+import { HwRestoreSeedDialogComponent } from './components/layout/hardware-wallet/hw-restore-seed-dialog/hw-restore-seed-dialog.component';
+import { HwDialogBaseComponent } from './components/layout/hardware-wallet/hw-dialog-base.component';
+import { HwConfirmTxDialogComponent } from './components/layout/hardware-wallet/hw-confirm-tx-dialog/hw-confirm-tx-dialog.component';
+import { HwConfirmAddressDialogComponent } from './components/layout/hardware-wallet/hw-confirm-address-dialog/hw-confirm-address-dialog.component';
+import { HwRemovePinDialogComponent } from './components/layout/hardware-wallet/hw-remove-pin-dialog/hw-remove-pin-dialog.component';
+import { HwUpdateFirmwareDialogComponent } from './components/layout/hardware-wallet/hw-update-firmware-dialog/hw-update-firmware-dialog.component';
+import { HwUpdateAlertDialogComponent } from './components/layout/hardware-wallet/hw-update-alert-dialog/hw-update-alert-dialog.component';
+import { HwWalletService } from './services/hw-wallet/hw-wallet.service';
+import { HwWalletDaemonService } from './services/hw-wallet/hw-wallet-daemon.service';
+import { HwWalletPinService } from './services/hw-wallet/hw-wallet-pin.service';
+import { HwWalletSeedWordService } from './services/hw-wallet/hw-wallet-seed-word.service';
+import { SeedWordDialogComponent } from './components/layout/seed-word-dialog/seed-word-dialog.component';
 
 @NgModule({
   declarations: [
@@ -133,6 +155,23 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     SendFormAdvancedComponent,
     SelectAddressComponent,
     MsgBarComponent,
+    HwOptionsDialogComponent,
+    HwWipeDialogComponent,
+    HwAddedDialogComponent,
+    HwGenerateSeedDialogComponent,
+    HwBackupDialogComponent,
+    HwMessageComponent,
+    HwPinDialogComponent,
+    HwChangePinDialogComponent,
+    HwPinHelpDialogComponent,
+    HwRestoreSeedDialogComponent,
+    HwDialogBaseComponent,
+    HwConfirmTxDialogComponent,
+    HwConfirmAddressDialogComponent,
+    HwRemovePinDialogComponent,
+    HwUpdateFirmwareDialogComponent,
+    HwUpdateAlertDialogComponent,
+    SeedWordDialogComponent,
   ],
   entryComponents: [
     AddDepositAddressComponent,
@@ -147,10 +186,28 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     ScanAddressesComponent,
     ChangeNodeURLComponent,
     WalletOptionsComponent,
-    SelectAddressComponent
+    SelectAddressComponent,
+    HwOptionsDialogComponent,
+    HwWipeDialogComponent,
+    HwAddedDialogComponent,
+    HwGenerateSeedDialogComponent,
+    HwBackupDialogComponent,
+    HwMessageComponent,
+    HwPinDialogComponent,
+    HwChangePinDialogComponent,
+    HwPinHelpDialogComponent,
+    HwRestoreSeedDialogComponent,
+    HwDialogBaseComponent,
+    HwConfirmTxDialogComponent,
+    HwConfirmAddressDialogComponent,
+    HwRemovePinDialogComponent,
+    HwUpdateFirmwareDialogComponent,
+    HwUpdateAlertDialogComponent,
+    SeedWordDialogComponent,
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     HttpClientModule,
     MatButtonModule,
     MatCardModule,
@@ -168,6 +225,7 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     MatToolbarModule,
     MatTooltipModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
     MatSliderModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
@@ -199,6 +257,10 @@ import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
     CustomMatDialogService,
     Bip39WordListService,
     MsgBarService,
+    HwWalletService,
+    HwWalletDaemonService,
+    HwWalletPinService,
+    HwWalletSeedWordService,
   ],
   bootstrap: [AppComponent],
 })

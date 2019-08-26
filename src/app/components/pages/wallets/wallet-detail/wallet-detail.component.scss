@@ -98,6 +98,15 @@
     }
   }
 
+  .truncated-address {
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   .-hours-column {
     color: $grey;
   }
@@ -282,6 +291,10 @@
     white-space: nowrap;
     padding-left: 11px;
   }
+
+  &.unconfirmed-label {
+    opacity: 0.5;
+  }
 }
 
 .copying .copy-label::after {
@@ -303,4 +316,8 @@ mat-spinner {
       background-color: darken($white, 2%) !important;
     }
   }
+}
+
+.-full-width {
+  width: 100%;
 }

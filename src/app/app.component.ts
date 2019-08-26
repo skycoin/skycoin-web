@@ -10,6 +10,12 @@ import { CustomMatDialogService } from './services/custom-mat-dialog.service';
 import { Bip39WordListService } from './services/bip39-word-list.service';
 import { MsgBarComponent } from './components/layout/msg-bar/msg-bar.component';
 import { MsgBarService } from './services/msg-bar.service';
+import { HwWalletService } from './services/hw-wallet/hw-wallet.service';
+import { HwWalletPinService } from './services/hw-wallet/hw-wallet-pin.service';
+import { HwWalletSeedWordService } from './services/hw-wallet/hw-wallet-seed-word.service';
+import { HwPinDialogComponent } from './components/layout/hardware-wallet/hw-pin-dialog/hw-pin-dialog.component';
+import { HwConfirmTxDialogComponent } from './components/layout/hardware-wallet/hw-confirm-tx-dialog/hw-confirm-tx-dialog.component';
+import { SeedWordDialogComponent } from './components/layout/seed-word-dialog/seed-word-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -32,9 +38,16 @@ export class AppComponent implements OnInit {
     router: Router,
     dialog: CustomMatDialogService,
     renderer: Renderer2,
+    hwWalletService: HwWalletService,
+    hwWalletPinService: HwWalletPinService,
+    hwWalletSeedWordService: HwWalletSeedWordService,
     private bip38WordList: Bip39WordListService,
     private msgBarService: MsgBarService,
   ) {
+    hwWalletPinService.requestPinComponent = HwPinDialogComponent;
+    hwWalletSeedWordService.requestWordComponent = SeedWordDialogComponent;
+    hwWalletService.signTransactionConfirmationComponent = HwConfirmTxDialogComponent;
+
     router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationEnd) {
         window.scrollTo(0, 0);

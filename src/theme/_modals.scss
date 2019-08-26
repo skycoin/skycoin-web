@@ -13,6 +13,13 @@
     color: $grey-dark;
   }
 
+  .big-text {
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+    word-break: break-word;
+  }
+
   .-check-container{
     text-align: center;
     margin-top: 25px;

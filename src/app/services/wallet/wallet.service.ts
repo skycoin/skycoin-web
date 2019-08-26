@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 import { BigNumber } from 'bignumber.js';
+import { Http } from '@angular/http';
 
 import { CipherProvider, GenerateAddressResponse } from '../cipher.provider';
 import { Address, Wallet } from '../../app.datatypes';
@@ -13,10 +14,25 @@ import { BaseCoin } from '../../coins/basecoin';
 import { CoinService } from '../coin.service';
 import { ApiService } from '../api.service';
 import { environment } from '../../../environments/environment';
+import { HwWalletService } from '../hw-wallet/hw-wallet.service';
+import { config } from '../../app.config';
 
 export class ScanProgressData {
   addressesFound = 1;
   progress = 0;
+}
+
+export enum HwSecurityWarnings {
+  NeedsBackup,
+  NeedsPin,
+  FirmwareVersionNotVerified,
+  OutdatedFirmware,
+}
+
+export interface HwFeaturesResponse {
+  features: any;
+  securityWarnings: HwSecurityWarnings[];
+  walletNameUpdated: boolean;
 }
 
 @Injectable()
@@ -30,6 +46,8 @@ export class WalletService {
     private translate: TranslateService,
     private coinService: CoinService,
     private apiService: ApiService,
+    private hwWalletService: HwWalletService,
+    private http: Http,
   ) {
     this.loadWallets();
     this.coinService.currentCoin.subscribe((coin) => this.currentCoin = coin);
@@ -41,9 +59,22 @@ export class WalletService {
 
   get currentWallets(): Observable<Wallet[]> {
     return this.wallets
-      .flatMap(wallets => this.coinService.currentCoin
-        .map((coin: BaseCoin) => wallets.filter(wallet => wallet.coinId === coin.id))
-      ).map(wallets => wallets ? wallets : []);
+      .flatMap(wallets => this.coinService.currentCoin.map((coin: BaseCoin) => wallets.filter(wallet => wallet.coinId === coin.id || wallet.isHardware))
+      ).map(wallets => wallets ? wallets : [])
+      .map(wallets => {
+        const hwWallets = [];
+        const swWallets = [];
+
+        wallets.forEach(wallet => {
+          if (wallet.isHardware) {
+            hwWallets.push(wallet);
+          } else {
+            swWallets.push(wallet);
+          }
+        });
+
+        return hwWallets.concat(swWallets);
+      });
   }
 
   get addresses(): Observable<Address[]> {
@@ -82,6 +113,7 @@ export class WalletService {
         };
 
         if (this.wallets.value.some((wlt: Wallet) =>
+            !wlt.isHardware &&
             wlt.addresses[0].address === wallet.addresses[0].address &&
             wlt.coinId === wallet.coinId)) {
           throw new Error(this.translate.instant('service.wallet.wallet-exists'));
@@ -93,6 +125,171 @@ export class WalletService {
 
         return wallet;
       });
+  }
+
+  createHardwareWallet(): Observable<Wallet> {
+    let addresses: string[];
+    let lastAddressWithTx = 0;
+    const addressesMap: Map<string, boolean> = new Map<string, boolean>();
+    const addressesWithTxMap: Map<string, boolean> = new Map<string, boolean>();
+
+    return this.hwWalletService.getAddresses(config.maxHardwareWalletAddresses, 0).flatMap(response => {
+      addresses = response.rawResponse;
+      addresses.forEach(address => {
+        addressesMap.set(address, true);
+      });
+
+      const addressesString = addresses.join(',');
+
+      return this.apiService.post('transactions', { addrs: addressesString });
+    }).map(response => {
+      response.forEach(tx => {
+        tx.txn.outputs.forEach(output => {
+          if (addressesMap.has(output.dst)) {
+            addressesWithTxMap.set(output.dst, true);
+          }
+        });
+      });
+
+      addresses.forEach((address, i) => {
+        if (addressesWithTxMap.has(address)) {
+          lastAddressWithTx = i;
+        }
+      });
+
+      const newWallet = this.createHardwareWalletData(
+        this.translate.instant('hardware-wallet.general.default-wallet-name'),
+        addresses.slice(0, lastAddressWithTx + 1).map(add => {
+          return { address: add, confirmed: false };
+        }), true, false,
+      );
+
+      this.add(newWallet);
+
+      return newWallet;
+    });
+  }
+
+  private createHardwareWalletData(label: string, addresses: {address: string, confirmed: boolean}[], hasHwSecurityWarnings: boolean, stopShowingHwSecurityPopup: boolean): Wallet {
+    return {
+      label: label,
+      seed: null,
+      needSeedConfirmation: false,
+      balance: new BigNumber('0'),
+      hours: new BigNumber('0'),
+      addresses: addresses,
+      nextSeed: null,
+      coinId: this.coinService.currentCoin.getValue().id,
+      isHardware: true,
+      hasHwSecurityWarnings: hasHwSecurityWarnings,
+      stopShowingHwSecurityPopup: stopShowingHwSecurityPopup,
+    };
+  }
+
+  getHwFeaturesAndUpdateData(wallet: Wallet): Observable<HwFeaturesResponse> {
+    if (!wallet || wallet.isHardware) {
+
+      let lastestFirmwareVersion: string;
+
+      return this.http.get(config.urlForHwWalletVersionChecking)
+      .catch(() => Observable.of(null))
+      .flatMap((res: any) => {
+        if (res) {
+          lastestFirmwareVersion = res.text();
+        } else {
+          lastestFirmwareVersion = null;
+        }
+
+        return this.hwWalletService.getFeatures();
+      })
+      .map(result => {
+        let lastestFirmwareVersionReaded = false;
+        let firmwareUpdated = false;
+
+        if (lastestFirmwareVersion) {
+          lastestFirmwareVersion = lastestFirmwareVersion.trim();
+          const versionParts = lastestFirmwareVersion.split('.');
+
+          if (versionParts.length === 3) {
+            lastestFirmwareVersionReaded = true;
+
+            const numVersionParts = versionParts.map(value => Number.parseInt(value.replace(/\D/g, '')));
+
+            const devMajorVersion = !config.useHwWalletDaemon ? result.rawResponse.majorVersion : result.rawResponse.fw_major;
+            const devMinorVersion = !config.useHwWalletDaemon ? result.rawResponse.minorVersion : result.rawResponse.fw_minor;
+            const devPatchVersion = !config.useHwWalletDaemon ? result.rawResponse.patchVersion : result.rawResponse.fw_patch;
+
+            if (devMajorVersion > numVersionParts[0]) {
+              firmwareUpdated = true;
+            } else {
+              if (devMajorVersion === numVersionParts[0]) {
+                if (devMinorVersion > numVersionParts[1]) {
+                  firmwareUpdated = true;
+                } else {
+                  if (devMinorVersion === numVersionParts[1] && devPatchVersion >= numVersionParts[2]) {
+                    firmwareUpdated = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        const warnings: HwSecurityWarnings[] = [];
+        let hasHwSecurityWarnings = false;
+
+        if (!config.useHwWalletDaemon) {
+          if (result.rawResponse.needsBackup) {
+            warnings.push(HwSecurityWarnings.NeedsBackup);
+            hasHwSecurityWarnings = true;
+          }
+          if (!result.rawResponse.pinProtection) {
+            warnings.push(HwSecurityWarnings.NeedsPin);
+            hasHwSecurityWarnings = true;
+          }
+        } else {
+          if (result.rawResponse.needs_backup) {
+            warnings.push(HwSecurityWarnings.NeedsBackup);
+            hasHwSecurityWarnings = true;
+          }
+          if (!result.rawResponse.pin_protection) {
+            warnings.push(HwSecurityWarnings.NeedsPin);
+            hasHwSecurityWarnings = true;
+          }
+        }
+
+        if (!lastestFirmwareVersionReaded) {
+          warnings.push(HwSecurityWarnings.FirmwareVersionNotVerified);
+        } else {
+          if (!firmwareUpdated) {
+            warnings.push(HwSecurityWarnings.OutdatedFirmware);
+            hasHwSecurityWarnings = true;
+          }
+        }
+
+        let walletNameUpdated = false;
+
+        if (wallet) {
+          const deviceLabel = result.rawResponse.label ? result.rawResponse.label : (result.rawResponse.deviceId ? result.rawResponse.deviceId : result.rawResponse.device_id);
+          if (wallet.label !== deviceLabel) {
+            wallet.label = deviceLabel;
+            walletNameUpdated = true;
+          }
+          wallet.hasHwSecurityWarnings = hasHwSecurityWarnings;
+          this.saveWallets();
+        }
+
+        const response = {
+          features: result.rawResponse,
+          securityWarnings: warnings,
+          walletNameUpdated: walletNameUpdated,
+        };
+
+        return response;
+      });
+    } else {
+      return null;
+    }
   }
 
   add(wallet: Wallet) {
@@ -152,8 +349,20 @@ export class WalletService {
       const strippedWallets: Wallet[] = [];
       this.wallets.value.forEach(wallet => {
         const strippedAddresses: Address[] = [];
-        wallet.addresses.forEach(address => strippedAddresses.push({ address: address.address }));
-        strippedWallets.push({ coinId: wallet.coinId, needSeedConfirmation: wallet.needSeedConfirmation, label: wallet.label, addresses: strippedAddresses });
+        wallet.addresses.forEach(address => strippedAddresses.push({
+          address: address.address,
+          confirmed: address.confirmed,
+        }));
+
+        strippedWallets.push({
+          coinId: wallet.coinId,
+          needSeedConfirmation: wallet.needSeedConfirmation,
+          label: wallet.label,
+          addresses: strippedAddresses,
+          isHardware: wallet.isHardware,
+          hasHwSecurityWarnings: wallet.hasHwSecurityWarnings,
+          stopShowingHwSecurityPopup: wallet.stopShowingHwSecurityPopup,
+        });
       });
       localStorage.setItem('wallets', JSON.stringify(strippedWallets));
     }

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 import { SendFormComponent } from './send-form.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
@@ -18,8 +19,11 @@ import { MockTranslatePipe,
   MockCustomMatDialogService,
   MockNavBarService,
   MockPriceService,
-  MockMsgBarService} from '../../../../utils/test-mocks';
+  MockMsgBarService,
+  MockHwWalletService,
+  MockTranslateService} from '../../../../utils/test-mocks';
 import { MsgBarService } from '../../../../services/msg-bar.service';
+import { HwWalletService } from '../../../../services/hw-wallet/hw-wallet.service';
 
 describe('SendFormComponent', () => {
   let component: SendFormComponent;
@@ -39,6 +43,8 @@ describe('SendFormComponent', () => {
         { provide: NavBarService, useClass: MockNavBarService },
         { provide: PriceService, useClass: MockPriceService },
         { provide: MsgBarService, useClass: MockMsgBarService },
+        { provide: HwWalletService, useClass: MockHwWalletService },
+        { provide: TranslateService, useClass: MockTranslateService },
       ]
     }).compileComponents();
   }));

@@ -229,3 +229,6 @@ export class MockMatDialogRef<T> {
   close(dialogResult?: any) {
   }
 }
+
+export class MockHwWalletService {
+}

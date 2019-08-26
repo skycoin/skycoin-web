@@ -1,3 +1,12 @@
+@import '../../../../../theme/_variables.scss';
+
 mat-input-container {
   width: 100%;
+}
+
+.info {
+  margin: 5px 0 25px;
+  color: $grey;
+  font-size: 12px;
+  line-height: 1.5;
 }

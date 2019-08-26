@@ -6,9 +6,10 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { WalletDetailComponent } from './wallet-detail.component';
 import { WalletService } from '../../../../services/wallet/wallet.service';
-import { MockTranslatePipe, MockWalletService, MockTranslateService, MockCustomMatDialogService, MockMsgBarService } from '../../../../utils/test-mocks';
+import { MockTranslatePipe, MockWalletService, MockTranslateService, MockCustomMatDialogService, MockMsgBarService, MockHwWalletService } from '../../../../utils/test-mocks';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { MsgBarService } from '../../../../services/msg-bar.service';
+import { HwWalletService } from '../../../../services/hw-wallet/hw-wallet.service';
 
 describe('WalletDetailComponent', () => {
   let component: WalletDetailComponent;
@@ -27,6 +28,7 @@ describe('WalletDetailComponent', () => {
         { provide: TranslateService, useClass: MockTranslateService },
         { provide: CustomMatDialogService, useClass: MockCustomMatDialogService },
         { provide: MsgBarService, useClass: MockMsgBarService },
+        { provide: HwWalletService, useClass: MockHwWalletService },
       ]
     }).compileComponents();
   }));

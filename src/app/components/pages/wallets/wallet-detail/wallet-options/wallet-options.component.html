@@ -1,12 +1,12 @@
 <app-modal class="modal" [headline]="'wallet.options' | translate" [dialog]="dialogRef">
   <div class="option-buttons-container header-sel-theme">
-    <button mat-button color="accent" (click)="onUnlockWallet()" *ngIf="showUnlockOption">
+    <button mat-button color="accent" (click)="onUnlockWallet()" *ngIf="!data.isHardware && showUnlockOption">
       <div class="label">
         <div class="img -btn-unlock"></div>
         <span>{{ 'wallet.unlock-wallet' | translate }}</span>
       </div>
     </button>
-    <button mat-button color="accent" (click)="onAddNewAddress()">
+    <button mat-button color="accent" (click)="onAddNewAddress()" *ngIf="!data.isHardware">
       <div class="label">
         <div class="img -btn-plus"></div>
         <span>{{ 'wallet.new-address' | translate }}</span>

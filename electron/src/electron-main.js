@@ -29,6 +29,7 @@ const serverPort= 8412;
 // It is only possible to make connections to hosts that are in this lists.
 var allowedHosts = new Map();
 allowedHosts.set('127.0.0.1:' + serverPort, true);
+allowedHosts.set('127.0.0.1:9510', true);
 allowedHosts.set('api.coinpaprika.com', true);
 allowedHosts.set('api.github.com', true);
 if (dev) {

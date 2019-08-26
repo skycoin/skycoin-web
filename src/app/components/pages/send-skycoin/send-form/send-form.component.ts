@@ -5,6 +5,7 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 import { BigNumber } from 'bignumber.js';
 import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { SpendingService, HoursSelectionTypes } from '../../../../services/wallet/spending.service';
@@ -20,6 +21,8 @@ import { NavBarService } from '../../../../services/nav-bar.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { PriceService } from '../../../../services/price.service';
 import { MsgBarService } from '../../../../services/msg-bar.service';
+import { HwWalletService } from '../../../../services/hw-wallet/hw-wallet.service';
+import { getHardwareWalletErrorMsg } from '../../../../utils/errors';
 
 @Component({
   selector: 'app-send-form',
@@ -57,6 +60,8 @@ export class SendFormComponent implements OnInit, OnDestroy {
     private coinService: CoinService,
     private navbarService: NavBarService,
     private msgBarService: MsgBarService,
+    private hwWalletService: HwWalletService,
+    private translate: TranslateService,
     priceService: PriceService,
   ) {
     this.subscriptionsGroup.push(priceService.price.subscribe(price => {
@@ -112,15 +117,24 @@ export class SendFormComponent implements OnInit, OnDestroy {
     this.msgBarService.hide();
     this.button.resetState();
 
-    const wallet = this.form.value.wallet;
+    const wallet: Wallet = this.form.value.wallet;
 
-    if (!wallet.seed) {
+    if (!wallet.isHardware && !wallet.seed) {
       this.removeProcessSubscription();
 
       this.processSubscription = openUnlockWalletModal(wallet, this.dialog).componentInstance
         .onWalletUnlocked.first().subscribe(() => this.checkBeforeSending());
     } else {
-      this.checkBeforeSending();
+      if (!wallet.isHardware) {
+        this.checkBeforeSending();
+      } else {
+        this.button.setLoading();
+        this.removeProcessSubscription();
+        this.processSubscription = this.hwWalletService.checkIfCorrectHwConnected(wallet.addresses[0].address).subscribe(
+          () => this.checkBeforeSending(),
+          err => this.onError(getHardwareWalletErrorMsg(this.translate, err)),
+        );
+      }
     }
   }
 
@@ -234,9 +248,13 @@ export class SendFormComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
+    if (error && error.result) {
+      error = getHardwareWalletErrorMsg(this.translate, error);
+    }
+
     this.showSlowMobileInfo = false;
     this.removeSlowInfoSubscription();
-    this.msgBarService.showError(error.message);
+    this.msgBarService.showError(error);
     this.button.resetState();
   }
 
