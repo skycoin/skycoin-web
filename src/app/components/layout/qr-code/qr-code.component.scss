@@ -1,96 +1,68 @@
 @import '../../../../theme/_variables';
-#qr {
-  ::ng-deep img {
-    width: 100%;
-  }
 
-  ::ng-deep canvas {
-    width: 100%;
-  }
-}
-
-.-address-footer {
-  margin: 24px -24px -24px -24px;
-  padding: 10px;
-  font-size: 13px;
-  border-top: $grey-very-light solid 1px;
-  justify-content: space-between;
-  line-height: 28px;
-
-  @media (max-width: $max-small-width) {
-    & {
-      padding: 0px;
-    }
-  }
-}
-.-button-qr {
-  border-radius: 100px;
-  cursor: pointer;
-  width: 28px;
-  height: 28px;
-  margin-left: 10px;
-  opacity: 0.5;
-}
-.-button-qr:hover {
-  opacity: 1;
-}
-
-.mobile-button {
-  font-size: 12px;
-  line-height: 14px;
+.qr-container {
   text-align: center;
+  margin-bottom: 24px;
+
+  .qr {
+    height: 180px;
+    width: 180px;
+    display: inline-block;
+  }
+}
+
+.separator {
+  background-color: $grey-light;
+  height: 1px;
   width: 100%;
-  cursor: pointer;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  opacity: 0.8;
+}
 
-  &:hover {
-    opacity: 1;
-  }
+.data-container {
+  margin: 14px 0;
 
-  ::ng-deep .mat-button-wrapper {
-    width: 100%;
-  }
-
-  .label {
-    word-break: break-all;
-    white-space: normal;
-    width: 100%;
+  .title {
     color: $black;
   }
 
-  .copy-label {
-    margin-top: 5px;
-  }
+  .data {
+    color: $grey-semi-dark;
+    cursor: pointer;
+    word-break: break-word;
 
-  .copying-label {
-    height: 0px;
-    overflow: visible;
-    position: relative;
-    top: -14px;
-    opacity: .001;
-    transition: opacity .2s ease-in-out;
-  }
-
-  .copying {
-    -webkit-animation: qr-floatup .5s ease-in-out;
-    animation: qr-floatup .5s ease-in-out;
-  }
-
-  @keyframes qr-floatup {
-    20% {
-      opacity: .999
+    .text {
+      margin-right: 5px;
     }
-    100% {
-      transform: translate3d(0, -17px, 0)
+
+    .copy {
+      color: $grey-semi-dark;
+      opacity: 0.25;
+    }
+  }
+
+  .data:hover {
+    .copy {
+      opacity: 0.75;
+    }
+  }
+
+  .data:active {
+    .copy {
+      opacity: 1;
     }
   }
 }
 
-.mobile-buttons-separator {
-  background-color: $grey-very-light;
-  height: 1px;
-  width: 100%;
+.link {
+  padding: 10px 0px;
+
+  mat-icon {
+    padding: 0;
+    display: inline;
+    vertical-align: middle;
+    font-size: 13px;
+  }
+}
+
+.invalid {
+  color: $red;
 }
