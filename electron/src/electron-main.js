@@ -46,7 +46,7 @@ if (dev) {
 }
 
 var defaultCoinHosts = new Map();
-defaultCoinHosts.set("node.skycoin.net", true);
+defaultCoinHosts.set("node.skycoin.com", true);
 
 let allowedNodes = new Map();
 let coinsWithAllowedNodes = new Map();
@@ -266,33 +266,33 @@ function createWindow() {
 
     // Blocks the connection if the URL is not in allowedHosts.
     const filters = { urls: ["*://*/*"] };
-    session.defaultSession.webRequest.onBeforeRequest(filters, function (
-        details,
-        callback
-    ) {
-        if (!details.url.startsWith("chrome-devtools://")) {
-            let requestUrl = details.url;
-            if (details.url.startsWith("blob:")) {
-                requestUrl = requestUrl.substr(
-                    "blob:".length,
-                    requestUrl.length - "blob:".length
-                );
-            }
+    session.defaultSession.webRequest.onBeforeRequest(
+        filters,
+        function (details, callback) {
+            if (!details.url.startsWith("chrome-devtools://")) {
+                let requestUrl = details.url;
+                if (details.url.startsWith("blob:")) {
+                    requestUrl = requestUrl.substr(
+                        "blob:".length,
+                        requestUrl.length - "blob:".length
+                    );
+                }
 
-            let requestHost = url.parse(requestUrl).host;
-            if (
-                !allowedHosts.has(requestHost) &&
-                !allowedNodes.has(requestHost) &&
-                !defaultCoinHosts.has(requestHost) &&
-                (!temporarilyAllowedCoin ||
-                    temporarilyAllowedCoin.host !== requestHost)
-            ) {
-                callback({ cancel: true });
-                return;
+                let requestHost = url.parse(requestUrl).host;
+                if (
+                    !allowedHosts.has(requestHost) &&
+                    !allowedNodes.has(requestHost) &&
+                    !defaultCoinHosts.has(requestHost) &&
+                    (!temporarilyAllowedCoin ||
+                        temporarilyAllowedCoin.host !== requestHost)
+                ) {
+                    callback({ cancel: true });
+                    return;
+                }
             }
+            callback({ cancel: false });
         }
-        callback({ cancel: false });
-    });
+    );
 }
 
 const customNodeUrlsFilePath = path.join(app.getPath("appData"), "./Skycoin");
