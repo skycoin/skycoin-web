@@ -43,12 +43,12 @@
     "font-awesome": "^4.7.0",
     "moment": "^2.21.0",
     "rxjs": "^5.5.7",
-    "snyk": "^1.76.0",
+    "snyk": "^1.316.0",
     "zone.js": "^0.8.14",
     "bignumber.js": "^7.2.1"
   },
   "devDependencies": {
-    "@angular/cli": "^1.7.3",
+    "@angular/cli": "^6.0.0",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
     "@types/jasmine": "~2.5.53",
