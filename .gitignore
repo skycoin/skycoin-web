@@ -50,3 +50,17 @@ Thumbs.db
 *[Mm][Cc][Pp]*
 
 /dist
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+vendor/
+
+# Binary
+skycoin-web
