@@ -1,4 +1,4 @@
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TemplateRef, Injectable } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { Observable } from 'rxjs/Observable';

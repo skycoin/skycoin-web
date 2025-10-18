@@ -1,6 +1,6 @@
 import { Component, Inject, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';

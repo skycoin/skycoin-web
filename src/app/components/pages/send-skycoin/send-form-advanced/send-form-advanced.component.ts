@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogConfig } from '@angular/material';
+import { MatDialogConfig } from '@angular/material/dialog';
 import { ISubscription } from 'rxjs/Subscription';
 import { BigNumber } from 'bignumber.js';
 import { Observable } from 'rxjs/Observable';

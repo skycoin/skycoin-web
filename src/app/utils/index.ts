@@ -1,4 +1,4 @@
-import { MatDialogConfig, MatDialogRef } from '@angular/material';
+import { MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Renderer2 } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { Observable } from 'rxjs/Observable';
