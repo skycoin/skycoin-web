@@ -20,6 +20,7 @@ func SetDistFS(fs embed.FS) {
 var (
 	port    int
 	host    string
+	nodeURL string
 	version = "dev"
 )
 
@@ -52,6 +53,7 @@ var versionCmd = &cobra.Command{
 func init() {
 	rootCmd.PersistentFlags().IntVarP(&port, "port", "p", 8001, "Port to serve on")
 	rootCmd.PersistentFlags().StringVarP(&host, "host", "H", "127.0.0.1", "Host to bind to")
+	rootCmd.PersistentFlags().StringVarP(&nodeURL, "node-url", "n", "https://node.skycoin.com", "Skycoin node URL to connect to")
 
 	rootCmd.AddCommand(serveCmd)
 	rootCmd.AddCommand(versionCmd)
@@ -75,11 +77,20 @@ func serve() {
 	fileServer := http.FileServer(http.FS(distSub))
 
 	// Setup routes
+	// API endpoint for configuration
+	http.HandleFunc("/api/config", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		fmt.Fprintf(w, `{"nodeUrl":"%s"}`, nodeURL)
+	})
+	
+	// Serve static files
 	http.Handle("/", fileServer)
 
 	addr := fmt.Sprintf("%s:%d", host, port)
 	fmt.Printf("Skycoin Web Wallet starting...\n")
 	fmt.Printf("Server listening on http://%s\n", addr)
+	fmt.Printf("Node URL: %s\n", nodeURL)
 	fmt.Printf("Open your browser and navigate to the address above\n")
 	fmt.Printf("Press Ctrl+C to stop the server\n\n")
 
