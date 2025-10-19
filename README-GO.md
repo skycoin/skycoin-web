@@ -13,11 +13,17 @@ A modernized, self-contained web wallet for Skycoin with embedded GUI.
 ## Quick Start
 
 ```bash
-# Run the wallet server
+# Run with default settings (connects to https://node.skycoin.com)
 ./skycoin-web
 
-# Or specify custom host/port
+# Specify a custom node URL
+./skycoin-web --node-url https://your-node.example.com
+
+# Custom host and port
 ./skycoin-web --host 0.0.0.0 --port 8080
+
+# All together
+./skycoin-web --node-url https://node.skycoin.com --host 0.0.0.0 --port 8080
 
 # View help
 ./skycoin-web --help
@@ -47,10 +53,16 @@ go build -o skycoin-web .
 
 ## CLI Commands
 
-- `skycoin-web` - Start the web server (default)
+- `skycoin-web` - Start the web server with defaults
 - `skycoin-web serve` - Explicitly start the server
 - `skycoin-web version` - Show version information
 - `skycoin-web --help` - Show all available options
+
+### Flags
+
+- `--host` / `-H` - Host to bind to (default: 127.0.0.1)
+- `--port` / `-p` - Port to serve on (default: 8001)
+- `--node-url` / `-n` - Skycoin node URL to connect to (default: https://node.skycoin.com)
 
 ## Development
 
