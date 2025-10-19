@@ -1,14 +1,27 @@
 # Skycoin Web Wallet - Go Edition
 
-A modernized, self-contained web wallet for Skycoin with embedded GUI.
+A modernized, self-contained web wallet for Skycoin with embedded GUI and API proxy.
 
 ## Features
 
 - Single binary with embedded web interface  
 - Built with Go 1.25+ and Angular 12
 - No external dependencies - everything embedded
+- Secure proxy architecture - API requests proxied through server
 - Cross-platform support (Linux, macOS, Windows)
 - Simple CLI built with Cobra
+
+## Architecture
+
+The server acts as a proxy between the web UI and the Skycoin node:
+
+```
+Browser -> localhost:8001 -> Server (Go) -> node.skycoin.com
+                              ↓
+                          Embedded Web UI
+```
+
+All `/api/*` requests are proxied to the configured node, avoiding CORS issues and keeping the node URL server-side only.
 
 ## Quick Start
 
