@@ -93,12 +93,12 @@ go run . --port 8001
 
 This wallet has been upgraded from Angular 5 → Angular 12:
 
-- ✅ Updated all dependencies and fixed 200+ vulnerabilities
-- ✅ Migrated to modern Angular Material imports
-- ✅ Added webpack 5 polyfills for crypto libraries
-- ✅ Replaced node-sass with dart-sass
-- ✅ Fixed all TypeScript compilation errors
-- ✅ Created single-binary distribution with Go
+- Updated all dependencies and fixed 200+ vulnerabilities
+- Migrated to modern Angular Material imports
+- Added webpack 5 polyfills for crypto libraries
+- Replaced node-sass with dart-sass
+- Fixed all TypeScript compilation errors
+- Created single-binary distribution with Go
 
 ## License
 

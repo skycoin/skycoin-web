@@ -1,9 +1,8 @@
 import { TranslateLoader } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/fromPromise';
+import { Observable, from } from 'rxjs';
 
 export class AppTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<any> {
-    return Observable.fromPromise(System.import(`../assets/i18n/${lang}.json`));
+    return from(import(`../assets/i18n/${lang}.json`));
   }
 }

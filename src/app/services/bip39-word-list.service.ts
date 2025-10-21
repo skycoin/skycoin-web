@@ -5,9 +5,9 @@ export class Bip39WordListService {
   private wordMap: Map<string, boolean>;
 
   constructor() {
-    System.import(`../../assets/bip39-word-list.json`).then (result => {
+    import(`../../assets/bip39-word-list.json`).then ((result: any) => {
       this.wordMap = new Map<string, boolean>();
-      result.list.forEach(word => {
+      result.list.forEach((word: string) => {
         this.wordMap.set(word, true);
       });
     });

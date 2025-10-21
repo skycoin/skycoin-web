@@ -28,20 +28,46 @@ export class CipherProvider {
   initialize(): Observable<InitializationResults> {
     if (!this.initialized) {
       this.initialized = true;
-      if (window['WebAssembly'] && window['WebAssembly'].instantiate) {
-        return this.http.get('/assets/scripts/skycoin-lite.wasm', { responseType: 'arraybuffer' })
-          .catch(() => Observable.throw(InitializationResults.ErrorLoadingWasmFile))
-          .flatMap((response: ArrayBuffer) => {
-            const go = new Go();
-            return Observable.fromPromise((window['WebAssembly'].instantiate(response, go.importObject) as Promise<any>)).map(result => {
+      if (window['WebAssembly'] && window['WebAssembly'].instantiateStreaming) {
+        console.log('[WASM] Starting WASM streaming instantiation...');
+        const go = new Go();
+        return Observable.fromPromise(
+          window['WebAssembly'].instantiateStreaming(fetch('/assets/scripts/skycoin-lite.wasm'), go.importObject)
+            .then((result: any) => {
+              console.log('[WASM] WASM module instantiated, running...');
               go.run(result.instance);
+              console.log('[WASM] Initialization complete!');
+              return InitializationResults.Ok;
+            })
+            .catch((err: any) => {
+              console.error('[WASM] Failed to instantiate WASM module:', err);
+              throw InitializationResults.ErrorLoadingWasmFile;
+            })
+        );
+      } else if (window['WebAssembly'] && window['WebAssembly'].instantiate) {
+        console.log('[WASM] Starting WASM download (fallback mode)...');
+        return this.http.get('/assets/scripts/skycoin-lite.wasm', { responseType: 'arraybuffer' })
+          .catch((err) => {
+            console.error('[WASM] Failed to download WASM file:', err);
+            return Observable.throw(InitializationResults.ErrorLoadingWasmFile);
+          })
+          .flatMap((response: ArrayBuffer) => {
+            console.log('[WASM] WASM file downloaded, size:', response.byteLength);
+            const go = new Go();
+            console.log('[WASM] Instantiating WASM module...');
+            return Observable.fromPromise((window['WebAssembly'].instantiate(response, go.importObject) as Promise<any>)).map(result => {
+              console.log('[WASM] WASM module instantiated, running...');
+              go.run(result.instance);
+              console.log('[WASM] Initialization complete!');
 
               return InitializationResults.Ok;
             }).catch(err => {
+              console.error('[WASM] Failed to instantiate WASM module:', err);
               return Observable.throw(InitializationResults.ErrorLoadingWasmFile);
             });
           });
       } else {
+        console.error('[WASM] Browser does not support WebAssembly');
         return Observable.throw(InitializationResults.BrowserIncompatibleWithWasm);
       }
     }

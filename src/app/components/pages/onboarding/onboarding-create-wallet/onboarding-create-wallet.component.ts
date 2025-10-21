@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -22,7 +22,7 @@ import { MsgBarService } from '../../../../services/msg-bar.service';
   templateUrl: './onboarding-create-wallet.component.html',
   styleUrls: ['./onboarding-create-wallet.component.scss'],
 })
-export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
+export class OnboardingCreateWalletComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('formControl') formControl: CreateWalletFormComponent;
   @ViewChild('create') createButton;
 
@@ -49,16 +49,21 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.checkUserWallets();
-    this.formControl.initForm(this.coinService.currentCoin.getValue());
 
     this.subscription = this.languageService.currentLanguage
       .subscribe(lang => this.language = lang);
   }
 
+  ngAfterViewInit() {
+    this.formControl.initForm(this.coinService.currentCoin.getValue());
+  }
+
   ngOnDestroy() {
     this.removeSlowInfoSubscription();
     this.msgBarService.hide();
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   changeForm(newState: DoubleButtonActive) {
