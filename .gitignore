@@ -49,7 +49,7 @@ Thumbs.db
 *[Cc][Rr][Uu][Ss][Hh]*
 *[Mm][Cc][Pp]*
 
-/dist
+/src/gui/dist
 
 # Go
 *.exe
@@ -60,7 +60,7 @@ Thumbs.db
 *.test
 *.out
 go.work
-vendor/
+
 
 # Binary
 skycoin-web

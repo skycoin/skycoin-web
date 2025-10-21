@@ -15,7 +15,7 @@
             "customWebpackConfig": {
               "path": "./webpack.config.js"
             },
-            "outputPath": "dist",
+            "outputPath": "src/gui/dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",

@@ -54,7 +54,7 @@ All `/api/*` requests are proxied to the configured node, avoiding CORS issues a
 # 1. Install dependencies
 npm install --legacy-peer-deps
 
-# 2. Build the web interface
+# 2. Build the web interface (outputs to src/gui/dist)
 npm run build
 
 # 3. Build the Go binary
@@ -62,6 +62,15 @@ go build -o skycoin-web .
 
 # 4. Run it!
 ./skycoin-web
+```
+
+You can also run directly with:
+```bash
+# From repository root
+go run .
+
+# Or from anywhere once merged upstream
+go run github.com/skycoin/skycoin-web@develop
 ```
 
 ## CLI Commands

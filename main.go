@@ -1,15 +1,18 @@
+// cmd/skycoin-web/skycoin-web.go
+/*
+skycoin-web thin client
+*/
 package main
 
 import (
-	"embed"
-	
-	"github.com/0pcom/skycoin-web/cmd"
+	"github.com/skycoin/skycoin-web/cmd/skycoin-web/commands"
+	"github.com/skycoin/skywire/pkg/skywire-utilities/pkg/flags"
 )
 
-//go:embed all:dist
-var distFS embed.FS
+func init() {
+	flags.InitFlags(commands.RootCmd, false)
+}
 
 func main() {
-	cmd.SetDistFS(distFS)
-	cmd.Execute()
+	commands.Execute()
 }

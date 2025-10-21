@@ -5,7 +5,7 @@ install-deps-ui: ## install npm dependences
 	npm install
 	cd electron && npm install
 
-build:
+build: ## builds the GUI to src/gui/dist
 	npm run build
 
 build-for-electron: ## compiles a version to be used with Electron
