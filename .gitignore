@@ -45,4 +45,8 @@ debug.log
 .DS_Store
 Thumbs.db
 
+# Crush files (case-insensitive)
+*[Cc][Rr][Uu][Ss][Hh]*
+*[Mm][Cc][Pp]*
+
 /dist
