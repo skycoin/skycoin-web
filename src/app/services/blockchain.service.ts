@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeWhile';
 import BigNumber from 'bignumber.js';

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { BigNumber } from 'bignumber.js';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
@@ -8,7 +8,7 @@ import { HistoryService } from '../../../../services/wallet/history.service';
 import { NavBarService } from '../../../../services/nav-bar.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
 import { Wallet } from '../../../../app.datatypes';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BaseCoin } from '../../../../coins/basecoin';
 import { CoinService } from '../../../../services/coin.service';
 import { GlobalsService } from '../../../../services/globals.service';
@@ -25,9 +25,9 @@ export class PendingTransactionsComponent implements OnInit, OnDestroy {
   currentCoin: BaseCoin;
   showError = false;
 
-  private navbarSubscription: ISubscription;
-  private coinSubscription: ISubscription;
-  private dataSubscription: ISubscription;
+  private navbarSubscription: Subscription;
+  private coinSubscription: Subscription;
+  private dataSubscription: Subscription;
 
   constructor(
     private walletService: WalletService,

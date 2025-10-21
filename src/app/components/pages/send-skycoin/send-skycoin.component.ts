@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { CoinService } from '../../../services/coin.service';
 import { DoubleButtonActive } from '../../layout/double-button/double-button.component';
@@ -17,8 +17,8 @@ export class SendSkycoinComponent implements OnInit, OnDestroy {
   activeForm: DoubleButtonActive;
   activeForms = DoubleButtonActive;
 
-  private subscription: ISubscription;
-  private coinSubscription: ISubscription;
+  private subscription: Subscription;
+  private coinSubscription: Subscription;
 
   constructor(
     private coinService: CoinService,

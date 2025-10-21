@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BigNumber } from 'bignumber.js';
 
 import { HistoryService } from './history.service';

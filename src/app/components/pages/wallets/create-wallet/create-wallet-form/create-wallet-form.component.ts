@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as Bip39 from 'bip39';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { CoinService } from '../../../../../services/coin.service';
 import { BaseCoin } from '../../../../../coins/basecoin';
@@ -28,7 +28,7 @@ export class CreateWalletFormComponent implements OnInit, OnDestroy {
   normalSeed = false;
   customSeedAccepted = false;
 
-  private statusSubscription: ISubscription;
+  private statusSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,

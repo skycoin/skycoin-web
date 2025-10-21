@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogConfig } from '@angular/material/dialog';
-import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Wallet } from '../../../app.datatypes';
@@ -23,7 +23,7 @@ export class WalletsComponent implements OnInit, OnDestroy {
   currentCoin: BaseCoin;
   showLockIcons: boolean;
 
-  private subscriptionsGroup: ISubscription[] = [];
+  private subscriptionsGroup: Subscription[] = [];
   private confirmSeedSubscription: Subscription;
   private deleteWalletSubscription: Subscription;
 

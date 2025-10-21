@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { ConfirmationData, Wallet, Address } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { ChangeNameComponent } from '../change-name/change-name.component';
 import { openUnlockWalletModal, openQrModal, showConfirmationModal, openDeleteWalletModal } from '../../../../utils/index';
-import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { WalletOptionsComponent, WalletOptionsResponses } from './wallet-options/wallet-options.component';
 import { CustomMatDialogService } from '../../../../services/custom-mat-dialog.service';
 import { config } from '../../../../app.config';
@@ -25,7 +25,7 @@ export class WalletDetailComponent implements OnDestroy {
   showSlowMobileInfo = false;
 
   private unlockSubscription: Subscription;
-  private slowInfoSubscription: ISubscription;
+  private slowInfoSubscription: Subscription;
 
   constructor(
     private walletService: WalletService,

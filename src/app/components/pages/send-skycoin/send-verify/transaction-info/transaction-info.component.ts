@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { Transaction } from '../../../../../app.datatypes';
 import { PriceService } from '../../../../../services/price.service';
@@ -18,7 +18,7 @@ export class TransactionInfoComponent implements OnInit, OnDestroy {
   showInputsOutputs = false;
   currentCoin: BaseCoin;
 
-  private subscription: ISubscription;
+  private subscription: Subscription;
 
   constructor(
     private priceService: PriceService,

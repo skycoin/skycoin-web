@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subscription, ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { SpendingService } from '../../../../services/wallet/spending.service';
 import { Wallet } from '../../../../app.datatypes';
@@ -20,7 +20,7 @@ export class OutputsComponent implements OnInit, OnDestroy {
   showError = false;
 
   private subscription: Subscription;
-  private dataSubscription: ISubscription;
+  private dataSubscription: Subscription;
   private urlParams: Params;
 
   constructor(

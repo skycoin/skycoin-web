@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/filter';
 import { BigNumber } from 'bignumber.js';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { SpendingService, HoursSelectionTypes } from '../../../../services/wallet/spending.service';
@@ -44,9 +44,9 @@ export class SendFormComponent implements OnInit, OnDestroy {
   valueGreaterThanBalance = false;
   price: number;
 
-  private processSubscription: ISubscription;
-  private subscriptionsGroup: ISubscription[] = [];
-  private slowInfoSubscription: ISubscription;
+  private processSubscription: Subscription;
+  private subscriptionsGroup: Subscription[] = [];
+  private slowInfoSubscription: Subscription;
 
   constructor(
     public blockchainService: BlockchainService,

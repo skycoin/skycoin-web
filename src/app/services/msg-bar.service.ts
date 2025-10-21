@@ -1,13 +1,13 @@
 import { Injectable, NgZone } from '@angular/core';
 import { MsgBarConfig, MsgBarComponent, MsgBarIcons, MsgBarColors } from '../components/layout/msg-bar/msg-bar.component';
 import { parseResponseMessage } from '../utils/errors';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class MsgBarService {
 
-  private timeSubscription: ISubscription;
+  private timeSubscription: Subscription;
 
   private msgBarComponentInternal: MsgBarComponent;
   set msgBarComponent(value: MsgBarComponent) {

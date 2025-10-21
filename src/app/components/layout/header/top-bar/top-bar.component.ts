@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, OnDestroy, Renderer2, ViewChild, NgZone } from '@angular/core';
 import 'rxjs/add/observable/interval';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { Overlay } from '@angular/cdk/overlay';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { BalanceService, BalanceStates } from '../../../../services/wallet/balance.service';
 import { CoinService } from '../../../../services/coin.service';
@@ -27,7 +27,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   language: LanguageData;
   hasManyCoins: boolean;
 
-  private subscriptionsGroup: ISubscription[] = [];
+  private subscriptionsGroup: Subscription[] = [];
 
   constructor(private balanceService: BalanceService,
               private coinService: CoinService,

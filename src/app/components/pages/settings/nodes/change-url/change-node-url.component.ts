@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import BigNumber from 'bignumber.js';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
@@ -29,7 +29,7 @@ export class ChangeNodeURLComponent implements OnInit, OnDestroy {
   coinName: string;
 
   private newUrl: string;
-  private verificationSubscription: ISubscription;
+  private verificationSubscription: Subscription;
   private initialURL: string;
 
   constructor(

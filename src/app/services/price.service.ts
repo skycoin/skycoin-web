@@ -1,9 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/timer';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { CoinService } from './coin.service';
 import { BaseCoin } from '../coins/basecoin';
@@ -15,8 +15,8 @@ export class PriceService {
 
   private readonly updatePeriod = 10 * 60 * 1000;
   private priceTickerId: string | null = null;
-  private lastPriceSubscription: ISubscription;
-  private timerSubscriptions: ISubscription[];
+  private lastPriceSubscription: Subscription;
+  private timerSubscriptions: Subscription[];
 
   constructor(
     private http: HttpClient,

@@ -1,8 +1,8 @@
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TemplateRef, Injectable } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class CustomMatDialogService extends MatDialog {

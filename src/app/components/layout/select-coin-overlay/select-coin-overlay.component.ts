@@ -1,13 +1,13 @@
 import { Component, Input, HostListener, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 import { TranslateService } from '@ngx-translate/core';
 
 import { CoinService } from '../../../services/coin.service';
 import { BaseCoin } from '../../../coins/basecoin';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { WalletService } from '../../../services/wallet/wallet.service';
 import { SpendingService } from '../../../services/wallet/spending.service';
 import { MsgBarService } from '../../../services/msg-bar.service';
@@ -20,7 +20,7 @@ import { MsgBarService } from '../../../services/msg-bar.service';
 export class SelectCoinOverlayComponent implements OnInit, OnDestroy {
 
   @ViewChild('searchInput') private searchInput: ElementRef;
-  private searchSuscription: ISubscription;
+  private searchSuscription: Subscription;
   private coinsWithWallets = new Map<number, boolean>();
 
   sections: Section[] = [];

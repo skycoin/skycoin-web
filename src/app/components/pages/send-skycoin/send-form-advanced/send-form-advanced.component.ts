@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogConfig } from '@angular/material/dialog';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { BigNumber } from 'bignumber.js';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/retryWhen';
 import 'rxjs/add/operator/concat';
 import 'rxjs/add/operator/take';
@@ -53,10 +53,10 @@ export class SendFormAdvancedComponent implements OnInit, OnDestroy {
   values: number[];
   price: number;
 
-  private subscriptionsGroup: ISubscription[] = [];
-  private getOutputsSubscriptions: ISubscription;
-  private unlockSubscription: ISubscription;
-  private destinationSubscriptions: ISubscription[] = [];
+  private subscriptionsGroup: Subscription[] = [];
+  private getOutputsSubscriptions: Subscription;
+  private unlockSubscription: Subscription;
+  private destinationSubscriptions: Subscription[] = [];
 
   constructor(
     public walletService: WalletService,

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService } from '../../../../services/wallet/wallet.service';
@@ -29,9 +29,9 @@ export class UnlockWalletComponent implements OnInit, OnDestroy {
   showSlowMobileInfo = false;
 
   private wallet: Wallet;
-  private unlockSubscription: ISubscription;
-  private progressSubscription: ISubscription;
-  private slowInfoSubscription: ISubscription;
+  private unlockSubscription: Subscription;
+  private progressSubscription: Subscription;
+  private slowInfoSubscription: Subscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data,

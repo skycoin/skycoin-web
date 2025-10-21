@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 import { BaseCoin } from '../coins/basecoin';
 import { SkycoinCoin } from '../coins/skycoin.coin';

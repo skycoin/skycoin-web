@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter, Injector } from '@angular/core';
 import 'rxjs/add/operator/mergeMap';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { BigNumber } from 'bignumber.js';
 

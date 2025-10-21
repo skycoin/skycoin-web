@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { DoubleButtonActive } from '../../../layout/double-button/double-button.component';
@@ -33,8 +33,8 @@ export class OnboardingCreateWalletComponent implements OnInit, OnDestroy {
   creatingWallet = false;
   language: LanguageData;
 
-  private slowInfoSubscription: ISubscription;
-  private subscription: ISubscription;
+  private slowInfoSubscription: Subscription;
+  private subscription: Subscription;
 
   constructor(
     private dialog: CustomMatDialogService,

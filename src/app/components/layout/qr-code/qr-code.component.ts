@@ -1,8 +1,8 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogConfig } from '@angular/material/dialog';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { CoinService } from '../../../services/coin.service';
 import { CustomMatDialogService } from '../../../services/custom-mat-dialog.service';
@@ -42,7 +42,7 @@ export class QrCodeComponent implements OnInit, OnDestroy {
   invalidHours = false;
 
   private defaultQrConfig = new DefaultQrConfig();
-  private subscriptionsGroup: ISubscription[] = [];
+  private subscriptionsGroup: Subscription[] = [];
   private updateQrEvent: Subject<boolean> = new Subject<boolean>();
 
   static openDialog(dialog: CustomMatDialogService, config: QrDialogConfig) {

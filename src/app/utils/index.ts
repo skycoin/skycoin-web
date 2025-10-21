@@ -1,7 +1,7 @@
 import { MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Renderer2 } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Wallet, ConfirmationData } from '../app.datatypes';

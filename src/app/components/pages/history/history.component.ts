@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogConfig } from '@angular/material/dialog';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -47,11 +47,11 @@ export class HistoryComponent implements OnInit, OnDestroy {
   private requestedAddress: string;
   private walletsLoaded = false;
   private transactionsLoaded = false;
-  private subscriptionsGroup: ISubscription[] = [];
-  private transactionsSubscription: ISubscription;
-  private filterSubscription: ISubscription;
-  private walletsSubscription: ISubscription;
-  private routeSubscription: ISubscription;
+  private subscriptionsGroup: Subscription[] = [];
+  private transactionsSubscription: Subscription;
+  private filterSubscription: Subscription;
+  private walletsSubscription: Subscription;
+  private routeSubscription: Subscription;
 
   constructor(
     private historyService: HistoryService,

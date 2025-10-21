@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { Wallet } from '../../../../app.datatypes';
 import { WalletService, ScanProgressData } from '../../../../services/wallet/wallet.service';
@@ -16,8 +16,8 @@ export class ScanAddressesComponent implements OnInit, OnDestroy {
   progress = new ScanProgressData();
   showSlowMobileInfo = false;
 
-  private subscriptionsGroup: ISubscription[] = [];
-  private slowInfoSubscription: ISubscription;
+  private subscriptionsGroup: Subscription[] = [];
+  private slowInfoSubscription: Subscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: Wallet,

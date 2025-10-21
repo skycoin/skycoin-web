@@ -1,10 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/first';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { ISubscription } from 'rxjs/Subscription';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { BigNumber } from 'bignumber.js';
 
 import { ApiService } from '../api.service';
@@ -31,7 +31,7 @@ export class BalanceService {
   hasPendingTransactions: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private canGetBalance = false;
-  private schedulerSubscription: ISubscription;
+  private schedulerSubscription: Subscription;
 
   private readonly coinsMultiplier = 1000000;
   private readonly shortUpdatePeriod = 10 * 1000;

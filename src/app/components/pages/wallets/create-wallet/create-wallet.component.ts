@@ -2,8 +2,8 @@ import { Component, Inject, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { WalletService } from '../../../../services/wallet/wallet.service';
 import { ButtonComponent } from '../../../layout/button/button.component';
@@ -29,7 +29,7 @@ export class CreateWalletComponent implements OnDestroy {
   showSlowMobileInfo = false;
   disableDismiss = false;
 
-  private slowInfoSubscription: ISubscription;
+  private slowInfoSubscription: Subscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,

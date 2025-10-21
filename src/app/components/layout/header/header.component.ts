@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, NgZone } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { BigNumber } from 'bignumber.js';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { PriceService } from '../../../services/price.service';
 import { BalanceService, BalanceStates } from '../../../services/wallet/balance.service';
@@ -36,8 +36,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   synchronized = true;
 
   private price: number;
-  private subscriptionsGroup: ISubscription[] = [];
-  private synchronizedSubscription: ISubscription;
+  private subscriptionsGroup: Subscription[] = [];
+  private synchronizedSubscription: Subscription;
 
   get loading() {
     return this.isBlockchainLoading || !this.balanceObtained;
