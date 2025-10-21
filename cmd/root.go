@@ -3,6 +3,7 @@ package cmd
 import (
 	"embed"
 	"fmt"
+	"io"
 	"io/fs"
 	"log"
 	"net/http"
@@ -77,11 +78,52 @@ func serve() {
 	fileServer := http.FileServer(http.FS(distSub))
 
 	// Setup routes
-	// API endpoint for configuration
-	http.HandleFunc("/api/config", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+	// Proxy all /api/* requests to the configured node
+	http.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
+		// Build target URL: nodeURL + request path
+		targetURL := nodeURL + r.URL.Path
+		if r.URL.RawQuery != "" {
+			targetURL += "?" + r.URL.RawQuery
+		}
+
+		// Create proxy request
+		proxyReq, err := http.NewRequest(r.Method, targetURL, r.Body)
+		if err != nil {
+			http.Error(w, "Failed to create proxy request", http.StatusInternalServerError)
+			return
+		}
+
+		// Copy headers from original request
+		for name, values := range r.Header {
+			for _, value := range values {
+				proxyReq.Header.Add(name, value)
+			}
+		}
+
+		// Execute request to node
+		client := &http.Client{}
+		resp, err := client.Do(proxyReq)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to proxy request to node: %v", err), http.StatusBadGateway)
+			return
+		}
+		defer resp.Body.Close()
+
+		// Copy response headers
+		for name, values := range resp.Header {
+			for _, value := range values {
+				w.Header().Add(name, value)
+			}
+		}
+
+		// Set CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		fmt.Fprintf(w, `{"nodeUrl":"%s"}`, nodeURL)
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token")
+
+		// Copy status code and body
+		w.WriteHeader(resp.StatusCode)
+		io.Copy(w, resp.Body)
 	})
 	
 	// Serve static files
@@ -90,7 +132,7 @@ func serve() {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	fmt.Printf("Skycoin Web Wallet starting...\n")
 	fmt.Printf("Server listening on http://%s\n", addr)
-	fmt.Printf("Node URL: %s\n", nodeURL)
+	fmt.Printf("Proxying to node: %s\n", nodeURL)
 	fmt.Printf("Open your browser and navigate to the address above\n")
 	fmt.Printf("Press Ctrl+C to stop the server\n\n")
 
