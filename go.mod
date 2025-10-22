@@ -3,7 +3,6 @@ module github.com/skycoin/skycoin-web
 go 1.25.1
 
 require (
-	github.com/0pcom/skycoin-lite v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.11.0
 	github.com/skycoin/skywire v1.3.31
 	github.com/spf13/cobra v1.10.1
@@ -49,4 +48,3 @@ require (
 	google.golang.org/protobuf v1.36.9 // indirect
 )
 
-replace github.com/0pcom/skycoin-lite => ../skycoin-lite
