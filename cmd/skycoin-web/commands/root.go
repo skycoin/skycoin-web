@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/0pcom/skycoin-lite/wasm-tinygo"
+	"github.com/skycoin/skycoin-lite/wasm-tinygo"
 	"github.com/gin-gonic/gin"
 	"github.com/skycoin/skycoin-web/src/gui"
 	"github.com/skycoin/skywire/pkg/skywire-utilities/pkg/calvin"
